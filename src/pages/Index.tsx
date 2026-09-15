@@ -1654,6 +1654,7 @@ function ConsumerRecoverySection({ onCta }: { onCta: () => void }) {
               <img src="/logoimagetwo.png" alt="Margin" className="h-16 w-auto object-contain brightness-0 invert sm:h-20" />
               <p className="mt-4 font-lora text-[24px] leading-tight tracking-[-0.04em] sm:text-[30px]">Consumer Recovery</p>
             </div>
+            <p className="absolute bottom-6 left-6 right-6 z-10 mx-auto max-w-[420px] text-center text-[11px] leading-5 text-white/75 sm:bottom-8 sm:text-[12px]">Consumer Recovery is opening soon. For the initial Early Access program, Margin will focus on high-value Amazon consumer claims where the potential recovery justifies a managed investigation.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="max-w-[620px]">
             <div className="mb-4 flex items-center gap-3">
