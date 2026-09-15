@@ -1444,6 +1444,28 @@ export const api = {
       },
     });
   },
+  getInformationRequiredState: (auditId?: string) => requestJson<{
+    success: boolean;
+    audit: AuditRunRecord;
+    submission: { id: string; status: string; note?: string | null; submitted_at: string } | null;
+  }>(`/api/information-required${auditId ? `?auditId=${encodeURIComponent(auditId)}` : ''}`),
+  submitInformationRequired: (files: File[], note: string, auditId: string) => {
+    const formData = new FormData();
+    files.forEach((file) => formData.append('files', file, file.name));
+    formData.append('auditId', auditId);
+    if (note.trim()) formData.append('note', note.trim());
+    return requestJson<{
+      success: boolean;
+      duplicate?: boolean;
+      submission?: { id: string; status: string; submitted_at: string } | null;
+      files?: Array<{ id: string; filename: string }>;
+      emailDelivery?: {
+        seller?: { status: 'sent' | 'skipped' | 'failed'; provider?: string; providerMessageId?: string | null; error?: string };
+        internal?: { status: 'sent' | 'skipped' | 'failed'; provider?: string; providerMessageId?: string | null; error?: string };
+      };
+      message?: string;
+    }>('/api/information-required/submit', { method: 'POST', body: formData });
+  },
   getUserProfile: (tenantSlug?: string) => requestJson<{
     success: boolean;
     user: {

@@ -1,5 +1,5 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   CheckCircle2,
@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
+import { api } from '@/lib/api';
 
 type UploadStatus = 'ready' | 'sending' | 'sent' | 'error';
 
@@ -68,6 +69,24 @@ export default function InformationRequired() {
   const [isSending, setIsSending] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [message, setMessage] = useState('');
+  const [receiptNotice, setReceiptNotice] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const [auditId, setAuditId] = useState(searchParams.get('auditId') || '');
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    api.getInformationRequiredState(searchParams.get('auditId') || undefined).then((response) => {
+      if (!active) return;
+      if (!response.ok || !response.data?.audit?.id) {
+        setLoadError(response.error || 'Margin could not load the information request.');
+        return;
+      }
+      setAuditId(response.data.audit.id);
+      if (response.data.submission) setIsSubmitted(true);
+    }).catch(() => { if (active) setLoadError('Margin could not load the information request.'); });
+    return () => { active = false; };
+  }, [searchParams]);
 
   const handleFiles = useCallback((incomingFiles: FileList | File[]) => {
     const selected = Array.from(incomingFiles);
@@ -97,28 +116,31 @@ export default function InformationRequired() {
   const validFiles = files.filter((item) => item.status === 'ready');
   const hasInvalidFiles = files.some((item) => item.status === 'error');
 
-  const sendFiles = () => {
+  const sendFiles = async () => {
     if (isSending || validFiles.length === 0 || hasInvalidFiles) return;
+    if (!auditId) { setLoadError('Margin could not identify the Audit for these files.'); return; }
 
     setIsSending(true);
     setFiles((current) => current.map((item) => item.status === 'ready'
       ? { ...item, status: 'sending', progress: 12 }
       : item));
 
-    const progressTimer = window.setInterval(() => {
-      setFiles((current) => current.map((item) => item.status === 'sending'
-        ? { ...item, progress: Math.min(100, item.progress + 22) }
-        : item));
-    }, 180);
-
-    window.setTimeout(() => {
-      window.clearInterval(progressTimer);
-      setFiles((current) => current.map((item) => item.status === 'sending'
-        ? { ...item, status: 'sent', progress: 100 }
-        : item));
-      setIsSending(false);
+    try {
+      const response = await api.submitInformationRequired(validFiles.map((item) => item.file), message, auditId);
+      if (!response.ok || !response.data?.success) throw new Error(response.error || 'Margin could not receive these files.');
+      const sellerEmailStatus = response.data.emailDelivery?.seller?.status;
+      if (sellerEmailStatus && sellerEmailStatus !== 'sent') {
+        setReceiptNotice('Files were received, but the receipt email did not send. Margin can still review your files.');
+      } else {
+        setReceiptNotice(null);
+      }
+      setFiles((current) => current.map((item) => item.status === 'sending' ? { ...item, status: 'sent', progress: 100 } : item));
       setIsSubmitted(true);
-    }, 1050);
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : 'Margin could not receive these files. Please try again.';
+      setLoadError(reason);
+      setFiles((current) => current.map((item) => item.status === 'sending' ? { ...item, status: 'ready', progress: 0 } : item));
+    } finally { setIsSending(false); }
   };
 
   if (isSubmitted) {
@@ -141,6 +163,7 @@ export default function InformationRequired() {
             <p className="mt-5 text-[12px] font-semibold text-[#595E68]">REVIEW IN PROGRESS</p>
             <h1 id="files-received-title" className="mt-2 max-w-2xl font-lora text-[32px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[40px]">Files received.</h1>
             <p className="mt-4 max-w-2xl text-[15px] leading-6 text-[#595E68] sm:text-[16px]">Our review team has received your files. We&apos;ll continue your Audit after we&apos;ve examined the additional records.</p>
+            {receiptNotice ? <div role="status" className="mt-5 rounded-[10px] border border-[#E9B7BD] bg-[#FFF4F5] px-3 py-2.5 text-[13px] leading-5 text-[#A73549]">{receiptNotice}</div> : null}
             <div className="mt-6 border-t border-[#E8E7E1] pt-4 text-[13px] leading-6 text-[#777A82]">Your Audit is still in progress. You can safely leave this page.</div>
           </section>
         </main>
@@ -161,6 +184,7 @@ export default function InformationRequired() {
 
       <main className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
         <div className="mx-auto max-w-3xl">
+          {loadError ? <div role="alert" className="mb-3 rounded-[10px] border border-[#E9B7BD] bg-[#FFF4F5] px-3 py-2.5 text-[13px] text-[#A73549]">{loadError}</div> : null}
           <section className="min-w-0 rounded-[14px] border border-[#E8E7E1] bg-white p-4 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-5" aria-labelledby="information-required-title">
             <div className="max-w-2xl border-b border-[#E8E7E1] pb-4">
               <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-[#595E68]">
