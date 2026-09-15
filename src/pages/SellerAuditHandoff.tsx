@@ -27,7 +27,7 @@ type HandoffDetails = {
 
 export default function SellerAuditHandoff() {
   usePageMeta({
-    title: 'Your Amazon Audit | Margin',
+    title: 'Seller File Handoff | Margin',
     description: 'Give Margin the context it needs, then send your Amazon files securely.',
     url: `${SITE_META.url}/seller-audit`,
     image: SITE_META.image,
@@ -62,16 +62,6 @@ export default function SellerAuditHandoff() {
     setDetails(savedDetails);
     setSubmitted(true);
 
-    if (DROPBOX_REQUEST_URL) {
-      window.open(DROPBOX_REQUEST_URL, '_blank', 'noopener,noreferrer');
-      return;
-    }
-
-    toast({
-      variant: 'destructive',
-      title: 'Upload link is being connected',
-      description: 'Your details were saved. The Dropbox File Request URL still needs to be configured for this environment.',
-    });
   };
 
   return (
