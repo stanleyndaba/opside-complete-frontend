@@ -246,14 +246,14 @@ function AccountingEvidenceSection() {
 }
 
 const financialControlOperations = [
-  "Financial Data",
-  "Reconciliation",
-  "Exception Management",
-  "Claims Management",
-  "Dispute Resolution",
-  "Evidence & Audit",
-  "Recovery Operations",
-  "Financial Controls",
+  "Finds the discrepancy",
+  "Trace what happened",
+  "Prove what’s owed",
+  "Build the recovery",
+  "Handle the case",
+  "Manage rejections",
+  "Pursue appeals",
+  "Reconcile the outcome",
 ];
 
 function FinancialControlOperationsSection() {
@@ -266,7 +266,7 @@ function FinancialControlOperationsSection() {
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-20">
           <motion.div {...revealProps}>
             <h2 id="financial-control-operations-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}>
-              Margin operates across the financial control operations
+              Margin handles the work between a financial problem and its resolution
             </h2>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative h-[300px] overflow-hidden border-y border-[#D5DEE1] sm:h-[360px]">
