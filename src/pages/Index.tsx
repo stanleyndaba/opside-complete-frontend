@@ -1555,44 +1555,26 @@ function ProductReframeSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }}>
-            <div className="border-y border-[var(--margin-border)]">
-              <div className="flex items-center justify-between gap-4 border-b border-[var(--margin-border)] py-4">
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">
-                  From activity to financial truth
-                </span>
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
-                  {String(activeStage + 1).padStart(2, "0")} / {String(recoveryOperationStages.length).padStart(2, "0")}
-                </span>
-              </div>
-              <div className="relative py-6 sm:py-8">
-                <motion.div
-                  aria-hidden="true"
-                  className="absolute left-0 right-0 top-0 h-px origin-left bg-[var(--margin-blue)]"
-                  animate={{ scaleX: reduceMotion ? 1 : (activeStage + 1) / recoveryOperationStages.length }}
-                  transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
-                />
-                <div className="grid gap-0 sm:grid-cols-2 lg:grid-cols-4">
-                  {recoveryOperationStages.map((stage, index) => {
-                    const isActive = reduceMotion ? index === 0 : index === activeStage;
-                    const isPast = !reduceMotion && index < activeStage;
-                    return (
-                      <motion.div
-                        key={stage}
-                        initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0.36, y: 8 }}
-                        animate={{ opacity: isActive ? 1 : isPast ? 0.68 : 0.38, y: isActive ? 0 : 2 }}
-                        transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-                        className="border-b border-r border-[var(--margin-border)] px-3 py-4 last:border-r-0 sm:px-4 sm:py-5 lg:[&:nth-child(4n)]:border-r-0"
-                      >
-                        <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--margin-text-muted)]">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <span className={`mt-3 block font-lora text-[21px] leading-[1.04] tracking-[-0.03em] ${isActive ? "text-[var(--margin-blue)]" : "text-[var(--margin-text-primary)]"}`} style={{ fontWeight: 400 }}>
-                          {stage}
-                        </span>
-                      </motion.div>
-                    );
-                  })}
-                </div>
+            <div className="relative min-h-[360px] overflow-hidden py-2 sm:min-h-[430px] sm:py-4">
+              <div className="absolute inset-x-0 top-1/2 h-28 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,rgba(11,116,222,0.08),transparent_68%)]" aria-hidden="true" />
+              <div className="relative flex h-full flex-col items-center justify-center gap-1.5 text-center sm:gap-2">
+                {recoveryOperationStages.map((stage, index) => {
+                  const distance = Math.abs(index - activeStage);
+                  const isActive = reduceMotion ? index === 0 : index === activeStage;
+                  const opacity = isActive ? 1 : distance === 1 ? 0.48 : distance === 2 ? 0.22 : 0.1;
+                  return (
+                    <motion.div
+                      key={stage}
+                      initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 8 }}
+                      animate={{ opacity, y: isActive ? 0 : distance === 1 ? 1 : 2, scale: isActive ? 1.04 : 1 }}
+                      transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
+                      className={`font-lora text-[27px] leading-none tracking-[-0.04em] sm:text-[36px] ${isActive ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
+                      style={{ fontWeight: 400 }}
+                    >
+                      {stage}
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
           </motion.div>
