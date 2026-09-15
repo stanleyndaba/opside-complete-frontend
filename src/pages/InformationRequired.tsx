@@ -6,6 +6,7 @@ import {
   CircleAlert,
   FileText,
   Files,
+  Info,
   Loader2,
   Upload,
   X,
@@ -114,6 +115,7 @@ export default function InformationRequired() {
   };
 
   const validFiles = files.filter((item) => item.status === 'ready');
+  const sendableFileCount = files.filter((item) => item.status === 'ready' || item.status === 'sending').length;
   const hasInvalidFiles = files.some((item) => item.status === 'error');
 
   const sendFiles = async () => {
@@ -248,7 +250,7 @@ export default function InformationRequired() {
               </section>
 
               <section className="border-t border-[#E8E7E1] pt-4" aria-labelledby="send-cta-title">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><h2 id="send-cta-title" className="text-[15px] font-semibold text-[#191B20]">Ready to continue?</h2><p className="mt-1 text-[12px] leading-5 text-[#595E68]">{validFiles.length > 0 && !hasInvalidFiles ? `${validFiles.length} file${validFiles.length === 1 ? '' : 's'} ready to send.` : 'Add at least one valid file to continue.'}</p></div><Button onClick={sendFiles} disabled={validFiles.length === 0 || hasInvalidFiles || isSending} className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 disabled:opacity-45">{isSending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}{isSending ? 'Sending files' : 'Send files to Margin'}</Button></div>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><h2 id="send-cta-title" className="text-[15px] font-semibold text-[#191B20]">Ready to continue?</h2><p className="mt-1 text-[12px] leading-5 text-[#595E68]">{isSending ? `${sendableFileCount} file${sendableFileCount === 1 ? '' : 's'} sending to Margin.` : validFiles.length > 0 && !hasInvalidFiles ? `${validFiles.length} file${validFiles.length === 1 ? '' : 's'} ready to send.` : 'Add at least one valid file to continue.'}</p></div><Button onClick={sendFiles} disabled={validFiles.length === 0 || hasInvalidFiles || isSending} className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 disabled:opacity-45">{isSending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}{isSending ? 'Sending files' : 'Send files to Margin'}</Button></div>
                 {hasInvalidFiles ? <div role="alert" className="mt-4 flex items-start gap-2 rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] px-3 py-2.5 text-[12px] leading-5 text-[#595E68]"><Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /><p>Remove the files that need review before sending.</p></div> : null}
               </section>
             </div>
