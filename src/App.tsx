@@ -35,6 +35,7 @@ const AppealsReview = lazy(() => import("./pages/AppealsReview"));
 const CaseDetail = lazy(() => import("./pages/CaseDetail"));
 const ResolveCase = lazy(() => import("./pages/ResolveCase"));
 const DataUpload = lazy(() => import("./pages/DataUpload"));
+const SellerAuditHandoff = lazy(() => import("./pages/SellerAuditHandoff"));
 const EvidenceLocker = lazy(() => import("./pages/EvidenceLocker"));
 const DocumentDetail = lazy(() => import("./pages/DocumentDetail"));
 const Billing = lazy(() => import("./pages/Billing"));
@@ -405,6 +406,8 @@ const App = () => (
                         <Route path="/system-error-preview" element={<SystemErrorPreview />} />
                         <Route path="/stripe/callback" element={<StripeCallback />} />
                         <Route path="/data-upload" element={<DataUpload />} />
+                        <Route path="/seller-audit" element={<SellerAuditHandoff />} />
+                        <Route path="/audit-intake" element={<SellerAuditHandoff />} />
                         {/* TENANT-SCOPED ROUTES - Require :tenantSlug */}
                         <Route path="/app" element={appRoute(<TenantRedirect />)} />
                         <Route path="/app/redirect" element={<EmailActionRedirect />} />
