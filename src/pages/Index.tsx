@@ -1643,6 +1643,37 @@ function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boo
   );
 }
 
+function ConsumerRecoverySection({ onCta }: { onCta: () => void }) {
+  return (
+    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-24" aria-labelledby="consumer-recovery-title">
+      <div className={containerClass}>
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:gap-14">
+          <motion.div {...revealProps} className="relative flex min-h-[360px] items-center justify-center overflow-hidden rounded-[4px] p-8 shadow-[0_24px_60px_rgba(72,103,122,0.14)] sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 18% 78%, #526b82 0%, transparent 55%), radial-gradient(ellipse at 76% 20%, #a7b8c7 0%, transparent 52%), radial-gradient(ellipse at 48% 42%, #8098aa 0%, transparent 52%), radial-gradient(ellipse at 84% 78%, #c5d0d7 0%, transparent 48%), linear-gradient(145deg, #bdcbd4 0%, #8298a8 42%, #566f82 100%)' }}>
+            <div className="absolute inset-0 bg-white/5" />
+            <div className="relative z-10 flex flex-col items-center text-center text-white">
+              <img src="/logoimagetwo.png" alt="Margin" className="h-16 w-auto object-contain brightness-0 invert sm:h-20" />
+              <p className="mt-4 font-lora text-[24px] leading-tight tracking-[-0.04em] sm:text-[30px]">Consumer Recovery</p>
+            </div>
+          </motion.div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="max-w-[620px]">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="h-px w-8 bg-[var(--margin-blue)]" />
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">CONSUMER RECOVERY</span>
+            </div>
+            <h2 id="consumer-recovery-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}>
+              The same recovery engine.<br />Now for consumers.
+            </h2>
+            <p className="mt-4 max-w-[580px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin investigates high-value consumer claims, builds the evidence, handles the recovery process, and keeps going until there&apos;s an outcome.</p>
+            <p className="mt-4 text-[15px] font-medium leading-7 text-[var(--margin-text-primary)] sm:text-[17px]">Starting with high-value Amazon claims.</p>
+            <Button type="button" onClick={onCta} className="landing-pressable mt-6 h-11 rounded-[7px] bg-[var(--margin-blue)] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] hover:bg-[var(--margin-blue-hover)]">Join Early Access <ArrowRight className="ml-2 h-4 w-4" /></Button>
+            <p className="mt-3 text-[11px] leading-5 text-[var(--margin-text-muted)]">Early access opens late November 2026.</p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Index() {
   usePageMeta(PUBLIC_ROUTE_META['/']);
   const navigate = useNavigate();
@@ -1725,6 +1756,7 @@ export default function Index() {
             </div>
           </div>
         </section>
+        <ConsumerRecoverySection onCta={() => handleClaimAccessClick("homepage_consumer_recovery")} />
 
         {/* Closing CTA */}
           <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-24" aria-labelledby="final-handoff-title">
