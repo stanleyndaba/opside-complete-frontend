@@ -71,6 +71,7 @@ export default function InformationRequired() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [message, setMessage] = useState('');
   const [receiptNotice, setReceiptNotice] = useState<string | null>(null);
+  const [submitFileCount, setSubmitFileCount] = useState(0);
   const [searchParams] = useSearchParams();
   const [auditId, setAuditId] = useState(searchParams.get('auditId') || '');
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -123,8 +124,9 @@ export default function InformationRequired() {
     if (!auditId) { setLoadError('Margin could not identify the Audit for these files.'); return; }
 
     setIsSending(true);
+    setSubmitFileCount(validFiles.length);
     setFiles((current) => current.map((item) => item.status === 'ready'
-      ? { ...item, status: 'sending', progress: 12 }
+      ? { ...item, status: 'sending', progress: 0 }
       : item));
 
     try {
@@ -142,7 +144,10 @@ export default function InformationRequired() {
       const reason = error instanceof Error ? error.message : 'Margin could not receive these files. Please try again.';
       setLoadError(reason);
       setFiles((current) => current.map((item) => item.status === 'sending' ? { ...item, status: 'ready', progress: 0 } : item));
-    } finally { setIsSending(false); }
+    } finally {
+      setIsSending(false);
+      setSubmitFileCount(0);
+    }
   };
 
   if (isSubmitted) {
@@ -228,7 +233,7 @@ export default function InformationRequired() {
                       const isError = item.status === 'error';
                       const isSendingFile = item.status === 'sending';
                       const isSent = item.status === 'sent';
-                      const statusLabel = isError ? 'Needs review' : isSendingFile ? `${item.progress}%` : isSent ? 'Received' : 'Ready';
+                      const statusLabel = isError ? 'Needs review' : isSendingFile ? 'Sending' : isSent ? 'Received' : 'Ready';
                       return <li key={item.id} className={`px-3 py-2.5 sm:px-4 ${index > 0 ? 'border-t border-[#E8E7E1]' : ''}`}>
                         <div className="flex min-h-[40px] items-center gap-3">
                           <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${isError ? 'bg-[#F4F3ED] text-[#A73549]' : isSent ? 'bg-[#DDF7F0] text-[#0E766C]' : 'bg-[#F4F3ED] text-[#595E68]'}`}>{isError ? <CircleAlert className="h-4 w-4" aria-hidden="true" /> : isSent ? <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> : <FileText className="h-4 w-4" aria-hidden="true" />}</span>
@@ -236,7 +241,6 @@ export default function InformationRequired() {
                           <span className={`hidden rounded-full px-2 py-1 text-[11px] font-medium sm:inline-flex ${isError ? 'bg-[#F4F3ED] text-[#A73549]' : isSent ? 'bg-[#DDF7F0] text-[#0E766C]' : isSendingFile ? 'bg-[#E9ECFF] text-[#3F51A8]' : 'bg-[#F4F3ED] text-[#595E68]'}`}>{statusLabel}</span>
                           {!isSendingFile && !isSent ? <button type="button" onClick={() => removeFile(item.id)} aria-label={`Remove ${item.file.name}`} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-[#595E68] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"><X className="h-4 w-4" /></button> : null}
                         </div>
-                        {isSendingFile ? <div className="ml-11 mt-2 h-1 overflow-hidden rounded-full bg-[#E8E7E1]"><div className="h-full rounded-full bg-[#3F51A8] transition-all" style={{ width: `${item.progress}%` }} /></div> : null}
                       </li>;
                     })}
                   </ul>
@@ -250,7 +254,7 @@ export default function InformationRequired() {
               </section>
 
               <section className="border-t border-[#E8E7E1] pt-4" aria-labelledby="send-cta-title">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><h2 id="send-cta-title" className="text-[15px] font-semibold text-[#191B20]">Ready to continue?</h2><p className="mt-1 text-[12px] leading-5 text-[#595E68]">{isSending ? `${sendableFileCount} file${sendableFileCount === 1 ? '' : 's'} sending to Margin.` : validFiles.length > 0 && !hasInvalidFiles ? `${validFiles.length} file${validFiles.length === 1 ? '' : 's'} ready to send.` : 'Add at least one valid file to continue.'}</p></div><Button onClick={sendFiles} disabled={validFiles.length === 0 || hasInvalidFiles || isSending} className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 disabled:opacity-45">{isSending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}{isSending ? 'Sending files' : 'Send files to Margin'}</Button></div>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><h2 id="send-cta-title" className="text-[15px] font-semibold text-[#191B20]">Ready to continue?</h2><p className="mt-1 text-[12px] leading-5 text-[#595E68]">{isSending ? `${submitFileCount || sendableFileCount} file${(submitFileCount || sendableFileCount) === 1 ? '' : 's'} sending to Margin.` : validFiles.length > 0 && !hasInvalidFiles ? `${validFiles.length} file${validFiles.length === 1 ? '' : 's'} ready to send.` : 'Add at least one valid file to continue.'}</p></div><Button onClick={sendFiles} disabled={validFiles.length === 0 || hasInvalidFiles || isSending} className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 disabled:opacity-45">{isSending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}{isSending ? 'Sending files' : 'Send files to Margin'}</Button></div>
                 {hasInvalidFiles ? <div role="alert" className="mt-4 flex items-start gap-2 rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] px-3 py-2.5 text-[12px] leading-5 text-[#595E68]"><Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /><p>Remove the files that need review before sending.</p></div> : null}
               </section>
             </div>
