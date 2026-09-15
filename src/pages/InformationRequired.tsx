@@ -74,11 +74,13 @@ export default function InformationRequired() {
   const [submitFileCount, setSubmitFileCount] = useState(0);
   const [searchParams] = useSearchParams();
   const [auditId, setAuditId] = useState(searchParams.get('auditId') || '');
+  const [isResolvingAudit, setIsResolvingAudit] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
+    setIsResolvingAudit(true);
     api.getInformationRequiredState(searchParams.get('auditId') || undefined).then((response) => {
       if (!active) return;
       if (!response.ok || !response.data?.audit?.id) {
@@ -86,8 +88,10 @@ export default function InformationRequired() {
         return;
       }
       setAuditId(response.data.audit.id);
+      setLoadError(null);
       if (response.data.submission) setIsSubmitted(true);
-    }).catch(() => { if (active) setLoadError('Margin could not load the information request.'); });
+    }).catch(() => { if (active) setLoadError('Margin could not load the information request.'); })
+      .finally(() => { if (active) setIsResolvingAudit(false); });
     return () => { active = false; };
   }, [searchParams]);
 
@@ -122,7 +126,6 @@ export default function InformationRequired() {
 
   const sendFiles = async () => {
     if (isSending || validFiles.length === 0 || hasInvalidFiles) return;
-    if (!auditId) { setSubmitError('Margin could not identify the Audit for these files.'); return; }
 
     setSubmitError(null);
     setIsSending(true);
@@ -132,7 +135,18 @@ export default function InformationRequired() {
       : item));
 
     try {
-      const response = await api.submitInformationRequired(validFiles.map((item) => item.file), message, auditId);
+      let resolvedAuditId = auditId;
+      if (!resolvedAuditId) {
+        const state = await api.getInformationRequiredState(searchParams.get('auditId') || undefined);
+        if (state.ok && state.data?.audit?.id) {
+          resolvedAuditId = state.data.audit.id;
+          setAuditId(resolvedAuditId);
+        }
+      }
+      if (!resolvedAuditId) {
+        throw new Error('Margin could not identify the Audit for these files. Open this page from your Audit, or add ?auditId= to the URL.');
+      }
+      const response = await api.submitInformationRequired(validFiles.map((item) => item.file), message, resolvedAuditId);
       if (!response.ok || !response.data?.success) throw new Error(response.error || 'Margin could not receive these files.');
       const sellerEmailStatus = response.data.emailDelivery?.seller?.status;
       if (sellerEmailStatus && sellerEmailStatus !== 'sent') {
@@ -260,7 +274,7 @@ export default function InformationRequired() {
               </section>
 
               <section className="border-t border-[#E8E7E1] pt-4" aria-labelledby="send-cta-title">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><h2 id="send-cta-title" className="text-[15px] font-semibold text-[#191B20]">Ready to continue?</h2><p className="mt-1 text-[12px] leading-5 text-[#595E68]">{isSending ? `${submitFileCount || sendableFileCount} file${(submitFileCount || sendableFileCount) === 1 ? '' : 's'} sending to Margin.` : validFiles.length > 0 && !hasInvalidFiles ? `${validFiles.length} file${validFiles.length === 1 ? '' : 's'} ready to send.` : 'Add at least one valid file to continue.'}</p></div><Button onClick={sendFiles} disabled={validFiles.length === 0 || hasInvalidFiles || isSending} className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 disabled:opacity-45">{isSending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}{isSending ? 'Sending files' : 'Send files to Margin'}</Button></div>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><h2 id="send-cta-title" className="text-[15px] font-semibold text-[#191B20]">Ready to continue?</h2><p className="mt-1 text-[12px] leading-5 text-[#595E68]">{isSending ? `${submitFileCount || sendableFileCount} file${(submitFileCount || sendableFileCount) === 1 ? '' : 's'} sending to Margin.` : isResolvingAudit && !auditId ? 'Locating your Audit…' : validFiles.length > 0 && !hasInvalidFiles ? `${validFiles.length} file${validFiles.length === 1 ? '' : 's'} ready to send.` : 'Add at least one valid file to continue.'}</p></div><Button onClick={sendFiles} disabled={validFiles.length === 0 || hasInvalidFiles || isSending || (isResolvingAudit && !auditId)} className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 disabled:opacity-45">{isSending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}{isSending ? 'Sending files' : 'Send files to Margin'}</Button></div>
                 {submitError ? (
                   <div role="alert" className="mt-4 flex items-start gap-2 rounded-[10px] border border-[#E9B7BD] bg-[#FFF4F5] px-3 py-2.5 text-[13px] leading-5 text-[#A73549]">
                     <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />

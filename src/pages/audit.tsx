@@ -1914,7 +1914,7 @@ export default function Audit() {
         </div>
       </main>
 
-      <footer className="border-t border-[#E8E7E1] bg-white px-4 py-6 text-center sm:px-6"><p className="text-[12px] text-[#777A82]">Margin Agents can make mistakes. Check important information before relying on it.</p><Link to="/information-required" className="mt-2 inline-block text-[12px] text-[#0B74DE] underline underline-offset-2">touch here</Link></footer>
+      <footer className="border-t border-[#E8E7E1] bg-white px-4 py-6 text-center sm:px-6"><p className="text-[12px] text-[#777A82]">Margin Agents can make mistakes. Check important information before relying on it.</p><Link to={audit?.id ? `/information-required?auditId=${encodeURIComponent(audit.id)}` : '/information-required'} className="mt-2 inline-block text-[12px] text-[#0B74DE] underline underline-offset-2">touch here</Link></footer>
 
       <RecoverOnceReviewSheet
         open={isRecoverOnceReviewOpen}
