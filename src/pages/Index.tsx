@@ -1515,10 +1515,15 @@ function ProductReframeSection() {
 
     const interval = window.setInterval(() => {
       setActiveStage((current) => (current + 1) % recoveryOperationStages.length);
-    }, 1250);
+    }, 1000);
 
     return () => window.clearInterval(interval);
   }, [reduceMotion, sectionInView]);
+
+  const visibleStages = [-1, 0, 1].map((offset) => {
+    const index = (activeStage + offset + recoveryOperationStages.length) % recoveryOperationStages.length;
+    return { stage: recoveryOperationStages[index], offset };
+  });
 
   return (
     <section
@@ -1555,19 +1560,17 @@ function ProductReframeSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }}>
-            <div className="relative min-h-[430px] overflow-hidden py-2 sm:min-h-[540px] sm:py-4">
-              <div className="relative flex h-full flex-col items-center justify-center gap-0 text-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_13%,black_87%,transparent_100%)]">
-                {recoveryOperationStages.map((stage, index) => {
-                  const distance = Math.abs(index - activeStage);
-                  const isActive = reduceMotion ? index === 0 : index === activeStage;
-                  const opacity = isActive ? 1 : distance === 1 ? 0.48 : distance === 2 ? 0.22 : 0.1;
+            <div className="relative flex min-h-[250px] items-center justify-center overflow-hidden py-2 sm:min-h-[310px] sm:py-4">
+              <div className="relative flex w-full flex-col items-center justify-center gap-1 text-center sm:gap-2">
+                {visibleStages.map(({ stage, offset }) => {
+                  const isActive = offset === 0;
                   return (
                     <motion.div
-                      key={stage}
-                      initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 8 }}
-                      animate={{ opacity, y: isActive ? 0 : distance === 1 ? 1 : 2, scale: isActive ? 1.04 : 1 }}
-                      transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
-                      className={`font-lora text-[38px] leading-[1.06] tracking-[-0.045em] sm:text-[54px] md:text-[64px] ${isActive ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
+                      key={`${stage}-${activeStage}`}
+                      initial={reduceMotion ? { opacity: isActive ? 1 : 0.28, y: 0 } : { opacity: 0, y: offset < 0 ? 18 : offset > 0 ? -18 : 0 }}
+                      animate={{ opacity: isActive ? 1 : 0.28, y: 0, scale: isActive ? 1.03 : 1 }}
+                      transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+                      className={`font-lora text-[31px] leading-[1.08] tracking-[-0.045em] sm:text-[44px] md:text-[52px] ${isActive ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
                       style={{ fontWeight: 400 }}
                     >
                       {stage}
