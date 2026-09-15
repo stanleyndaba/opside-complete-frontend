@@ -272,7 +272,7 @@ function FinancialControlOperationsSection() {
   }, [reduceMotion]);
 
   const visibleOperations = [-3, -2, -1, 0, 1, 2, 3].map((offset) => {
-    const index = (activeOperation + offset + financialControlOperations.length) % financialControlOperations.length;
+    const index = (activeOperation - offset + financialControlOperations.length) % financialControlOperations.length;
     return { operation: financialControlOperations[index], offset, opacity: [0.1, 0.3, 0.6, 1, 0.6, 0.3, 0.1][offset + 3] };
   });
 
@@ -281,7 +281,7 @@ function FinancialControlOperationsSection() {
       <div className={containerClass}>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-20">
           <motion.div {...revealProps}>
-            <h2 id="financial-control-operations-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}>
+            <h2 id="financial-control-operations-title" className="max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
               Margin handles the work between a financial problem and its resolution
             </h2>
           </motion.div>
@@ -291,10 +291,15 @@ function FinancialControlOperationsSection() {
                 const isActive = offset === 0;
                 return (
                   <motion.div
-                    key={`${operation}-${offset}`}
+                    key={operation}
                     initial={false}
+                    layout
                     animate={{ opacity, scale: isActive ? 1.02 : 1 }}
-                    transition={{ duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{
+                      layout: { duration: reduceMotion ? 0 : 0.62, ease: [0.22, 1, 0.36, 1] },
+                      opacity: { duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] },
+                      scale: { duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] },
+                    }}
                     className={`font-lora text-[32px] leading-[1.05] tracking-[-0.045em] sm:text-[48px] md:text-[60px] ${isActive ? "text-[#182026]" : "text-[#A8B3B7]"}`}
                     style={{ fontWeight: 400 }}
                   >
