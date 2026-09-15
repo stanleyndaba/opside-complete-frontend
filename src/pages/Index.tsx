@@ -1555,9 +1555,8 @@ function ProductReframeSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }}>
-            <div className="relative min-h-[360px] overflow-hidden py-2 sm:min-h-[430px] sm:py-4">
-              <div className="absolute inset-x-0 top-1/2 h-28 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,rgba(11,116,222,0.08),transparent_68%)]" aria-hidden="true" />
-              <div className="relative flex h-full flex-col items-center justify-center gap-1.5 text-center sm:gap-2">
+            <div className="relative min-h-[430px] overflow-hidden py-2 sm:min-h-[540px] sm:py-4">
+              <div className="relative flex h-full flex-col items-center justify-center gap-0 text-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_13%,black_87%,transparent_100%)]">
                 {recoveryOperationStages.map((stage, index) => {
                   const distance = Math.abs(index - activeStage);
                   const isActive = reduceMotion ? index === 0 : index === activeStage;
@@ -1568,7 +1567,7 @@ function ProductReframeSection() {
                       initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 8 }}
                       animate={{ opacity, y: isActive ? 0 : distance === 1 ? 1 : 2, scale: isActive ? 1.04 : 1 }}
                       transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
-                      className={`font-lora text-[27px] leading-none tracking-[-0.04em] sm:text-[36px] ${isActive ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
+                      className={`font-lora text-[38px] leading-[1.06] tracking-[-0.045em] sm:text-[54px] md:text-[64px] ${isActive ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
                       style={{ fontWeight: 400 }}
                     >
                       {stage}
