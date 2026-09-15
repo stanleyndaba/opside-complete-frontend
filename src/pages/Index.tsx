@@ -246,7 +246,7 @@ function AccountingEvidenceSection() {
 }
 
 const financialControlOperations = [
-  "Finds the discrepancy",
+  "Find the discrepancy",
   "Trace what happened",
   "Prove what’s owed",
   "Build the recovery",
@@ -258,7 +258,23 @@ const financialControlOperations = [
 
 function FinancialControlOperationsSection() {
   const reduceMotion = useReducedMotion();
-  const repeatedOperations = [...financialControlOperations, ...financialControlOperations, ...financialControlOperations];
+  const [activeOperation, setActiveOperation] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setActiveOperation(0);
+      return;
+    }
+    const interval = window.setInterval(() => {
+      setActiveOperation((current) => (current + 1) % financialControlOperations.length);
+    }, 1000);
+    return () => window.clearInterval(interval);
+  }, [reduceMotion]);
+
+  const visibleOperations = [-3, -2, -1, 0, 1, 2, 3].map((offset) => {
+    const index = (activeOperation + offset + financialControlOperations.length) % financialControlOperations.length;
+    return { operation: financialControlOperations[index], offset, opacity: [0.1, 0.3, 0.6, 1, 0.6, 0.3, 0.1][offset + 3] };
+  });
 
   return (
     <section className="relative overflow-hidden bg-[#F4F7F7] py-14 sm:py-18 md:py-24" aria-labelledby="financial-control-operations-title">
@@ -269,24 +285,24 @@ function FinancialControlOperationsSection() {
               Margin handles the work between a financial problem and its resolution
             </h2>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative h-[300px] overflow-hidden border-y border-[#D5DEE1] sm:h-[360px]">
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-[#F4F7F7] to-transparent" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-t from-[#F4F7F7] to-transparent" />
-            <motion.div
-              className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 flex-col items-center"
-              animate={reduceMotion ? { y: -financialControlOperations.length * 54 } : { y: [0, -financialControlOperations.length * 54] }}
-              transition={reduceMotion ? { duration: 0 } : { duration: 20, repeat: Infinity, ease: "linear" }}
-            >
-              {repeatedOperations.map((operation, index) => {
-                const isActive = index % financialControlOperations.length === 3;
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative flex min-h-[330px] items-center justify-center overflow-hidden sm:min-h-[430px] [mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)]">
+            <div className="relative flex w-full max-w-[585px] flex-col items-center justify-center gap-1.5 text-center sm:gap-2.5">
+              {visibleOperations.map(({ operation, offset, opacity }) => {
+                const isActive = offset === 0;
                 return (
-                  <div key={`${operation}-${index}`} className={`flex h-[54px] items-center justify-center px-4 text-center font-lora text-[23px] leading-none tracking-[-0.035em] transition-colors sm:text-[29px] ${isActive ? "text-[#182026]" : "text-[#A8B3B7]"}`}>
+                  <motion.div
+                    key={`${operation}-${offset}`}
+                    initial={false}
+                    animate={{ opacity, scale: isActive ? 1.02 : 1 }}
+                    transition={{ duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] }}
+                    className={`font-lora text-[32px] leading-[1.05] tracking-[-0.045em] sm:text-[48px] md:text-[60px] ${isActive ? "text-[#182026]" : "text-[#A8B3B7]"}`}
+                    style={{ fontWeight: 400 }}
+                  >
                     {operation}
-                  </div>
+                  </motion.div>
                 );
               })}
-            </motion.div>
-            <div className="pointer-events-none absolute inset-x-0 top-1/2 z-20 h-[54px] -translate-y-1/2 border-y border-[#AEBCC1]/70 bg-white/20" />
+            </div>
           </motion.div>
         </div>
       </div>
