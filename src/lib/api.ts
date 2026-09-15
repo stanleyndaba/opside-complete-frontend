@@ -891,7 +891,14 @@ async function requestJsonWithRetry<T>(
           ? `${safeAuthorizationCode ? `${safeAuthorizationCode}: ` : ''}${errorMsg}`
           : `Forbidden (403): You don't have permission to access this resource.`;
       } else if (res.status >= 500) {
-        userFriendlyError = getGentleRequestErrorMessage('server', options?.method);
+        const backendError = typeof data?.error === 'string' && data.error.trim()
+          ? data.error
+          : typeof data?.message === 'string' && data.message.trim()
+            ? data.message
+            : null;
+        userFriendlyError = path.startsWith('/api/information-required') && backendError
+          ? backendError
+          : getGentleRequestErrorMessage('server', options?.method);
       }
 
       // Log 404s as warnings (not errors) since they're often expected (endpoint not implemented)
