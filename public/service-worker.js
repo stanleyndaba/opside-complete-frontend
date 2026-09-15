@@ -1,11 +1,15 @@
-const CACHE_NAME = 'margin-v2';
+const CACHE_NAME = 'margin-v3';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
+  event.waitUntil(
+    caches.keys()
+      .then((cacheNames) => Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName))))
+      .then(() => clients.claim())
+  );
 });
 
 self.addEventListener('fetch', (event) => {
