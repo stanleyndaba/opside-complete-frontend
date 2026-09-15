@@ -1501,6 +1501,17 @@ function OutcomeWorkspace({ state, index, reduceMotion }: { state: (typeof recov
   );
 }
 
+const recoveryOperationStages = [
+  "Find the discrepancy",
+  "Trace what happened",
+  "Prove what’s owed",
+  "Build the recovery",
+  "Handle the case",
+  "Manage rejections",
+  "Pursue appeals",
+  "Reconcile the outcome",
+];
+
 function ProductReframeSection() {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
@@ -1544,20 +1555,12 @@ function ProductReframeSection() {
             className="font-lora text-[36px] leading-[0.99] tracking-[-0.05em] text-[var(--margin-text-primary)] sm:text-[48px] md:text-[66px]"
             style={{ fontWeight: 400 }}
           >
-            Margin is not another place to look for problems.
-            <span className="mt-3 block font-sans text-[18px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">It is where the recovery operation stays in view.</span>
+            Margin handles the work between a financial problem and its resolution.
           </h2>
         </motion.div>
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[0.86fr_1.14fr] lg:items-start lg:gap-20">
-          <motion.div {...revealProps}>
-            <p className="max-w-[560px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-9">
-              Amazon activity does not become useful simply because it has been collected. It becomes useful when the right signal can be understood, supported, acted on, and checked against the money that followed.
-            </p>
-            <p className="mt-6 max-w-[520px] text-[14px] leading-7 text-[var(--margin-text-muted)] md:text-[15px] md:leading-8">
-              Margin keeps that movement connected so recovery is treated as an operating function—not a pile of disconnected findings.
-            </p>
-          </motion.div>
+          <motion.div {...revealProps} aria-hidden="true" />
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }}>
             <div className="relative flex min-h-[250px] items-center justify-center overflow-hidden py-2 sm:min-h-[310px] sm:py-4">
