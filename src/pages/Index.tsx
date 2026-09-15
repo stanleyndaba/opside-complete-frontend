@@ -245,6 +245,55 @@ function AccountingEvidenceSection() {
   );
 }
 
+const financialControlOperations = [
+  "Financial Data",
+  "Reconciliation",
+  "Exception Management",
+  "Claims Management",
+  "Dispute Resolution",
+  "Evidence & Audit",
+  "Recovery Operations",
+  "Financial Controls",
+];
+
+function FinancialControlOperationsSection() {
+  const reduceMotion = useReducedMotion();
+  const repeatedOperations = [...financialControlOperations, ...financialControlOperations, ...financialControlOperations];
+
+  return (
+    <section className="relative overflow-hidden bg-[#F4F7F7] py-14 sm:py-18 md:py-24" aria-labelledby="financial-control-operations-title">
+      <div className={containerClass}>
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-20">
+          <motion.div {...revealProps}>
+            <h2 id="financial-control-operations-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}>
+              Margin operates across the financial control operations
+            </h2>
+          </motion.div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative h-[300px] overflow-hidden border-y border-[#D5DEE1] sm:h-[360px]">
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-[#F4F7F7] to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-t from-[#F4F7F7] to-transparent" />
+            <motion.div
+              className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 flex-col items-center"
+              animate={reduceMotion ? { y: -financialControlOperations.length * 54 } : { y: [0, -financialControlOperations.length * 54] }}
+              transition={reduceMotion ? { duration: 0 } : { duration: 20, repeat: Infinity, ease: "linear" }}
+            >
+              {repeatedOperations.map((operation, index) => {
+                const isActive = index % financialControlOperations.length === 3;
+                return (
+                  <div key={`${operation}-${index}`} className={`flex h-[54px] items-center justify-center px-4 text-center font-lora text-[23px] leading-none tracking-[-0.035em] transition-colors sm:text-[29px] ${isActive ? "text-[#182026]" : "text-[#A8B3B7]"}`}>
+                    {operation}
+                  </div>
+                );
+              })}
+            </motion.div>
+            <div className="pointer-events-none absolute inset-x-0 top-1/2 z-20 h-[54px] -translate-y-1/2 border-y border-[#AEBCC1]/70 bg-white/20" />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const historicalVideoSections = [
   { id: "recovery-preview", label: "Recovery preview", title: "See the recovery taking shape.", body: "Margin turns the first signal into a record you can understand, with the underlying activity and evidence kept in view.", videos: ["/Evidentiary.mp4", "/DocumentAnalysis.mp4"] },
   { id: "supporting-evidence-preview", label: "Supporting evidence", title: "The proof stays connected to the case.", body: "Supporting records, case preparation, and filing context remain connected instead of being rebuilt across separate tools.", videos: ["/superEvidence.mp4", "/CaseBuilding.mp4", "/CasesTable.mp4", "/Filing.mp4"] },
@@ -1705,6 +1754,7 @@ export default function Index() {
         <MarginStandardSection />
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
+        <FinancialControlOperationsSection />
         <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
         <NestedRecoveryBrowsers />
         <RiskSection />
