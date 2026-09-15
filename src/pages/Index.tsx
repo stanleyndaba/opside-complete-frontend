@@ -1531,9 +1531,9 @@ function ProductReframeSection() {
     return () => window.clearInterval(interval);
   }, [reduceMotion, sectionInView]);
 
-  const visibleStages = [-1, 0, 1].map((offset) => {
+  const visibleStages = [-3, -2, -1, 0, 1, 2, 3].map((offset) => {
     const index = (activeStage + offset + recoveryOperationStages.length) % recoveryOperationStages.length;
-    return { stage: recoveryOperationStages[index], offset };
+    return { stage: recoveryOperationStages[index], offset, opacity: [0.1, 0.3, 0.6, 1, 0.6, 0.3, 0.1][offset + 3] };
   });
 
   return (
@@ -1563,17 +1563,17 @@ function ProductReframeSection() {
           <motion.div {...revealProps} aria-hidden="true" />
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }}>
-            <div className="relative flex min-h-[250px] items-center justify-center overflow-hidden py-2 sm:min-h-[310px] sm:py-4">
-              <div className="relative flex w-full flex-col items-center justify-center gap-1 text-center sm:gap-2">
-                {visibleStages.map(({ stage, offset }) => {
+            <div className="relative flex min-h-[330px] items-center justify-center overflow-hidden py-2 sm:min-h-[430px] sm:py-4 [mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)]">
+              <div className="relative flex w-full max-w-[585px] flex-col items-center justify-center gap-1.5 text-center sm:gap-2.5">
+                {visibleStages.map(({ stage, offset, opacity }) => {
                   const isActive = offset === 0;
                   return (
                     <motion.div
-                      key={`${stage}-${activeStage}`}
-                      initial={reduceMotion ? { opacity: isActive ? 1 : 0.28, y: 0 } : { opacity: 0, y: offset < 0 ? 18 : offset > 0 ? -18 : 0 }}
-                      animate={{ opacity: isActive ? 1 : 0.28, y: 0, scale: isActive ? 1.03 : 1 }}
-                      transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
-                      className={`font-lora text-[31px] leading-[1.08] tracking-[-0.045em] sm:text-[44px] md:text-[52px] ${isActive ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
+                      key={`${stage}-${offset}`}
+                      initial={false}
+                      animate={{ opacity, scale: isActive ? 1.02 : 1 }}
+                      transition={{ duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] }}
+                      className={`font-lora text-[32px] leading-[1.05] tracking-[-0.045em] sm:text-[48px] md:text-[60px] ${isActive ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
                       style={{ fontWeight: 400 }}
                     >
                       {stage}
