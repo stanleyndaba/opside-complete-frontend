@@ -210,6 +210,10 @@ export default function PricingAdjust() {
                   cta_location: ctaLocation,
                   cta_text: ctaText,
                 });
+                if (['Recovery Audit', 'Recover Once', 'Recovery Workspace'].includes(tier.name)) {
+                  navigate('/audit-start');
+                  return;
+                }
                 if (tier.checkoutUrl) {
                   navigate(tier.checkoutUrl);
                   return;
