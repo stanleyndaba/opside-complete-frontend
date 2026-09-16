@@ -77,7 +77,6 @@ const ReimbursementAcquisitionPage = lazy(() => import("./pages/ReimbursementAcq
 const GetidaAlternative = lazy(() => import("./pages/GetidaAlternative"));
 const SellerboardAlternative = lazy(() => import("./pages/SellerboardAlternative"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
-const RecoveryStart = lazy(() => import("./pages/RecoveryStart"));
 const InformationRequired = lazy(() => import("./pages/InformationRequired"));
 const RecoverOnce = lazy(() => import('./pages/RecoverOnce'));
 const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
@@ -294,7 +293,6 @@ const App = () => (
                         <Routes>
                         {/* PUBLIC ROUTES - No tenant required */}
                         <Route path="/" element={<Index />} />
-                        <Route path="/get-started" element={<RecoveryStart />} />
                         <Route path="/information-required" element={<InformationRequired />} />
                         <Route path='/recover-once' element={<RecoverOnce />} />
                         <Route path='/recovery-workspace' element={<RecoveryWorkspace />} />
