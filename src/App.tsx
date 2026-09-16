@@ -406,6 +406,7 @@ const App = () => (
                         <Route path="/auth/sandbox-callback" element={<OAuthCallback />} />
                         <Route path="/system-error-preview" element={<SystemErrorPreview />} />
                         <Route path="/stripe/callback" element={<StripeCallback />} />
+                        <Route path="/audit-start" element={<Navigate to="/get-started" replace />} />
                         <Route path="/data-upload" element={<DataUpload />} />
                         <Route path="/seller-audit" element={<SellerAuditHandoff />} />
                         <Route path="/audit-intake" element={<SellerAuditHandoff />} />

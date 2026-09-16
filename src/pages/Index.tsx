@@ -1754,7 +1754,7 @@ export default function Index() {
       <PublicNavbar variant="light" wide />
       
       <main>
-        <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/get-started"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/audit-start"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
         <MarginEngineSection />
         <RealityCheckSection />
         <MarginLifecycleSection />
@@ -1770,7 +1770,7 @@ export default function Index() {
         <FinancialReconciliationSection />
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
-        <RecoveryRoutingSection onAuditCta={handleClaimAccessClick} />
+        <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
 
         {/* Section 14 — Trust / FAQ */}
         <section className="relative bg-[var(--margin-canvas)] py-[83px] md:py-[146px]" aria-labelledby="trust-faq-title">
@@ -1844,7 +1844,7 @@ export default function Index() {
                       Understand what happened, identify what&apos;s unresolved, and decide what deserves action.
                     </p>
                     <div className="mt-auto pt-16">
-                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_audit")} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
+                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
                         Start Audit Now <ArrowRight className="h-4 w-4 text-white/60" />
                       </Button>
                     </div>
@@ -1859,7 +1859,7 @@ export default function Index() {
                       You sell. Margin runs the recovery operation — every discrepancy, case, rejection, and follow-up.
                     </p>
                     <div className="mt-auto pt-16">
-                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_handled")} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
+                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_handled"); navigate("/audit-start"); }} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
                         Get It Handled <ArrowRight className="h-4 w-4 text-white/60" />
                       </Button>
                     </div>
