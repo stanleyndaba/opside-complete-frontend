@@ -66,13 +66,13 @@ export default function SellerAuditHandoff() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white font-sans text-[#30343B]">
-      <main className="mx-auto max-w-[1120px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+      <main className="mx-auto max-w-[860px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="mb-7 flex items-center gap-2.5 px-1">
           <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
           <span className="font-merriweather text-[15px] font-semibold tracking-[-0.02em] text-[#30343B]">Margin</span>
         </div>
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-          <section className="rounded-[5px] border border-[#E4E6E8] bg-white p-5 shadow-[0_1px_2px_rgba(25,27,32,0.04)] sm:p-8" aria-labelledby="handoff-title">
+        <div>
+          <section className="bg-white p-0 sm:p-2" aria-labelledby="handoff-title">
             <div className="max-w-2xl border-b border-[#E4E6E8] pb-6">
               <h1 id="handoff-title" className="font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.02em] text-[#30343B] sm:text-[38px]">Let’s get your files to Margin.</h1>
               <p className="mt-3 max-w-xl text-[15px] leading-6 text-[#595E68]">Give us the small amount of context we need to connect your files to the right audit conversation.</p>
@@ -108,18 +108,9 @@ export default function SellerAuditHandoff() {
                 {!DROPBOX_REQUEST_URL ? <p className="mt-3 text-[12px] text-[#A73549]">Dropbox File Request URL is not configured yet.</p> : null}
               </div>
             )}
-          </section>
 
-          <aside className="space-y-4">
-            <section className="rounded-[5px] border border-[#E4E6E8] bg-white p-5">
-              <div className="flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F4F3ED] text-[#191B20]"><Store className="h-3.5 w-3.5" aria-hidden="true" /></span><h2 className="text-[14px] font-semibold text-[#191B20]">A frictionless handoff</h2></div>
-              <p className="mt-3 text-[13px] leading-5 text-[#595E68]">Identify the seller, open the upload door, and get out of your way. We can collect anything else later.</p>
-            </section>
-            <section className="rounded-[5px] border border-[#E4E6E8] bg-white p-5">
-              <h2 className="text-[14px] font-semibold text-[#191B20]">What we do not need</h2>
-              <p className="mt-3 text-[13px] leading-5 text-[#595E68]">No Seller Central password, merchant ID, store URL, phone number, address, revenue, or long explanation.</p>
-            </section>
-          </aside>
+            <p className="mt-8 max-w-xl border-t border-[#E4E6E8] pt-5 text-[13px] leading-5 text-[#777A82]">If we need anything else for your review, Margin will reach out by email.</p>
+          </section>
         </div>
       </main>
       <footer className="border-t border-[#E4E6E8] bg-white px-4 py-6 text-center sm:px-6"><p className="text-[12px] text-[#777A82]">Margin Agents can make mistakes. Check important information before relying on it.</p></footer>
