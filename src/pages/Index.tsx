@@ -1755,9 +1755,10 @@ function EnterpriseReviewsSection() {
           transition={reduceMotion ? { duration: 0 } : { duration: 28, repeat: Infinity, ease: "linear" }}
         >
           {cards.map((review, index) => (
-            <article key={`${review.name}-${index}`} className="flex w-[300px] flex-col rounded-[12px] border border-[#D8E3E5] bg-white/85 p-5 shadow-[0_14px_35px_rgba(59,84,94,0.08)] backdrop-blur-sm sm:w-[390px] sm:p-6 md:w-[430px]">
-              <p className="min-h-[122px] text-[14px] leading-6 text-[#4D5B66] sm:text-[15px] sm:leading-7">“{review.quote}”</p>
-              <div className="mt-6 flex items-center gap-3 border-t border-[#E5ECEC] pt-4">
+            <article key={`${review.name}-${index}`} className="relative flex w-[300px] flex-col overflow-hidden rounded-[12px] bg-white/18 p-5 shadow-[0_18px_40px_rgba(59,84,94,0.08)] backdrop-blur-xl sm:w-[390px] sm:p-6 md:w-[430px]">
+              <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-[12px] border border-[#D8E3E5]/90 border-b-0 bg-gradient-to-b from-white/45 via-white/18 to-transparent" />
+              <p className="relative z-10 min-h-[122px] text-[14px] leading-6 text-[#4D5B66] sm:text-[15px] sm:leading-7">“{review.quote}”</p>
+              <div className="relative z-10 mt-6 flex items-center gap-3 border-t border-[#E5ECEC]/60 pt-4">
                 <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-lora text-[17px] ${review.tone}`}>{review.mark}</span>
                 <div className="min-w-0"><p className="truncate text-[13px] font-semibold text-[#26343B]">{review.name}</p><p className="truncate text-[11px] text-[#748188]">{review.role}</p></div>
               </div>
