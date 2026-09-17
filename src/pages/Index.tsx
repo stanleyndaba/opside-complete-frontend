@@ -536,23 +536,20 @@ function MarginLifecycleSection() {
             className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
-            <span className="block">You don&apos;t get another list.</span>
-            <span className="mt-3 block font-sans text-[18px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">You get it handled.</span>
+            You don&apos;t have to figure out what to do with it.
           </h2>
         </motion.div>
 
-          <motion.p
-            {...revealProps}
-            className="mt-4 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"
-          >
-            Margin takes the recovery from finding the problem to getting the outcome. It investigates what happened, handles the case, follows up with Amazon, and keeps going until you know what happened to the money.
+          <motion.div {...revealProps} className="mt-4 max-w-[780px] space-y-1 font-lora text-[19px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
+            <p>The evidence is already there.</p>
+            <p>The case is built.</p>
+            <p>The next step is clear.</p>
+          </motion.div>
+          <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+            You review what matters, approve the action, and let the recovery move forward — without turning the problem into another project on your desk.
           </motion.p>
-          <motion.p
-            {...revealProps}
-            className="mt-4 max-w-[780px] font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]"
-            style={{ fontWeight: 400 }}
-          >
-            Margin takes responsibility for moving the recovery toward resolution.
+          <motion.p {...revealProps} className="mt-4 max-w-[780px] font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
+            From “I need to look into this” to “It&apos;s being handled.”
           </motion.p>
         </div>
         </div>
