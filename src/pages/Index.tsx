@@ -1663,8 +1663,13 @@ function RecoveryOutcomeExplorer() {
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
           <motion.div {...revealProps} className="order-1 lg:sticky lg:top-28">
             <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">10 / WHEN THINGS GO WRONG</span></div>
-            <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
-            <p className="mt-4 max-w-[760px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin doesn&apos;t give up at the first answer. It treats the response as part of the recovery record—not automatically the end of it. Where the evidence and rules support another path, Margin determines the appropriate next action.</p>
+            <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says <span className="text-[var(--margin-blue)]">NO</span>.</h2>
+            <div className="mt-4 max-w-[760px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
+              <p>An Amazon response shouldn&apos;t leave you wondering whether that&apos;s the end of the road.</p>
+              <p>You can see what Amazon said, what it means for the recovery, whether anything remains unresolved, and what can happen next.</p>
+              <p>So a rejection doesn&apos;t become another open question sitting on your desk.</p>
+            </div>
+            <p className="mt-5 max-w-[760px] font-lora text-[19px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>You know where it stands. You know what&apos;s next.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden rounded-[12px] border border-[#D9E2E6] bg-white shadow-[0_20px_60px_rgba(72,103,122,0.14)]">
             <FinalDelegationPreview compactMobile src="/appeals-review" title="Appeals Review page preview" />
