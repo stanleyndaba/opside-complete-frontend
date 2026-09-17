@@ -980,8 +980,16 @@ function OneRecordAnalysisVisual() {
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
           <motion.div {...revealProps} className="flex flex-col justify-center">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              07 / ONE RECORD</p>
-            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>You shouldn&apos;t have to piece the recovery together.</h2>
-            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">Margin connects the shipment, evidence, decision, Amazon response, payout, and outcome into one operating record—so the next action is grounded in what actually happened, not reconstructed from fragments.</p>
+            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>You don&apos;t have to reconstruct the story.</h2>
+            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">The important details stay connected to the records that support them.</p>
+            <div className="mt-5 space-y-1 font-lora text-[19px] leading-[1.15] tracking-[-0.025em] text-[var(--margin-text-primary)] sm:text-[22px]">
+              <p>What was expected.</p>
+              <p>What actually happened.</p>
+              <p>What changed.</p>
+              <p>What the evidence shows.</p>
+            </div>
+            <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">So when you look at a recovery, you can see <strong className="font-semibold text-[var(--margin-text-primary)]">why it exists — not just that it does.</strong></p>
+            <p className="mt-4 max-w-[780px] font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>The answer comes with the evidence behind it.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
             <BrowserChrome hidePath />
