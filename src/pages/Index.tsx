@@ -1702,6 +1702,73 @@ function FinancialReconciliationSection() {
   );
 }
 
+const enterpriseReviewCards = [
+  {
+    quote: "We stopped treating reimbursement work as a monthly fire drill. The team can see what is supported, what is waiting, and what needs a decision.",
+    name: "Maya Chen",
+    role: "VP Finance · Northline Home",
+    mark: "N",
+    tone: "bg-[#DCEAF0] text-[#31576B]",
+  },
+  {
+    quote: "The useful part is not another dashboard. It is being able to return to a case and understand the evidence, the response, and the next action immediately.",
+    name: "Daniel Ortiz",
+    role: "Director of Operations · Harbor & Pine",
+    mark: "H",
+    tone: "bg-[#E9E3F1] text-[#65527A]",
+  },
+  {
+    quote: "Our finance and operations teams now work from the same recovery record. There is less chasing and far less time spent rebuilding the history.",
+    name: "Priya Shah",
+    role: "Controller · Fieldstone Goods",
+    mark: "F",
+    tone: "bg-[#E5EFE2] text-[#4E6B4A]",
+  },
+  {
+    quote: "When Amazon asks for more information, we know what was already sent, what is still missing, and who owns the next move.",
+    name: "Evan Brooks",
+    role: "Head of Marketplace · Alder Supply",
+    mark: "A",
+    tone: "bg-[#F1E7D9] text-[#806243]",
+  },
+];
+
+function EnterpriseReviewsSection() {
+  const reduceMotion = useReducedMotion();
+  const cards = [...enterpriseReviewCards, ...enterpriseReviewCards];
+
+  return (
+    <section className="relative overflow-hidden border-y border-[#DCE5E7] bg-[#F4F8F8] py-16 sm:py-20 md:py-24" aria-labelledby="enterprise-reviews-title">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="mx-auto max-w-[760px] text-center">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">Seller perspectives</p>
+          <h2 id="enterprise-reviews-title" className="mt-3 font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}>Recovery work that stays understandable.</h2>
+          <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">A clearer operating record changes how finance, operations, and marketplace teams move through the work.</p>
+        </motion.div>
+      </div>
+      <div className="relative mt-12 overflow-hidden sm:mt-14">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#F4F8F8] to-transparent sm:w-24" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#F4F8F8] to-transparent sm:w-24" />
+        <motion.div
+          className="flex w-max gap-4 px-4 sm:gap-5 sm:px-8"
+          animate={reduceMotion ? { x: -420 } : { x: [0, -1080] }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 28, repeat: Infinity, ease: "linear" }}
+        >
+          {cards.map((review, index) => (
+            <article key={`${review.name}-${index}`} className="flex w-[300px] flex-col rounded-[12px] border border-[#D8E3E5] bg-white/85 p-5 shadow-[0_14px_35px_rgba(59,84,94,0.08)] backdrop-blur-sm sm:w-[390px] sm:p-6 md:w-[430px]">
+              <p className="min-h-[122px] text-[14px] leading-6 text-[#4D5B66] sm:text-[15px] sm:leading-7">“{review.quote}”</p>
+              <div className="mt-6 flex items-center gap-3 border-t border-[#E5ECEC] pt-4">
+                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-lora text-[17px] ${review.tone}`}>{review.mark}</span>
+                <div className="min-w-0"><p className="truncate text-[13px] font-semibold text-[#26343B]">{review.name}</p><p className="truncate text-[11px] text-[#748188]">{review.role}</p></div>
+              </div>
+            </article>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 
 function BrowserChrome({ path, hidePath = false }: { path?: string; hidePath?: boolean }) {
   return (
@@ -1801,6 +1868,7 @@ export default function Index() {
         <RecoveryOutcomeExplorer />
         <FinancialReconciliationSection />
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
+        <EnterpriseReviewsSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
         <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
 
