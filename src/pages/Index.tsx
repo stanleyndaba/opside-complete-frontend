@@ -1859,7 +1859,7 @@ export default function Index() {
                 {/* Left label */}
                 <motion.div {...revealProps} className="lg:w-[180px] shrink-0">
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)] mb-1">15 / FINAL DELEGATION</p>
-                  <h2 id="final-handoff-title" className="font-lora text-[32px] leading-tight tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
+                  <h2 id="final-handoff-title" className="whitespace-nowrap font-lora text-[32px] leading-tight tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
                     Get started
                   </h2>
                 </motion.div>
