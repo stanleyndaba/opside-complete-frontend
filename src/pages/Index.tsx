@@ -223,18 +223,20 @@ function AccountingEvidenceSection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">08 / THE CONTEXT MARGIN HANDLES</span>
             </div>
             <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              You don&apos;t have to go looking for the answer.
+              Everything you need, brought together.
             </h2>
             <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Margin pulls together the relevant information it needs to understand, support, and close the recovery—so you don&apos;t have to search through reports, settlements, books, emails, and files to figure it out.
+              The information behind a recovery can live across Amazon, settlements, accounting, emails, and files.
+            </p>
+            <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+              You shouldn&apos;t have to hunt through all of it to understand what happened.
+            </p>
+            <p className="mt-5 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#182026] sm:text-[25px]" style={{ fontWeight: 400 }}>
+              The relevant records come together. The story becomes clear. The recovery keeps moving.
             </p>
             <div className="mt-8 border-t border-[#C9D1D6] pt-5">
               <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Amazon · Accounting · Settlements · Files · Email</p>
-              <p className="mt-4 font-lora text-[24px] leading-[1.05] tracking-[-0.04em] text-[#182026] sm:text-[30px]" style={{ fontWeight: 400 }}>
-                Margin does the digging.
-                <span className="mt-1.5 block text-[#0B74DE]">You get the recovery handled.</span>
-              </p>
-              <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#66737F]">
+              <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[9px] font-semibold uppercase tracking-tight text-[#66737F]">
                 <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
               </div>
             </div>
