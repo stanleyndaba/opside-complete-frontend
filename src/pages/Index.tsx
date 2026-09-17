@@ -792,13 +792,20 @@ function ControlSection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">05 / CONTROL</span>
             </div>
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              From Finding to Resolution
+              You don&apos;t have to keep track of every case.
             </h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              Margin doesn&apos;t stop when a recovery is identified.
+              Once something needs to be recovered, you can see exactly where it stands.
             </p>
-            <p className="mt-4 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              It takes each recovery through the work required to get to an outcome — from approval and filing to payout, reconciliation, and closure.
+            <div className="mt-5 space-y-1 font-lora text-[19px] leading-[1.15] tracking-[-0.025em] text-[var(--margin-text-primary)] sm:text-[22px]">
+              <p>What&apos;s ready to approve.</p>
+              <p>What&apos;s already been filed.</p>
+              <p>What needs attention.</p>
+              <p>What&apos;s waiting on Amazon.</p>
+              <p>What&apos;s resolved.</p>
+            </div>
+            <p className="mt-6 max-w-[560px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>
+              Nothing gets lost between “we found it” and “it&apos;s done.”
             </p>
           </motion.div>
 
