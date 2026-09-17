@@ -1006,8 +1006,8 @@ function OneRecordAnalysisVisual() {
 function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) => void }) {
   const recoveryThreadCards = [
     {
-      title: "Find the gap. Know what to do next.",
-      copy: "Margin connects the Amazon activity, seller records, and supporting evidence to identify what does not reconcile. You see the amount, the reason, and the next action clearly—before a recovery case is opened.",
+      title: "Know what happened. Know what happens next.",
+      copy: "Once something doesn’t add up, you shouldn’t have to work out the entire path yourself. See what the issue is, what supports it, what’s still missing, and what needs to happen next — before the recovery becomes another project for you to manage. You see the problem. You understand the next step. You keep moving.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(255,255,255,0.98),transparent_36%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_54%,#F9FAF8_100%)]" />
@@ -1040,8 +1040,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       ),
     },
     {
-      title: "Every recovery step, kept in view.",
-      copy: "A case is only one part of the work. Margin keeps evidence requests, response reviews, submission steps, reversals, and appeals visible together, so the recovery does not stall between one action and the next.",
+      title: "You don’t have to keep track of everything.",
+      copy: "A recovery rarely moves in a straight line. Documents get requested. Amazon responds. Evidence gets reviewed. Submissions change. Reversals happen. Appeals follow. You shouldn’t have to hold all of that in your head or keep checking whether someone followed up. The recovery stays together. You stay out of the chase.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.98),transparent_38%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_54%,#F9FAF8_100%)]" />
@@ -1108,8 +1108,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       ),
     },
     {
-      title: "Different tools. One recovery thread.",
-      copy: "The work may happen across email, documents, and team messages, but the recovery should not become fragmented. Margin keeps every request, response, document, and next step connected and visible, so the recovery keeps moving without you coordinating every handoff.",
+      title: "One recovery. No handoff to manage.",
+      copy: "The work can happen across email, documents, messages, and Amazon — but you shouldn’t have to coordinate all of it yourself. Requests, responses, documents, decisions, and next steps stay connected to the same recovery, so the work doesn’t disappear between tools or people. You don’t coordinate the recovery. You see where it stands. You know when it’s done.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.96),transparent_36%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_52%,#F9FAF8_100%)]" />
@@ -1164,8 +1164,9 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[860px]">
           <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The recovery thread</span></div>
-          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You run the business. <span className="font-sans text-[18px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">Margin keeps the recovery work legible.</span></h2>
+          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You run the business. <span className="font-sans text-[18px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">Margin keeps the recovery moving.</span></h2>
           <p className="mt-5 max-w-[700px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Getting a recovery started is rarely the hard part. The work is everything that happens between <span className="font-semibold text-[var(--margin-text-primary)]">“something is wrong”</span> and <span className="font-semibold text-[var(--margin-text-primary)]">“this is actually finished.”</span></p>
+          <p className="mt-4 max-w-[700px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">You shouldn&apos;t have to remember what was requested, who replied, which document is missing, what happens next, or whether the money ever arrived.</p>
         </motion.div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-3 md:gap-6 lg:mt-12 lg:gap-8">
