@@ -484,16 +484,18 @@ function RealityCheckSection() {
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              03 / THE PROBLEM</span>
           </div>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-            Recovery shouldn&apos;t be another job.
+            Finally, you know what happened.
           </h2>
-          <p className="mt-3 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            You shouldn&apos;t have to find the issue, figure out what happened, gather the proof, deal with Amazon, chase the outcome, and check whether the money actually came back.
+          <div className="mt-4 max-w-[780px] space-y-1 text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+            <p>No more digging through transactions to figure out where the money went.</p>
+            <p>No more piecing together evidence.</p>
+            <p>No more wondering whether an issue was actually resolved.</p>
+          </div>
+          <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+            You can see what happened, what needs to happen next, and what still needs your attention — clearly and in one place.
           </p>
           <p className="mt-3 max-w-[720px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">
-            Margin handles it.
-          </p>
-          <p className="mt-3 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            It takes the recovery from the first finding through to the final outcome—so you can get back to running your business instead of running another recovery operation.
+            So you can get on with the business.
           </p>
         </motion.div>
         </div>
