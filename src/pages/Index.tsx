@@ -1738,7 +1738,7 @@ function EnterpriseReviewsSection() {
   const cards = [...enterpriseReviewCards, ...enterpriseReviewCards];
 
   return (
-    <section className="relative overflow-hidden border-y border-[#DCE5E7] bg-[#F4F8F8] py-16 sm:py-20 md:py-24" aria-labelledby="enterprise-reviews-title">
+    <section className="hidden relative overflow-hidden border-y border-[#DCE5E7] bg-[#F4F8F8] py-16 sm:py-20 md:py-24" aria-labelledby="enterprise-reviews-title">
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto max-w-[760px] text-center">
           <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">Seller perspectives</p>
