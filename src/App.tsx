@@ -413,7 +413,7 @@ const App = () => (
                         <Route path="/audit-start" element={<AmazonAuditIntro />} />
                         <Route path="/amazon-audit" element={<AmazonAuditIntro />} />
                         {/* TENANT-SCOPED ROUTES - Require :tenantSlug */}
-                        <Route path="/app" element={appRoute(<TenantRedirect />)} />
+                        <Route path="/app" element={<Navigate to="/onboarding-approval" replace />} />
                         <Route path="/app/redirect" element={<EmailActionRedirect />} />
                         <Route path="/app/:tenantSlug" element={appRoute(<FoundingActivationGate><Dashboard /></FoundingActivationGate>)} />
                         <Route path="/app/:tenantSlug/dashboard" element={appRoute(<FoundingActivationGate><Dashboard /></FoundingActivationGate>)} />

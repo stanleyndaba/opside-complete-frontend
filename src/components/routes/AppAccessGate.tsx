@@ -171,6 +171,7 @@ export function AppAccessGate({ children }: AppAccessGateProps) {
   const hasAuthenticatedSession = isSessionValid && Boolean(authToken) && authToken !== DEMO_SESSION_TOKEN;
   const [hydrationRecoveryRequired, setHydrationRecoveryRequired] = useState(false);
   const isDemoWorkspaceRoute = isDemoWorkspacePath(location.pathname);
+  const isTenantScopedAppRoute = location.pathname.startsWith('/app/') && location.pathname !== '/app/redirect';
   const canOpenInternalDemoWorkspace = hasAuthenticatedSession && isInternalDemoAccessEmail(userEmail);
 
   useEffect(() => {
@@ -216,6 +217,12 @@ export function AppAccessGate({ children }: AppAccessGateProps) {
       return <AppAccessRecovery next={next} />;
     }
     return <AppAccessLoader />;
+  }
+
+  // Until the audit-first flow is complete, only the reserved demo/ACME
+  // workspace may enter the tenant-scoped application surface.
+  if (isTenantScopedAppRoute && !isDemoWorkspaceRoute) {
+    return <Navigate to="/onboarding-approval" replace />;
   }
 
   if (isDemoWorkspaceRoute && canOpenInternalDemoWorkspace && !hasDemoSession) {
