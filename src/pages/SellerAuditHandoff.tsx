@@ -65,21 +65,24 @@ export default function SellerAuditHandoff() {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-white font-sans text-[#30343B]">
-      <main className="mx-auto max-w-[860px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-        <div className="mb-7 flex items-center gap-2.5 px-1">
+    <div className="min-h-screen overflow-x-hidden bg-[#EAF1F5] font-sans text-[#182026]">
+      <main className="relative mx-auto flex min-h-screen max-w-[860px] items-center px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="pointer-events-none absolute -right-36 -top-40 h-[520px] w-[520px] rounded-full border-[74px] border-white/45" />
+        <div className="pointer-events-none absolute -bottom-56 -left-40 h-[500px] w-[500px] rounded-full border-[64px] border-[#C7DCE8]/55" />
+        <div className="relative z-10 w-full">
+        <div className="mb-6 flex items-center gap-2.5 px-1">
           <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
           <span className="font-merriweather text-[15px] font-semibold tracking-[-0.02em] text-[#30343B]">Margin</span>
         </div>
         <div>
-          <section className="mx-auto max-w-2xl bg-white p-0 sm:p-2" aria-labelledby="handoff-title">
+          <section className="mx-auto max-w-2xl rounded-[14px] bg-white/90 px-6 py-6 shadow-[0_20px_70px_rgba(50,78,96,0.12)] backdrop-blur-sm sm:px-8 sm:py-8" aria-labelledby="handoff-title">
             <div className="mx-auto border-b border-[#E4E6E8] pb-6">
-              <h1 id="handoff-title" className="font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.02em] text-[#30343B] sm:text-[38px]">Let’s get your files to Margin.</h1>
-              <p className="mt-3 max-w-xl text-[15px] leading-6 text-[#595E68]">Give us the small amount of context we need to connect your files to the right audit conversation.</p>
+              <h1 id="handoff-title" className="font-lora text-[30px] font-normal leading-[1.05] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Let’s get your files to Margin.</h1>
+              <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">Give us the small amount of context we need to connect your files to the right audit conversation.</p>
             </div>
 
             {!submitted ? (
-              <form className="mx-auto mt-7 max-w-xl space-y-5" onSubmit={(event) => { event.preventDefault(); continueToUpload(); }} noValidate>
+              <form className="mx-auto mt-6 max-w-xl space-y-4" onSubmit={(event) => { event.preventDefault(); continueToUpload(); }} noValidate>
                 <div className="space-y-2">
                   <Label htmlFor="handoff-email" className="text-[13px] font-semibold text-[#30343B]">Email <span className="text-[#A73549]">*</span></Label>
                   <div className="relative"><Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777A82]" aria-hidden="true" /><Input id="handoff-email" type="email" autoComplete="email" placeholder="you@example.com" value={details.email} onChange={(event) => updateDetails('email', event.target.value)} className="h-11 rounded-[10px] border-[#D7D7D1] pl-10 text-[14px] focus-visible:ring-[#5165C7]" aria-invalid={Boolean(errors.email)} /></div>
@@ -109,11 +112,11 @@ export default function SellerAuditHandoff() {
               </div>
             )}
 
-            <p className="mx-auto mt-8 max-w-xl border-t border-[#E4E6E8] pt-5 text-[13px] leading-5 text-[#777A82]">If we need anything else for your review, Margin will reach out by email.</p>
+            <p className="mx-auto mt-6 max-w-xl border-t border-[#E4E6E8] pt-4 text-[12px] leading-5 text-[#777A82]">If we need anything else for your review, Margin will reach out by email.</p>
           </section>
         </div>
+        </div>
       </main>
-      <footer className="border-t border-[#E4E6E8] bg-white px-4 py-6 text-center sm:px-6"><p className="text-[12px] text-[#777A82]">Margin Agents can make mistakes. Check important information before relying on it.</p></footer>
     </div>
   );
 }

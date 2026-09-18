@@ -43,22 +43,25 @@ export default function AmazonAuditIntro() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-white font-sans text-[#30343B]">
-      <main className="mx-auto max-w-[860px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-        <div className="mb-10 flex items-center gap-2.5">
+    <div className="min-h-screen overflow-x-hidden bg-[#EAF1F5] font-sans text-[#182026]">
+      <main className="relative mx-auto flex min-h-screen max-w-[860px] items-center px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="pointer-events-none absolute -right-36 -top-40 h-[520px] w-[520px] rounded-full border-[74px] border-white/45" />
+        <div className="pointer-events-none absolute -bottom-56 -left-40 h-[500px] w-[500px] rounded-full border-[64px] border-[#C7DCE8]/55" />
+        <div className="relative z-10 w-full">
+        <div className="mb-6 flex items-center gap-2.5">
           <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
           <span className="font-merriweather text-[15px] font-semibold tracking-[-0.02em] text-[#30343B]">Margin</span>
         </div>
 
-        <section className="mx-auto max-w-2xl" aria-labelledby="audit-intro-title">
+        <section className="mx-auto max-w-2xl rounded-[14px] bg-white/90 px-6 py-6 shadow-[0_20px_70px_rgba(50,78,96,0.12)] backdrop-blur-sm sm:px-8 sm:py-8" aria-labelledby="audit-intro-title">
           <div className="border-b border-[#E4E6E8] pb-8">
             <p className="mb-4 text-[12px] font-medium text-[#777A82]">File-first Audit</p>
-            <h1 id="audit-intro-title" className="font-lora text-[32px] font-normal leading-[1.08] tracking-[-0.025em] text-[#30343B] sm:text-[42px]">Let’s get your Amazon Audit started.</h1>
-            <p className="mt-5 max-w-xl text-[15px] leading-7 text-[#595E68]">To investigate your account properly, Margin will first ask you for the Amazon files relevant to your Audit.</p>
-            <p className="mt-4 max-w-xl text-[15px] leading-7 text-[#595E68]">These records give us a detailed view of what happened across your Amazon business — so we can look beyond a single issue and investigate what may have been missed.</p>
+            <h1 id="audit-intro-title" className="font-lora text-[30px] font-normal leading-[1.05] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Let’s get your Amazon Audit started.</h1>
+            <p className="mt-4 max-w-xl text-[14px] leading-6 text-[#595E68]">To investigate your account properly, Margin will first ask you for the Amazon files relevant to your Audit.</p>
+            <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">These records give us a detailed view of what happened across your Amazon business — so we can look beyond a single issue and investigate what may have been missed.</p>
           </div>
 
-          <div className="mt-8 border-b border-[#E4E6E8] pb-8">
+          <div className="mt-6 border-b border-[#E4E6E8] pb-6">
             <h2 className="font-lora text-[23px] font-normal tracking-[-0.015em] text-[#30343B]">Files come first</h2>
             <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Uploading your files gives Margin the broadest view of your account and allows us to perform a deeper Audit.</p>
             <p className="mt-4 text-[14px] leading-6 text-[#595E68]">If we need additional information to complete the investigation, we may ask you to connect your Amazon account through <strong className="font-semibold text-[#30343B]">Amazon SP-API</strong> so Margin can retrieve the additional records needed.</p>
@@ -66,7 +69,7 @@ export default function AmazonAuditIntro() {
             <p className="mt-1 text-[14px] font-semibold leading-6 text-[#30343B]">We’ll tell you if we need anything else.</p>
           </div>
 
-          <div className="mt-10">
+          <div className="mt-7">
             <h2 className="font-lora text-[23px] font-normal tracking-[-0.015em] text-[#30343B]">What happens next?</h2>
             <div className="mt-5 grid gap-x-10 gap-y-2 sm:grid-cols-2">
               {auditSteps.map(({ number, title, description }) => (
@@ -81,16 +84,13 @@ export default function AmazonAuditIntro() {
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col items-start gap-5 border-t border-[#E4E6E8] pt-8">
+          <div className="mt-7 flex flex-col items-start gap-4 border-t border-[#E4E6E8] pt-6">
             <Button type="button" onClick={() => navigate('/seller-audit')} className="h-11 rounded-[10px] bg-[#3F51A8] px-5 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D]">Continue to Upload <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             <p className="max-w-xl text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to figure out what to look for. That’s Margin’s job.</p>
           </div>
         </section>
+        </div>
       </main>
-
-      <footer className="border-t border-[#E4E6E8] bg-white px-4 py-6 text-center sm:px-6">
-        <p className="text-[12px] text-[#777A82]">Margin Agents can make mistakes. Check important information before relying on it.</p>
-      </footer>
     </div>
   );
 }
