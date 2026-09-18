@@ -44,13 +44,20 @@
   <link rel="apple-touch-icon" href="/margin-pwa-192-v3.png">
   <meta name="theme-color" content="#09121C">
 
-  <!-- Service Worker Registration -->
+  <!-- Disable the legacy service worker so stale Vite chunks cannot survive deployments. -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js', { updateViaCache: 'none' })
-          .then(reg => console.log('Margin App: Desktop Ready'))
-          .catch(err => console.log('PWA registration failed:', err));
+        Promise.all([
+          navigator.serviceWorker.getRegistrations().then(registrations =>
+            Promise.all(registrations.map(registration => registration.unregister()))
+          ),
+          'caches' in window
+            ? caches.keys().then(cacheNames => Promise.all(cacheNames.map(cacheName => caches.delete(cacheName))))
+            : Promise.resolve(),
+        ])
+          .then(() => console.log('Margin App: Legacy service worker cleared'))
+          .catch(err => console.log('Margin App: Service worker cleanup skipped', err));
       });
     }
   </script>
