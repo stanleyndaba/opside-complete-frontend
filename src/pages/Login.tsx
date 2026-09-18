@@ -1413,12 +1413,15 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-y-auto bg-[#F5F8FB] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+    <div className="relative min-h-screen overflow-y-auto bg-[#B8C6D3] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -left-[18vw] -top-[18vw] h-[58vw] w-[58vw] rounded-full bg-[#DDEBFF]/80 blur-[80px]" />
-        <div className="absolute -right-[12vw] top-[8vh] h-[48vw] w-[48vw] rounded-full bg-[#E9DEFF]/70 blur-[100px]" />
-        <div className="absolute bottom-[-24vw] left-[20vw] h-[52vw] w-[52vw] rounded-full bg-[#DDF4E5]/60 blur-[100px]" />
-        <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(120deg,rgba(255,255,255,0.7),transparent_38%,rgba(255,255,255,0.35)_68%,transparent),linear-gradient(30deg,transparent_48%,rgba(255,255,255,0.42)_49%,transparent_51%)] [background-size:100%_100%,180px_180px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_48%_42%,rgba(239,244,247,0.92)_0%,rgba(214,225,234,0.78)_44%,rgba(177,193,207,0.9)_100%)]" />
+        <div className="absolute -bottom-[34vw] -left-[16vw] h-[76vw] w-[76vw] rounded-full border-[clamp(48px,7vw,150px)] border-[#DCEAF4]/65 bg-[#AFC5D8]/35 shadow-[inset_18px_22px_55px_rgba(255,255,255,0.5),inset_-28px_-35px_70px_rgba(86,111,132,0.2),0_18px_80px_rgba(89,117,140,0.16)]" />
+        <div className="absolute -right-[8vw] top-[7vh] h-[33vw] w-[33vw] rounded-full border-[clamp(28px,4.4vw,84px)] border-[#E9E6D9]/80 bg-[#B5C7D7]/30 shadow-[inset_15px_18px_34px_rgba(255,255,255,0.55),inset_-18px_-20px_38px_rgba(96,117,132,0.18),0_25px_60px_rgba(92,112,130,0.14)] rotate-[18deg]" />
+        <div className="absolute right-[17vw] top-[30vh] h-[8vw] w-[8vw] rounded-full bg-[radial-gradient(circle_at_32%_26%,#F5F5ED_0%,#DDE7EE_42%,#A6BBCB_100%)] shadow-[inset_-12px_-14px_24px_rgba(74,100,122,0.2),0_18px_28px_rgba(88,112,131,0.16)]" />
+        <div className="absolute left-[28vw] top-[19vh] h-[4vw] w-[4vw] rounded-full bg-[radial-gradient(circle_at_30%_25%,#F1F5F6_0%,#CBDCE8_55%,#9FB4C5_100%)] shadow-[0_14px_24px_rgba(85,110,130,0.16)]" />
+        <div className="absolute left-[31vw] top-[57vh] h-[1.6vw] w-[1.6vw] rounded-full bg-[#F4F1DD]/75 shadow-[0_6px_12px_rgba(85,110,130,0.14)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(118deg,rgba(255,255,255,0.42),transparent_38%,rgba(255,255,255,0.18)_68%,transparent)]" />
       </div>
       <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Left Side: Form */}
