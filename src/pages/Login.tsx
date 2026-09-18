@@ -1413,10 +1413,16 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-y-auto bg-[#FAFAF7] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+    <div className="relative min-h-screen overflow-y-auto bg-[#F5F8FB] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+        <div className="absolute -left-[18vw] -top-[18vw] h-[58vw] w-[58vw] rounded-full bg-[#DDEBFF]/80 blur-[80px]" />
+        <div className="absolute -right-[12vw] top-[8vh] h-[48vw] w-[48vw] rounded-full bg-[#E9DEFF]/70 blur-[100px]" />
+        <div className="absolute bottom-[-24vw] left-[20vw] h-[52vw] w-[52vw] rounded-full bg-[#DDF4E5]/60 blur-[100px]" />
+        <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(120deg,rgba(255,255,255,0.7),transparent_38%,rgba(255,255,255,0.35)_68%,transparent),linear-gradient(30deg,transparent_48%,rgba(255,255,255,0.42)_49%,transparent_51%)] [background-size:100%_100%,180px_180px]" />
+      </div>
       <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Left Side: Form */}
-        <div className="flex flex-1 items-center justify-center px-6 py-8 sm:px-8 lg:py-12">
+        <div className="flex flex-1 items-center justify-center bg-white/55 px-6 py-8 backdrop-blur-[2px] sm:px-8 lg:py-12">
           <div className="w-full max-w-[380px]">
             <div className="mb-8 flex flex-col items-start sm:mb-10">
               <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
@@ -1754,7 +1760,7 @@ const Login = () => {
         </div>
 
         {/* Right Side: Information */}
-        <div className="hidden lg:flex flex-1 items-center justify-center bg-[#F3F6F8] px-12 py-16">
+        <div className="hidden flex-1 items-center justify-center bg-white/25 px-12 py-16 backdrop-blur-[1px] lg:flex">
           <div className="w-full max-w-[520px]">
             {isAuditIntent && (
               <p className="mb-6 text-[12px] font-bold uppercase tracking-widest text-[#0B74DE]">
