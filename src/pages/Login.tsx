@@ -1413,15 +1413,15 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-y-auto bg-[#B8C6D3] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+    <div className="relative min-h-screen overflow-y-auto bg-[#C1CED9] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_48%_42%,rgba(239,244,247,0.92)_0%,rgba(214,225,234,0.78)_44%,rgba(177,193,207,0.9)_100%)]" />
-        <div className="absolute -bottom-[34vw] -left-[16vw] h-[76vw] w-[76vw] rounded-full border-[clamp(48px,7vw,150px)] border-[#DCEAF4]/65 bg-[#AFC5D8]/35 shadow-[inset_18px_22px_55px_rgba(255,255,255,0.5),inset_-28px_-35px_70px_rgba(86,111,132,0.2),0_18px_80px_rgba(89,117,140,0.16)]" />
-        <div className="absolute -right-[8vw] top-[7vh] h-[33vw] w-[33vw] rounded-full border-[clamp(28px,4.4vw,84px)] border-[#E9E6D9]/80 bg-[#B5C7D7]/30 shadow-[inset_15px_18px_34px_rgba(255,255,255,0.55),inset_-18px_-20px_38px_rgba(96,117,132,0.18),0_25px_60px_rgba(92,112,130,0.14)] rotate-[18deg]" />
-        <div className="absolute right-[17vw] top-[30vh] h-[8vw] w-[8vw] rounded-full bg-[radial-gradient(circle_at_32%_26%,#F5F5ED_0%,#DDE7EE_42%,#A6BBCB_100%)] shadow-[inset_-12px_-14px_24px_rgba(74,100,122,0.2),0_18px_28px_rgba(88,112,131,0.16)]" />
-        <div className="absolute left-[28vw] top-[19vh] h-[4vw] w-[4vw] rounded-full bg-[radial-gradient(circle_at_30%_25%,#F1F5F6_0%,#CBDCE8_55%,#9FB4C5_100%)] shadow-[0_14px_24px_rgba(85,110,130,0.16)]" />
-        <div className="absolute left-[31vw] top-[57vh] h-[1.6vw] w-[1.6vw] rounded-full bg-[#F4F1DD]/75 shadow-[0_6px_12px_rgba(85,110,130,0.14)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(118deg,rgba(255,255,255,0.42),transparent_38%,rgba(255,255,255,0.18)_68%,transparent)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_48%_42%,#F1F5F7_0%,#D8E3EB_48%,#B6C5D2_100%)]" />
+        <div className="absolute -bottom-[34vw] -left-[16vw] h-[76vw] w-[76vw] rounded-full border-[clamp(48px,7vw,150px)] border-[#E2EEF6] bg-[#AEC4D5]/45 shadow-[inset_18px_22px_42px_rgba(255,255,255,0.7),inset_-28px_-35px_58px_rgba(73,101,124,0.26),0_18px_60px_rgba(75,103,124,0.2)]" />
+        <div className="absolute -right-[8vw] top-[7vh] h-[33vw] w-[33vw] rounded-full border-[clamp(28px,4.4vw,84px)] border-[#F1EEDC] bg-[#B2C7D8]/45 shadow-[inset_15px_18px_30px_rgba(255,255,255,0.76),inset_-18px_-20px_34px_rgba(79,104,124,0.25),0_25px_48px_rgba(76,101,120,0.2)] rotate-[18deg]" />
+        <div className="absolute right-[17vw] top-[30vh] h-[8vw] w-[8vw] rounded-full bg-[radial-gradient(circle_at_30%_25%,#FFFFFF_0%,#DFEAF1_42%,#9FB7C9_100%)] shadow-[inset_-12px_-14px_22px_rgba(66,94,117,0.26),0_18px_24px_rgba(74,101,122,0.2)]" />
+        <div className="absolute left-[28vw] top-[19vh] h-[4vw] w-[4vw] rounded-full bg-[radial-gradient(circle_at_28%_24%,#FFFFFF_0%,#D4E3ED_52%,#93AEC2_100%)] shadow-[0_14px_22px_rgba(75,101,122,0.2)]" />
+        <div className="absolute left-[31vw] top-[57vh] h-[1.6vw] w-[1.6vw] rounded-full bg-[#F7F1D8] shadow-[0_6px_10px_rgba(75,101,122,0.18)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(118deg,rgba(255,255,255,0.48),transparent_38%,rgba(255,255,255,0.2)_68%,transparent)]" />
       </div>
       <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Left Side: Form */}
@@ -1763,7 +1763,7 @@ const Login = () => {
         </div>
 
         {/* Right Side: Information */}
-        <div className="hidden flex-1 items-center justify-center bg-white/25 px-12 py-16 backdrop-blur-[1px] lg:flex">
+        <div className="hidden flex-1 items-center justify-center bg-white/55 px-12 py-16 backdrop-blur-[2px] lg:flex">
           <div className="w-full max-w-[520px]">
             {isAuditIntent && (
               <p className="mb-6 text-[12px] font-bold uppercase tracking-widest text-[#0B74DE]">
