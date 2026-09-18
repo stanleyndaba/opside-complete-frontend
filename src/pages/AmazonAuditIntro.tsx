@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
@@ -69,17 +69,18 @@ export default function AmazonAuditIntro() {
             <p className="mt-1 text-[14px] font-semibold leading-6 text-[#30343B]">We’ll tell you if we need anything else.</p>
           </div>
 
-          <div className="mt-7">
-            <h2 className="font-lora text-[23px] font-normal tracking-[-0.015em] text-[#30343B]">What happens next?</h2>
-            <div className="mt-5 grid gap-x-10 gap-y-2 sm:grid-cols-2">
+          <div className="mt-7" aria-labelledby="audit-next-title">
+            <h2 id="audit-next-title" className="font-lora text-[23px] font-normal tracking-[-0.015em] text-[#30343B]">What happens next?</h2>
+            <div className="mt-4 divide-y divide-[#E4E6E8] border-y border-[#E4E6E8]">
               {auditSteps.map(({ number, title, description }) => (
-                <div key={number} className="flex gap-4 py-4">
-                  <span className="pt-0.5 text-[13px] font-semibold text-[#5165C7]">{number}</span>
-                  <div>
-                    <h3 className="text-[14px] font-semibold text-[#30343B]">{title}</h3>
-                    <p className="mt-2 text-[13px] leading-5 text-[#777A82]">{description}</p>
-                  </div>
-                </div>
+                <details key={number} className="group py-3">
+                  <summary className="flex cursor-pointer list-none items-center gap-3 text-[14px] font-semibold text-[#30343B] outline-none marker:hidden focus-visible:text-[#3F51A8]">
+                    <span className="w-4 shrink-0 text-[12px] font-semibold text-[#5165C7]">{number}</span>
+                    <span className="flex-1">{title}</span>
+                    <ChevronDown className="h-4 w-4 shrink-0 text-[#8C969E] transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
+                  </summary>
+                  <p className="pl-7 pr-6 pt-2 text-[13px] leading-5 text-[#777A82]">{description}</p>
+                </details>
               ))}
             </div>
           </div>
