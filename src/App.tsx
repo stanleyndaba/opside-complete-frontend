@@ -78,6 +78,7 @@ const GetidaAlternative = lazy(() => import("./pages/GetidaAlternative"));
 const SellerboardAlternative = lazy(() => import("./pages/SellerboardAlternative"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
 const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
+const AuditFirst = lazy(() => import("./pages/AuditFirst"));
 const InformationRequired = lazy(() => import("./pages/InformationRequired"));
 const RecoverOnce = lazy(() => import('./pages/RecoverOnce'));
 const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
@@ -393,6 +394,7 @@ const App = () => (
                         <Route path="/discrepancy-stack" element={<DiscrepancyStack />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
+                        <Route path="/audit-first" element={<AuditFirst />} />
                         <Route path="/document-uploads" element={<DocumentUploads />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
                         <Route path="/branding" element={<Branding />} />
