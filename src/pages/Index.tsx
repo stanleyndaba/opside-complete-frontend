@@ -1931,7 +1931,7 @@ export default function Index() {
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
                     You hand Margin the recovery. You stay in control.
                   </h2>
-                  <div className="mt-5 space-y-3 text-[13px] leading-6 text-[var(--margin-text-secondary)] sm:text-[14px] sm:leading-7">
+                  <div className="mt-4 space-y-1.5 text-[13px] leading-5.5 text-[var(--margin-text-secondary)] sm:text-[14px] sm:leading-6">
                     <p>Margin does the investigation, evidence work, recovery work, and follow-through.</p>
                     <p>You see what was found, why it matters, and what supports it. You approve what gets submitted.</p>
                     <p>Margin doesn&apos;t turn uncertainty into a claim. It doesn&apos;t act on your behalf without the controls you&apos;ve agreed to.</p>
