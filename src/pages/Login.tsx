@@ -1657,7 +1657,7 @@ const Login = () => {
                         variant="outline"
                         onClick={() => void startSocialOAuth('google')}
                         disabled={loading || !clerkAuthLoaded}
-                        className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
+                        className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
                       >
                         <GoogleMark className="mr-2 h-4 w-4" />
                         Continue with Google
@@ -1768,33 +1768,33 @@ const Login = () => {
               </p>
             )}
             
-            <h1 className="text-left text-[42px] font-bold leading-[1.1] tracking-tight text-[#182026] font-lora">
+            <h1 className="text-left text-[36px] font-bold leading-[1.08] tracking-[-0.02em] text-[#182026] font-lora">
               {heading}
             </h1>
 
             {mode === 'signup' && (
-              <div className="mt-8 space-y-8">
-                <p className="text-[18px] leading-relaxed text-[#4D5B66]">
+              <div className="mt-5 space-y-5">
+                <p className="text-[15px] leading-7 text-[#4D5B66]">
                   Create your free Margin account and run a read-only Recovery Audit.
                 </p>
-                <p className="text-[18px] leading-relaxed text-[#4D5B66]">
+                <p className="text-[15px] leading-7 text-[#4D5B66]">
                   Margin examines your available Amazon records, shows you what the evidence supports, and makes clear what needs attention—and what doesn&apos;t.
                 </p>
                 
-                <div className="flex flex-col gap-4 border-t border-[#D8E3EA] pt-8">
-                  <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
+                <div className="flex flex-col gap-2.5 border-t border-[#D8E3EA] pt-5">
+                  <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
                     <span>Free Margin account</span>
                   </div>
-                  <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
+                  <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
                     <span>Read-only Recovery Audit</span>
                   </div>
-                  <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
+                  <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
                     <span>See the result before deciding</span>
                   </div>
-                  <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
+                  <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
                     <span>Nothing is submitted without your approval</span>
                   </div>
@@ -1803,17 +1803,17 @@ const Login = () => {
             )}
 
             {mode === 'login' && (
-              <div className="mt-8 space-y-5">
-                <p className="text-[18px] leading-relaxed text-[#4D5B66]">
+              <div className="mt-5 space-y-4">
+                <p className="text-[15px] leading-7 text-[#4D5B66]">
                   Your recovery work is right where you left it.
                 </p>
-                <p className="text-[18px] leading-relaxed text-[#4D5B66]">
+                <p className="text-[15px] leading-7 text-[#4D5B66]">
                   See what happened, what needs attention, what Margin is handling, and where each recovery stands.
                 </p>
-                <p className="text-[18px] leading-relaxed text-[#4D5B66]">
+                <p className="text-[15px] leading-7 text-[#4D5B66]">
                   Your records, evidence, decisions, and recovery progress stay connected—so you can come back without having to piece everything together again.
                 </p>
-                <p className="pt-2 font-merriweather text-[16px] font-semibold tracking-tight text-[#182026]">
+                <p className="pt-1 font-merriweather text-[14px] font-semibold leading-6 tracking-tight text-[#182026]">
                   Clear recovery work. You stay in control.
                 </p>
               </div>
