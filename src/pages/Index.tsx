@@ -1926,11 +1926,17 @@ export default function Index() {
               <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start pt-12 md:pt-16">
 
                 {/* Left label */}
-                <motion.div {...revealProps} className="lg:w-[180px] shrink-0">
-                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)] mb-1">15 / FINAL DELEGATION</p>
-                  <h2 id="final-handoff-title" className="whitespace-nowrap font-lora text-[32px] leading-tight tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
-                    Get started
+                <motion.div {...revealProps} className="lg:w-[300px] shrink-0">
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)] mb-1">15 / DELEGATION &amp; CONTROL</p>
+                  <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
+                    You hand Margin the recovery. You stay in control.
                   </h2>
+                  <div className="mt-5 space-y-3 text-[13px] leading-6 text-[var(--margin-text-secondary)] sm:text-[14px] sm:leading-7">
+                    <p>Margin does the investigation, evidence work, recovery work, and follow-through.</p>
+                    <p>You see what was found, why it matters, and what supports it. You approve what gets submitted.</p>
+                    <p>Margin doesn&apos;t turn uncertainty into a claim. It doesn&apos;t act on your behalf without the controls you&apos;ve agreed to.</p>
+                    <p className="font-medium text-[var(--margin-text-primary)]">You don&apos;t hand over your business. You hand over the recovery.</p>
+                  </div>
                 </motion.div>
 
                 {/* Two cards */}
