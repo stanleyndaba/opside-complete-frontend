@@ -394,7 +394,7 @@ const App = () => (
                         <Route path="/discrepancy-stack" element={<DiscrepancyStack />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
-                        <Route path="/audit-first" element={<AuditFirst />} />
+                        <Route path="/onboarding-approval" element={<AuditFirst />} />
                         <Route path="/document-uploads" element={<DocumentUploads />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
                         <Route path="/branding" element={<Branding />} />

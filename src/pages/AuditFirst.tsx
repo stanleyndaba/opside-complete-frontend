@@ -18,7 +18,7 @@ export default function AuditFirst() {
   usePageMeta({
     title: 'Audit First | Margin',
     description: 'Establish what is actually happening before you begin managing recovery work with Margin.',
-    url: `${SITE_META.url}/audit-first`,
+    url: `${SITE_META.url}/onboarding-approval`,
     image: SITE_META.image,
   });
 
