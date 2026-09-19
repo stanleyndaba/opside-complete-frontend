@@ -47,6 +47,7 @@ import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import { MarginEngineSection } from "@/components/landing/MarginEngineSection";
+import { GoogleMark } from "@/components/GoogleMark";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -1923,40 +1924,40 @@ export default function Index() {
         {/* Closing CTA */}
           <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-12 md:py-16" aria-labelledby="final-handoff-title">
             <div className={containerClass}>
-              <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start pt-12 md:pt-16">
+              <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:flex-row lg:gap-10 lg:pt-16">
 
                 {/* Left label */}
-                <motion.div {...revealProps} className="lg:w-[300px] shrink-0">
+                <motion.div {...revealProps} className="w-full shrink-0 lg:w-[360px]">
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)] mb-1">15 / DELEGATION &amp; CONTROL</p>
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
                     You hand Margin the recovery. You stay in control.
                   </h2>
-                  <div className="mt-6 w-full max-w-[320px] rounded-[8px] border border-[#D8E3EA] bg-[#EEF4F8] p-3.5 text-[#182026] shadow-[0_10px_28px_rgba(37,49,58,0.06)] sm:p-4">
+                  <div className="mt-6 w-full max-w-[380px] p-0 text-[#182026]">
                     <label htmlFor="delegation-email" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
                     <input id="delegation-email" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
-                    <Button onClick={() => navigate("/audit-start")} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Continue</Button>
+                    <Button onClick={() => navigate("/audit-start")} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Get started for free</Button>
                     <div className="my-3 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.18em] text-[#A1AEB7]">
                       <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
                     </div>
                     <Button type="button" variant="outline" className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-3 text-[12px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">
-                      <span aria-hidden="true" className="mr-2 font-bold text-[#4285F4]">G</span>Continue with Google
+                      <GoogleMark className="mr-2 h-4 w-4" />Continue with Google
                     </Button>
-                    <p className="mt-3 text-center text-[10px] leading-4 text-[#7B8790]">Your sign-in creates your Margin account. You will connect Seller Central separately when you are ready.</p>
+                    <p className="mt-3 max-w-[360px] text-center text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
                   </div>
                 </motion.div>
 
                 {/* Two cards */}
-                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid w-full flex-1 grid-cols-1 gap-3 md:grid-cols-2">
 
                   {/* Card 1 — warm aurora */}
-                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex flex-col rounded-[4px] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]" style={{ background: 'radial-gradient(ellipse at 20% 80%, #d4956a 0%, transparent 55%), radial-gradient(ellipse at 70% 20%, #c9a0c4 0%, transparent 50%), radial-gradient(ellipse at 40% 40%, #d4b896 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #e8c4a0 0%, transparent 45%), linear-gradient(145deg, #cba4b8 0%, #d5b8a0 40%, #c9a888 100%)' }}>
+                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-[4px] p-6 sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 20% 80%, #d4956a 0%, transparent 55%), radial-gradient(ellipse at 70% 20%, #c9a0c4 0%, transparent 50%), radial-gradient(ellipse at 40% 40%, #d4b896 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #e8c4a0 0%, transparent 45%), linear-gradient(145deg, #cba4b8 0%, #d5b8a0 40%, #c9a888 100%)' }}>
                     <h3 className="text-[22px] font-semibold tracking-tight text-white leading-tight sm:text-[24px]">
                       You don&apos;t have to wonder.
                     </h3>
                     <p className="mt-3 text-[15px] leading-relaxed text-white/80 font-medium">
                       Understand what happened, identify what&apos;s unresolved, and decide what deserves action.
                     </p>
-                    <div className="mt-auto pt-16">
+                    <div className="mt-auto pt-10 sm:pt-16">
                       <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
                         Start Audit Now <ArrowRight className="h-4 w-4 text-white/60" />
                       </Button>
@@ -1964,14 +1965,14 @@ export default function Index() {
                   </motion.div>
 
                   {/* Card 2 — cool sage earth */}
-                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="flex flex-col rounded-[4px] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]" style={{ background: 'radial-gradient(ellipse at 30% 70%, #4a5e3a 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, #8a9a7e 0%, transparent 50%), radial-gradient(ellipse at 50% 30%, #b0b8a8 0%, transparent 50%), radial-gradient(ellipse at 20% 20%, #c4c8be 0%, transparent 45%), linear-gradient(145deg, #b8bdb0 0%, #8a9680 40%, #5a6e4a 100%)' }}>
+                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-[4px] p-6 sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 30% 70%, #4a5e3a 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, #8a9a7e 0%, transparent 50%), radial-gradient(ellipse at 50% 30%, #b0b8a8 0%, transparent 50%), radial-gradient(ellipse at 20% 20%, #c4c8be 0%, transparent 45%), linear-gradient(145deg, #b8bdb0 0%, #8a9680 40%, #5a6e4a 100%)' }}>
                     <h3 className="text-[22px] font-semibold tracking-tight text-white leading-tight sm:text-[24px]">
                       Let it be handled.
                     </h3>
                     <p className="mt-3 text-[15px] leading-relaxed text-white/75 font-medium">
                       You sell. Margin runs the recovery operation — every discrepancy, case, rejection, and follow-up.
                     </p>
-                    <div className="mt-auto pt-16">
+                    <div className="mt-auto pt-10 sm:pt-16">
                       <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_handled"); navigate("/audit-start"); }} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
                         Get It Handled <ArrowRight className="h-4 w-4 text-white/60" />
                       </Button>
