@@ -980,8 +980,8 @@ function OneRecordAnalysisVisual() {
 function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) => void }) {
   const recoveryThreadCards = [
     {
-      title: "Know what happened. Know what happens next.",
-      copy: "Once something doesn’t add up, you shouldn’t have to work out the entire path yourself. See what the issue is, what supports it, what’s still missing, and what needs to happen next — before the recovery becomes another project for you to manage. You see the problem. You understand the next step. You keep moving.",
+      title: "See the problem. Know the next step.",
+      copy: "When something doesn’t add up, Margin shows what happened, what supports it, and what needs to happen next. You see the issue and keep moving.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(255,255,255,0.98),transparent_36%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_54%,#F9FAF8_100%)]" />
@@ -1014,8 +1014,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       ),
     },
     {
-      title: "You don’t have to keep track of everything.",
-      copy: "A recovery rarely moves in a straight line. Documents get requested. Amazon responds. Evidence gets reviewed. Submissions change. Reversals happen. Appeals follow. You shouldn’t have to hold all of that in your head or keep checking whether someone followed up. The recovery stays together. You stay out of the chase.",
+      title: "The recovery stays together.",
+      copy: "Documents, responses, evidence, reversals, and appeals stay connected. You stay out of the chase.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.98),transparent_38%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_54%,#F9FAF8_100%)]" />
@@ -1082,8 +1082,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       ),
     },
     {
-      title: "One recovery. No handoff to manage.",
-      copy: "The work can happen across email, documents, messages, and Amazon — but you shouldn’t have to coordinate all of it yourself. Requests, responses, documents, decisions, and next steps stay connected to the same recovery, so the work doesn’t disappear between tools or people. You don’t coordinate the recovery. You see where it stands. You know when it’s done.",
+      title: "No handoff to manage.",
+      copy: "Requests, responses, decisions, and next steps stay connected across Amazon, email, and documents. See where it stands. Know when it’s done.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.96),transparent_36%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_52%,#F9FAF8_100%)]" />
