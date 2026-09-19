@@ -1172,14 +1172,12 @@ function NestedRecoveryBrowsers() {
         <div className="grid items-start gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps}>
             <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">Connected operational view</span></div>
-            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}>The work stays visible.</h2>
-            <div className="mt-5 max-w-[560px] space-y-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              <p>You don&apos;t have to wonder what happened while you weren&apos;t looking.</p>
-              <p>A recovery can involve dozens of small actions before it reaches an outcome.</p>
-              <p>Records get found. Evidence gets checked. Details get confirmed. Responses get reviewed. New information changes what happens next.</p>
-              <p>You shouldn&apos;t have to reconstruct that history from emails, documents, messages, and case notes.</p>
-              <p>The work stays recorded as it happens — so you can see what was done, what supports the recovery, and what still needs to happen.</p>
+            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}>See how it got there.</h2>
+            <div className="mt-6 max-w-[560px] space-y-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Reconstruct the history of a recovery from scattered records, messages, documents, and case notes to work out what was actually done.</p>
+              <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Follow the recovery from the first finding through investigation, evidence, action, and outcome — with the underlying records connected at every step.</p>
             </div>
+            <p className="mt-5 max-w-[560px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>The work has a history. The evidence stays with it.</p>
             <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Nested recovery pages">
               {(Object.keys(browsers) as Array<'progress' | 'evidence'>).map((key) => (
                 <button key={key} type="button" role="tab" aria-selected={activeBrowser === key} onClick={() => setActiveBrowser(key)} className={`rounded-full px-3 py-1.5 text-[11px] font-medium tracking-tight transition-colors ${activeBrowser === key ? 'bg-[#DCEBF2] text-[#284B5B]' : 'bg-white/70 text-[#6A7D86] hover:bg-white'}`}>{browsers[key].label}</button>
