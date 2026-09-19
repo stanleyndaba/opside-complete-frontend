@@ -224,16 +224,13 @@ function AccountingEvidenceSection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">08 / THE CONTEXT MARGIN HANDLES</span>
             </div>
             <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              Everything you need, brought together.
+              Bring it all together.
             </h2>
             <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              The information behind a recovery can live across Amazon, settlements, accounting, emails, and files.
+              <span className="font-semibold text-[#182026]">Before:</span> Search across Amazon, settlements, accounting, email, and files to piece together what happened.
             </p>
             <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              You shouldn&apos;t have to hunt through all of it to understand what happened.
-            </p>
-            <p className="mt-5 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#182026] sm:text-[25px]" style={{ fontWeight: 400 }}>
-              The relevant records come together. The story becomes clear. The recovery keeps moving.
+              <span className="font-semibold text-[#182026]">Now:</span> Relevant records come together in one place, so you can understand the situation without chasing information across systems.
             </p>
             <div className="mt-8 border-t border-[#C9D1D6] pt-5">
               <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Amazon · Accounting · Settlements · Files · Email</p>
