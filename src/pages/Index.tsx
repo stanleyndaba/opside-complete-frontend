@@ -1857,7 +1857,7 @@ export default function Index() {
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">14 / TRUST / FAQ</span>
               </div>
               <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
-                <span className="text-[var(--margin-text-primary)]">Before you run the Audit.</span> <span className="font-sans text-[18px] font-medium tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">A few things to know.</span>
+                <span className="text-[var(--margin-text-primary)]">Before you run the Audit.</span> <span className="font-sans text-[18px] font-medium tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">Start with the records. Not assumptions.</span>
               </h2>
             </motion.div>
             <div className="mt-10 md:mt-14 max-w-4xl">
