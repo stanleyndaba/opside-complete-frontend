@@ -152,7 +152,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                 <Link
                                     to="/login"
                                     className={cn(
-                                        "hidden text-[13px] font-medium transition-colors md:inline-flex",
+                                        "text-[13px] font-medium transition-colors",
                                         isLight ? "text-[var(--margin-text-secondary)] hover:text-[var(--margin-text-primary)]" : "text-white/70 hover:text-white"
                                     )}
                                 >
@@ -161,7 +161,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                         <Link
                             to="/login?mode=signup"
                                     className={cn(
-                                        "hidden h-[32px] items-center justify-center gap-1.5 rounded-full px-3.5 text-[13px] font-medium transition-colors md:inline-flex",
+                                        "flex h-[32px] items-center justify-center gap-1.5 rounded-full px-3.5 text-[13px] font-medium transition-colors",
                                 isLight
                                     ? "bg-[var(--margin-surface-alt)] text-[var(--margin-text-primary)] hover:bg-[var(--margin-border)]"
                                     : "bg-white text-black hover:bg-white/90"
@@ -195,13 +195,6 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                             <div className={cn(
                                 "flex max-h-[calc(100vh-92px)] flex-col overflow-y-auto rounded-[3px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.22)]"
                             )}>
-                                <div className="flex items-center justify-between gap-3 border-b border-[#E8EDF0] px-3.5 py-3">
-                                    <span className="font-sans text-[13px] font-medium text-[#687684]">Your recovery, your control.</span>
-                                    <div className="flex items-center gap-2">
-                                        <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="rounded-[7px] px-3 py-2 text-[12px] font-semibold text-[#52616C] transition-colors hover:bg-[#F3F6F8]">Log in</Link>
-                                        <Link to="/login?mode=signup" onClick={() => setMobileMenuOpen(false)} className="inline-flex items-center gap-1.5 rounded-full bg-[#111111] px-3.5 py-2 text-[12px] font-semibold text-white transition-colors hover:bg-[#2A2A2A]"><GoogleMark className="h-3.5 w-3.5" />Sign up</Link>
-                                    </div>
-                                </div>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="teams" className="border-none">
                                         <AccordionTrigger className={cn(
