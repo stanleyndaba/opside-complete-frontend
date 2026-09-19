@@ -34,8 +34,8 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
         ? "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-colors hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]"
         : "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white";
     const desktopNavLinkClass = isLight
-        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[11px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-[background-color,color,border-color] duration-150 hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]"
-        : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[11px] font-sans font-bold uppercase tracking-tight text-white/80 transition-[background-color,color,border-color] duration-150 hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
+        ? "hidden md:inline-flex h-9 items-center rounded-[7px] border border-transparent px-3 text-[12px] font-sans font-medium tracking-[-0.01em] text-[var(--margin-text-secondary)] transition-[background-color,color,border-color] duration-150 hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]"
+        : "hidden md:inline-flex h-9 items-center rounded-[7px] border border-transparent px-3 text-[12px] font-sans font-medium tracking-[-0.01em] text-white/80 transition-[background-color,color,border-color] duration-150 hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
 
     // Close mobile menu on resize
     useEffect(() => {
@@ -141,7 +141,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                             Pricing
                         </Link>
                         <Link to="/sales" className={desktopNavLinkClass}>
-                            ENTERPRISE
+                                Enterprise
                         </Link>
                         <Link to="/consumer-recovery" className={desktopNavLinkClass}>
                             B2C Recovery
