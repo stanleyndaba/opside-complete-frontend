@@ -487,18 +487,13 @@ function RealityCheckSection() {
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              03 / THE PROBLEM</span>
           </div>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-            Finally, you know what happened.
+            Make the money make sense.
           </h2>
-          <div className="mt-4 max-w-[780px] space-y-1 text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            <p>No more digging through transactions to figure out where the money went.</p>
-            <p>No more piecing together evidence.</p>
-            <p>No more wondering whether an issue was actually resolved.</p>
-          </div>
-          <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            You can see what happened, what needs to happen next, and what still needs your attention — clearly and in one place.
+          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+            <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Piece together and dig through transactions, documents, evidence, and Amazon records to figure out where something went wrong.
           </p>
-          <p className="mt-3 max-w-[720px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">
-            So you can get on with the business.
+          <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+            <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> See the discrepancy, understand why it matters, what supports it, and know what happens next.
           </p>
         </motion.div>
         </div>
@@ -539,20 +534,15 @@ function MarginLifecycleSection() {
             className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
-            You don&apos;t have to figure out what to do with it.
+            Let it be handled.
           </h2>
         </motion.div>
 
-          <motion.div {...revealProps} className="mt-4 max-w-[780px] space-y-1 font-lora text-[19px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
-            <p>The evidence is already there.</p>
-            <p>The case is built.</p>
-            <p>The next step is clear.</p>
-          </motion.div>
-          <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            You review what matters, approve the action, and let the recovery move forward — without turning the problem into another project on your desk.
+          <motion.p {...revealProps} className="mt-6 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+            <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Investigate the records yourself, piece together and work through transactions, metadata, and supporting records to figure out whether a case can actually be supported.
           </motion.p>
-          <motion.p {...revealProps} className="mt-4 max-w-[780px] font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
-            From “I need to look into this” to “It&apos;s being handled.”
+          <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+            <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> The relevant evidence is examined, the case is built, and the next step is ready when you are.
           </motion.p>
         </div>
         </div>
