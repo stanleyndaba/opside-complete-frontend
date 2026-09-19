@@ -1932,7 +1932,7 @@ export default function Index() {
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
                     You hand Margin the recovery. You stay in control.
                   </h2>
-                  <div className="mt-6 w-full max-w-[380px] p-0 text-[#182026]">
+                  <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block">
                     <label htmlFor="delegation-email" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
                     <input id="delegation-email" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
                     <Button onClick={() => navigate("/audit-start")} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Get started for free</Button>
@@ -1979,6 +1979,22 @@ export default function Index() {
                     </div>
                   </motion.div>
 
+                </div>
+
+                <div className="w-full md:hidden">
+                  <div className="mx-auto w-full max-w-[380px] p-0 text-[#182026]">
+                    <label htmlFor="delegation-email-mobile" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
+                    <input id="delegation-email-mobile" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
+                    <Button onClick={() => navigate("/audit-start")} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Get started for free</Button>
+                    <div className="my-3 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.18em] text-[#A1AEB7]">
+                      <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
+                    </div>
+                    <Button type="button" variant="outline" className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-3 text-[12px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">
+                      <GoogleMark className="mr-2 h-4 w-4" />Continue with Google
+                    </Button>
+                    <p className="mt-3 max-w-[360px] text-center text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
+                    <p className="mt-5 text-center font-lora text-[18px] leading-tight tracking-[-0.02em] text-[var(--margin-text-primary)]">Your process. Your rules. Your approvals.</p>
+                  </div>
                 </div>
               </div>
             </div>
