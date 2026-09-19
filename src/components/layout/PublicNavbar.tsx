@@ -103,7 +103,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
         >
             <div className={cn(wide ? "mx-auto w-full max-w-[1280px] px-3 py-3 md:px-6 md:py-5 lg:px-10 2xl:px-12" : "container mx-auto px-3 py-3 md:px-6 md:py-5")}>
                     <div className={cn(
-                        "relative flex items-center justify-between gap-3 transition-all duration-300 md:gap-5 md:px-4 md:py-3 lg:px-6",
+                        "relative grid grid-cols-[1fr_auto] items-center gap-3 transition-all duration-300 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:gap-5 md:px-4 md:py-3 lg:px-6",
                         isLight
                             ? "rounded-[8px] bg-white/96 px-3 py-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md"
                             : "rounded-[8px] bg-[#080808]/88 px-3 py-2.5 shadow-[0_18px_48px_rgba(0,0,0,0.42)] backdrop-blur-xl saturate-[180%]"
@@ -130,7 +130,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                         </Link>
                     </div>
 
-                    <nav className="absolute left-[39%] hidden -translate-x-1/2 items-center gap-1 md:flex">
+                    <nav className="col-start-2 hidden items-center justify-center gap-1 md:flex">
                         <div className="hidden lg:block">
                             <ApisMegaMenu variant={effectiveVariant} />
                         </div>
@@ -148,20 +148,20 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                         </Link>
                     </nav>
 
-                    <div className="flex items-center gap-3 sm:gap-4">
-                        <Link
-                            to="/login"
-                            className={cn(
-                                "text-[13px] font-medium transition-colors",
-                                isLight ? "text-[var(--margin-text-secondary)] hover:text-[var(--margin-text-primary)]" : "text-white/70 hover:text-white"
-                            )}
-                        >
+                    <div className="col-start-2 flex items-center justify-end gap-2 sm:gap-3 md:col-start-3 md:gap-4">
+                                <Link
+                                    to="/login"
+                                    className={cn(
+                                        "hidden text-[13px] font-medium transition-colors md:inline-flex",
+                                        isLight ? "text-[var(--margin-text-secondary)] hover:text-[var(--margin-text-primary)]" : "text-white/70 hover:text-white"
+                                    )}
+                                >
                             Log in
                         </Link>
                         <Link
                             to="/login?mode=signup"
-                            className={cn(
-                                "flex h-[32px] items-center justify-center gap-1.5 rounded-full px-3.5 text-[13px] font-medium transition-colors",
+                                    className={cn(
+                                        "hidden h-[32px] items-center justify-center gap-1.5 rounded-full px-3.5 text-[13px] font-medium transition-colors md:inline-flex",
                                 isLight
                                     ? "bg-[var(--margin-surface-alt)] text-[var(--margin-text-primary)] hover:bg-[var(--margin-border)]"
                                     : "bg-white text-black hover:bg-white/90"
@@ -195,6 +195,13 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                             <div className={cn(
                                 "flex max-h-[calc(100vh-92px)] flex-col overflow-y-auto rounded-[3px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.22)]"
                             )}>
+                                <div className="flex items-center justify-between gap-3 border-b border-[#E8EDF0] px-3.5 py-3">
+                                    <span className="font-sans text-[13px] font-medium text-[#687684]">Your recovery, your control.</span>
+                                    <div className="flex items-center gap-2">
+                                        <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="rounded-[7px] px-3 py-2 text-[12px] font-semibold text-[#52616C] transition-colors hover:bg-[#F3F6F8]">Log in</Link>
+                                        <Link to="/login?mode=signup" onClick={() => setMobileMenuOpen(false)} className="inline-flex items-center gap-1.5 rounded-full bg-[#111111] px-3.5 py-2 text-[12px] font-semibold text-white transition-colors hover:bg-[#2A2A2A]"><GoogleMark className="h-3.5 w-3.5" />Sign up</Link>
+                                    </div>
+                                </div>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="teams" className="border-none">
                                         <AccordionTrigger className={cn(
