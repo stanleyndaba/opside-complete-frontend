@@ -1149,7 +1149,6 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           {recoveryThreadCards.map((card, index) => (
             <motion.article key={card.title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="min-w-0 border-t border-[#D8DEDA] pt-4">
               <div className="relative aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-white p-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] sm:p-3">{card.visual}</div>
-              <p className="mt-4 font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">0{index + 1} / RECOVERY THREAD</p>
               <h3 className="mt-2 font-lora text-[25px] leading-[1.06] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]">{card.title}</h3>
               <p className="mt-3 text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">{card.copy}</p>
             </motion.article>
