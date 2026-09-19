@@ -47,8 +47,12 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">12 / THE AUDIT</span>
           </div>
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the Audit. Find out what is actually happening.</h2>
-          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Before you choose a recovery path, Margin reconstructs the relevant activity from the records available to you. We reconcile what was expected with what was received, identify what the records substantiate, separate confirmed findings from open questions, and show you the next step only when the evidence supports one.</p>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Know what&apos;s actually happening.</h2>
+          <div className="mt-6 max-w-[760px] space-y-4 text-[15px] leading-7 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+            <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Sort through Amazon records trying to work out what happened, what matters, and whether anything needs to be recovered.</p>
+            <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> See what reconciles, what doesn&apos;t, what&apos;s supported by the evidence, and where recovery makes sense.</p>
+          </div>
+          <p className="mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit turns uncertainty into something you can understand.</p>
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative">
