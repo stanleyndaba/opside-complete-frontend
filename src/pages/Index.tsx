@@ -795,20 +795,13 @@ function ControlSection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">05 / CONTROL</span>
             </div>
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              You don&apos;t have to keep track of every case.
+              Keep the recovery moving.
             </h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              Once something needs to be recovered, you can see exactly where it stands.
+              <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Carry every case forward manually as evidence changes, submissions move, Amazon responds, and payouts arrive.
             </p>
-            <div className="mt-5 space-y-1 font-lora text-[19px] leading-[1.15] tracking-[-0.025em] text-[var(--margin-text-primary)] sm:text-[22px]">
-              <p>What&apos;s ready to approve.</p>
-              <p>What&apos;s already been filed.</p>
-              <p>What needs attention.</p>
-              <p>What&apos;s waiting on Amazon.</p>
-              <p>What&apos;s resolved.</p>
-            </div>
-            <p className="mt-6 max-w-[560px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>
-              Nothing gets lost between “we found it” and “it&apos;s done.”
+            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> See what is ready to approve, what has been filed, what is waiting on Amazon, what needs attention, and what is resolved—without having to keep every recovery in your head.
             </p>
           </motion.div>
 
@@ -983,16 +976,9 @@ function OneRecordAnalysisVisual() {
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
           <motion.div {...revealProps} className="flex flex-col justify-center">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              07 / ONE RECORD</p>
-            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>You don&apos;t have to reconstruct the story.</h2>
-            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">The important details stay connected to the records that support them.</p>
-            <div className="mt-5 space-y-1 font-lora text-[19px] leading-[1.15] tracking-[-0.025em] text-[var(--margin-text-primary)] sm:text-[22px]">
-              <p>What was expected.</p>
-              <p>What actually happened.</p>
-              <p>What changed.</p>
-              <p>What the evidence shows.</p>
-            </div>
-            <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">So when you look at a recovery, you can see <strong className="font-semibold text-[var(--margin-text-primary)]">why it exists — not just that it does.</strong></p>
-            <p className="mt-4 max-w-[780px] font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>The answer comes with the evidence behind it.</p>
+            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>Make the evidence usable.</h2>
+            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Reconstruct the case from disconnected records and turn scattered details into an explanation you can actually stand behind.</p>
+            <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Extract the relevant facts, connect them to the records that support them, and show why the recovery exists—not just that it does.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
             <BrowserChrome hidePath />
