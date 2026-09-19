@@ -63,49 +63,46 @@ export function LearningLoopSection() {
             <svg
               viewBox="0 0 640 480"
               role="img"
-              aria-label="Three connected recovery layers forming a learning loop"
+              aria-label="Three consistent recovery layers connected by an observe, learn, improve route"
               className="h-auto w-full"
             >
               <defs>
                 <linearGradient id="learning-surface" x1="0" x2="1" y1="0" y2="1">
-                  <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.96" />
-                  <stop offset="1" stopColor="#E8F1F2" stopOpacity="0.74" />
+                  <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.98" />
+                  <stop offset="1" stopColor="#E6F0F1" stopOpacity="0.9" />
                 </linearGradient>
                 <filter id="learning-soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feDropShadow dx="0" dy="14" stdDeviation="16" floodColor="#73919C" floodOpacity="0.14" />
+                  <feDropShadow dx="0" dy="12" stdDeviation="13" floodColor="#617C87" floodOpacity="0.16" />
                 </filter>
               </defs>
 
-              <g fill="none" stroke="#91A8B1" strokeWidth="1" strokeLinejoin="round" vectorEffect="non-scaling-stroke">
-                <path d="M320 72 L526 178 L320 284 L114 178 Z" fill="url(#learning-surface)" filter="url(#learning-soft-shadow)" />
-                <path d="M114 178 L320 284 L320 329 L114 223 Z" fill="#E7EFF0" fillOpacity="0.68" />
-                <path d="M320 284 L526 178 L526 223 L320 329 Z" fill="#DCE9EC" fillOpacity="0.72" />
-                <path d="M114 223 L320 329 L526 223" stroke="#B4C5CA" />
-                <path d="M114 246 L320 352 L526 246" stroke="#B4C5CA" strokeOpacity="0.72" />
-                <path d="M114 269 L320 375 L526 269" stroke="#B4C5CA" strokeOpacity="0.48" />
-                <path d="M114 292 L320 398 L526 292" stroke="#B4C5CA" strokeOpacity="0.3" />
+              {/* Three intentional recovery layers using the same +60° / -60° projection. */}
+              <g fill="none" strokeLinejoin="round" vectorEffect="non-scaling-stroke">
+                <path d="M104 270 L300 371 L496 270 L300 169 Z" stroke="#C5D0D3" strokeWidth="1" opacity="0.52" />
+                <path d="M104 234 L300 335 L496 234 L300 133 Z" stroke="#AEBFC4" strokeWidth="1.05" opacity="0.7" />
+                <path d="M104 198 L300 299 L496 198 L300 97 Z" stroke="#8499A1" strokeWidth="1.25" opacity="0.9" />
+                <path d="M104 198 L300 299 L300 343 L104 242 Z" fill="#E5EEF0" fillOpacity="0.58" stroke="#82969D" strokeWidth="1.35" />
+                <path d="M300 299 L496 198 L496 242 L300 343 Z" fill="#DCE9EC" fillOpacity="0.72" stroke="#82969D" strokeWidth="1.35" />
+                <path d="M300 97 L516 208 L300 319 L84 208 Z" fill="url(#learning-surface)" stroke="#718890" strokeWidth="1.7" filter="url(#learning-soft-shadow)" />
               </g>
 
-              <g fill="none" stroke="#2E6A83" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke">
-                <path d="M151 176 C180 102 260 64 338 88 C431 117 473 178 447 244" strokeDasharray="4 7" />
-                <path d="M447 244 C424 288 379 308 326 304" strokeDasharray="4 7" />
-                <path d="M326 304 C253 302 194 265 168 218" strokeDasharray="4 7" />
-              </g>
+              {/* The process route stays inside the top plane rather than orbiting it. */}
+              <path d="M168 207 C203 165 254 150 303 169 C354 188 398 213 432 204 C411 244 360 268 307 246 C252 224 208 215 168 207 Z" fill="none" stroke="#2E6A83" strokeWidth="1.35" strokeDasharray="4 6" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
 
-              {[{ x: 151, y: 176, label: "OBSERVE" }, { x: 447, y: 244, label: "LEARN" }, { x: 326, y: 304, label: "IMPROVE" }].map((node, index) => (
+              {[{ x: 168, y: 207, label: "OBSERVE", lx: 168, ly: 178, active: false }, { x: 432, y: 204, label: "LEARN", lx: 451, ly: 178, active: false }, { x: 307, y: 246, label: "IMPROVE", lx: 307, ly: 280, active: true }].map((node, index) => (
                 <g key={node.label}>
-                  <circle cx={node.x} cy={node.y} r="8" fill="#F4F8F8" stroke="#2E6A83" strokeWidth="1.2" />
-                  <circle cx={node.x} cy={node.y} r="3" fill="#0B74DE">
-                    {!reduceMotion && <animate attributeName="r" values="3;5;3" dur={`${2.4 + index * 0.3}s`} repeatCount="indefinite" />}
-                  </circle>
-                  <text x={node.x} y={node.y - 17} textAnchor="middle" fill="#496772" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="10" letterSpacing="1.2">{node.label}</text>
+                  <path d={`M${node.x} ${node.y} L${node.lx} ${node.ly + (node.active ? -7 : 7)}`} fill="none" stroke="#5F7D88" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+                  <circle cx={node.x} cy={node.y} r="6" fill={node.active ? "#0B74DE" : "#F4F8F8"} stroke="#1683BD" strokeWidth="1.45" />
+                  {!node.active && <circle cx={node.x} cy={node.y} r="2" fill="#1683BD" />}
+                  {node.active && !reduceMotion && <animate attributeName="r" values="6;8;6" dur={`${2.4 + index * 0.3}s`} repeatCount="indefinite" />}
+                  <text x={node.lx} y={node.ly} textAnchor="middle" fill="#5E7078" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="11" fontWeight="600" letterSpacing="1.5">{node.label}</text>
                 </g>
               ))}
 
-              <g fill="#536B75" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="10" letterSpacing="1">
-                <text x="278" y="139">RECOVERY RECORD</text>
-                <text x="278" y="157" fill="#84979D">evidence · response · outcome</text>
-                <text x="194" y="346" fill="#84979D">history becomes context</text>
+              <g fill="#536B75" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">
+                <text x="275" y="148" fontSize="12" fontWeight="600" letterSpacing="1.5">RECOVERY RECORD</text>
+                <text x="275" y="166" fill="#71858D" fontSize="11" letterSpacing="0.8">evidence / response / outcome</text>
+                <text x="190" y="393" fill="#83959B" fontSize="11" letterSpacing="1.2">HISTORY → CONTEXT</text>
               </g>
             </svg>
           </motion.div>
