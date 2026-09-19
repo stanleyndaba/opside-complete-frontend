@@ -1983,6 +1983,7 @@ export default function Index() {
 
                 <div className="w-full md:hidden">
                   <div className="mx-auto w-full max-w-[380px] p-0 text-[#182026]">
+                    <p className="mb-5 text-center font-lora text-[18px] leading-tight tracking-[-0.02em] text-[var(--margin-text-primary)]">Your process. Your rules. Your approvals.</p>
                     <label htmlFor="delegation-email-mobile" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
                     <input id="delegation-email-mobile" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
                     <Button onClick={() => navigate("/audit-start")} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Get started for free</Button>
@@ -1993,7 +1994,6 @@ export default function Index() {
                       <GoogleMark className="mr-2 h-4 w-4" />Continue with Google
                     </Button>
                     <p className="mt-3 max-w-[360px] text-center text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
-                    <p className="mt-5 text-center font-lora text-[18px] leading-tight tracking-[-0.02em] text-[var(--margin-text-primary)]">Your process. Your rules. Your approvals.</p>
                   </div>
                 </div>
               </div>
