@@ -56,7 +56,17 @@
             ? caches.keys().then(cacheNames => Promise.all(cacheNames.map(cacheName => caches.delete(cacheName))))
             : Promise.resolve(),
         ])
-          .then(() => console.log('Margin App: Legacy service worker cleared'))
+          .then(() => {
+            console.log('Margin App: Legacy service worker cleared');
+            try {
+              if (sessionStorage.getItem('margin:service-worker-cleanup-reloaded') !== 'true') {
+                sessionStorage.setItem('margin:service-worker-cleanup-reloaded', 'true');
+                window.location.reload();
+              }
+            } catch (error) {
+              console.log('Margin App: Cleanup reload skipped', error);
+            }
+          })
           .catch(err => console.log('Margin App: Service worker cleanup skipped', err));
       });
     }
