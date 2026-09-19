@@ -1931,11 +1931,17 @@ export default function Index() {
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
                     You hand Margin the recovery. You stay in control.
                   </h2>
-                  <div className="mt-4 space-y-1.5 text-[13px] leading-5.5 text-[var(--margin-text-secondary)] sm:text-[14px] sm:leading-6">
-                    <p>Margin does the investigation, evidence work, recovery work, and follow-through.</p>
-                    <p>You see what was found, why it matters, and what supports it. You approve what gets submitted.</p>
-                    <p>Margin doesn&apos;t turn uncertainty into a claim. It doesn&apos;t act on your behalf without the controls you&apos;ve agreed to.</p>
-                    <p className="font-medium text-[var(--margin-text-primary)]">You don&apos;t hand over your business. You hand over the recovery.</p>
+                  <div className="mt-6 w-full max-w-[320px] rounded-[8px] border border-[#D8E3EA] bg-[#EEF4F8] p-3.5 text-[#182026] shadow-[0_10px_28px_rgba(37,49,58,0.06)] sm:p-4">
+                    <label htmlFor="delegation-email" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
+                    <input id="delegation-email" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
+                    <Button onClick={() => navigate("/audit-start")} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Continue</Button>
+                    <div className="my-3 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.18em] text-[#A1AEB7]">
+                      <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
+                    </div>
+                    <Button type="button" variant="outline" className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-3 text-[12px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">
+                      <span aria-hidden="true" className="mr-2 font-bold text-[#4285F4]">G</span>Continue with Google
+                    </Button>
+                    <p className="mt-3 text-center text-[10px] leading-4 text-[#7B8790]">Your sign-in creates your Margin account. You will connect Seller Central separately when you are ready.</p>
                   </div>
                 </motion.div>
 
