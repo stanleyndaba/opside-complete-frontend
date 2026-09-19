@@ -108,8 +108,7 @@ export default function Sales() {
                                 For Amazon businesses managing $1M+ in annual GMV
                             </span>
                             <h1 className="font-lora text-4xl md:text-[68px] font-medium leading-[1.05] tracking-tight text-[#182026]">
-                                At scale, Amazon recovery <br className="hidden md:block" />
-                                cannot run on assumptions.
+                                Don&apos;t manage recovery across complex Amazon operations. Let Margin run it.
                             </h1>
                             <p className="max-w-2xl text-lg md:text-xl text-[#4D5B66] leading-relaxed tracking-tight">
                                 Margin gives your finance and operations teams a controlled view of what Amazon paid, missed, reversed, or left unresolved—then turns the evidence into a clear recovery plan your team can own.
@@ -121,7 +120,7 @@ export default function Sales() {
                                 asChild
                                 className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all"
                             >
-                                <a href="#assessment">Request an Enterprise Assessment</a>
+                                <a href="#assessment">Explore Margin for Enterprise</a>
                             </Button>
                             <a href="#how-it-works" className="text-[14px] font-semibold text-[#182026] hover:underline flex items-center gap-2">
                                 See how the assessment works <ArrowRight className="h-4 w-4" />
