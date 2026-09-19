@@ -1139,10 +1139,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
         <motion.div {...revealProps} className="max-w-[860px]">
           <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">09 / THE RECOVERY SYSTEM</span></div>
           <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>One recovery. Every step connected.</h2>
-          <p className="mt-5 max-w-[700px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Margin connects the work between the first discrepancy and the final financial outcome.</p>
           <p className="mt-5 max-w-[840px] font-sans text-[18px] font-semibold leading-[1.45] tracking-[-0.025em] text-[#294B61] sm:text-[21px] md:text-[24px]">Find what happened. Establish what is supported. Build what is owed. Move the case forward. Verify the money.</p>
-          <p className="mt-5 max-w-[700px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Every stage stays connected to the records, evidence, decisions, responses, and outcome that support it.</p>
-          <p className="mt-5 max-w-[720px] font-lora text-[22px] leading-[1.12] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[26px] md:text-[30px]" style={{ fontWeight: 400 }}>No lost context. No abandoned handoffs. No recovery left half-finished.</p>
         </motion.div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-3 md:gap-6 lg:mt-12 lg:gap-8">
