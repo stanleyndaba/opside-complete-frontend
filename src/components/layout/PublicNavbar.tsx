@@ -13,6 +13,7 @@ import {
     AccordionTrigger
 } from '@/components/ui/accordion';
 import { ProductsMegaMenu, productMenuGroups, ProductServiceItem } from '@/components/landing/ProductsMegaMenu';
+import { GoogleMark } from '@/components/GoogleMark';
 import { ApisMegaMenu, apiMenuGroups, ApiServiceItem } from '@/components/landing/ApisMegaMenu';
 
 type PublicNavbarProps = {
@@ -121,9 +122,9 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                 width="20"
                                 height="20"
                                 fetchPriority="high"
-                                className={cn("h-5 w-5 object-contain md:h-6 md:w-6", isLight ? "" : "invert brightness-0")}
+                                className={cn("h-4 w-auto object-contain md:h-5", isLight ? "" : "invert brightness-0")}
                             />
-                            <span className={cn("brand-wordmark font-merriweather text-base tracking-tight md:text-xl", isLight ? "text-[var(--margin-text-primary)]" : "text-white")}>
+                            <span className={cn("brand-wordmark font-merriweather text-base tracking-tight md:text-lg", isLight ? "text-[var(--margin-text-primary)]" : "text-white")}>
                                 Margin
                             </span>
                         </Link>
@@ -161,9 +162,12 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                             to="/login?mode=signup"
                                     className={cn(
                                         "flex h-9 items-center justify-center rounded-full px-4 text-[13px] font-semibold transition-colors md:h-10 md:px-5 md:text-[14px]",
-                                "bg-[#0B74DE] text-white hover:bg-[#095FAF]"
+                                        isLight
+                                            ? "bg-[var(--margin-surface-alt)] text-[var(--margin-text-primary)] hover:bg-[var(--margin-border)]"
+                                            : "bg-white text-black hover:bg-white/90"
                             )}
                         >
+                            <GoogleMark className="h-3.5 w-3.5" />
                             Sign up
                         </Link>
                         <button
