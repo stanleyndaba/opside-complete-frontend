@@ -54,8 +54,8 @@ type ProductsMegaMenuProps = {
 
 export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
     const triggerClassName = variant === 'light'
-        ? 'h-10 rounded-[7px] border border-transparent bg-transparent px-3.5 text-[13px] font-sans font-medium tracking-[-0.01em] text-[#52616C] outline-none ring-0 transition-colors hover:border-transparent hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)] focus:border-transparent focus:bg-transparent focus:text-[var(--margin-text-primary)] focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-transparent data-[state=open]:!bg-[var(--margin-surface-alt)] data-[state=open]:!text-[var(--margin-text-primary)]'
-        : 'h-10 rounded-[7px] !border-0 bg-transparent px-3.5 text-[13px] font-medium tracking-[-0.01em] text-white/85 shadow-none outline-none ring-0 transition-colors hover:!border-0 hover:bg-white/10 hover:text-white focus:!border-0 focus:bg-transparent focus:text-white focus-visible:!border-0 focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-0 data-[state=open]:!bg-white/10 data-[state=open]:!text-white';
+        ? 'h-10 rounded-[9px] border border-transparent bg-transparent px-3.5 text-[13px] font-sans font-medium tracking-[-0.01em] text-[#52616C] outline-none ring-0 transition-colors hover:border-transparent hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)] focus:border-transparent focus:bg-transparent focus:text-[var(--margin-text-primary)] focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-[#DCE3E7] data-[state=open]:!bg-[#F2F5F6] data-[state=open]:!text-[var(--margin-text-primary)] data-[state=open]:!shadow-[0_3px_10px_rgba(24,32,38,0.06)]'
+        : 'h-10 rounded-[9px] !border-0 bg-transparent px-3.5 text-[13px] font-medium tracking-[-0.01em] text-white/85 shadow-none outline-none ring-0 transition-colors hover:!border-0 hover:bg-white/10 hover:text-white focus:!border-0 focus:bg-transparent focus:text-white focus-visible:!border-0 focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-0 data-[state=open]:!bg-white/10 data-[state=open]:!text-white data-[state=open]:!shadow-[0_4px_16px_rgba(0,0,0,0.12)]';
 
     return (
         <NavigationMenu>
@@ -65,18 +65,18 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                         For Teams
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[4px] bg-white shadow-[0_12px_40px_rgba(0,0,0,0.08)] border border-[#E5E7EB] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[72px] lg:w-[96vw] lg:max-w-[1020px] lg:-translate-x-1/2">
+                        <div className="relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[16px] bg-white shadow-[0_24px_70px_rgba(24,32,38,0.16),0_2px_8px_rgba(24,32,38,0.06)] border border-[#E2E8EB] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[80px] lg:w-[94vw] lg:max-w-[1080px] lg:-translate-x-1/2">
                             <div className="grid grid-cols-1 lg:grid-cols-3">
                                 {productMenuGroups.map((group, index) => (
                                     <div
                                         key={group.label}
                                         className={cn(
-                                            'p-4 lg:p-5',
-                                            index < productMenuGroups.length - 1 && 'border-b border-[#D8E3E8]/60 lg:border-b-0 lg:border-r'
+                                            'p-5 lg:p-7',
+                                            index < productMenuGroups.length - 1 && 'border-b border-[#E8EEF0] lg:border-b-0 lg:border-r lg:border-[#E8EEF0]'
                                         )}
                                     >
                                         <div className="mb-2 flex items-center justify-between gap-3">
-                                            <h4 className="text-[11px] font-lora font-medium tracking-tight text-[#94A3B8]">
+                                            <h4 className="text-[11px] font-lora font-medium tracking-wide text-[#7B8790]">
                                                 {group.label}
                                             </h4>
                                             {group.badge && (
@@ -99,7 +99,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                     </div>
                                 ))}
                             </div>
-                            <div className="border-t border-[#D8E3E8] bg-[#F8FAFB] px-6 py-3 lg:flex lg:items-center lg:justify-between lg:px-8">
+                            <div className="border-t border-[#E5ECEF] bg-[#F6F9FA] px-6 py-4 lg:flex lg:items-center lg:justify-between lg:px-8">
                                 <div>
                                     <p className="text-[14px] font-semibold tracking-tight text-[#182026]">Built for serious FBA operations</p>
                                     <p className="mt-0.5 max-w-[680px] text-[11px] font-normal tracking-tight text-[#66737F]">
@@ -135,27 +135,27 @@ export function ProductServiceItem({
     return (
         <div
             className={cn(
-                'landing-menu-item group flex cursor-default items-start gap-3 rounded-[3px] px-2 py-2.5 transition-colors duration-150',
+                'landing-menu-item group flex cursor-default items-start gap-3 rounded-[9px] border border-transparent px-3 py-3 transition-[background-color,border-color,transform] duration-150 hover:-translate-y-0.5',
                 isLight
-                    ? 'hover:bg-[#F3F5F4]'
+                    ? 'hover:border-[#E5ECEF] hover:bg-[#F7FAFB] hover:shadow-[0_8px_20px_rgba(24,32,38,0.05)]'
                     : 'hover:bg-white/[0.03] hover:border-white/10'
             )}
         >
             <div className={cn(
-                'mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center transition-colors',
+                'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] bg-[#F1F5F6] p-1 transition-colors',
                 isLight ? 'text-[#6B7280] group-hover:text-[#0B74DE]' : 'text-white/40 group-hover:text-white'
             )}>
                 <Icon className="h-full w-full" strokeWidth={1.5} />
             </div>
             <div className="min-w-0">
                 <span className={cn(
-                    'block text-[12px] font-sans font-semibold tracking-tight transition-colors',
+                    'block text-[12px] font-sans font-semibold leading-snug tracking-tight transition-colors',
                     isLight ? 'text-[#182026] group-hover:text-[#0B74DE]' : 'text-white group-hover:text-blue-400'
                 )}>
                     {title}
                 </span>
                 <p className={cn(
-                    'mt-0.5 text-[10px] font-sans font-normal leading-[1.45] tracking-tight',
+                    'mt-1 text-[10px] font-sans font-normal leading-[1.5] tracking-tight',
                     isLight ? 'text-[#66737F]' : 'text-white/50'
                 )}>
                     {description}
