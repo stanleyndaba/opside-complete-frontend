@@ -503,6 +503,63 @@ function RealityCheckSection() {
   );
 }
 
+const recoveryHarnessPoints = [
+  {
+    number: "01",
+    title: "Guardrails Controlled by Design",
+    lead: "Not everything becomes a claim.",
+    body: "Margin applies evidence, rules, and guardrails before a recovery moves forward. You see what was found, why it matters, and approve the action before anything is submitted.",
+    outcome: "Find it. Prove it. Approve it.",
+  },
+  {
+    number: "02",
+    title: "Learns From What Happens",
+    lead: "Every outcome teaches the system.",
+    body: "Rejections, responses, recoveries, reversals, and successful outcomes become part of the evidence Margin learns from. What happens to one case can improve how the next case is investigated and handled.",
+    outcome: "What happens next makes Margin better.",
+  },
+  {
+    number: "03",
+    title: "Builds From the Supply Chain",
+    lead: "The transaction is only part of the story.",
+    body: "Margin connects supply-chain financial events and operational records — shipments, inventory movements, fulfillment events, returns, and financial activity — to reconstruct what actually happened and build the case around it.",
+    outcome: "Context grounds the case.",
+  },
+];
+function RecoveryHarnessSection() {
+  return (
+    <section className="relative overflow-hidden border-y border-[#D8E3EA] bg-[#F4F8F8] py-12 sm:py-14 md:py-20" aria-labelledby="recovery-harness-title">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="max-w-[760px]">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">THE RECOVERY HARNESS</span>
+          </div>
+          <h2 id="recovery-harness-title" className="font-lora text-[36px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
+            The Recovery Harness
+          </h2>
+          <p className="mt-5 max-w-[720px] text-[16px] leading-7 text-[var(--margin-text-secondary)] sm:text-[18px] sm:leading-8">
+            Margin doesn&apos;t just find something that looks wrong. It establishes whether there&apos;s something worth acting on, learns from what happens, and builds the case from the evidence around it.
+          </p>
+        </motion.div>
+        <div className="mt-10 grid gap-px overflow-hidden rounded-[10px] bg-[#D8E3EA] shadow-[0_18px_50px_rgba(37,49,58,0.07)] md:mt-14 md:grid-cols-3">
+          {recoveryHarnessPoints.map((point, index) => (
+            <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="flex min-h-[330px] flex-col bg-white p-6 sm:p-8">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[11px] font-semibold tracking-[0.12em] text-[var(--margin-blue)]">{point.number}</span>
+                <div className="h-px w-10 bg-[#C8D8E0]" />
+              </div>
+              <h3 className="mt-8 font-lora text-[25px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[28px]">{point.title}</h3>
+              <p className="mt-5 text-[15px] font-semibold leading-6 tracking-[-0.01em] text-[#294B61]">{point.lead}</p>
+              <p className="mt-3 text-[14px] leading-6 text-[var(--margin-text-secondary)]">{point.body}</p>
+              <p className="mt-auto pt-7 font-lora text-[17px] leading-6 tracking-[-0.02em] text-[var(--margin-text-primary)]">{point.outcome}</p>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 function MarginLifecycleSection() {
 
   return (
@@ -1830,6 +1887,7 @@ export default function Index() {
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/audit-start"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
         <MarginEngineSection />
         <RealityCheckSection />
+        <RecoveryHarnessSection />
         <MarginLifecycleSection />
         <ControlSection />
         <MarginStandardSection />
