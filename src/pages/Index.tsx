@@ -866,7 +866,7 @@ function MarginStandardSection() {
     <section className="relative overflow-hidden bg-white py-8 sm:py-10 md:py-14" aria-labelledby="margin-standard-title">
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
-          <motion.div {...revealProps} className="max-w-[720px]">
+          <motion.div {...revealProps} className="order-1 max-w-[720px] lg:order-2">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-blue)]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">06 / THE MARGIN STANDARD</span>
@@ -882,7 +882,7 @@ function MarginStandardSection() {
             </p>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[var(--margin-border)]">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 border-t border-[var(--margin-border)] lg:order-1">
             <div className="relative flex min-h-[210px] items-center overflow-hidden border-b border-[var(--margin-border)] py-10 sm:min-h-[260px] sm:px-5 sm:py-12" aria-live="polite" aria-atomic="true">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.p
@@ -1631,7 +1631,7 @@ function RecoveryOutcomeExplorer() {
     <section aria-labelledby="recovery-outcome-title" className="relative bg-[var(--margin-canvas)] py-12 md:py-16">
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
-          <motion.div {...revealProps} className="order-1 lg:sticky lg:top-28">
+          <motion.div {...revealProps} className="order-1 lg:order-2 lg:sticky lg:top-28">
             <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">10 / WHEN THINGS GO WRONG</span></div>
             <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}>Don&apos;t let a rejection stop the recovery.</h2>
             <div className="mt-6 max-w-[760px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
@@ -1641,7 +1641,7 @@ function RecoveryOutcomeExplorer() {
             <p className="mt-5 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">You don&apos;t have to start the investigation again.</p>
             <p className="mt-4 max-w-[760px] font-lora text-[19px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>The case gets stronger. The recovery keeps moving.</p>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden rounded-[12px] border border-[#D9E2E6] bg-white shadow-[0_20px_60px_rgba(72,103,122,0.14)]">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden rounded-[12px] border border-[#D9E2E6] bg-white shadow-[0_20px_60px_rgba(72,103,122,0.14)] lg:order-1">
             <FinalDelegationPreview compactMobile src="/appeals-review" title="Appeals Review page preview" />
           </motion.div>
         </div>

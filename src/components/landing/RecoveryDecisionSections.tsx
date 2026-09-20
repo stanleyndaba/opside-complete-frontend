@@ -41,8 +41,8 @@ const revealProps = {
 export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
   <section className="relative bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
-      <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
-        <motion.div {...revealProps} className="max-w-[780px]">
+      <div className="grid gap-10 lg:grid-cols-[1.26fr_0.74fr] lg:items-center lg:gap-16">
+        <motion.div {...revealProps} className="order-2 max-w-[780px] lg:order-2">
           <div className="mb-5 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">12 / THE AUDIT</span>
@@ -55,7 +55,7 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
           <p className="mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit turns uncertainty into something you can understand.</p>
         </motion.div>
 
-        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative">
+        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-1 lg:order-1">
           <FinalDelegationPreview compactMobile src="/recovery-workspace" title="Recovery Workspace page preview" />
         </motion.div>
       </div>
