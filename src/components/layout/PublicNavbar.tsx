@@ -106,7 +106,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                         "relative grid min-h-[56px] grid-cols-[1fr_auto] items-center gap-3 border border-black/[0.06] transition-all duration-300 md:min-h-[68px] md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:gap-6 md:px-5 md:py-3 lg:px-7",
                         isLight
                             ? "rounded-[14px] bg-white/[0.94] px-4 py-2.5 shadow-[0_12px_42px_rgba(37,49,58,0.10)] backdrop-blur-xl"
-                            : "rounded-[14px] bg-[#101010]/90 px-4 py-2.5 shadow-[0_18px_55px_rgba(0,0,0,0.34)] backdrop-blur-xl saturate-[160%]"
+                            : "rounded-[14px] border-white/15 bg-white/[0.08] px-4 py-2.5 shadow-[0_18px_55px_rgba(0,0,0,0.24)] backdrop-blur-xl saturate-[160%]"
                     )}>
                     <div className="flex items-center gap-3">
                         <Link
@@ -161,7 +161,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                         <Link
                             to="/login?mode=signup"
                                     className={cn(
-                                        "flex h-9 items-center justify-center rounded-full px-4 text-[13px] font-semibold shadow-[0_4px_14px_rgba(0,0,0,0.08)] transition-[background-color,transform,box-shadow] duration-150 hover:shadow-[0_6px_18px_rgba(0,0,0,0.12)] active:scale-[0.98] md:h-10 md:px-5 md:text-[14px]",
+                                        "flex h-9 items-center justify-center gap-2 rounded-full px-4 text-[13px] font-semibold shadow-[0_4px_14px_rgba(0,0,0,0.08)] transition-[background-color,transform,box-shadow] duration-150 hover:shadow-[0_6px_18px_rgba(0,0,0,0.12)] active:scale-[0.98] md:h-10 md:px-5 md:text-[14px]",
                                         isLight
                                             ? "bg-[var(--margin-surface-alt)] text-[var(--margin-text-primary)] hover:bg-[var(--margin-border)]"
                                             : "bg-white text-black hover:bg-white/90"
