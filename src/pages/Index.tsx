@@ -1823,7 +1823,7 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--margin-canvas)] selection:bg-[var(--margin-blue)]/16 selection:text-[var(--margin-text-primary)]">
+    <div className="landing-google-sans min-h-screen bg-[var(--margin-canvas)] selection:bg-[var(--margin-blue)]/16 selection:text-[var(--margin-text-primary)]">
       <PublicNavbar variant="light" wide />
       
       <main>

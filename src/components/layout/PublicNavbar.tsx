@@ -98,7 +98,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
     return (
         <header
             className={cn(
-                "fixed left-0 right-0 top-0 z-50 border-transparent bg-transparent transition-colors",
+                "landing-navbar-google-sans fixed left-0 right-0 top-0 z-50 border-transparent bg-transparent transition-colors",
             )}
         >
             <div className={cn(wide ? "mx-auto w-full max-w-[1280px] px-3 py-3 md:px-6 md:py-3 lg:px-12 2xl:px-14" : "container mx-auto px-3 py-3 md:px-6 md:py-3")}>

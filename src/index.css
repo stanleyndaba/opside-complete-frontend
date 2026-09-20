@@ -114,7 +114,22 @@ html, body, #root {
 .font-lora, .font-lora * { font-family: var(--font-serif) !important; }
 .font-merriweather, .font-merriweather * { font-family: 'Merriweather', serif !important; }
 .font-playfair, .font-playfair * { font-family: 'Playfair Display', serif !important; }
-
+.landing-google-sans,
+.landing-google-sans * {
+  font-family: "Google Sans", var(--font-sans) !important;
+}
+.landing-google-sans .font-lora,
+.landing-google-sans .font-lora * {
+  font-family: var(--font-serif) !important;
+}
+.landing-navbar-google-sans,
+.landing-navbar-google-sans * {
+  font-family: "Google Sans", var(--font-sans) !important;
+}
+.landing-navbar-google-sans .brand-wordmark,
+.landing-navbar-google-sans .brand-wordmark * {
+  font-family: 'Merriweather', Georgia, serif !important;
+}
 /* ============================================================
    PWA DESKTOP POLISH — "Website → App" native feel
    ============================================================ */
@@ -181,7 +196,7 @@ html, body, #root {
 
 #margin-hero-title, #margin-hero-title * {
   font-family: var(--font-serif) !important;
-  font-weight: 400 !important;
+  font-weight: 540 !important;
 }
 
 /* Final Fallback for Lora */
