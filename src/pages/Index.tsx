@@ -361,7 +361,7 @@ function HistoricalVideoPreviewSections() {
   return (
     <>
       {historicalVideoSections.map((section, sectionIndex) => (
-        <section key={section.id} aria-labelledby={`${section.id}-title`} className="relative overflow-hidden bg-white py-8 sm:py-10 md:py-14">
+        <section key={section.id} aria-labelledby={`${section.id}-title`} className="relative overflow-hidden bg-white py-7 sm:py-8 md:py-11">
           <div className={containerClass}>
             <motion.div {...revealProps} className="max-w-[900px]">
               <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">{String(sectionIndex + 1).padStart(2, "0")} / {section.label}</span></div>
@@ -428,7 +428,7 @@ function KineticHeroSection({
 
 function OneRecoverySection() {
   return (
-    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-[52px] md:py-[73px]">
+    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 md:py-14">
       <div className={containerClass}>
         <div className="grid items-center gap-12 lg:grid-cols-1 xl:gap-24">
           <motion.div {...revealProps} className="order-1 lg:pt-2">
@@ -474,7 +474,7 @@ const realityCheckWords = realityCheckStages.flatMap((stage) => stage.words);
 
 function RealityCheckSection() {
   return (
-    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-[52px] md:py-[73px]">
+    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 md:py-14">
       <div className={containerClass}>
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.68fr)_minmax(0,1.32fr)] lg:gap-8">
         <div className="flex flex-col justify-center">
@@ -508,7 +508,7 @@ function MarginLifecycleSection() {
   return (
     <section
       aria-labelledby="margin-lifecycle-title"
-      className="relative overflow-hidden bg-white py-8 sm:py-10 md:py-14"
+      className="relative overflow-hidden bg-white py-7 sm:py-8 md:py-11"
     >
       <div className={containerClass}>
         <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
@@ -626,7 +626,7 @@ function MarginOperationSection() {
   });
 
   return (
-    <section ref={operationScrollRef} className="relative bg-[#FAFAF7] py-[52px] md:py-[73px]">
+    <section ref={operationScrollRef} className="relative bg-[#FAFAF7] py-10 md:py-14">
       <div className={containerClass}>
         <div className="grid gap-12 lg:grid-cols-[0.72fr_1fr] lg:gap-16">
           <div className="lg:sticky lg:top-32 lg:h-fit">
@@ -863,7 +863,7 @@ function MarginStandardSection() {
   }, [activeStandardText, reduceMotion, standardPhase, visibleStandardLength]);
 
   return (
-    <section className="relative overflow-hidden bg-white py-8 sm:py-10 md:py-14" aria-labelledby="margin-standard-title">
+    <section className="relative overflow-hidden bg-white py-7 sm:py-8 md:py-11" aria-labelledby="margin-standard-title">
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
           <motion.div {...revealProps} className="order-1 max-w-[720px] lg:order-2">
@@ -958,7 +958,7 @@ function OneRecordAnalysisVisual() {
   
   function RecoveryWorkStatement() {
   return (
-    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-8 sm:py-10 md:py-14" aria-labelledby="trust-section-title">
+    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-7 sm:py-8 md:py-11" aria-labelledby="trust-section-title">
       <div className={containerClass}>
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
           <motion.div {...revealProps} className="flex flex-col justify-center">
@@ -1134,7 +1134,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
   ];
 
   return (
-    <section className="relative overflow-hidden bg-[#FAFAF7] py-9 sm:py-12 md:py-14" aria-labelledby="recovery-thread-title">
+    <section className="relative overflow-hidden bg-[#FAFAF7] py-8 sm:py-10 md:py-12" aria-labelledby="recovery-thread-title">
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[860px]">
           <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">09 / THE RECOVERY SYSTEM</span></div>
@@ -1165,7 +1165,7 @@ function NestedRecoveryBrowsers() {
   } as const;
 
   return (
-    <section className="relative overflow-hidden border-t border-[#D8DEDA] bg-[#F4F8F8] py-9 sm:py-12 md:py-14" aria-labelledby="nested-recovery-title">
+    <section className="relative overflow-hidden border-t border-[#D8DEDA] bg-[#F4F8F8] py-8 sm:py-10 md:py-12" aria-labelledby="nested-recovery-title">
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 lg:order-2">
@@ -1554,7 +1554,7 @@ function ProductReframeSection() {
     <section
       ref={sectionRef}
       aria-labelledby="product-reframe-title"
-      className="relative overflow-hidden bg-white py-[52px] md:py-[73px]"
+      className="relative overflow-hidden bg-white py-10 md:py-14"
     >
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[1040px]">
@@ -1606,7 +1606,7 @@ function ProductReframeSection() {
 
 function RiskSection() {
   return (
-    <section aria-labelledby="amazon-thread-title" className="relative overflow-hidden bg-[var(--margin-canvas)] py-8 sm:py-10 md:py-14">
+    <section aria-labelledby="amazon-thread-title" className="relative overflow-hidden bg-[var(--margin-canvas)] py-7 sm:py-8 md:py-11">
       <div className={containerClass}>
         <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-12">
           <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
@@ -1628,7 +1628,7 @@ function RiskSection() {
 
 function RecoveryOutcomeExplorer() {
   return (
-    <section aria-labelledby="recovery-outcome-title" className="relative bg-[var(--margin-canvas)] py-12 md:py-16">
+    <section aria-labelledby="recovery-outcome-title" className="relative bg-[var(--margin-canvas)] py-10 md:py-12">
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
           <motion.div {...revealProps} className="order-1 lg:order-2 lg:sticky lg:top-28">
@@ -1653,7 +1653,7 @@ function RecoveryOutcomeExplorer() {
 
 function FinancialReconciliationSection() {
   return (
-    <section aria-labelledby="financial-reconciliation-title" className="relative overflow-hidden bg-white py-9 sm:py-12 md:py-16">
+    <section aria-labelledby="financial-reconciliation-title" className="relative overflow-hidden bg-white py-7 sm:py-8 md:py-11">
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.76fr_1.24fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
@@ -1774,7 +1774,7 @@ function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boo
 
 function ConsumerRecoverySection({ onCta }: { onCta: () => void }) {
   return (
-    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-12 md:py-16" aria-labelledby="consumer-recovery-title">
+    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="consumer-recovery-title">
       <div className={containerClass}>
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:gap-14">
           <motion.div {...revealProps} role="link" tabIndex={0} onClick={onCta} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onCta(); }} className="group relative flex min-h-[360px] cursor-pointer items-center justify-center overflow-hidden rounded-[4px] p-8 shadow-[0_24px_60px_rgba(72,103,122,0.14)] outline-none transition-transform duration-300 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-[var(--margin-blue)] sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 22% 72%, #f08a6e 0%, transparent 48%), radial-gradient(ellipse at 75% 20%, #8a8aef 0%, transparent 50%), radial-gradient(ellipse at 48% 42%, #e87aaa 0%, transparent 46%), radial-gradient(ellipse at 82% 68%, #a78ae8 0%, transparent 46%), radial-gradient(ellipse at 18% 22%, #7aade8 0%, transparent 42%), linear-gradient(145deg, #c8a0e0 0%, #e8889a 35%, #f0a070 65%, #a088e0 100%)' }}>
@@ -1847,7 +1847,7 @@ export default function Index() {
         <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
 
         {/* Section 14 — Trust / FAQ */}
-        <section className="relative bg-[var(--margin-canvas)] py-14 md:py-20" aria-labelledby="trust-faq-title">
+        <section className="relative bg-[var(--margin-canvas)] py-10 md:py-14" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className="mb-5 flex items-center gap-3">
@@ -1894,7 +1894,7 @@ export default function Index() {
         <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
 
         {/* Closing CTA */}
-          <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-12 md:py-16" aria-labelledby="final-handoff-title">
+          <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="final-handoff-title">
             <div className={containerClass}>
               <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:flex-row lg:gap-10 lg:pt-16">
 
