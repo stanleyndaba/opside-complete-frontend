@@ -196,7 +196,7 @@ html, body, #root {
 
 #margin-hero-title, #margin-hero-title * {
   font-family: var(--font-serif) !important;
-  font-weight: 540 !important;
+  font-weight: 430 !important;
 }
 
 /* Final Fallback for Lora */
