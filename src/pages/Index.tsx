@@ -47,7 +47,6 @@ import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import { MarginEngineSection } from "@/components/landing/MarginEngineSection";
-import { LearningLoopSection } from "@/components/landing/LearningLoopSection";
 import { GoogleMark } from "@/components/GoogleMark";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
@@ -1838,7 +1837,6 @@ export default function Index() {
         <AccountingEvidenceSection />
         <FinancialControlOperationsSection />
         <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
-        <LearningLoopSection />
         <NestedRecoveryBrowsers />
         <RiskSection />
         <RecoveryOutcomeExplorer />
