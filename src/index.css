@@ -630,3 +630,63 @@ html, body, #root {
     opacity: 0.36;
   }
 }
+/* Reconciled Matter landing-page surface system */
+.landing-google-sans {
+  background: #F1EFE8 !important;
+}
+
+/* Receipt paper: explanation and established record */
+.landing-google-sans > main > section:nth-child(2),
+.landing-google-sans > main > section:nth-child(5),
+.landing-google-sans > main > section:nth-child(8),
+.landing-google-sans > main > section:nth-child(17),
+.landing-google-sans > main > section:nth-child(19) {
+  background-color: #F1EFE8 !important;
+}
+
+/* Ledger grey: investigation, evidence, and operational work */
+.landing-google-sans > main > section:nth-child(4),
+.landing-google-sans > main > section:nth-child(6),
+.landing-google-sans > main > section:nth-child(9),
+.landing-google-sans > main > section:nth-child(10),
+.landing-google-sans > main > section:nth-child(11),
+.landing-google-sans > main > section:nth-child(12),
+.landing-google-sans > main > section:nth-child(15) {
+  background-color: #D7D9D5 !important;
+  border-color: #BFC5C1 !important;
+}
+
+/* Oxidized paper: friction and unresolved records */
+.landing-google-sans > main > section:nth-child(3),
+.landing-google-sans > main > section:nth-child(13),
+.landing-google-sans > main > section:nth-child(14) {
+  background-color: #C7B8A8 !important;
+}
+
+/* Resolved graphite: decision and closure */
+.landing-google-sans > main > section:nth-child(16),
+.landing-google-sans > main > section:nth-child(18),
+.landing-google-sans > main > section:nth-child(20) {
+  background-color: #263438 !important;
+  color: #F1EFE8;
+}
+
+/* Keep copy readable on resolved surfaces without recolouring hero internals. */
+.landing-google-sans > main > section:nth-child(20) h2,
+.landing-google-sans > main > section:nth-child(20) p,
+.landing-google-sans > main > section:nth-child(20) label {
+  color: #F1EFE8;
+}
+
+/* Evidence plates: filed rather than floating. */
+.landing-google-sans > main > section:nth-child(4) article,
+.landing-google-sans > main > section:nth-child(9) article,
+.landing-google-sans > main > section:nth-child(11) article {
+  box-shadow: none !important;
+  border-radius: 2px !important;
+}
+
+/* Small record-rule transition between surfaces. */
+.landing-google-sans > main > section:not(:first-child) {
+  border-top: 1px solid rgba(24, 32, 38, 0.10);
+}
