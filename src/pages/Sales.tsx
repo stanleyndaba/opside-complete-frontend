@@ -96,7 +96,8 @@ export default function Sales() {
 
             <main className="relative z-10 pt-32 pb-24">
                 {/* Hero Section */}
-                <section className="container mx-auto px-6 max-w-5xl mb-32">
+                <section className="mb-32 bg-[#263438] px-6 py-16 text-[#F1EFE8] md:py-24">
+                    <div className="container mx-auto max-w-5xl">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -104,13 +105,13 @@ export default function Sales() {
                         className="space-y-10"
                     >
                         <div className="space-y-4">
-                            <span className="text-[11px] font-bold text-[#0B74DE] tracking-tight uppercase">
+                            <span className="text-[11px] font-bold uppercase tracking-tight text-[#B28368]">
                                 For Amazon businesses managing $1M+ in annual GMV
                             </span>
-                            <h1 className="font-lora text-4xl md:text-[68px] font-medium leading-[1.05] tracking-tight text-[#182026]">
+                            <h1 className="font-lora text-4xl font-medium leading-[1.05] tracking-tight text-[#F1EFE8] md:text-[68px]">
                                 Don&apos;t manage recovery across complex Amazon operations. Let Margin run it.
                             </h1>
-                            <p className="max-w-2xl text-lg md:text-xl text-[#4D5B66] leading-relaxed tracking-tight">
+                            <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-[#C7D0CE] md:text-xl">
                                 Margin gives your finance and operations teams a controlled view of what Amazon paid, missed, reversed, or left unresolved—then turns the evidence into a clear recovery plan your team can own.
                             </p>
                         </div>
@@ -127,12 +128,12 @@ export default function Sales() {
                             </a>
                         </div>
 
-                        <div className="pt-8 border-t border-[#D8E3E8] flex flex-col md:flex-row md:items-center justify-between gap-6">
-                            <div className="flex items-center gap-2 text-[13px] font-medium text-[#182026]">
-                                <ShieldCheck className="h-4 w-4 text-[#0B74DE]" />
+                        <div className="flex flex-col justify-between gap-6 border-t border-white/20 pt-8 md:flex-row md:items-center">
+                            <div className="flex items-center gap-2 text-[13px] font-medium text-[#F1EFE8]">
+                                <ShieldCheck className="h-4 w-4 text-[#B28368]" />
                                 Evidence-led. Read-only by default. Your team approves the action.
                             </div>
-                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold text-[#8C9BA6] uppercase tracking-tight">
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-tight text-[#AEBBB9]">
                                 <span>Multi-account operations</span>
                                 <span className="h-1 w-1 rounded-full bg-[#D8E3E8]" />
                                 <span>SKU-level evidence</span>
@@ -143,6 +144,7 @@ export default function Sales() {
                             </div>
                         </div>
                     </motion.div>
+                    </div>
                 </section>
 
                 {/* Section 1: The Problem */}
