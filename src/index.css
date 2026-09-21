@@ -690,3 +690,17 @@ html, body, #root {
 .landing-google-sans > main > section:not(:first-child) {
   border-top: 1px solid rgba(24, 32, 38, 0.10);
 }
+/* Section headings are Google Sans; the hero remains Lora. */
+.landing-google-sans .font-lora:not(#margin-hero-title),
+.landing-google-sans .font-lora:not(#margin-hero-title) * {
+  font-family: "Google Sans", var(--font-sans) !important;
+}
+
+.landing-google-sans h1,
+.landing-google-sans h2,
+.landing-google-sans h3,
+.landing-google-sans h4,
+.landing-google-sans h5,
+.landing-google-sans h6 {
+  font-family: "Google Sans", var(--font-sans) !important;
+}
