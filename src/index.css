@@ -130,6 +130,14 @@ html, body, #root {
 .landing-navbar-google-sans .brand-wordmark * {
   font-family: 'Merriweather', Georgia, serif !important;
 }
+.landing-google-sans h1,
+.landing-google-sans h2,
+.landing-google-sans h3,
+.landing-google-sans h4,
+.landing-google-sans h5,
+.landing-google-sans h6 {
+  font-family: "Google Sans", var(--font-sans) !important;
+}
 /* ============================================================
    PWA DESKTOP POLISH — "Website → App" native feel
    ============================================================ */
