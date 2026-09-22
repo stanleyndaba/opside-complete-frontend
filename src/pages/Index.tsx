@@ -507,7 +507,6 @@ const recoveryHarnessPoints = [
   {
     number: "01",
     title: "Guardrails Controlled by Design",
-    image: "/recovery-harness-guardrails.png",
     lead: "Not everything becomes a claim.",
     body: "Margin applies evidence, rules, and guardrails before a recovery moves forward. You see what was found, why it matters, and approve the action before anything is submitted.",
     outcome: "Find it. Prove it. Approve it.",
@@ -527,6 +526,33 @@ const recoveryHarnessPoints = [
     outcome: "Context grounds the case.",
   },
 ];
+function GuardrailListVisual() {
+  const items = [
+    { icon: ReceiptText, title: "Overcharged Fee M334121", state: "blocked", detail: "Compiling complete evidence for this case", tone: "text-[#9A5A03]" },
+    { icon: SearchCheck, title: "Possible issue", state: "Possible issue · Supported recovery", detail: "2 held back · 1 ready for approval", tone: "text-[#52616A]" },
+    { icon: MessagesSquare, title: "Case rejected by Amazon", state: "Rebuilding the case from feedback", detail: "", tone: "text-[#7A5147]" },
+  ];
+  return (
+    <div className="mb-6 rounded-[4px] border border-[#D8E3EA] bg-white p-3 shadow-[0_10px_24px_rgba(37,49,58,0.06)] sm:p-4" aria-label="Guardrails evidence status list">
+      <div className="mb-3 flex items-center justify-between border-b border-[#E8EDEB] pb-2">
+        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#7B878D]">Recovery review</span>
+        <span className="text-[9px] font-semibold uppercase tracking-[0.08em] text-[#7B878D]">Guardrails</span>
+      </div>
+      <div className="space-y-2">
+        {items.map(({ icon: Icon, title, state, detail, tone }, index) => (
+          <div key={title} className="flex items-start gap-2.5 border-b border-[#EEF1EF] pb-2 last:border-b-0 last:pb-0">
+            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] border border-[#D8E3EA] bg-[#F7F8F6] text-[#52616A]" aria-hidden="true"><Icon className="h-3.5 w-3.5" strokeWidth={1.7} /></span>
+            <span className="min-w-0 flex-1">
+              <span className="flex items-center gap-2 text-[11px] font-semibold leading-4 tracking-[-0.01em] text-[#263438] sm:text-[12px]">{index + 1}. {title}<span className={`ml-auto shrink-0 text-[9px] font-semibold uppercase tracking-[0.06em] ${tone}`}>{index === 0 ? "Held" : index === 1 ? "Review" : "Rework"}</span></span>
+              <span className={`mt-0.5 block text-[10px] font-medium leading-4 ${tone}`}>{state}</span>
+              {detail ? <span className="mt-0.5 block text-[9px] leading-3.5 text-[#7B878D]">{detail}</span> : null}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 function RecoveryHarnessSection() {
   return (
     <section className="relative overflow-hidden border-y border-[#D8E3EA] bg-[#F4F8F8] py-12 sm:py-14 md:py-20" aria-labelledby="recovery-harness-title">
@@ -546,7 +572,7 @@ function RecoveryHarnessSection() {
         <div className="mt-10 grid gap-px overflow-hidden rounded-[10px] bg-[#D8E3EA] shadow-[0_18px_50px_rgba(37,49,58,0.07)] md:mt-14 md:grid-cols-3">
           {recoveryHarnessPoints.map((point, index) => (
             <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="flex min-h-[330px] flex-col bg-white p-6 sm:p-8">
-              {point.image ? <div className="mb-6 aspect-[4/3] overflow-hidden rounded-[4px] bg-[#D7D9D5]"><img src={point.image} alt="Seller reviewing evidence before approving a recovery" className="h-full w-full object-cover" loading="lazy" /></div> : null}
+              {point.number === "01" ? <GuardrailListVisual /> : null}
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[11px] font-semibold tracking-[0.12em] text-[var(--margin-blue)]">{point.number}</span>
                 <div className="h-px w-10 bg-[#C8D8E0]" />
