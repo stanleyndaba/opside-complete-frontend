@@ -539,7 +539,7 @@ function GuardrailListVisual() {
       <div className="relative flex h-full items-center justify-center p-3 sm:p-5">
         <div className="w-full max-w-[390px] space-y-2.5">
           {items.map(({ title, detail, status, tone }) => (
-            <div key={title} className="rounded-[10px] bg-[#E7EBE9]/70 px-3 py-2.5 shadow-[0_14px_30px_rgba(20,31,34,0.16)] backdrop-blur-xl sm:px-4 sm:py-3">
+            <div key={title} className="rounded-[10px] bg-[#F2F4F2]/78 px-3 py-2.5 shadow-[0_14px_30px_rgba(20,31,34,0.16)] backdrop-blur-xl sm:px-4 sm:py-3">
               <div className="flex items-start gap-2.5">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#4FB879] text-white shadow-[0_3px_8px_rgba(31,119,76,0.22)]" aria-hidden="true"><Check className="h-3 w-3" strokeWidth={3} /></span>
                 <span className="min-w-0 flex-1">
