@@ -7,6 +7,10 @@ export function MarginEngineSection() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(178,220,232,0.28),transparent_38%)]" />
       <div className="relative mx-auto w-full max-w-[1240px] px-5 sm:px-8">
         <div className="mb-10 max-w-[720px] md:mb-14">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px w-8 bg-[#0B74DE]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">06 / THE PROMISE</span>
+          </div>
           <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>
             <span className="sm:hidden">Less chasing. More clarity about your money.</span>
             <span className="hidden sm:inline">Less uncertainty. Less financial chasing. More confidence about what happened to the money.</span>

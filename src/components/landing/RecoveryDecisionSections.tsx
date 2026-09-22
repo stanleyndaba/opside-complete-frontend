@@ -45,7 +45,7 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
         <motion.div {...revealProps} className="order-1 max-w-[780px] lg:order-1">
           <div className="mb-5 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">12 / THE AUDIT</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">15 / THE AUDIT</span>
           </div>
           <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-white sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Know what&apos;s actually happening.</h2>
           <div className="mt-6 max-w-[760px] space-y-4 text-[15px] leading-7 tracking-[-0.01em] text-white/72 md:text-[17px] md:leading-8">
@@ -74,7 +74,7 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
         <motion.div {...revealProps} className="order-1 max-w-[780px] lg:order-2">
           <div className="mb-5 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">ENTERPRISE</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">14 / ENTERPRISE</span>
           </div>
           <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-white sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Don&apos;t manage recovery across complex Amazon operations. Let Margin run it.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-white/72 md:text-[17px] md:leading-8">When your business spans multiple marketplaces, entities, catalogs, and operational environments, recovery doesn&apos;t get simpler.</p>
@@ -96,7 +96,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
         <motion.div {...revealProps} className="max-w-[760px]">
           <div className="mb-5 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / ROUTING</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">16 / ROUTING</span>
           </div>
           <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Choose the recovery path that fits the work.</h2>
           <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The Audit establishes what is happening first. Then Margin routes you to the right level of support-one justified recovery or an operating layer for work that keeps returning.</p>
