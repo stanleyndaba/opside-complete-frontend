@@ -562,13 +562,13 @@ function RecoveryHarnessSection() {
     return (
       <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[4px] border border-[#BFC5C1] bg-[#D7D9D5]" aria-label="Settlement outcome record">
         <img src="/gmaillist.png" alt="Gmail case correspondence showing a recorded recovery outcome" className="h-full w-full object-cover" loading="lazy" />
-        <div className="absolute inset-x-3 bottom-3 rounded-[10px] bg-[#F2F4F2]/78 px-3 py-2.5 shadow-[0_14px_30px_rgba(20,31,34,0.16)] backdrop-blur-xl sm:inset-x-4 sm:bottom-4 sm:px-4 sm:py-3">
+        <div className="absolute inset-x-2 bottom-3 rounded-[10px] bg-white px-3 py-2.5 shadow-[0_14px_30px_rgba(20,31,34,0.16)] backdrop-blur-xl sm:inset-x-3 sm:bottom-4 sm:px-4 sm:py-3">
           <div className="flex items-start justify-between gap-3">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#7B878D]">Case outcome</span>
+            <span className="text-[10px] font-semibold tracking-tight text-[#7B878D]">Case outcome</span>
             <span className="flex items-center gap-1 text-[9px] font-semibold tracking-tight text-[#2D7B59]"><Check className="h-3 w-3" strokeWidth={2.5} /> Pattern learned</span>
           </div>
           <p className="mt-1 text-[11px] font-semibold leading-4 tracking-tight text-[#263438] sm:text-[12px]">Rejected → Reason identified → Evidence updated → Refiled</p>
-          <p className="mt-1 text-[9px] leading-3.5 tracking-tight text-[#667177]">Evidence requirement → updated</p>
+          <p className="mt-1 text-[9px] leading-3.5 tracking-tight text-[#667177]">Evidence requirement → updated (Agent Harness Recalibrated)</p>
         </div>
       </div>
     );
