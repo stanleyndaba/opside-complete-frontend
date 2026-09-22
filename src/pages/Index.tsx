@@ -561,7 +561,7 @@ function RecoveryHarnessSection() {
   function SettlementOutcomeVisual() {
     return (
       <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[4px] border border-[#BFC5C1] bg-[#D7D9D5]" aria-label="Settlement outcome record">
-        <img src="/recovery-harness-settlement.png" alt="Settlement statement showing a recorded recovery outcome" className="h-full w-full object-cover" loading="lazy" />
+        <img src="/gmaillist.png" alt="Gmail case correspondence showing a recorded recovery outcome" className="h-full w-full object-cover" loading="lazy" />
         <div className="absolute inset-x-3 bottom-3 rounded-[10px] bg-[#F2F4F2]/78 px-3 py-2.5 shadow-[0_14px_30px_rgba(20,31,34,0.16)] backdrop-blur-xl sm:inset-x-4 sm:bottom-4 sm:px-4 sm:py-3">
           <div className="flex items-start justify-between gap-3">
             <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#7B878D]">Case outcome</span>
