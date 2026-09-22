@@ -1,73 +1,61 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { ClerkProvider } from '@clerk/react'
-import App from './App.tsx'
 import './index.css'
-import { startPwaInstallManager } from '@/lib/pwaInstall'
-
-// Core Web Vitals reporting (LCP, FID/INP, CLS, TTFB, FCP)
-import { onLCP, onFID, onCLS, onTTFB, onFCP, onINP } from 'web-vitals'
-import type { MetricType } from 'web-vitals'
-import { trackEvent } from '@/lib/analytics'
-
-type SentryBrowserRuntime = {
-  init: (options: {
-    dsn: string;
-    integrations?: unknown[];
-    tracesSampleRate: number;
-    replaysSessionSampleRate: number;
-  }) => void;
-  BrowserTracing?: new (options?: { routingInstrumentation?: unknown }) => unknown;
-  browserTracingIntegration?: { routingInstrumentation?: unknown };
-};
-
-// Sentry RUM (lazy init)
-if (import.meta.env.VITE_SENTRY_DSN) {
-  // Lazy load Sentry to avoid impact on TTI
-  import('@sentry/browser').then((Sentry) => {
-    const sentryRuntime = Sentry as unknown as SentryBrowserRuntime;
-    const integrations = sentryRuntime.BrowserTracing
-      ? [new sentryRuntime.BrowserTracing({
-        routingInstrumentation: sentryRuntime.browserTracingIntegration?.routingInstrumentation,
-      })]
-      : [];
-
-    sentryRuntime.init({
-      dsn: import.meta.env.VITE_SENTRY_DSN,
-      integrations,
-      tracesSampleRate: Number(import.meta.env.VITE_SENTRY_TRACES_RATE || 0.1),
-      replaysSessionSampleRate: Number(import.meta.env.VITE_SENTRY_REPLAYS_RATE || 0.1),
-    });
-  }).catch(() => { });
-}
-
-import { GlobalErrorBoundary } from '@/components/error/GlobalErrorBoundary';
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const root = createRoot(document.getElementById('root')!);
 
-startPwaInstallManager();
-
-createRoot(document.getElementById("root")!).render(
-  <ClerkProvider publishableKey={clerkPublishableKey}>
+void Promise.all([
+  import('./App.tsx'),
+  import('@/components/error/GlobalErrorBoundary'),
+]).then(([{ default: App }, { GlobalErrorBoundary }]) => {
+  const app = (
     <GlobalErrorBoundary>
       <App />
     </GlobalErrorBoundary>
-  </ClerkProvider>
-);
+  );
 
-const report = (name: string, metric: MetricType) => {
-  trackEvent('web_vital', {
-    name,
-    value: metric.value,
-    rating: metric.rating,
-    id: metric.id,
-    navigationType: metric.navigationType || performance.getEntriesByType('navigation')[0]?.type,
+  if (!clerkPublishableKey) {
+    root.render(app);
+    return;
+  }
+
+  return import('@clerk/react').then(({ ClerkProvider }) => {
+    root.render(<ClerkProvider publishableKey={clerkPublishableKey}>{app}</ClerkProvider>);
   });
-};
+}).catch((error) => {
+  console.error('Margin failed to bootstrap the application', error);
+  const message = error instanceof Error ? error.message : 'Unknown bootstrap error';
+  document.getElementById('root')!.innerHTML = `<main class="route-loading-shell" aria-label="Margin bootstrap error"><div class="route-loading-shell__brand"><span>Margin</span></div><p style="margin-top:16px;font:14px system-ui;color:#66737F">${message}</p></main>`;
+});
 
-onLCP(m => report('LCP', m));
-onFID(m => report('FID', m));
-onINP(m => report('INP', m));
-onCLS(m => report('CLS', m));
-onTTFB(m => report('TTFB', m));
-onFCP(m => report('FCP', m));
+// Optional integrations are intentionally initialized after the first render path.
+void import('@/lib/pwaInstall').then(({ startPwaInstallManager }) => {
+  try {
+    startPwaInstallManager();
+  } catch (error) {
+    console.warn('Margin PWA install manager unavailable during development', error);
+  }
+}).catch(() => undefined);
+
+void Promise.all([
+  import('web-vitals'),
+  import('@/lib/analytics'),
+]).then(([webVitals, { trackEvent }]) => {
+  const report = (name: string, metric: { value: number; rating: string; id: string; navigationType?: string }) => {
+    trackEvent('web_vital', {
+      name,
+      value: metric.value,
+      rating: metric.rating,
+      id: metric.id,
+      navigationType: metric.navigationType || performance.getEntriesByType('navigation')[0]?.type,
+    });
+  };
+
+  webVitals.onLCP(metric => report('LCP', metric));
+  webVitals.onFID(metric => report('FID', metric));
+  webVitals.onINP(metric => report('INP', metric));
+  webVitals.onCLS(metric => report('CLS', metric));
+  webVitals.onTTFB(metric => report('TTFB', metric));
+  webVitals.onFCP(metric => report('FCP', metric));
+}).catch(() => undefined);

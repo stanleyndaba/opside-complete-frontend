@@ -71,7 +71,7 @@ function getStoredDemoEmail() {
     return localStorage.getItem('user_email') || DEMO_USER_EMAIL;
 }
 
-export function SessionProvider({ children }: { children: ReactNode }) {
+function ClerkSessionProvider({ children }: { children: ReactNode }) {
     const {
         isLoaded: isClerkLoaded,
         isSignedIn: isClerkSignedIn,
@@ -361,6 +361,30 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             {children}
         </SessionContext.Provider>
     );
+}
+
+// Public routes remain renderable in local development when Clerk is not configured.
+// Authenticated behavior is unchanged whenever VITE_CLERK_PUBLISHABLE_KEY exists.
+export function SessionProvider({ children }: { children: ReactNode }) {
+    if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
+        return (
+            <SessionContext.Provider value={{
+                isSessionValid: false,
+                isAuthReady: true,
+                authToken: null,
+                userId: null,
+                userEmail: null,
+                isPaidUser: false,
+                showSessionTimeout: () => undefined,
+                hideSessionTimeout: () => undefined,
+                signOut: async () => undefined,
+            }}>
+                {children}
+            </SessionContext.Provider>
+        );
+    }
+
+    return <ClerkSessionProvider>{children}</ClerkSessionProvider>;
 }
 
 export function useSession() {

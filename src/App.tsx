@@ -18,9 +18,9 @@ import { RouteErrorBoundary } from "@/components/error/RouteErrorBoundary";
 import { usePrivateRouteRobots } from "@/hooks/usePrivateRouteRobots";
 import { AnalyticsRouteTracker } from "@/components/AnalyticsRouteTracker";
 import { PublicSiteInstrumentation } from "@/components/analytics/PublicSiteInstrumentation";
+import Index from "./pages/Index";
 
 // Route-level code splitting
-const Index = lazy(() => import("./pages/Index"));
 const Dashboard = lazy(() => import("@/components/layout/Dashboard").then(m => ({ default: m.Dashboard })));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Login = lazy(() => import("./pages/Login"));
