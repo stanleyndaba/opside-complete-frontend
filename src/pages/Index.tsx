@@ -533,22 +533,28 @@ function GuardrailListVisual() {
     { icon: MessagesSquare, title: "Case rejected by Amazon", state: "Rebuilding the case from feedback", detail: "", tone: "text-[#7A5147]" },
   ];
   return (
-    <div className="mb-6 rounded-[4px] border border-[#D8E3EA] bg-white p-3 shadow-[0_10px_24px_rgba(37,49,58,0.06)] sm:p-4" aria-label="Guardrails evidence status list">
-      <div className="mb-3 flex items-center justify-between border-b border-[#E8EDEB] pb-2">
-        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#7B878D]">Recovery review</span>
-        <span className="text-[9px] font-semibold uppercase tracking-[0.08em] text-[#7B878D]">Guardrails</span>
-      </div>
-      <div className="space-y-2">
-        {items.map(({ icon: Icon, title, state, detail, tone }, index) => (
-          <div key={title} className="flex items-start gap-2.5 border-b border-[#EEF1EF] pb-2 last:border-b-0 last:pb-0">
-            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] border border-[#D8E3EA] bg-[#F7F8F6] text-[#52616A]" aria-hidden="true"><Icon className="h-3.5 w-3.5" strokeWidth={1.7} /></span>
-            <span className="min-w-0 flex-1">
-              <span className="flex items-center gap-2 text-[11px] font-semibold leading-4 tracking-[-0.01em] text-[#263438] sm:text-[12px]">{index + 1}. {title}<span className={`ml-auto shrink-0 text-[9px] font-semibold uppercase tracking-[0.06em] ${tone}`}>{index === 0 ? "Held" : index === 1 ? "Review" : "Rework"}</span></span>
-              <span className={`mt-0.5 block text-[10px] font-medium leading-4 ${tone}`}>{state}</span>
-              {detail ? <span className="mt-0.5 block text-[9px] leading-3.5 text-[#7B878D]">{detail}</span> : null}
-            </span>
+    <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[4px] border border-[#BFC5C1] bg-[#D7D9D5]" aria-label="Guardrails evidence status list">
+      <img src="/recovery-harness-guardrails.png" alt="Seller reviewing evidence before approving a recovery" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      <div className="absolute inset-0 bg-[#263438]/42 backdrop-blur-[1px]" />
+      <div className="relative flex h-full items-center justify-center p-3 sm:p-5">
+        <div className="w-full rounded-[4px] border border-[#D8E3EA] bg-white p-3 shadow-[0_14px_30px_rgba(20,31,34,0.18)] sm:p-4">
+          <div className="mb-3 flex items-center justify-between border-b border-[#E8EDEB] pb-2">
+            <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#7B878D]">Recovery review</span>
+            <span className="text-[9px] font-semibold uppercase tracking-[0.08em] text-[#7B878D]">Guardrails</span>
           </div>
-        ))}
+          <div className="space-y-2">
+            {items.map(({ icon: Icon, title, state, detail, tone }, index) => (
+              <div key={title} className="flex items-start gap-2.5 border-b border-[#EEF1EF] pb-2 last:border-b-0 last:pb-0">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] border border-[#D8E3EA] bg-[#F7F8F6] text-[#52616A]" aria-hidden="true"><Icon className="h-3.5 w-3.5" strokeWidth={1.7} /></span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2 text-[11px] font-semibold leading-4 tracking-[-0.01em] text-[#263438] sm:text-[12px]">{index + 1}. {title}<span className={`ml-auto shrink-0 text-[9px] font-semibold uppercase tracking-[0.06em] ${tone}`}>{index === 0 ? "Held" : index === 1 ? "Review" : "Rework"}</span></span>
+                  <span className={`mt-0.5 block text-[10px] font-medium leading-4 ${tone}`}>{state}</span>
+                  {detail ? <span className="mt-0.5 block text-[9px] leading-3.5 text-[#7B878D]">{detail}</span> : null}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
