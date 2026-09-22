@@ -16,7 +16,8 @@ export function MarginEngineSection() {
             <span className="hidden sm:inline">Less uncertainty. Less financial chasing. More confidence about what happened to the money.</span>
           </h2>
           <p className="mt-4 max-w-[620px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Know what happened. Resolve what matters. Move forward.</p>
-        <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">You no longer have to know where to look. Margin establishes what happened and shows what deserves attention.</p>
+        <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Margin owns the gap between what Amazon says happened and what actually happened to your money.</p>
+        <p className="mt-3 max-w-[680px] text-[15px] leading-7 text-[#536872] sm:text-[17px]">Sometimes the answer is a recovery. Sometimes the answer is that nothing is wrong. Either way, you know.</p>
         </div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="mx-auto w-full max-w-[1040px] lg:max-w-[1350px]">

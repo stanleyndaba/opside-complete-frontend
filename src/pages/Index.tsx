@@ -523,7 +523,7 @@ const recoveryHarnessPoints = [
     number: "03",
     title: "Builds From the Supply Chain",
     lead: "The transaction is only part of the story.",
-    body: "Margin connects supply-chain financial events and operational records — shipments, inventory movements, fulfillment events, returns, and financial activity — to reconstruct what actually happened and build the case around it.",
+    body: "When something doesn’t add up, you can see why—without reconstructing the entire chain yourself. Margin connects the surrounding records so the financial reality becomes clear.",
     outcome: "Context grounds the case.",
   },
 ];
@@ -613,7 +613,7 @@ function RecoveryHarnessSection() {
             The Recovery Harness
           </h2>
           <p className="mt-5 max-w-[720px] text-[16px] leading-7 text-[var(--margin-text-secondary)] sm:text-[18px] sm:leading-8">
-            You don&apos;t have to decide what deserves a case. Margin establishes what happened, what the evidence supports, and what is ready for your approval.
+            You don&apos;t have to decide what deserves a case. Margin establishes what happened, what the evidence supports, and what is ready for your approval. Not every discrepancy becomes a claim; sometimes the answer is that the money is already right.
           </p>
         </motion.div>
         <div className="mt-10 grid gap-5 md:mt-14 md:grid-cols-3 md:gap-6">
@@ -1006,10 +1006,11 @@ function MarginStandardSection() {
               If something needs recovering, Margin handles it.
             </h2>
             <p className="mt-6 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              Margin investigates what happened, builds what is needed, handles the recovery, follows the outcome, and keeps going until the money is accounted for.
+              Margin doesn&apos;t stop when it finds something. It stays with the money until the story is resolved.
             </p>
+            <p className="mt-4 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Detected is not resolved. Approved is not paid. Paid is not reconciled.</p>
             <p className="mt-6 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
-              No guessing. No chasing. No unnecessary claims.
+              No guessing. No chasing. No unnecessary claims. Nothing gets left as &quot;probably fine.&quot;
             </p>
           </motion.div>
 
@@ -1747,6 +1748,7 @@ function RiskSection() {
             <p className="mt-6 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Search through Amazon messages, old case threads, and scattered notes to remember what was said and what it was about.</p>
             <p className="mt-5 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> The conversation stays with the recovery — what Amazon said, what Margin responded, what changed, and what still needs to happen.</p>
             <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">No lost context. No starting over. A recovery with a history.</p>
+            <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">Something looks wrong. Margin knows what happened.</p>
             <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">You don&apos;t need to remember where the recovery stands.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 overflow-hidden rounded-[12px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
@@ -1799,6 +1801,7 @@ function FinancialReconciliationSection() {
             <p className="mt-5 max-w-[580px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">No second investigation. No loose ends.</p>
             <p className="mt-4 max-w-[580px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">When the money comes back, you know the matter is actually closed.</p>
             <p className="mt-4 max-w-[580px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>The money is accounted for. The record is closed.</p>
+            <p className="mt-3 max-w-[580px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">The money moved. Margin knows where it landed.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3">
             <FinalDelegationPreview compactMobile src="/financial-reconciliation" title="Financial reconciliation page preview" />
@@ -2050,6 +2053,7 @@ export default function Index() {
                   </h2>
                   <p className="mt-4 max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">You approve what matters. Margin owns the investigation, evidence, casework, follow-up, and verification.</p>
                   <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>You just need to know it&apos;s being handled.</p>
+                  <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You can operate without Margin. You should not have to operate without knowing what happened to your money.</p>
                   <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block">
                     <label htmlFor="delegation-email" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
                     <input id="delegation-email" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />

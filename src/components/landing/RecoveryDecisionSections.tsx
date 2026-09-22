@@ -78,7 +78,7 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
           </div>
           <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-white sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Don&apos;t manage recovery across complex Amazon operations. Let Margin run it.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-white/72 md:text-[17px] md:leading-8">When your business spans multiple marketplaces, entities, catalogs, and operational environments, recovery doesn&apos;t get simpler.</p>
-          <p className="mt-4 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-white/72 md:text-[17px] md:leading-8">Margin gives your team one place to understand what happened, establish what the evidence supports, and manage recovery across the operation.</p>
+          <p className="mt-4 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-white/72 md:text-[17px] md:leading-8">Your team no longer has to carry the financial history of every recovery across systems, people, and marketplaces. Margin keeps the operation accountable to what actually happened.</p>
           <Link to="/sales" className="landing-pressable mt-6 inline-flex h-11 items-center rounded-[7px] bg-[var(--margin-blue)] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] transition-colors hover:bg-[var(--margin-blue-hover)]">Explore Margin for Enterprise <ArrowRight className="ml-2 h-4 w-4" /></Link>
           <div className="mt-4 border-l border-white/25 pl-4 text-[13px] leading-6 text-white/60"><p>US · CA · MX · UK · EU + More</p><p>Multiple markets / one examination</p></div>
         </motion.div>
