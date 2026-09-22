@@ -1984,7 +1984,7 @@ export default function Index() {
                 <div className="h-px w-8 bg-[var(--margin-blue)]" />
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">14 / TRUST / FAQ</span>
               </div>
-              <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
+              <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] text-white sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
                 Your questions answered
               </h2>
             </motion.div>
@@ -1993,18 +1993,18 @@ export default function Index() {
                 type="single"
                 collapsible
                 defaultValue="faq-0"
-                className="w-full border-t border-[var(--margin-border)]"
+                className="w-full border-t border-white/20"
               >
                 {faqs.slice(0, showAllFaqs ? faqs.length : 3).map((item, index) => (
                   <AccordionItem
                     key={item.question}
                     value={`faq-${index}`}
-                    className="border-b border-[var(--margin-border)] px-0"
+                    className="border-b border-white/20 px-0"
                   >
-                    <AccordionTrigger className="py-6 text-left text-[18px] font-semibold tracking-[-0.035em] text-[var(--margin-text-primary)] hover:no-underline md:py-7 md:text-[22px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-[var(--margin-text-muted)]">
+                    <AccordionTrigger className="py-6 text-left text-[18px] font-semibold tracking-[-0.035em] text-white hover:no-underline md:py-7 md:text-[22px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-white/60">
                       {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="pb-7 pr-10 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+                    <AccordionContent className="pb-7 pr-10 text-[15px] leading-7 text-white/72 md:text-[17px] md:leading-8">
                       <p>{item.answer}</p>
                     </AccordionContent>
                   </AccordionItem>
