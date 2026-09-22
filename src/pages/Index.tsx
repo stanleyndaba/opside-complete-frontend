@@ -615,6 +615,10 @@ function RecoveryHarnessSection() {
           <p className="mt-5 max-w-[720px] text-[16px] leading-7 text-[var(--margin-text-secondary)] sm:text-[18px] sm:leading-8">
             You don&apos;t have to decide what deserves a case. Margin establishes what happened, what the evidence supports, and what is ready for your approval. Not every discrepancy becomes a claim; sometimes the answer is that the money is already right.
           </p>
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#52616A] sm:text-[11px]">
+            <span>No recovery · evidence supports Amazon&apos;s charge</span>
+            <span>Potential discrepancy · evidence insufficient to claim</span>
+          </div>
         </motion.div>
         <div className="mt-10 grid gap-5 md:mt-14 md:grid-cols-3 md:gap-6">
           {recoveryHarnessPoints.map((point, index) => (
@@ -1012,6 +1016,12 @@ function MarginStandardSection() {
             <p className="mt-6 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
               No guessing. No chasing. No unnecessary claims. Nothing gets left as &quot;probably fine.&quot;
             </p>
+            <div className="mt-5 border-l border-[var(--margin-border)] pl-4 text-[12px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] sm:text-[13px] sm:leading-7">
+              <p>We don&apos;t guess about money.</p>
+              <p>We don&apos;t turn uncertainty into a claim.</p>
+              <p>We don&apos;t call something recovered until the money is accounted for.</p>
+              <p>We don&apos;t leave financial questions unresolved.</p>
+            </div>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 border-t border-[var(--margin-border)] lg:order-1">
@@ -1749,6 +1759,8 @@ function RiskSection() {
             <p className="mt-5 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> The conversation stays with the recovery — what Amazon said, what Margin responded, what changed, and what still needs to happen.</p>
             <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">No lost context. No starting over. A recovery with a history.</p>
             <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">Something looks wrong. Margin knows what happened.</p>
+            <p className="mt-3 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">The next review starts with what Margin already established—not a blank page.</p>
+            <p className="mt-3 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">When something changes, Margin shows what changed from the established record.</p>
             <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">You don&apos;t need to remember where the recovery stands.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 overflow-hidden rounded-[12px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
@@ -1802,6 +1814,7 @@ function FinancialReconciliationSection() {
             <p className="mt-4 max-w-[580px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">When the money comes back, you know the matter is actually closed.</p>
             <p className="mt-4 max-w-[580px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>The money is accounted for. The record is closed.</p>
             <p className="mt-3 max-w-[580px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">The money moved. Margin knows where it landed.</p>
+            <p className="mt-3 max-w-[580px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">An approval is not a recovery. A recovery is not complete until the money is accounted for.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3">
             <FinalDelegationPreview compactMobile src="/financial-reconciliation" title="Financial reconciliation page preview" />
