@@ -590,14 +590,13 @@ function RecoveryHarnessSection() {
         </motion.div>
         <div className="mt-10 grid gap-px overflow-hidden rounded-[10px] bg-[#D8E3EA] shadow-[0_18px_50px_rgba(37,49,58,0.07)] md:mt-14 md:grid-cols-3">
           {recoveryHarnessPoints.map((point, index) => (
-            <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className={`flex min-h-[330px] flex-col ${index === 0 ? "bg-transparent p-0" : "bg-white p-6 sm:p-8"}`}>
+            <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="flex min-h-[330px] flex-col bg-transparent p-0">
               {point.number === "01" ? <GuardrailListVisual /> : null}
               {point.number === "02" ? <SettlementOutcomeVisual /> : null}
-              {index !== 0 ? <div className="flex items-center justify-between"><span className="font-mono text-[11px] font-semibold tracking-[0.12em] text-[var(--margin-blue)]">{point.number}</span><div className="h-px w-10 bg-[#C8D8E0]" /></div> : null}
-              <h3 className={`${index === 0 ? "mt-6 px-6 sm:px-8" : "mt-8"} font-lora text-[25px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[28px]`}>{point.title}</h3>
-              <p className={`${index === 0 ? "px-6 sm:px-8" : ""} mt-5 text-[15px] font-semibold leading-6 tracking-[-0.01em] text-[#294B61]`}>{point.lead}</p>
-              <p className={`${index === 0 ? "px-6 sm:px-8" : ""} mt-3 text-[14px] leading-6 text-[var(--margin-text-secondary)]`}>{point.body}</p>
-              <p className={`${index === 0 ? "px-6 sm:px-8" : ""} mt-auto pt-7 font-lora text-[17px] leading-6 tracking-[-0.02em] text-[var(--margin-text-primary)]`}>{point.outcome}</p>
+              <h3 className="mt-6 px-6 font-lora text-[25px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:px-8 sm:text-[28px]">{point.title}</h3>
+              <p className="mt-5 px-6 text-[15px] font-semibold leading-6 tracking-[-0.01em] text-[#294B61] sm:px-8">{point.lead}</p>
+              <p className="mt-3 px-6 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:px-8">{point.body}</p>
+              <p className="mt-auto px-6 pt-7 font-lora text-[17px] leading-6 tracking-[-0.02em] text-[var(--margin-text-primary)] sm:px-8">{point.outcome}</p>
             </motion.article>
           ))}
         </div>
