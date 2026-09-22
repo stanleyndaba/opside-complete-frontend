@@ -136,10 +136,10 @@ export default function PricingAdjust() {
   const renderPricingTier = (tier: PricingTier, index: number) => {
     const featured = Boolean(tier.featured);
     const baseCard =
-      'relative flex h-full flex-col overflow-hidden rounded-[34px] border p-6 transition-all duration-300 shadow-[0_28px_90px_rgba(37,49,58,0.1)]';
+      'relative flex h-full flex-col overflow-hidden rounded-[3px] border p-6 transition-all duration-300 shadow-[0_18px_50px_rgba(37,49,58,0.07)]';
     const cardClasses = featured
-      ? `${baseCard} border-[#BFD8EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF4FF_100%)]`
-      : `${baseCard} border-[#CFE0EA] bg-white`;
+      ? `${baseCard} border-[#AEBAB5] bg-[#D7D9D5]`
+      : `${baseCard} border-[#BFC5C1] bg-[#F8F7F2]`;
 
     return (
       <motion.div
@@ -149,24 +149,24 @@ export default function PricingAdjust() {
         transition={{ delay: 0.2 + index * 0.1, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         className={cn(cardClasses, "mx-auto w-full max-w-md lg:max-w-none")}
       >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(11,116,222,0.1),_transparent_60%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(255,255,255,0.28),transparent)]" />
 
         <div className="relative z-10 flex h-full flex-col">
           <div className="mb-6 flex items-start justify-between gap-4">
             <div>
-              <div className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
+              <div className="text-[10px] font-mono font-semibold uppercase tracking-tight text-[#0B74DE]">
                 {tier.salesLed ? 'Offer' : 'Coverage'}
               </div>
-              <h2 className="mt-3 font-lora text-3xl font-normal leading-tight tracking-tight text-[#182026]">{tier.name}</h2>
+              <h2 className="mt-3 text-3xl font-normal leading-tight tracking-[-0.04em] text-[#263438]">{tier.name}</h2>
             </div>
             {featured || tier.badgeLabel ? (
               <Badge 
                 variant="outline" 
                 className={cn(
-                  "text-[9px] uppercase whitespace-nowrap rounded-[6px] px-2 py-0.5",
+                  "text-[9px] uppercase whitespace-nowrap rounded-[3px] px-2 py-0.5",
                   tier.badgeLabel?.includes('Coming Soon')
                     ? "font-medium tracking-tight bg-slate-100 text-slate-500 border-[#D8E3EA]"
-                    : "font-bold tracking-tight border-[#D8E3EA] bg-white text-[#0B74DE] shadow-sm"
+                    : "font-bold tracking-tight border-[#BFC5C1] bg-[#F8F7F2] text-[#0B74DE] shadow-sm"
                 )}
               >
                 {tier.badgeLabel || 'Most Popular'}
@@ -174,9 +174,9 @@ export default function PricingAdjust() {
             ) : null}
           </div>
 
-          <div className="mb-6 rounded-[24px] border border-[#E4EDF1] bg-[#F8FAFC] p-5">
-            <div className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Price</div>
-            <div className="mt-3 font-lora text-4xl font-normal tracking-[-0.02em] text-[#182026]">
+          <div className="mb-6 rounded-[3px] border border-[#C7CDC9] bg-[#F1EFE8] p-5">
+            <div className="text-[10px] font-mono font-semibold uppercase tracking-tight text-[#66737F]">Price</div>
+            <div className="mt-3 text-4xl font-normal tracking-[-0.04em] text-[#263438]">
               {tier.price}
             </div>
             <div className="mt-2 text-[11px] text-[#66737F]">
@@ -184,13 +184,13 @@ export default function PricingAdjust() {
             </div>
           </div>
 
-          <div className="mb-6 rounded-[22px] border border-[#E4EDF1] bg-white p-4 min-h-[104px]">
-            <div className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Purpose</div>
+          <div className="mb-6 min-h-[104px] rounded-[3px] border border-[#C7CDC9] bg-[#F8F7F2] p-4">
+            <div className="text-[10px] font-mono font-semibold uppercase tracking-tight text-[#66737F]">Purpose</div>
             <div className="mt-3 text-sm font-semibold text-[#25313A]">{tier.purpose}</div>
           </div>
 
-          <div className="mb-8 flex-grow rounded-[24px] border border-[#E4EDF1] bg-white p-5">
-            <div className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Key Differentiators</div>
+          <div className="mb-8 flex-grow rounded-[3px] border border-[#C7CDC9] bg-[#F8F7F2] p-5">
+            <div className="text-[10px] font-mono font-semibold uppercase tracking-tight text-[#66737F]">Key differentiators</div>
             <div className="mt-4 space-y-3">
               {tier.features.map((feature) => (
                 <div key={feature} className="flex items-start gap-3 text-sm leading-6 text-[#4D5B66]">
@@ -228,12 +228,12 @@ export default function PricingAdjust() {
               }}
               disabled={tier.badgeLabel?.includes('Coming Soon')}
               className={cn(
-                "h-12 rounded-[6px] font-bold text-[13px] uppercase tracking-tight transition-all duration-200",
+                "h-12 rounded-[3px] font-bold text-[13px] tracking-tight transition-all duration-200",
                 tier.badgeLabel?.includes('Coming Soon')
                   ? "bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed"
                   : featured
-                    ? "bg-white text-[#0B74DE] border border-[#0B74DE] hover:bg-[#FAFAF7] shadow-sm"
-                    : "border border-[#D8E3EA] bg-white text-[#182026] hover:bg-[#FAFAF7]"
+                    ? "bg-[#263438] text-[#F1EFE8] border border-[#263438] hover:bg-[#1D292C] shadow-sm"
+                    : "border border-[#BFC5C1] bg-[#F1EFE8] text-[#263438] hover:bg-white"
               )}
             >
               {tier.ctaLabel || `Start ${tier.name} Coverage`}
@@ -247,7 +247,7 @@ export default function PricingAdjust() {
 
   return (
     <PageLayout title="Pricing" noPadding hideNavbar hideSidebar hideLogo plainBackground>
-      <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+      <div className="landing-google-sans relative min-h-screen overflow-hidden bg-[#F1EFE8] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
         {isInAppOverlay ? (
           <div className="fixed inset-x-0 top-0 z-20 flex items-center justify-between px-6 py-5 md:px-8">
             <Link
@@ -268,9 +268,7 @@ export default function PricingAdjust() {
         ) : (
           <PublicNavbar variant="light" />
         )}
-        <div
-          className="pointer-events-none fixed inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]"
-        />
+        <div className="pointer-events-none fixed inset-0 opacity-[0.38] [background-image:linear-gradient(rgba(37,49,58,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(37,49,58,0.045)_1px,transparent_1px)] [background-size:72px_72px]" />
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.04]"
           style={{
@@ -278,7 +276,7 @@ export default function PricingAdjust() {
               'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
           }}
         />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(199,184,168,0.18),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.07),transparent_28%)]" />
 
         <div className={cn(
           "relative z-10 w-full mx-auto px-6 lg:px-10 pb-24",
@@ -291,7 +289,8 @@ export default function PricingAdjust() {
             className="mb-16 flex flex-col items-start justify-between gap-10 md:flex-row md:items-end"
           >
             <div className="max-w-xl">
-              <h2 className="font-lora text-4xl font-normal leading-tight tracking-tight text-[#182026] sm:text-5xl md:text-7xl md:leading-none">
+              <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[#0B74DE]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Pricing / recovery infrastructure</span></div>
+              <h2 className="text-4xl font-normal leading-[1.03] tracking-[-0.05em] text-[#263438] sm:text-5xl md:text-7xl md:leading-none">
                 Simple pricing,<br />
                 <span className="text-[#8A99A4]">real results.</span>
               </h2>
@@ -307,8 +306,8 @@ export default function PricingAdjust() {
                   'Move up or down whenever your data follows',
                   'No migrations, exports, or downtime',
                 ].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-[13px] leading-relaxed text-[#66737F] md:justify-end">
-                    <Check className="h-3.5 w-3.5 shrink-0 text-[#0B74DE]" />
+                  <div key={item} className="flex items-center gap-2 text-[13px] leading-relaxed text-[#52616A] md:justify-end">
+                    <Check className="h-3.5 w-3.5 shrink-0 text-[#2E7D5B]" />
                     <span>{item}</span>
                   </div>
                 ))}
