@@ -577,6 +577,22 @@ function RecoveryHarnessSection() {
     return (
       <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[4px] border border-[#BFC5C1] bg-[#D7D9D5]" aria-label="Fulfillment and settlement reconciliation report">
         <img src="/recovery-harness-fulfillment-report.jpg" alt="Settlement reconciliation report with fulfillment metadata and recovery amounts" className="h-full w-full object-cover" loading="lazy" />
+        <div className="absolute inset-x-2 bottom-2 rounded-[10px] bg-white p-3 shadow-[0_14px_30px_rgba(20,31,34,0.18)] sm:inset-x-3 sm:bottom-3 sm:p-4">
+          <div className="grid grid-cols-4 gap-1.5">
+            {['FULFILLMENT RECORD', 'INVENTORY MOVEMENT', 'RETURN EVENT', 'SETTLEMENT'].map((label, index) => (
+              <div key={label} className="relative min-w-0">
+                <div className={`rounded-[5px] px-1.5 py-1.5 text-center text-[7px] font-semibold leading-3 tracking-tight ${index === 3 ? 'bg-[#F4F0E7] text-[#6D5A35]' : 'bg-[#F5F6F3] text-[#52616A]'}`}>{label}</div>
+                {index < 3 ? <span className="absolute -right-1.5 top-1/2 h-px w-1.5 bg-[#B9C2BE]" aria-hidden="true" /> : null}
+              </div>
+            ))}
+          </div>
+          <div className="mt-2.5 grid grid-cols-3 gap-1 border-t border-[#E8EDEB] pt-2">
+            <div className="min-w-0"><span className="block text-[7px] uppercase tracking-tight text-[#7B878D]">Shipped</span><span className="mt-0.5 block text-[11px] font-semibold tracking-tight text-[#263438]">12 units</span></div>
+            <div className="min-w-0"><span className="block text-[7px] uppercase tracking-tight text-[#7B878D]">Accounted for</span><span className="mt-0.5 block text-[11px] font-semibold tracking-tight text-[#263438]">11 units</span></div>
+            <div className="min-w-0 border-l border-[#E7D7B8] pl-2"><span className="block text-[7px] uppercase tracking-tight text-[#9A6A20]">Unresolved</span><span className="mt-0.5 block text-[11px] font-semibold tracking-tight text-[#9A6A20]">1 unit</span></div>
+          </div>
+          <div className="mt-2 flex items-center justify-between border-t border-[#E8EDEB] pt-2 text-[8px] font-semibold tracking-tight"><span className="text-[#7B878D]">Margin context layer</span><span className="text-[#2D7B59]">Evidence connected ✓</span></div>
+        </div>
       </div>
     );
   }
