@@ -573,6 +573,13 @@ function RecoveryHarnessSection() {
       </div>
     );
   }
+  function FulfillmentReportVisual() {
+    return (
+      <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[4px] border border-[#BFC5C1] bg-[#D7D9D5]" aria-label="Fulfillment and settlement reconciliation report">
+        <img src="/recovery-harness-fulfillment-report.jpg" alt="Settlement reconciliation report with fulfillment metadata and recovery amounts" className="h-full w-full object-cover" loading="lazy" />
+      </div>
+    );
+  }
   return (
     <section className="relative overflow-hidden border-y border-[#D8E3EA] bg-[#F4F8F8] py-12 sm:py-14 md:py-20" aria-labelledby="recovery-harness-title">
       <div className={containerClass}>
@@ -593,6 +600,7 @@ function RecoveryHarnessSection() {
             <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="flex min-h-[330px] flex-col bg-transparent p-0">
               {point.number === "01" ? <GuardrailListVisual /> : null}
               {point.number === "02" ? <SettlementOutcomeVisual /> : null}
+              {point.number === "03" ? <FulfillmentReportVisual /> : null}
               <h3 className="mt-6 px-6 font-lora text-[25px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:px-8 sm:text-[28px]">{point.title}</h3>
               <p className="mt-5 px-6 text-[15px] font-semibold leading-6 tracking-[-0.01em] text-[#294B61] sm:px-8">{point.lead}</p>
               <p className="mt-3 px-6 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:px-8">{point.body}</p>
