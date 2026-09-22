@@ -507,6 +507,7 @@ const recoveryHarnessPoints = [
   {
     number: "01",
     title: "Guardrails Controlled by Design",
+    image: "/recovery-harness-guardrails.png",
     lead: "Not everything becomes a claim.",
     body: "Margin applies evidence, rules, and guardrails before a recovery moves forward. You see what was found, why it matters, and approve the action before anything is submitted.",
     outcome: "Find it. Prove it. Approve it.",
@@ -545,6 +546,7 @@ function RecoveryHarnessSection() {
         <div className="mt-10 grid gap-px overflow-hidden rounded-[10px] bg-[#D8E3EA] shadow-[0_18px_50px_rgba(37,49,58,0.07)] md:mt-14 md:grid-cols-3">
           {recoveryHarnessPoints.map((point, index) => (
             <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="flex min-h-[330px] flex-col bg-white p-6 sm:p-8">
+              {point.image ? <div className="mb-6 aspect-[4/3] overflow-hidden rounded-[4px] bg-[#D7D9D5]"><img src={point.image} alt="Seller reviewing evidence before approving a recovery" className="h-full w-full object-cover" loading="lazy" /></div> : null}
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[11px] font-semibold tracking-[0.12em] text-[var(--margin-blue)]">{point.number}</span>
                 <div className="h-px w-10 bg-[#C8D8E0]" />
