@@ -615,9 +615,9 @@ function RecoveryHarnessSection() {
             Margin doesn&apos;t just find something that looks wrong. It establishes whether there&apos;s something worth acting on, learns from what happens, and builds the case from the evidence around it.
           </p>
         </motion.div>
-        <div className="mt-10 grid gap-px overflow-hidden rounded-[10px] bg-[#D8E3EA] shadow-[0_18px_50px_rgba(37,49,58,0.07)] md:mt-14 md:grid-cols-3">
+        <div className="mt-10 grid gap-5 md:mt-14 md:grid-cols-3 md:gap-6">
           {recoveryHarnessPoints.map((point, index) => (
-            <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="flex min-h-[330px] flex-col bg-transparent p-0">
+            <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="flex min-h-[330px] flex-col overflow-hidden rounded-[14px] border border-[#D8E3EA] bg-[#FAFAF7] shadow-[0_18px_50px_rgba(37,49,58,0.10)]">
               {point.number === "01" ? <GuardrailListVisual /> : null}
               {point.number === "02" ? <SettlementOutcomeVisual /> : null}
               {point.number === "03" ? <FulfillmentReportVisual /> : null}
