@@ -12,22 +12,18 @@ import { SITE_META } from '@/config/site';
  */
 const auditSteps = [
   {
-    number: '1',
     title: 'Tell us who you are',
     description: 'We’ll ask for a few quick details so we can associate your files with your Audit.',
   },
   {
-    number: '2',
     title: 'Upload your Amazon files',
     description: 'You’ll be taken to a secure upload page where you can send multiple files at once.',
   },
   {
-    number: '3',
     title: 'Margin investigates',
     description: 'We’ll review the records, identify what needs attention, and gather more information if necessary.',
   },
   {
-    number: '4',
     title: 'We come back with the result',
     description: 'Once the Audit is complete, we’ll show you what we found and what happens next.',
   },
@@ -58,7 +54,6 @@ export default function AmazonAuditIntro() {
         <section className="mx-auto max-w-2xl rounded-[14px] bg-white/90 px-4 py-5 shadow-[0_20px_70px_rgba(50,78,96,0.12)] backdrop-blur-sm sm:px-8 sm:py-8 md:hidden" aria-labelledby="mobile-audit-title">
           <div className="border-b border-[#E4E6E8] pb-5">
             <p className="text-[11px] font-medium text-[#777A82]">File-first Audit</p>
-            <p className="mt-3 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#5165C7]">{mobileStep} / 3</p>
             <h1 id="mobile-audit-title" className="mt-3 font-lora text-[28px] font-normal leading-[1.06] tracking-[-0.035em] text-[#30343B]">
               {mobileStep === 1 ? 'Let’s get your Amazon Audit started.' : mobileStep === 2 ? 'Almost there.' : 'A few things to keep in mind.'}
             </h1>
@@ -87,9 +82,8 @@ export default function AmazonAuditIntro() {
             <div className="pt-5">
               <h2 className="font-lora text-[21px] font-normal tracking-[-0.015em] text-[#30343B]">What happens next?</h2>
               <div className="mt-4 divide-y divide-[#E4E6E8] border-y border-[#E4E6E8]">
-                {auditSteps.map(({ number, title }) => (
-                  <div key={number} className="flex gap-3 py-3 text-[14px]">
-                    <span className="w-4 shrink-0 text-[12px] font-semibold text-[#5165C7]">{number}</span>
+                {auditSteps.map(({ title }) => (
+                  <div key={title} className="flex gap-3 py-3 text-[14px]">
                     <span className="font-semibold text-[#30343B]">{title}</span>
                   </div>
                 ))}
@@ -119,14 +113,13 @@ export default function AmazonAuditIntro() {
           <div className="mt-6 sm:mt-7" aria-labelledby="audit-next-title">
             <h2 id="audit-next-title" className="font-lora text-[21px] font-normal tracking-[-0.015em] text-[#30343B] sm:text-[23px]">What happens next?</h2>
             <div className="mt-4 divide-y divide-[#E4E6E8] border-y border-[#E4E6E8]">
-              {auditSteps.map(({ number, title, description }) => (
-                <details key={number} className="group py-3">
+              {auditSteps.map(({ title, description }) => (
+                <details key={title} className="group py-3">
                   <summary className="flex cursor-pointer list-none items-center gap-3 text-[14px] font-semibold text-[#30343B] outline-none marker:hidden focus-visible:text-[#3F51A8]">
-                    <span className="w-4 shrink-0 text-[12px] font-semibold text-[#5165C7]">{number}</span>
                     <span className="flex-1">{title}</span>
                     <ChevronDown className="h-4 w-4 shrink-0 text-[#8C969E] transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
                   </summary>
-                  <p className="pl-7 pr-6 pt-2 text-[13px] leading-5 text-[#777A82]">{description}</p>
+                  <p className="pr-6 pt-2 text-[13px] leading-5 text-[#777A82]">{description}</p>
                 </details>
               ))}
             </div>
