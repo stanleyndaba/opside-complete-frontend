@@ -192,13 +192,13 @@ function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section data-navbar-theme="light" className="relative overflow-x-hidden bg-white py-10 md:py-16" aria-labelledby="accounting-section-title">
+    <section data-navbar-theme="light" className="relative overflow-x-hidden bg-[#D8CEC3] py-10 md:py-16" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
               <div className="relative min-h-[390px] overflow-hidden py-8 sm:min-h-[430px] sm:py-10">
-                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-white via-white/90 to-transparent sm:w-24" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-white via-white/90 to-transparent sm:w-24" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#D8CEC3] via-[#D8CEC3]/90 to-transparent sm:w-24" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#D8CEC3] via-[#D8CEC3]/90 to-transparent sm:w-24" />
                 <div className="relative space-y-5 sm:space-y-7">
                   {[0, 1].map((rowIndex) => (
                     <motion.div
