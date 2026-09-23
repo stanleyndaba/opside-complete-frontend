@@ -93,7 +93,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
     return (
     <section className="recovery-routing-section relative bg-white py-10 sm:py-10 md:py-14" aria-labelledby="recovery-routing-title">
       <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
-        <motion.div {...revealProps} className="max-w-[760px]">
+        <motion.div {...revealProps} className="routing-copy max-w-[760px]">
           <div className="mb-5 flex items-center gap-3">
             <div className="h-px w-8 bg-[#0B74DE]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">17 / ROUTING</span>
@@ -131,7 +131,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
             </motion.div>
           )})}
         </div>
-        <motion.div {...revealProps} className="mt-9 border-l-2 border-[var(--margin-border)] pl-5">
+        <motion.div {...revealProps} className="routing-note mt-9 border-l-2 border-[var(--margin-border)] pl-5">
           <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not ready to continue? That is fine.</p>
           <p className="mt-2 text-[14px] leading-6 text-[#182026]">The Audit is free. Margin establishes that a recovery exists before asking you to decide whether any work is worth managing.</p>
         </motion.div>

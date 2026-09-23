@@ -748,6 +748,12 @@ html, body, #root {
   color: #182026 !important;
 }
 
+.landing-google-sans > main > section.recovery-routing-section .routing-copy h2,
+.landing-google-sans > main > section.recovery-routing-section .routing-copy p,
+.landing-google-sans > main > section.recovery-routing-section .routing-note p {
+  color: #182026 !important;
+}
+
 /* Section headings are Google Sans; the hero remains Lora. */
 .landing-google-sans .font-lora:not(#margin-hero-title),
 .landing-google-sans .font-lora:not(#margin-hero-title) * {
