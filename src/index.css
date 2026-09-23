@@ -683,11 +683,6 @@ html, body, #root {
   }
 }
 /* Reconciled Matter landing-page surface system */
-.landing-google-sans > main > section.recovery-routing-section {
-  background-color: #FFFFFF !important;
-  color: #182026 !important;
-}
-
 .landing-google-sans {
   background: #F1EFE8 !important;
 }
@@ -746,6 +741,13 @@ html, body, #root {
 .landing-google-sans > main > section:not(:first-child) {
   border-top: 1px solid rgba(24, 32, 38, 0.10);
 }
+
+/* Routing is intentionally a pure-white surface, regardless of section position. */
+.landing-google-sans > main > section.recovery-routing-section {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+
 /* Section headings are Google Sans; the hero remains Lora. */
 .landing-google-sans .font-lora:not(#margin-hero-title),
 .landing-google-sans .font-lora:not(#margin-hero-title) * {
