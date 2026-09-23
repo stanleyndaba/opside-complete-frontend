@@ -486,7 +486,7 @@ function RealityCheckSection() {
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">01 / RECOGNITION</span>
           </div>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-            Make the money make sense.
+            Your FBA numbers don&apos;t tell the whole story.
           </h2>
           <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Sales, fees, refunds, returns, inventory, cases, settlements, and payouts keep moving around the business. You cannot reasonably keep every financial relationship in your head.</p>
           <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
