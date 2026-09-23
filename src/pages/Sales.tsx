@@ -94,10 +94,10 @@ export default function Sales() {
 
             <PublicNavbar variant="light" />
 
-            <main className="relative z-10 pb-24 pt-32 md:pt-40">
+            <main className="relative z-10 pt-32 pb-24">
                 {/* Hero Section */}
-                <section className="mb-24 border-b border-[#D8E3E8] bg-[#FAFAF7] px-5 py-16 text-[#182026] sm:px-8 md:mb-28 md:py-24">
-                    <div className="mx-auto w-full max-w-[1280px] px-0 lg:px-2">
+                <section className="mb-32 bg-[#263438] px-6 py-16 text-[#F1EFE8] md:py-24">
+                    <div className="container mx-auto max-w-5xl">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -105,13 +105,13 @@ export default function Sales() {
                         className="space-y-10"
                     >
                         <div className="space-y-4">
-                            <span className="font-google-sans text-[11px] font-semibold uppercase tracking-tight text-[#B28368]">
+                            <span className="text-[11px] font-bold uppercase tracking-tight text-[#B28368]">
                                 For Amazon businesses managing $1M+ in annual GMV
                             </span>
-                            <h1 className="font-google-sans text-4xl font-normal leading-[1.02] tracking-[-0.055em] text-[#182026] md:text-[76px]">
+                            <h1 className="font-lora text-4xl font-medium leading-[1.05] tracking-tight text-[#F1EFE8] md:text-[68px]">
                                 Don&apos;t manage recovery across complex Amazon operations. Let Margin run it.
                             </h1>
-                            <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-[#4D5B66] md:text-xl">
+                            <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-[#C7D0CE] md:text-xl">
                                 Margin gives your finance and operations teams a controlled view of what Amazon paid, missed, reversed, or left unresolved—then turns the evidence into a clear recovery plan your team can own.
                             </p>
                         </div>
@@ -123,17 +123,17 @@ export default function Sales() {
                             >
                                 <a href="#assessment">Explore Margin for Enterprise</a>
                             </Button>
-                            <a href="#how-it-works" className="flex items-center gap-2 text-[14px] font-semibold text-[#182026] hover:underline">
+                            <a href="#how-it-works" className="text-[14px] font-semibold text-[#182026] hover:underline flex items-center gap-2">
                                 See how the assessment works <ArrowRight className="h-4 w-4" />
                             </a>
                         </div>
 
-                        <div className="flex flex-col justify-between gap-6 border-t border-[#D8E3E8] pt-8 md:flex-row md:items-center">
-                            <div className="flex items-center gap-2 text-[13px] font-medium text-[#182026]">
+                        <div className="flex flex-col justify-between gap-6 border-t border-white/20 pt-8 md:flex-row md:items-center">
+                            <div className="flex items-center gap-2 text-[13px] font-medium text-[#F1EFE8]">
                                 <ShieldCheck className="h-4 w-4 text-[#B28368]" />
                                 Evidence-led. Read-only by default. Your team approves the action.
                             </div>
-                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6]">
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-tight text-[#AEBBB9]">
                                 <span>Multi-account operations</span>
                                 <span className="h-1 w-1 rounded-full bg-[#D8E3E8]" />
                                 <span>SKU-level evidence</span>
