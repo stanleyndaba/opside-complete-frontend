@@ -192,7 +192,7 @@ function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section data-navbar-theme="light" className="relative overflow-x-hidden bg-[#D8CEC3] py-10 md:py-16" aria-labelledby="accounting-section-title">
+    <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F6F8F9] py-10 md:py-16" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
@@ -225,7 +225,7 @@ function AccountingEvidenceSection() {
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:order-2 lg:pt-2">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[#0B74DE]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">02 / THE CONTEXT</span>
+              <span className="context-audit-eyebrow font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">02 / THE CONTEXT</span>
             </div>
             <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
               Bring it all together.

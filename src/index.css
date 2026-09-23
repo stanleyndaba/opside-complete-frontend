@@ -791,6 +791,34 @@ html, body, #root {
   color: #52616A !important;
 }
 
+/* Context shares the Audit section's soft near-white surface and restrained text palette. */
+.landing-google-sans > main > section.context-audit-surface {
+  background-color: #F6F8F9 !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface h2,
+.landing-google-sans > main > section.context-audit-surface p {
+  color: #4D5B66 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface h2,
+.landing-google-sans > main > section.context-audit-surface p span.font-semibold {
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .font-mono {
+  color: #66737F !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-audit-eyebrow {
+  color: #0B74DE !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .bg-white {
+  background-color: #FFFFFF !important;
+}
+
 /* Section headings are Google Sans; the hero remains Lora. */
 .landing-google-sans .font-lora:not(#margin-hero-title),
 .landing-google-sans .font-lora:not(#margin-hero-title) * {
