@@ -68,7 +68,7 @@ export default function AboutMargin() {
 
               <div className="flex flex-wrap items-center gap-5 pt-2 lg:col-start-2">
                 <Button asChild className="h-11 rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] transition-all hover:bg-[#075EBA]">
-                  <Link to="/audit">Explore Recovery Audit</Link>
+                  <Link to="/audit-start">Explore Recovery Audit</Link>
                 </Button>
                 <Link to="/contact" className="text-[14px] font-semibold text-[#182026] hover:underline flex items-center gap-2">
                   Talk to Margin <ArrowRight className="h-4 w-4" />
@@ -398,7 +398,7 @@ export default function AboutMargin() {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                 <Button asChild className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
-                  <Link to="/audit">Run a Recovery Audit</Link>
+                  <Link to="/audit-start">Run a Recovery Audit</Link>
                 </Button>
                 <Link to="/contact" className="text-[14px] font-semibold text-[#182026] hover:underline flex items-center gap-2">
                   Talk to the team building Margin <ArrowRight className="h-4 w-4" />
