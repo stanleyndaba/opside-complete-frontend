@@ -189,6 +189,31 @@ html, body, #root {
   border-color: var(--margin-border) !important;
   box-shadow: 0 18px 50px rgba(72, 103, 122, 0.08);
 }
+
+.sales-page h1,
+.sales-page h2,
+.sales-page h3,
+.sales-page h4,
+.sales-page .font-lora,
+.sales-page .font-mono,
+.sales-page [class*="text-[10px]"],
+.sales-page [class*="text-[11px]"],
+.sales-page [class*="text-[12px]"] {
+  font-family: var(--font-google-sans) !important;
+}
+
+.sales-page .container {
+  max-width: 1280px !important;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.sales-page input,
+.sales-page textarea,
+.sales-page button,
+.sales-page [role="combobox"] {
+  font-family: var(--font-google-sans) !important;
+}
 /* ============================================================
    PWA DESKTOP POLISH — "Website → App" native feel
    ============================================================ */
