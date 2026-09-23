@@ -928,7 +928,7 @@ function ControlSection() {
             <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">You don&apos;t need to decide which anomalies deserve a case.</p>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative overflow-hidden rounded-[14px] border border-[#DCE8EE] bg-white shadow-[0_24px_75px_rgba(42,91,116,0.12)]">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative overflow-hidden">
             <FinalDelegationPreview compactMobile src="/filing-pipeline-preview" title="Recovery Pipeline page preview" />
           </motion.div>
         </div>
