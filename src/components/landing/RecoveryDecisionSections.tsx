@@ -91,7 +91,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
     const [activePath, setActivePath] = useState<number | null>(null);
   
     return (
-    <section className="relative bg-[var(--margin-canvas)] py-10 sm:py-10 md:py-14" aria-labelledby="recovery-routing-title">
+    <section className="relative bg-white py-10 sm:py-10 md:py-14" aria-labelledby="recovery-routing-title">
       <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
         <motion.div {...revealProps} className="max-w-[760px]">
           <div className="mb-5 flex items-center gap-3">
@@ -105,27 +105,27 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           {pathOptions.map((option, index) => {
             const isFirst = index === 0;
             const gradientStyle = isFirst 
-              ? 'radial-gradient(ellipse at 15% 85%, #c97b4a 0%, transparent 50%), radial-gradient(ellipse at 75% 15%, #d4a0b8 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, #dbb896 0%, transparent 45%), radial-gradient(ellipse at 85% 75%, #c48a6e 0%, transparent 40%), linear-gradient(145deg, #d1a0a0 0%, #cc9870 35%, #d4a87a 70%, #c8907a 100%)'
-              : 'radial-gradient(ellipse at 25% 75%, #6b7a54 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, #a8b098 0%, transparent 50%), radial-gradient(ellipse at 45% 35%, #c2c8b8 0%, transparent 45%), radial-gradient(ellipse at 70% 80%, #8a9a6e 0%, transparent 40%), linear-gradient(145deg, #b8bda8 0%, #96a480 35%, #7a8e60 70%, #5e7244 100%)';
+              ? 'radial-gradient(ellipse at 15% 85%, #D8B39A 0%, transparent 50%), radial-gradient(ellipse at 75% 15%, #E7D3D8 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, #E8D8C2 0%, transparent 45%), radial-gradient(ellipse at 85% 75%, #D9B9A4 0%, transparent 40%), linear-gradient(145deg, #E8D8D3 0%, #E5C8B2 35%, #E8D4B8 70%, #E0C2B2 100%)'
+              : 'radial-gradient(ellipse at 25% 75%, #B8C7A8 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, #D8DED0 0%, transparent 50%), radial-gradient(ellipse at 45% 35%, #E1E4D9 0%, transparent 45%), radial-gradient(ellipse at 70% 80%, #C8D2B6 0%, transparent 40%), linear-gradient(145deg, #E0E3D8 0%, #C9D2BC 35%, #B8C6A2 70%, #A9B990 100%)';
             
             return (
             <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} style={{ background: gradientStyle }} className={`relative rounded-[8px] p-6 sm:p-8 md:p-10 transition-[filter,opacity] duration-500 will-change-[filter,opacity] lg:min-w-0 lg:flex-1 ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-white/90">{option.label}</p>
-              <h3 className="mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-white sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>{option.title}</h3>
-              <p className="mt-4 max-w-[520px] text-[14px] leading-6 text-white/80 md:text-[15px] md:leading-7">{option.copy}</p>
-              <div className="mt-7 grid gap-0 border-y border-white/20 sm:grid-cols-2">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#52616A]">{option.label}</p>
+              <h3 className="mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>{option.title}</h3>
+              <p className="mt-4 max-w-[520px] text-[14px] leading-6 text-[#344149] md:text-[15px] md:leading-7">{option.copy}</p>
+              <div className="mt-7 grid gap-0 border-y border-[#7B8A82]/35 sm:grid-cols-2">
                 {option.items.map((item) => (
-                  <div key={item} className="flex items-start gap-2 border-b border-white/10 py-3 text-[12px] leading-5 text-white/90 last:border-b-0 sm:pr-4 md:text-[13px]">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-white/70" />
+                  <div key={item} className="flex items-start gap-2 border-b border-[#7B8A82]/20 py-3 text-[12px] leading-5 text-[#344149] last:border-b-0 sm:pr-4 md:text-[13px]">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#52616A]" />
                     <span>{item}</span>
                   </div>
                 ))}
               </div>
               <div className="mt-7 pt-2">
-                <p className="text-[26px] font-semibold tracking-[-0.05em] text-white md:text-[30px]">{option.price}</p>
-                {option.subPrice && <p className="mt-1 text-[13px] font-medium text-white/70">{option.subPrice}</p>}
-                <Button onClick={() => onAuditCta(option.ctaLocation)} className="mt-6 h-12 rounded-[6px] bg-white text-[#191B20] px-6 text-[14px] font-semibold hover:bg-gray-100 shadow-sm">
-                  {option.cta}<ArrowRight className="ml-2 h-4 w-4 text-gray-500" />
+                <p className="text-[26px] font-semibold tracking-[-0.05em] text-[#182026] md:text-[30px]">{option.price}</p>
+                {option.subPrice && <p className="mt-1 text-[13px] font-medium text-[#52616A]">{option.subPrice}</p>}
+                <Button onClick={() => onAuditCta(option.ctaLocation)} className="mt-6 h-12 rounded-[6px] bg-[#182026] text-white px-6 text-[14px] font-semibold hover:bg-[#344149] shadow-sm">
+                  {option.cta}<ArrowRight className="ml-2 h-4 w-4 text-white/70" />
                 </Button>
               </div>
             </motion.div>

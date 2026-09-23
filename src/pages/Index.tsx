@@ -192,13 +192,13 @@ function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section data-navbar-theme="light" className="relative overflow-x-hidden bg-[#D7D9D5] py-10 md:py-16" aria-labelledby="accounting-section-title">
+    <section data-navbar-theme="light" className="relative overflow-x-hidden bg-white py-10 md:py-16" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
               <div className="relative min-h-[390px] overflow-hidden py-8 sm:min-h-[430px] sm:py-10">
-                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#D7D9D5] via-[#D7D9D5]/85 to-transparent sm:w-24" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#D7D9D5] via-[#D7D9D5]/85 to-transparent sm:w-24" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-white via-white/90 to-transparent sm:w-24" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-white via-white/90 to-transparent sm:w-24" />
                 <div className="relative space-y-5 sm:space-y-7">
                   {[0, 1].map((rowIndex) => (
                     <motion.div
@@ -2006,14 +2006,14 @@ export default function Index() {
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
 
         {/* Section 14 — Trust / FAQ */}
-        <section className="relative bg-[var(--margin-canvas)] py-10 md:py-14" aria-labelledby="trust-faq-title">
+        <section className="relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className="mb-5 flex items-center gap-3">
                 <div className="h-px w-8 bg-[var(--margin-blue)]" />
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">16 / TRUST / FAQ</span>
               </div>
-              <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] text-white sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
+              <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
                 Your questions answered
               </h2>
             </motion.div>
@@ -2022,18 +2022,18 @@ export default function Index() {
                 type="single"
                 collapsible
                 defaultValue="faq-0"
-                className="w-full border-t border-white/20"
+                className="w-full border-t border-[var(--margin-border)]"
               >
                 {faqs.slice(0, showAllFaqs ? faqs.length : 3).map((item, index) => (
                   <AccordionItem
                     key={item.question}
                     value={`faq-${index}`}
-                    className="border-b border-white/20 px-0"
+                    className="border-b border-[var(--margin-border)] px-0"
                   >
-                    <AccordionTrigger className="py-6 text-left text-[18px] font-semibold tracking-[-0.035em] text-white hover:no-underline md:py-7 md:text-[22px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-white/60">
+                    <AccordionTrigger className="py-6 text-left text-[18px] font-semibold tracking-[-0.035em] text-[var(--margin-text-primary)] hover:no-underline md:py-7 md:text-[22px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-[var(--margin-text-muted)]">
                       {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="pb-7 pr-10 text-[15px] leading-7 text-white/72 md:text-[17px] md:leading-8">
+                    <AccordionContent className="pb-7 pr-10 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
                       <p>{item.answer}</p>
                     </AccordionContent>
                   </AccordionItem>
