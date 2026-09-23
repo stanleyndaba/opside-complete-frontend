@@ -16,10 +16,10 @@ const revealProps = {
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
 };
 
-const containerClass = 'mx-auto w-full max-w-5xl px-6';
-const labelClass = 'text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]';
-const sectionHeadingClass = 'font-lora text-3xl md:text-4xl font-medium tracking-tight text-[#182026] leading-tight';
-const bodyTextClass = 'text-[16px] md:text-[18px] text-[#4D5B66] leading-relaxed tracking-tight';
+const containerClass = 'mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12';
+const labelClass = 'about-small font-google-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-[#0B74DE]';
+const sectionHeadingClass = 'font-google-sans text-[32px] md:text-[48px] font-normal tracking-[-0.045em] text-[#182026] leading-[1.03]';
+const bodyTextClass = 'text-[15px] md:text-[17px] text-[#4D5B66] leading-7 md:leading-8 tracking-tight';
 
 export default function AboutMargin() {
   usePageMeta({
@@ -30,32 +30,32 @@ export default function AboutMargin() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+    <div className="about-page min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
       <PublicNavbar variant="light" />
 
       <main className="relative">
         {/* Background effects */}
-        <div className="pointer-events-none fixed inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
+        <div className="pointer-events-none fixed inset-0 opacity-[0.28] [background-image:linear-gradient(rgba(11,116,222,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.04)_1px,transparent_1px)] [background-size:72px_72px]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[700px] bg-[radial-gradient(circle_at_18%_8%,rgba(178,220,232,0.25),transparent_34%),radial-gradient(circle_at_84%_12%,rgba(11,116,222,0.07),transparent_30%)]" />
 
         {/* Hero Section */}
-        <section className="relative pt-32 pb-24 md:pt-48 md:pb-32">
+        <section className="relative border-b border-[#D8E3EA] pt-32 pb-20 md:pt-44 md:pb-28">
           <div className={containerClass}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="space-y-8"
+              className="grid items-end gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-20"
             >
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <span className={labelClass}>The Recovery Engine</span>
-                <h1 className="font-lora text-4xl md:text-[76px] font-medium leading-[1.02] tracking-tight text-[#182026]">
+                <h1 className="max-w-[900px] text-4xl leading-[1.02] tracking-[-0.055em] text-[#182026] md:text-[72px] lg:text-[88px]">
                   Financial truth should not disappear inside a marketplace.
                 </h1>
               </div>
               
-              <div className="max-w-3xl space-y-6">
-                <p className="text-xl md:text-2xl text-[#4D5B66] leading-relaxed tracking-tight font-medium">
+              <div className="max-w-[620px] space-y-5 lg:pb-2">
+                <p className="text-[20px] leading-8 tracking-[-0.02em] text-[#48677A] md:text-[24px] md:leading-9">
                   Margin exists to make unresolved marketplace money visible, evidence-backed, and accountable.
                 </p>
                 <p className={bodyTextClass}>
@@ -66,8 +66,8 @@ export default function AboutMargin() {
                 </p>
               </div>
 
-              <div className="pt-4 flex flex-wrap items-center gap-6">
-                <Button asChild className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
+              <div className="flex flex-wrap items-center gap-5 pt-2 lg:col-start-2">
+                <Button asChild className="h-11 rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] transition-all hover:bg-[#075EBA]">
                   <Link to="/audit">Explore Recovery Audit</Link>
                 </Button>
                 <Link to="/contact" className="text-[14px] font-semibold text-[#182026] hover:underline flex items-center gap-2">
