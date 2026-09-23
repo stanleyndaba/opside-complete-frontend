@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     ChevronRight,
-    Menu,
 } from 'lucide-react';
 import {
     Accordion,
@@ -23,7 +22,7 @@ type PublicNavbarProps = {
     wide?: boolean;
 };
 
-export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarProps) => {
+export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
     const effectiveVariant = variant === 'light' && isOverDarkSurface ? 'dark' : variant;
@@ -101,12 +100,12 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                 "landing-navbar-google-sans fixed left-0 right-0 top-0 z-50 border-transparent bg-transparent transition-colors",
             )}
         >
-            <div className={cn(wide ? "mx-auto w-full max-w-[1280px] px-3 py-3 md:px-6 md:py-3 lg:px-12 2xl:px-14" : "container mx-auto px-3 py-3 md:px-6 md:py-3")}>
+            <div className="w-full px-0 py-0">
                     <div className={cn(
                         "relative grid min-h-[56px] grid-cols-[1fr_auto] items-center gap-3 transition-all duration-300 md:min-h-[68px] md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:gap-6 md:px-5 md:py-3 lg:px-7",
                         isLight
-                            ? "rounded-[14px] bg-white/[0.94] px-4 py-2.5 shadow-[0_12px_42px_rgba(37,49,58,0.10)] backdrop-blur-xl"
-                            : "rounded-[14px] bg-white/[0.08] px-4 py-2.5 shadow-[0_18px_55px_rgba(0,0,0,0.24)] backdrop-blur-xl saturate-[160%]"
+                            ? "rounded-none bg-white/[0.94] px-4 py-2.5 shadow-[0_12px_42px_rgba(37,49,58,0.10)] backdrop-blur-xl"
+                            : "rounded-none bg-white/[0.08] px-4 py-2.5 shadow-[0_18px_55px_rgba(0,0,0,0.24)] backdrop-blur-xl saturate-[160%]"
                     )}>
                     <div className="flex items-center gap-3">
                         <Link
@@ -179,7 +178,10 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                             aria-label="Toggle menu"
                             aria-expanded={mobileMenuOpen}
                             onClick={() => setMobileMenuOpen((prev) => !prev)}>
-                            <Menu className="h-[18px] w-[18px]" strokeWidth={1.5} />
+                            <span aria-hidden="true" className="flex h-[18px] w-[20px] flex-col justify-center gap-[5px]">
+                                <span className="block h-px w-full bg-current" />
+                                <span className="block h-px w-full bg-current" />
+                            </span>
                         </button>
                     </div>
                 </div>
