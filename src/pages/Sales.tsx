@@ -118,7 +118,7 @@ export default function Sales() {
                         <div className="flex flex-wrap items-center gap-6">
                             <Button 
                                 asChild
-                                className="h-12 px-8 rounded-[7px] bg-[#0B74DE] text-[14px] font-semibold text-[#182026] shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all"
+                                className="h-12 px-8 rounded-[7px] bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all"
                             >
                                 <a href="#assessment">Explore Margin for Enterprise</a>
                             </Button>
@@ -708,7 +708,7 @@ export default function Sales() {
                                         <Button 
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="h-12 w-full rounded-[7px] bg-[#0B74DE] text-[14px] font-semibold text-[#182026] shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all"
+                                            className="h-12 w-full rounded-[7px] bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all"
                                         >
                                             {isSubmitting ? 'Preparing Request...' : 'Request Enterprise Assessment'}
                                         </Button>
