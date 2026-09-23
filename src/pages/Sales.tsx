@@ -87,16 +87,16 @@ export default function Sales() {
     return (
         <div className="sales-page landing-google-sans min-h-screen overflow-x-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026] font-sans">
             {/* Background effects */}
-            <div className="fixed inset-0 pointer-events-none opacity-[0.28] z-0 [background-image:linear-gradient(rgba(11,116,222,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.04)_1px,transparent_1px)] [background-size:72px_72px]" />
+            <div className="fixed inset-0 pointer-events-none opacity-[0.45] z-0 [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(178,220,232,0.25),transparent_34%),radial-gradient(circle_at_84%_12%,rgba(11,116,222,0.07),transparent_30%)]" />
+                <div className="absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.08),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.06),transparent_28%)]" />
             </div>
 
             <PublicNavbar variant="light" />
 
             <main className="relative z-10 pb-24 pt-32 md:pt-40">
                 {/* Hero Section */}
-                <section className="mb-24 border-y border-[#263438] bg-[#263438] px-5 py-16 text-[#F1EFE8] sm:px-8 md:mb-28 md:py-24">
+                <section className="mb-24 border-b border-[#D8E3E8] bg-[#FAFAF7] px-5 py-16 text-[#182026] sm:px-8 md:mb-28 md:py-24">
                     <div className="mx-auto w-full max-w-[1280px] px-0 lg:px-2">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -105,13 +105,13 @@ export default function Sales() {
                         className="space-y-10"
                     >
                         <div className="space-y-4">
-                            <span className="font-google-sans text-[11px] font-semibold uppercase tracking-tight text-[#C9A58E]">
+                            <span className="font-google-sans text-[11px] font-semibold uppercase tracking-tight text-[#B28368]">
                                 For Amazon businesses managing $1M+ in annual GMV
                             </span>
-                            <h1 className="font-google-sans text-4xl font-normal leading-[1.02] tracking-[-0.055em] text-[#F1EFE8] md:text-[76px]">
+                            <h1 className="font-google-sans text-4xl font-normal leading-[1.02] tracking-[-0.055em] text-[#182026] md:text-[76px]">
                                 Don&apos;t manage recovery across complex Amazon operations. Let Margin run it.
                             </h1>
-                            <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-[#C7D0CE] md:text-xl">
+                            <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-[#4D5B66] md:text-xl">
                                 Margin gives your finance and operations teams a controlled view of what Amazon paid, missed, reversed, or left unresolved—then turns the evidence into a clear recovery plan your team can own.
                             </p>
                         </div>
@@ -123,17 +123,17 @@ export default function Sales() {
                             >
                                 <a href="#assessment">Explore Margin for Enterprise</a>
                             </Button>
-                            <a href="#how-it-works" className="flex items-center gap-2 text-[13px] font-semibold text-[#F1EFE8] underline decoration-white/30 underline-offset-4 hover:text-white">
+                            <a href="#how-it-works" className="flex items-center gap-2 text-[14px] font-semibold text-[#182026] hover:underline">
                                 See how the assessment works <ArrowRight className="h-4 w-4" />
                             </a>
                         </div>
 
-                        <div className="flex flex-col justify-between gap-6 border-t border-white/20 pt-8 md:flex-row md:items-center">
-                            <div className="flex items-center gap-2 text-[13px] font-medium text-[#F1EFE8]">
+                        <div className="flex flex-col justify-between gap-6 border-t border-[#D8E3E8] pt-8 md:flex-row md:items-center">
+                            <div className="flex items-center gap-2 text-[13px] font-medium text-[#182026]">
                                 <ShieldCheck className="h-4 w-4 text-[#B28368]" />
                                 Evidence-led. Read-only by default. Your team approves the action.
                             </div>
-                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-tight text-[#AEBBB9]">
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6]">
                                 <span>Multi-account operations</span>
                                 <span className="h-1 w-1 rounded-full bg-[#D8E3E8]" />
                                 <span>SKU-level evidence</span>
