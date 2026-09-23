@@ -189,7 +189,7 @@ export default function Contact() {
                       </div>
                       <div className="pt-4 space-y-6">
                         <Button asChild className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
-                          <Link to="/audit">Run a Free Recovery Audit</Link>
+                          <Link to="/audit-start">Run a Free Recovery Audit</Link>
                         </Button>
                         <div className="space-y-4">
                           <p className="text-[13px] font-medium text-[#182026] flex items-center gap-2">
