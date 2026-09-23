@@ -197,8 +197,8 @@ function AccountingEvidenceSection() {
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
               <div className="relative min-h-[390px] overflow-hidden py-8 sm:min-h-[430px] sm:py-10">
-                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#D8CEC3] via-[#D8CEC3]/90 to-transparent sm:w-24" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#D8CEC3] via-[#D8CEC3]/90 to-transparent sm:w-24" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#D8CEC3] via-[#D8CEC3] to-transparent sm:w-24" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#D8CEC3] via-[#D8CEC3] to-transparent sm:w-24" />
                 <div className="relative space-y-5 sm:space-y-7">
                   {[0, 1].map((rowIndex) => (
                     <motion.div
@@ -208,7 +208,7 @@ function AccountingEvidenceSection() {
                       transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 27, repeat: Infinity, ease: "linear" }}
                     >
                       {[...accountingRows[rowIndex], ...accountingRows[rowIndex]].map((source, index) => (
-                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[132px] w-[132px] shrink-0 items-center justify-center rounded-[10px] border-[7px] border-[#DCE8EE] bg-white shadow-[0_14px_28px_rgba(37,49,58,0.12)] sm:h-[150px] sm:w-[150px]">
+                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[132px] w-[132px] shrink-0 items-center justify-center rounded-[10px] border-[7px] border-[#C9BCAF] bg-white shadow-[0_14px_28px_rgba(103,82,68,0.16)] sm:h-[150px] sm:w-[150px]">
                           <img src={source.src} alt={source.name} className="h-16 w-16 object-contain sm:h-[76px] sm:w-[76px]" />
                         </div>
                       ))}
