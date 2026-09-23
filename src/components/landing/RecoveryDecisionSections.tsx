@@ -65,22 +65,22 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
 );
 
 export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
-  <section className="relative bg-[#252321] py-10 sm:py-10 md:py-14" aria-labelledby="recovery-audit-duplicate-title">
+  <section className="enterprise-routing-section relative bg-white py-10 sm:py-10 md:py-14" aria-labelledby="recovery-audit-duplicate-title">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[1.26fr_0.74fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-1">
           <FinalDelegationPreview compactMobile src="/speak-to-sales" title="Enterprise Recovery Program Review page preview" />
         </motion.div>
-        <motion.div {...revealProps} className="order-1 max-w-[780px] lg:order-2">
+        <motion.div {...revealProps} className="enterprise-routing-copy order-1 max-w-[780px] lg:order-2">
           <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-8 bg-[#B77C68]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#D09A86]">14 / ENTERPRISE</span>
+            <div className="h-px w-8 bg-[#0B74DE]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">14 / ENTERPRISE</span>
           </div>
-          <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-white sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Don&apos;t manage recovery across complex Amazon operations. Let Margin run it.</h2>
-          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-white/72 md:text-[17px] md:leading-8">When your business spans multiple marketplaces, entities, catalogs, and operational environments, recovery doesn&apos;t get simpler.</p>
-          <p className="mt-4 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-white/72 md:text-[17px] md:leading-8">Your team no longer has to carry the financial history of every recovery across systems, people, and marketplaces. Margin keeps the operation accountable to what actually happened.</p>
-          <Link to="/sales" className="landing-pressable mt-6 inline-flex h-11 items-center rounded-[7px] bg-[#B77C68] px-6 text-[13px] font-bold text-[#252321] shadow-[0_12px_26px_rgba(183,124,104,0.18)] transition-colors hover:bg-[#C58C78]">Explore Margin for Enterprise <ArrowRight className="ml-2 h-4 w-4" /></Link>
-          <div className="mt-4 border-l border-[#BEB5AA]/35 pl-4 text-[13px] leading-6 text-[#BEB5AA]"><p>US · CA · MX · UK · EU + More</p><p>Multiple markets / one examination</p></div>
+          <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Don&apos;t manage recovery across complex Amazon operations. Let Margin run it.</h2>
+          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">When your business spans multiple marketplaces, entities, catalogs, and operational environments, recovery doesn&apos;t get simpler.</p>
+          <p className="mt-4 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Your team no longer has to carry the financial history of every recovery across systems, people, and marketplaces. Margin keeps the operation accountable to what actually happened.</p>
+          <Link to="/sales" className="landing-pressable mt-6 inline-flex h-11 items-center rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Explore Margin for Enterprise <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          <div className="enterprise-routing-meta mt-4 border-l border-[#C8D2D9] pl-4 text-[13px] leading-6 text-[#98A5AE]"><p>US · CA · MX · UK · EU + More</p><p>Multiple markets / one examination</p></div>
         </motion.div>
       </div>
     </div>
