@@ -99,7 +99,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">17 / ROUTING</span>
           </div>
           <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Choose the recovery path that fits the work.</h2>
-          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">The Audit establishes what is happening first. Then Margin routes you to the right level of support-one justified recovery or an operating layer for work that keeps returning.</p>
+          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Audit establishes what is happening first. Then Margin routes you to the right level of support-one justified recovery or an operating layer for work that keeps returning.</p>
         </motion.div>
         <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
           {pathOptions.map((option, index) => {
@@ -110,20 +110,20 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
             
             return (
             <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} style={{ background: gradientStyle }} className={`relative rounded-[8px] p-6 sm:p-8 md:p-10 transition-[filter,opacity] duration-500 will-change-[filter,opacity] lg:min-w-0 lg:flex-1 ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-white">{option.label}</p>
-              <h3 className="mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-white sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>{option.title}</h3>
-              <p className="mt-4 max-w-[520px] text-[14px] leading-6 text-white md:text-[15px] md:leading-7">{option.copy}</p>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#52616A]">{option.label}</p>
+              <h3 className="mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-[#344149] sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>{option.title}</h3>
+              <p className="mt-4 max-w-[520px] text-[14px] leading-6 text-[#344149] md:text-[15px] md:leading-7">{option.copy}</p>
               <div className="mt-7 grid gap-0 border-y border-white/40 sm:grid-cols-2">
                 {option.items.map((item) => (
-                  <div key={item} className="flex items-start gap-2 border-b border-white/30 py-3 text-[12px] leading-5 text-white last:border-b-0 sm:pr-4 md:text-[13px]">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-white" />
+                  <div key={item} className="flex items-start gap-2 border-b border-[#7B8A82]/30 py-3 text-[12px] leading-5 text-[#344149] last:border-b-0 sm:pr-4 md:text-[13px]">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#52616A]" />
                     <span>{item}</span>
                   </div>
                 ))}
               </div>
               <div className="mt-7 pt-2">
-                <p className="text-[26px] font-semibold tracking-[-0.05em] text-white md:text-[30px]">{option.price}</p>
-                {option.subPrice && <p className="mt-1 text-[13px] font-medium text-white">{option.subPrice}</p>}
+                <p className="text-[26px] font-semibold tracking-[-0.05em] text-[#344149] md:text-[30px]">{option.price}</p>
+                {option.subPrice && <p className="mt-1 text-[13px] font-medium text-[#52616A]">{option.subPrice}</p>}
                 <Button onClick={() => onAuditCta(option.ctaLocation)} className="mt-6 h-12 rounded-[6px] bg-[#0B74DE] px-6 text-[14px] font-semibold text-white shadow-sm hover:bg-[#075EBA]">
                   {option.cta}<ArrowRight className="ml-2 h-4 w-4 text-white" />
                 </Button>
@@ -133,7 +133,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
         </div>
         <motion.div {...revealProps} className="mt-9 border-l-2 border-[var(--margin-border)] pl-5">
           <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not ready to continue? That is fine.</p>
-          <p className="mt-2 text-[14px] leading-6 text-[#4D5B66]">The Audit is free. Margin establishes that a recovery exists before asking you to decide whether any work is worth managing.</p>
+          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The Audit is free. Margin establishes that a recovery exists before asking you to decide whether any work is worth managing.</p>
         </motion.div>
       </div>
     </section>
