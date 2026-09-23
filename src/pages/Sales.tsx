@@ -84,7 +84,7 @@ export default function Sales() {
     };
 
     return (
-        <div className="sales-page landing-google-sans min-h-screen overflow-x-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026] font-sans">
+        <div className="font-google-sans min-h-screen overflow-x-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026] font-sans">
             <PublicNavbar variant="light" />
 
             <main className="relative z-10 pt-32 pb-24">
@@ -184,7 +184,7 @@ export default function Sales() {
                 </section>
 
                 {/* Section 2: The Promise */}
-                <section className="border-y border-[#D8E3EA] bg-white py-24 mb-32">
+                <section className="border-y border-[#D8E3EA] bg-[#FAFAF7] py-24 mb-32">
                     <div className="container mx-auto px-6 max-w-5xl text-center space-y-8">
                         <h2 className="font-google-sans text-3xl md:text-4xl font-medium tracking-tight text-[#182026]">
                             One recovery operation. One evidence standard. <br />
@@ -412,7 +412,7 @@ export default function Sales() {
                                 ))}
                             </div>
                         </div>
-                        <div className="border-y border-[#0B74DE]/20 bg-[#0B74DE]/5 py-8 text-center">
+                        <div className="border-y border-[#0B74DE]/20 bg-[#FAFAF7] py-8 text-center">
                             <p className="text-[16px] font-semibold text-[#182026] leading-relaxed">
                                 The commercial decision should be based on the value Margin can establish—not a generic industry percentage.
                             </p>
@@ -435,7 +435,7 @@ export default function Sales() {
                             { step: "4. Choose the operating model", desc: "Your team can manage the work, ask Margin to handle a defined recovery route, or continue with a recurring control and reporting relationship." },
                             { step: "5. Expand only when the evidence earns it", desc: "Additional accounts, marketplaces, SKU sets, or recurring examinations should follow demonstrated value—not an arbitrary implementation schedule." }
                         ].map((item, i) => (
-                            <div key={i} className="border-t border-[#D8E3E8] bg-transparent py-6 flex flex-col sm:flex-row sm:items-center gap-6 group transition-colors hover:bg-[#F1F5F6]/70">
+                            <div key={i} className="border-t border-[#D8E3E8] bg-transparent py-6 flex flex-col sm:flex-row sm:items-center gap-6 group transition-colors hover:bg-[#FAFAF7]/70">
                                 <div className="sm:w-[280px] flex-shrink-0">
                                     <h4 className="text-[16px] font-bold text-[#182026]">{item.step}</h4>
                                 </div>
@@ -471,7 +471,7 @@ export default function Sales() {
                                 Formal certifications and deployment options are disclosed by their actual status—not by generic “enterprise-grade” language.
                             </p>
                         </div>
-                        <div className="lg:col-span-7 grid sm:grid-cols-2 gap-x-12 gap-y-6 border-y border-[#D8E3E8] bg-white py-8">
+                        <div className="lg:col-span-7 grid sm:grid-cols-2 gap-x-12 gap-y-6 border-y border-[#D8E3E8] bg-[#FAFAF7] py-8">
                             {[
                                 "read-only access by default",
                                 "explicit account scope",
@@ -537,19 +537,19 @@ export default function Sales() {
                                     </p>
                                     <div className="space-y-4 pt-6">
                                         <div className="flex items-center gap-3 text-[13px] text-[#4D5B66]">
-                                            <div className="h-5 w-5 rounded-full bg-[#F1F5F6] flex items-center justify-center flex-shrink-0">
+                                            <div className="h-5 w-5 rounded-full bg-[#FAFAF7] flex items-center justify-center flex-shrink-0">
                                                 <Check className="h-3 w-3" />
                                             </div>
                                             <span>No commitment required</span>
                                         </div>
                                         <div className="flex items-center gap-3 text-[13px] text-[#4D5B66]">
-                                            <div className="h-5 w-5 rounded-full bg-[#F1F5F6] flex items-center justify-center flex-shrink-0">
+                                            <div className="h-5 w-5 rounded-full bg-[#FAFAF7] flex items-center justify-center flex-shrink-0">
                                                 <Check className="h-3 w-3" />
                                             </div>
                                             <span>No provider switch required</span>
                                         </div>
                                         <div className="flex items-center gap-3 text-[13px] text-[#4D5B66]">
-                                            <div className="h-5 w-5 rounded-full bg-[#F1F5F6] flex items-center justify-center flex-shrink-0">
+                                            <div className="h-5 w-5 rounded-full bg-[#FAFAF7] flex items-center justify-center flex-shrink-0">
                                                 <Check className="h-3 w-3" />
                                             </div>
                                             <span>No account connection required</span>
