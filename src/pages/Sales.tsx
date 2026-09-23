@@ -85,12 +85,6 @@ export default function Sales() {
 
     return (
         <div className="sales-page landing-google-sans min-h-screen overflow-x-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026] font-sans">
-            {/* Background effects */}
-            <div className="fixed inset-0 pointer-events-none opacity-[0.45] z-0 [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.08),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.06),transparent_28%)]" />
-            </div>
-
             <PublicNavbar variant="light" />
 
             <main className="relative z-10 pt-32 pb-24">

@@ -225,6 +225,13 @@ html, body, #root {
 .sales-page [class*="bg-[#0B74DE]"] {
   color: #FFFFFF !important;
 }
+
+.sales-page [class*="bg-white"],
+.sales-page [class*="bg-[#F1F5F6]"],
+.sales-page [class*="bg-[#FAFAF7]"],
+.sales-page [class*="bg-[#0B74DE]/5"] {
+  background-color: var(--margin-canvas) !important;
+}
 /* ============================================================
    PWA DESKTOP POLISH — "Website → App" native feel
    ============================================================ */
