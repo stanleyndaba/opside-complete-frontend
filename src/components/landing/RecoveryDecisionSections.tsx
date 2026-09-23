@@ -39,20 +39,20 @@ const revealProps = {
 };
 
 export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
-  <section className="relative bg-[#302D2B] py-10 sm:py-10 md:py-14">
+  <section className="audit-routing-section relative bg-[#F6F8F9] py-10 sm:py-10 md:py-14">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
-        <motion.div {...revealProps} className="order-1 max-w-[780px] lg:order-1">
+        <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
           <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-8 bg-[#B77C68]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#D09A86]">15 / THE AUDIT</span>
+            <div className="h-px w-8 bg-[#0B74DE]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">15 / THE AUDIT</span>
           </div>
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-white sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Know what&apos;s actually happening.</h2>
-          <div className="mt-6 max-w-[760px] space-y-4 text-[15px] leading-7 tracking-[-0.01em] text-[#C8BFB4] md:text-[17px] md:leading-8">
-            <p><span className="font-semibold text-white">Before:</span> Sort through Amazon records trying to work out what happened, what matters, and whether anything needs to be recovered.</p>
-            <p><span className="font-semibold text-white">Now:</span> See what reconciles, what doesn&apos;t, what&apos;s supported by the evidence, and where recovery makes sense.</p>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Know what&apos;s actually happening.</h2>
+          <div className="audit-routing-body mt-6 max-w-[760px] space-y-4 text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">
+            <p><span className="font-semibold text-[#182026]">Before:</span> Sort through Amazon records trying to work out what happened, what matters, and whether anything needs to be recovered.</p>
+            <p><span className="font-semibold text-[#182026]">Now:</span> See what reconciles, what doesn&apos;t, what&apos;s supported by the evidence, and where recovery makes sense.</p>
           </div>
-          <p className="mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#F4EFE8] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit turns uncertainty into something you can understand.</p>
+          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit turns uncertainty into something you can understand.</p>
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-2">

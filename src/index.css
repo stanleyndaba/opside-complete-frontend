@@ -770,6 +770,27 @@ html, body, #root {
   color: #98A5AE !important;
 }
 
+/* Audit is a soft near-white surface with charcoal and restrained grey copy. */
+.landing-google-sans > main > section.audit-routing-section {
+  background-color: #F6F8F9 !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.audit-routing-section .audit-routing-copy h2,
+.landing-google-sans > main > section.audit-routing-section .audit-routing-body,
+.landing-google-sans > main > section.audit-routing-section .audit-routing-body p {
+  color: #4D5B66 !important;
+}
+
+.landing-google-sans > main > section.audit-routing-section .audit-routing-copy h2,
+.landing-google-sans > main > section.audit-routing-section .audit-routing-body span {
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.audit-routing-section .audit-routing-lead {
+  color: #52616A !important;
+}
+
 /* Section headings are Google Sans; the hero remains Lora. */
 .landing-google-sans .font-lora:not(#margin-hero-title),
 .landing-google-sans .font-lora:not(#margin-hero-title) * {
