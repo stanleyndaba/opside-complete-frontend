@@ -10,7 +10,6 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
-import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
 
 export default function Sales() {
@@ -96,7 +95,7 @@ export default function Sales() {
 
             <main className="relative z-10 pt-32 pb-24">
                 {/* Hero Section */}
-                <section className="mb-32 bg-[#263438] px-6 py-16 text-[#F1EFE8] md:py-24">
+                <section className="mb-32 border-b border-[#D8E3EA] bg-[#FAFAF7] px-6 py-16 text-[#182026] md:py-24">
                     <div className="container mx-auto max-w-5xl">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -105,13 +104,13 @@ export default function Sales() {
                         className="space-y-10"
                     >
                         <div className="space-y-4">
-                            <span className="text-[11px] font-bold uppercase tracking-tight text-[#B28368]">
+                            <span className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">
                                 For Amazon businesses managing $1M+ in annual GMV
                             </span>
-                            <h1 className="font-lora text-4xl font-medium leading-[1.05] tracking-tight text-[#F1EFE8] md:text-[68px]">
+                            <h1 className="font-google-sans text-4xl font-medium leading-[1.05] tracking-tight text-[#182026] md:text-[68px]">
                                 Don&apos;t manage recovery across complex Amazon operations. Let Margin run it.
                             </h1>
-                            <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-[#C7D0CE] md:text-xl">
+                            <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-[#4D5B66] md:text-xl">
                                 Margin gives your finance and operations teams a controlled view of what Amazon paid, missed, reversed, or left unresolved—then turns the evidence into a clear recovery plan your team can own.
                             </p>
                         </div>
@@ -119,7 +118,7 @@ export default function Sales() {
                         <div className="flex flex-wrap items-center gap-6">
                             <Button 
                                 asChild
-                                className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all"
+                                className="h-12 px-8 rounded-[7px] bg-[#0B74DE] text-[14px] font-semibold text-[#182026] shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all"
                             >
                                 <a href="#assessment">Explore Margin for Enterprise</a>
                             </Button>
@@ -128,12 +127,12 @@ export default function Sales() {
                             </a>
                         </div>
 
-                        <div className="flex flex-col justify-between gap-6 border-t border-white/20 pt-8 md:flex-row md:items-center">
-                            <div className="flex items-center gap-2 text-[13px] font-medium text-[#F1EFE8]">
-                                <ShieldCheck className="h-4 w-4 text-[#B28368]" />
+                        <div className="flex flex-col justify-between gap-6 border-t border-[#D8E3EA] pt-8 md:flex-row md:items-center">
+                            <div className="flex items-center gap-2 text-[13px] font-medium text-[#182026]">
+                                <ShieldCheck className="h-4 w-4 text-[#0B74DE]" />
                                 Evidence-led. Read-only by default. Your team approves the action.
                             </div>
-                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-tight text-[#AEBBB9]">
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6]">
                                 <span>Multi-account operations</span>
                                 <span className="h-1 w-1 rounded-full bg-[#D8E3E8]" />
                                 <span>SKU-level evidence</span>
@@ -151,7 +150,7 @@ export default function Sales() {
                 <section className="container mx-auto px-6 max-w-5xl mb-32">
                     <div className="grid lg:grid-cols-12 gap-16">
                         <div className="lg:col-span-5 space-y-6">
-                            <h2 className="font-lora text-3xl font-medium tracking-tight text-[#182026] leading-tight">
+                            <h2 className="font-google-sans text-3xl font-medium tracking-tight text-[#182026] leading-tight">
                                 The more you sell, the less you can afford to leave unresolved.
                             </h2>
                             <div className="space-y-4 text-[15px] text-[#4D5B66] leading-relaxed">
@@ -167,7 +166,7 @@ export default function Sales() {
                             </div>
                         </div>
                         <div className="lg:col-span-7">
-                            <div className="border-y border-[#D8E3E8] bg-white overflow-hidden">
+                            <div className="border-y border-[#D8E3E8] bg-[#FAFAF7] overflow-hidden">
                                 <div className="px-6 py-4 border-b border-[#D8E3E8] bg-[#FAFAF7]">
                                     <h3 className="text-[12px] font-bold text-[#182026] uppercase tracking-tight">Margin helps your team answer five questions:</h3>
                                 </div>
@@ -191,9 +190,9 @@ export default function Sales() {
                 </section>
 
                 {/* Section 2: The Promise */}
-                <section className="bg-white border-y border-[#D8E3E8] py-24 mb-32">
+                <section className="border-y border-[#D8E3EA] bg-white py-24 mb-32">
                     <div className="container mx-auto px-6 max-w-5xl text-center space-y-8">
-                        <h2 className="font-lora text-3xl md:text-4xl font-medium tracking-tight text-[#182026]">
+                        <h2 className="font-google-sans text-3xl md:text-4xl font-medium tracking-tight text-[#182026]">
                             One recovery operation. One evidence standard. <br />
                             One accountable view.
                         </h2>
@@ -216,7 +215,7 @@ export default function Sales() {
                     <div className="grid lg:grid-cols-2 gap-16 items-start">
                         <div className="space-y-12">
                             <div className="space-y-4">
-                                <h2 className="font-lora text-3xl font-medium tracking-tight text-[#182026]">
+                                <h2 className="font-google-sans text-3xl font-medium tracking-tight text-[#182026]">
                                     Built for complex Amazon operations—not ordinary private-label accounts.
                                 </h2>
                                 <p className="text-[#4D5B66] leading-relaxed">
@@ -268,12 +267,12 @@ export default function Sales() {
                 </section>
 
                 {/* Section 4: What Margin controls */}
-                <section className="bg-[#182026] py-24 mb-32 text-white overflow-hidden relative">
+                <section className="border-y border-[#D8E3EA] bg-[#FAFAF7] py-24 mb-32 text-[#182026] overflow-hidden relative">
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none [background-image:linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:40px_40px]" />
                     <div className="container mx-auto px-6 max-w-5xl relative z-10">
                         <div className="max-w-2xl mb-16">
-                            <h2 className="font-lora text-3xl md:text-4xl font-medium tracking-tight mb-6">From discrepancy to verified outcome.</h2>
-                            <p className="text-lg text-white/70 leading-relaxed">
+                            <h2 className="font-google-sans text-3xl md:text-4xl font-medium tracking-tight mb-6">From discrepancy to verified outcome.</h2>
+                            <p className="text-lg text-[#4D5B66] leading-relaxed">
                                 Margin brings the recovery operation into one accountable sequence:
                             </p>
                         </div>
@@ -290,7 +289,7 @@ export default function Sales() {
                                 <div key={i} className="space-y-4">
                                     <div className="text-[10px] font-bold text-[#0B74DE] uppercase tracking-tight">{step.n}</div>
                                     <h4 className="text-lg font-semibold tracking-tight">{step.title}</h4>
-                                    <p className="text-[14px] text-white/60 leading-relaxed">{step.desc}</p>
+                                    <p className="text-[14px] text-[#66737F] leading-relaxed">{step.desc}</p>
                                 </div>
                             ))}
                         </div>
@@ -300,7 +299,7 @@ export default function Sales() {
                 {/* Section 5: What your team receives */}
                 <section className="container mx-auto px-6 max-w-5xl mb-32">
                     <div className="text-center max-w-3xl mx-auto mb-20">
-                        <h2 className="font-lora text-3xl md:text-4xl font-medium tracking-tight text-[#182026] mb-6">
+                        <h2 className="font-google-sans text-3xl md:text-4xl font-medium tracking-tight text-[#182026] mb-6">
                             The operating record your recovery process has been missing.
                         </h2>
                     </div>
@@ -315,7 +314,7 @@ export default function Sales() {
                             { icon: BriefcaseBusiness, title: "A clear handoff", desc: "Your team can own the work, ask Margin to handle an approved recovery route, or use Margin as an independent control layer alongside an existing provider." }
                         ].map((benefit, i) => (
                             <div key={i} className="border-t border-[#D8E3E8] bg-transparent py-8 flex gap-5">
-                                <div className="h-9 w-9 rounded-[4px] bg-[#F8FAFB] border border-[#D8E3E8] flex items-center justify-center flex-shrink-0">
+                                <div className="h-9 w-9 border-l-2 border-[#D8E3E8] pl-5 flex items-center justify-center flex-shrink-0">
                                     <benefit.icon className="h-4 w-4 text-[#66737F]" strokeWidth={1.5} />
                                 </div>
                                 <div className="space-y-2">
@@ -332,7 +331,7 @@ export default function Sales() {
                     <div className="border-y border-[#D8E3E8] bg-[#FAFAF7] py-8 md:py-12 overflow-hidden relative">
                         <div className="grid lg:grid-cols-2 gap-12 relative z-10">
                             <div className="space-y-6">
-                                <h2 className="font-lora text-3xl font-medium tracking-tight text-[#182026]">
+                                <h2 className="font-google-sans text-3xl font-medium tracking-tight text-[#182026]">
                                     Your existing provider may be working. <br />
                                     Margin helps you verify that.
                                 </h2>
@@ -373,36 +372,26 @@ export default function Sales() {
                 {/* Section 7: Economic Value */}
                 <section className="container mx-auto px-6 max-w-5xl mb-32">
                     <div className="max-w-3xl mb-12">
-                        <h2 className="font-lora text-3xl md:text-4xl font-medium tracking-tight text-[#182026] mb-4">Economic value</h2>
+                        <h2 className="font-google-sans text-3xl md:text-4xl font-medium tracking-tight text-[#182026] mb-4">Economic value</h2>
                         <p className="text-lg text-[#4D5B66] leading-relaxed">
                             The business case is not “more alerts.” It is less unresolved money and less unowned work. For an enterprise operator, Margin’s value can come from several sources:
                         </p>
                     </div>
 
-                    <div className="border-y border-[#D8E3E8] bg-white overflow-hidden mb-12">
-                        <Table>
-                            <TableHeader>
-                                <TableRow className="bg-[#FAFAF7] hover:bg-[#FAFAF7]">
-                                    <TableHead className="w-[280px] text-[11px] font-bold uppercase tracking-tight text-[#182026]">Value driver</TableHead>
-                                    <TableHead className="text-[11px] font-bold uppercase tracking-tight text-[#182026]">Enterprise impact</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {[
-                                    { driver: "Recovered marketplace value", impact: "Finds and advances materially supported recovery opportunities." },
-                                    { driver: "Reduced leakage", impact: "Identifies recurring operational failures that continue creating discrepancies." },
-                                    { driver: "Lower manual workload", impact: "Replaces scattered checks, repeated exports, and unstructured follow-up." },
-                                    { driver: "Faster financial close", impact: "Gives finance and operations a clearer record of what happened and what remains open." },
-                                    { driver: "Better provider accountability", impact: "Independently checks whether paid recovery work produced the expected result." },
-                                    { driver: "Reduced decision risk", impact: "Separates verified outcomes from estimates and incomplete coverage." }
-                                ].map((row, i) => (
-                                    <TableRow key={i} className="hover:bg-transparent">
-                                        <TableCell className="font-bold text-[13px] text-[#182026] py-5">{row.driver}</TableCell>
-                                        <TableCell className="text-[13px] text-[#4D5B66] py-5">{row.impact}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                    <div className="mb-12 divide-y divide-[#D8E3EA] border-y border-[#D8E3EA]">
+                        {[
+                            { driver: "Recovered marketplace value", impact: "Finds and advances materially supported recovery opportunities." },
+                            { driver: "Reduced leakage", impact: "Identifies recurring operational failures that continue creating discrepancies." },
+                            { driver: "Lower manual workload", impact: "Replaces scattered checks, repeated exports, and unstructured follow-up." },
+                            { driver: "Faster financial close", impact: "Gives finance and operations a clearer record of what happened and what remains open." },
+                            { driver: "Better provider accountability", impact: "Independently checks whether paid recovery work produced the expected result." },
+                            { driver: "Reduced decision risk", impact: "Separates verified outcomes from estimates and incomplete coverage." }
+                        ].map((row) => (
+                            <div key={row.driver} className="grid gap-3 py-6 sm:grid-cols-[280px_1fr] sm:gap-8">
+                                <h3 className="font-google-sans text-[13px] font-semibold text-[#182026]">{row.driver}</h3>
+                                <p className="text-[13px] leading-6 text-[#4D5B66]">{row.impact}</p>
+                            </div>
+                        ))}
                     </div>
 
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -440,7 +429,7 @@ export default function Sales() {
                 {/* Section 8: How it starts */}
                 <section className="container mx-auto px-6 max-w-5xl mb-32" id="how-it-works">
                     <div className="text-center max-w-3xl mx-auto mb-16">
-                        <h2 className="font-lora text-3xl md:text-4xl font-medium tracking-tight text-[#182026] mb-4">How an Enterprise engagement starts</h2>
+                        <h2 className="font-google-sans text-3xl md:text-4xl font-medium tracking-tight text-[#182026] mb-4">How an Enterprise engagement starts</h2>
                         <p className="text-lg text-[#4D5B66]">Start with a controlled assessment—not a platform migration.</p>
                     </div>
 
@@ -452,7 +441,7 @@ export default function Sales() {
                             { step: "4. Choose the operating model", desc: "Your team can manage the work, ask Margin to handle a defined recovery route, or continue with a recurring control and reporting relationship." },
                             { step: "5. Expand only when the evidence earns it", desc: "Additional accounts, marketplaces, SKU sets, or recurring examinations should follow demonstrated value—not an arbitrary implementation schedule." }
                         ].map((item, i) => (
-                            <div key={i} className="border-t border-[#D8E3E8] bg-transparent py-6 flex flex-col sm:flex-row sm:items-center gap-6 group transition-colors hover:bg-[#F8FAFB]/70">
+                            <div key={i} className="border-t border-[#D8E3E8] bg-transparent py-6 flex flex-col sm:flex-row sm:items-center gap-6 group transition-colors hover:bg-[#F1F5F6]/70">
                                 <div className="sm:w-[280px] flex-shrink-0">
                                     <h4 className="text-[16px] font-bold text-[#182026]">{item.step}</h4>
                                 </div>
@@ -480,7 +469,7 @@ export default function Sales() {
                 <section className="container mx-auto px-6 max-w-5xl mb-32">
                     <div className="grid lg:grid-cols-12 gap-16 items-start">
                         <div className="lg:col-span-5 space-y-6">
-                            <h2 className="font-lora text-3xl font-medium tracking-tight text-[#182026]">Your marketplace data remains under a defined access boundary.</h2>
+                            <h2 className="font-google-sans text-3xl font-medium tracking-tight text-[#182026]">Your marketplace data remains under a defined access boundary.</h2>
                             <p className="text-[15px] text-[#4D5B66] leading-relaxed">
                                 Margin is designed around controlled access, evidence traceability, and server-owned authorization. We will state the exact controls available for your engagement before data is connected or uploaded.
                             </p>
@@ -512,7 +501,7 @@ export default function Sales() {
 
                 {/* Section 10: FAQ */}
                 <section className="container mx-auto px-6 max-w-5xl mb-32">
-                    <h2 className="font-lora text-3xl font-medium tracking-tight text-[#182026] mb-12">What enterprise buyers need to know before they book</h2>
+                    <h2 className="font-google-sans text-3xl font-medium tracking-tight text-[#182026] mb-12">What enterprise buyers need to know before they book</h2>
                     <div className="grid md:grid-cols-2 gap-x-16 gap-y-12">
                         {[
                             { q: "Will Margin replace our current provider?", a: "Not automatically. Margin can assess your current operation, identify gaps, and recommend a replacement only when the evidence supports it." },
@@ -533,7 +522,7 @@ export default function Sales() {
                 {/* Section 11: Founder Statement */}
                 <section className="container mx-auto px-6 max-w-5xl mb-32">
                     <div className="py-16 border-t border-[#D8E3E8] text-center max-w-3xl mx-auto">
-                        <p className="font-lora text-2xl md:text-3xl font-medium tracking-tight text-[#182026] leading-relaxed mb-8 italic">
+                        <p className="font-google-sans text-2xl md:text-3xl font-medium tracking-tight text-[#182026] leading-relaxed mb-8 italic">
                             "At $1M+ in GMV, recovery is no longer a side task. It is part of your financial operation. Margin was built to make that operation visible, evidence-backed, and accountable—without asking you to trust an unexplained number."
                         </p>
                         <p className="text-[12px] font-bold text-[#8C9BA6] uppercase tracking-tight">
@@ -544,36 +533,36 @@ export default function Sales() {
 
                 {/* Section 12: Application Form */}
                 <section className="container mx-auto px-6 max-w-5xl" id="assessment">
-                    <div className="rounded-2xl border border-[#D8E3E8] bg-white shadow-2xl shadow-[#182026]/5 overflow-hidden">
+                    <div className="border-y border-[#D8E3E8] bg-[#FAFAF7] overflow-hidden">
                         <div className="grid lg:grid-cols-5">
-                            <div className="lg:col-span-2 bg-[#182026] p-8 md:p-12 text-white flex flex-col justify-between">
+                            <div className="lg:col-span-2 bg-[#FAFAF7] p-8 md:p-12 text-[#182026] flex flex-col justify-between">
                                 <div className="space-y-6">
-                                    <h2 className="font-lora text-3xl font-medium tracking-tight">Start with the operation you need to control.</h2>
-                                    <p className="text-white/60 leading-relaxed">
+                                    <h2 className="font-google-sans text-3xl font-medium tracking-tight">Start with the operation you need to control.</h2>
+                                    <p className="text-[#66737F] leading-relaxed">
                                         A Margin specialist will review your operating profile and confirm whether an Enterprise assessment is appropriate. 
                                     </p>
                                     <div className="space-y-4 pt-6">
-                                        <div className="flex items-center gap-3 text-[13px] text-white/80">
-                                            <div className="h-5 w-5 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                                        <div className="flex items-center gap-3 text-[13px] text-[#4D5B66]">
+                                            <div className="h-5 w-5 rounded-full bg-[#F1F5F6] flex items-center justify-center flex-shrink-0">
                                                 <Check className="h-3 w-3" />
                                             </div>
                                             <span>No commitment required</span>
                                         </div>
-                                        <div className="flex items-center gap-3 text-[13px] text-white/80">
-                                            <div className="h-5 w-5 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                                        <div className="flex items-center gap-3 text-[13px] text-[#4D5B66]">
+                                            <div className="h-5 w-5 rounded-full bg-[#F1F5F6] flex items-center justify-center flex-shrink-0">
                                                 <Check className="h-3 w-3" />
                                             </div>
                                             <span>No provider switch required</span>
                                         </div>
-                                        <div className="flex items-center gap-3 text-[13px] text-white/80">
-                                            <div className="h-5 w-5 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                                        <div className="flex items-center gap-3 text-[13px] text-[#4D5B66]">
+                                            <div className="h-5 w-5 rounded-full bg-[#F1F5F6] flex items-center justify-center flex-shrink-0">
                                                 <Check className="h-3 w-3" />
                                             </div>
                                             <span>No account connection required</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="pt-12 text-[12px] text-white/40 leading-relaxed">
+                                <div className="pt-12 text-[12px] text-[#8C9BA6] leading-relaxed">
                                     Your information is used to scope the conversation. No account connection or provider change is required to request an assessment.
                                 </div>
                             </div>
@@ -591,7 +580,7 @@ export default function Sales() {
                                         <Button 
                                             onClick={() => setIsSubmitted(false)}
                                             variant="outline"
-                                            className="h-11 rounded-md border-[#D8E3E8] px-8 text-[13px] font-semibold"
+                                            className="h-11 rounded-[7px] border-[#D8E3E8] px-8 text-[13px] font-semibold"
                                         >
                                             Start another request
                                         </Button>
@@ -605,7 +594,7 @@ export default function Sales() {
                                                     value={form.name}
                                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                                                     placeholder="Your name"
-                                                    className="h-11 rounded-md border-[#D8E3E8] focus-visible:ring-[#0B74DE]"
+                                                    className="h-11 rounded-[7px] border-[#D8E3E8] focus-visible:ring-[#0B74DE]"
                                                     required
                                                 />
                                             </div>
@@ -616,7 +605,7 @@ export default function Sales() {
                                                     value={form.email}
                                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                                     placeholder="name@company.com"
-                                                    className="h-11 rounded-md border-[#D8E3E8] focus-visible:ring-[#0B74DE]"
+                                                    className="h-11 rounded-[7px] border-[#D8E3E8] focus-visible:ring-[#0B74DE]"
                                                     required
                                                 />
                                             </div>
@@ -626,14 +615,14 @@ export default function Sales() {
                                                     value={form.company}
                                                     onChange={(e) => setForm({ ...form, company: e.target.value })}
                                                     placeholder="Legal entity or portfolio"
-                                                    className="h-11 rounded-md border-[#D8E3E8] focus-visible:ring-[#0B74DE]"
+                                                    className="h-11 rounded-[7px] border-[#D8E3E8] focus-visible:ring-[#0B74DE]"
                                                     required
                                                 />
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="text-[11px] font-bold text-[#182026] uppercase tracking-tight">Your role</label>
                                                 <Select onValueChange={(v) => setForm({ ...form, role: v })}>
-                                                    <SelectTrigger className="h-11 rounded-md border-[#D8E3E8]">
+                                                    <SelectTrigger className="h-11 rounded-[7px] border-[#D8E3E8]">
                                                         <SelectValue placeholder="Select role" />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -649,7 +638,7 @@ export default function Sales() {
                                             <div className="space-y-2">
                                                 <label className="text-[11px] font-bold text-[#182026] uppercase tracking-tight">Annual Amazon GMV</label>
                                                 <Select onValueChange={(v) => setForm({ ...form, gmv: v })}>
-                                                    <SelectTrigger className="h-11 rounded-md border-[#D8E3E8]">
+                                                    <SelectTrigger className="h-11 rounded-[7px] border-[#D8E3E8]">
                                                         <SelectValue placeholder="Select range" />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -666,7 +655,7 @@ export default function Sales() {
                                                     value={form.accounts}
                                                     onChange={(e) => setForm({ ...form, accounts: e.target.value })}
                                                     placeholder="e.g. 3 accounts, 5 countries"
-                                                    className="h-11 rounded-md border-[#D8E3E8] focus-visible:ring-[#0B74DE]"
+                                                    className="h-11 rounded-[7px] border-[#D8E3E8] focus-visible:ring-[#0B74DE]"
                                                 />
                                             </div>
                                         </div>
@@ -675,7 +664,7 @@ export default function Sales() {
                                             <div className="space-y-2">
                                                 <label className="text-[11px] font-bold text-[#182026] uppercase tracking-tight">Current recovery process</label>
                                                 <Select onValueChange={(v) => setForm({ ...form, process: v })}>
-                                                    <SelectTrigger className="h-11 rounded-md border-[#D8E3E8]">
+                                                    <SelectTrigger className="h-11 rounded-[7px] border-[#D8E3E8]">
                                                         <SelectValue placeholder="Select process" />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -691,7 +680,7 @@ export default function Sales() {
                                             <div className="space-y-2">
                                                 <label className="text-[11px] font-bold text-[#182026] uppercase tracking-tight">What are you trying to establish?</label>
                                                 <Select onValueChange={(v) => setForm({ ...form, objective: v })}>
-                                                    <SelectTrigger className="h-11 rounded-md border-[#D8E3E8]">
+                                                    <SelectTrigger className="h-11 rounded-[7px] border-[#D8E3E8]">
                                                         <SelectValue placeholder="Select objective" />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -712,14 +701,14 @@ export default function Sales() {
                                                 value={form.notes}
                                                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
                                                 placeholder="Describe marketplace coverage, operating complexity, current workflow, or unresolved concern."
-                                                className="min-h-[100px] rounded-md border-[#D8E3E8] focus-visible:ring-[#0B74DE]"
+                                                className="min-h-[100px] rounded-[7px] border-[#D8E3E8] focus-visible:ring-[#0B74DE]"
                                             />
                                         </div>
 
                                         <Button 
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="h-12 w-full rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all"
+                                            className="h-12 w-full rounded-[7px] bg-[#0B74DE] text-[14px] font-semibold text-[#182026] shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all"
                                         >
                                             {isSubmitting ? 'Preparing Request...' : 'Request Enterprise Assessment'}
                                         </Button>
@@ -735,23 +724,3 @@ export default function Sales() {
         </div>
     );
 }
-
-// Minimal table components for Section 7
-const Table = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <table className={cn("w-full border-collapse text-left", className)}>{children}</table>
-);
-const TableHeader = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <thead className={className}>{children}</thead>
-);
-const TableBody = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <tbody className={className}>{children}</tbody>
-);
-const TableRow = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <tr className={cn("border-b border-[#D8E3E8] last:border-0", className)}>{children}</tr>
-);
-const TableHead = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <th className={cn("px-6 py-4 text-left align-middle", className)}>{children}</th>
-);
-const TableCell = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <td className={cn("px-6 py-4 align-middle", className)}>{children}</td>
-);
