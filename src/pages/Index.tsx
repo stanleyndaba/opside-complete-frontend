@@ -648,8 +648,7 @@ function MarginLifecycleSection() {
     >
       <div className={containerClass}>
         <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
-        <motion.div {...revealProps} className="relative order-2 h-fit self-start overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:order-1">
-          <BrowserChrome path="margin.app/workspace" />
+        <motion.div {...revealProps} className="relative order-2 h-fit self-start lg:order-1">
           <div className="isolate overflow-hidden rounded-[12px]" style={{ clipPath: "inset(0 round 12px)", WebkitClipPath: "inset(0 round 12px)" }}>
             <DeferredVideo className="block aspect-[1.45] w-full scale-[1.04] object-contain shadow-[0_20px_60px_rgba(0,0,0,0.18)]" src="/workflow.mp4" label="How Margin handles recovery work" />
           </div>
@@ -1112,8 +1111,7 @@ function OneRecordAnalysisVisual() {
             <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Extract the relevant facts, connect them to the records that support them, and show why the recovery exists—not just that it does.</p>
             <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">You don&apos;t need to reconstruct what happened.</p>
           </motion.div>
-          <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
-            <BrowserChrome hidePath />
+          <motion.div {...revealProps} className="relative">
             <OneRecordAnalysisVisual />
           </motion.div>
         </div>
@@ -1413,9 +1411,8 @@ function FullRecoveryLoopSection() {
         <motion.div {...revealProps} className="mt-8 md:mt-10">
           <div
             aria-label="A living orchestration of the full recovery loop"
-            className="recovery-orchestra-canvas relative hidden overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] lg:block"
+            className="recovery-orchestra-canvas relative hidden overflow-hidden lg:block"
           >
-            <div className="relative z-20"><BrowserChrome path="margin.app/recovery-loop" /></div>
             <svg
               aria-hidden="true"
               className="recovery-orchestra-lines pointer-events-none absolute inset-0 h-full w-full"
@@ -1765,8 +1762,7 @@ function RiskSection() {
             <p className="mt-3 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">When something changes, Margin shows what changed from the established record.</p>
             <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">You don&apos;t need to remember where the recovery stands.</p>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 overflow-hidden rounded-[12px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
-            <BrowserChrome path="margin.app/amazon-thread-review" />
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 overflow-hidden">
             <iframe title="Amazon Thread Review page preview" src="/amazon-thread-review" className="block h-[520px] w-full rounded-b-[8px] border-0 bg-[#FBFAF7] sm:h-[600px]" loading="lazy" />
           </motion.div>
         </div>
@@ -1790,7 +1786,7 @@ function RecoveryOutcomeExplorer() {
             <p className="mt-5 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">You don&apos;t have to start the investigation again.</p>
             <p className="mt-4 max-w-[760px] font-lora text-[19px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>The case gets stronger. The recovery keeps moving.</p>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden rounded-[12px] border border-[#D9E2E6] bg-white shadow-[0_20px_60px_rgba(72,103,122,0.14)] lg:order-1">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden lg:order-1">
             <FinalDelegationPreview compactMobile src="/appeals-review" title="Appeals Review page preview" />
           </motion.div>
         </div>
@@ -1818,7 +1814,7 @@ function FinancialReconciliationSection() {
             <p className="mt-3 max-w-[580px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">The money moved. Margin knows where it landed.</p>
             <p className="mt-3 max-w-[580px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">An approval is not a recovery. A recovery is not complete until the money is accounted for.</p>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden">
             <FinalDelegationPreview compactMobile src="/financial-reconciliation" title="Financial reconciliation page preview" />
           </motion.div>
         </div>
@@ -1895,17 +1891,6 @@ function EnterpriseReviewsSection() {
   );
 }
 
-
-function BrowserChrome({ path, hidePath = false }: { path?: string; hidePath?: boolean }) {
-  return (
-    <div className="flex h-7 items-center gap-1.5 border-b border-[#D9E2E6] px-2">
-      <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
-      <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
-      <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
-      {!hidePath && path ? <span className="ml-2 min-w-0 flex-1 truncate text-center font-sans text-[9px] text-[#7A8B93]">{path}</span> : <span className="flex-1" aria-hidden="true" />}
-    </div>
-  );
-}
 
 function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boolean }) {
   const [mode, setMode] = useState<'finding' | 'proof'>('proof');
