@@ -214,6 +214,17 @@ html, body, #root {
 .sales-page [role="combobox"] {
   font-family: var(--font-google-sans) !important;
 }
+
+.sales-page section,
+.sales-page section .bg-white,
+.sales-page section .bg-\[\#F1F5F6\],
+.sales-page section .bg-\[\#0B74DE\]\/5 {
+  background-color: var(--margin-canvas) !important;
+}
+
+.sales-page [class*="bg-[#0B74DE]"] {
+  color: #FFFFFF !important;
+}
 /* ============================================================
    PWA DESKTOP POLISH — "Website → App" native feel
    ============================================================ */
