@@ -476,7 +476,7 @@ const realityCheckWords = realityCheckStages.flatMap((stage) => stage.words);
 
 function RealityCheckSection() {
   return (
-    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 md:py-14">
+    <section className="relative overflow-hidden bg-white py-10 md:py-14">
       <div className={containerClass}>
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.68fr)_minmax(0,1.32fr)] lg:gap-8">
         <div className="flex flex-col justify-center">
