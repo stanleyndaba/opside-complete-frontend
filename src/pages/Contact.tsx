@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ChevronRight
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { BrandFooter } from '@/components/layout/BrandFooter';
@@ -26,8 +27,9 @@ import { cn } from '@/lib/utils';
 
 type ContactRoute = 'audit' | 'enterprise' | 'support' | 'partnership' | 'general' | null;
 
-const fieldLabelClass = 'text-[11px] font-bold uppercase tracking-tight text-[#182026]';
-const inputClass = 'h-12 rounded-[5px] border-[#DCE8EE] bg-white text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/10 focus-visible:border-[#0B74DE]';
+const containerClass = 'mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12';
+const fieldLabelClass = 'font-google-sans text-[11px] font-semibold uppercase tracking-tight text-[#182026]';
+const inputClass = 'h-12 rounded-[7px] border-[#D8E3EA] bg-white font-google-sans text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/10 focus-visible:border-[#0B74DE]';
 
 export default function Contact() {
   usePageMeta({
@@ -80,31 +82,31 @@ export default function Contact() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026] font-sans">
+    <div className="contact-page landing-google-sans relative min-h-screen overflow-x-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026] font-sans">
       {/* Background effects */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.28] [background-image:linear-gradient(rgba(11,116,222,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.04)_1px,transparent_1px)] [background-size:72px_72px]" />
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.08),transparent_34%),radial-gradient(circle_at_84%_0%,rgba(46,125,91,0.06),transparent_32%)]" />
+        <div className="absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(178,220,232,0.25),transparent_34%),radial-gradient(circle_at_84%_0%,rgba(11,116,222,0.07),transparent_32%)]" />
       </div>
 
       <PublicNavbar variant="light" />
 
-      <main className="relative z-10 px-4 pb-24 pt-32 md:px-6 md:pb-28">
-        <div className="mx-auto max-w-5xl">
+      <main className="relative z-10 pb-24 pt-32 md:pb-28 md:pt-40">
+        <div className={containerClass}>
           
           {/* Hero */}
-          <section className="mb-20 space-y-6">
-            <div className="inline-flex items-center gap-2 text-[11px] font-bold text-[#0B74DE] tracking-tight uppercase">
+          <section className="mb-20 max-w-[900px] space-y-6 border-b border-[#D8E3EA] pb-20 md:mb-24 md:pb-24">
+            <div className="inline-flex items-center gap-2 font-google-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-[#0B74DE]">
               Contact Margin
             </div>
-            <h1 className="font-lora text-4xl md:text-[64px] font-medium leading-[1.05] tracking-tight text-[#182026]">
+            <h1 className="font-google-sans text-4xl font-normal leading-[1.02] tracking-[-0.055em] text-[#182026] md:text-[72px]">
               Tell us what you need <br className="hidden md:block" />
               to move forward.
             </h1>
-            <p className="max-w-2xl text-lg md:text-xl text-[#4D5B66] leading-relaxed tracking-tight">
+            <p className="max-w-[760px] text-[17px] leading-8 tracking-tight text-[#4D5B66] md:text-[20px] md:leading-9">
               Whether you want to check an Amazon recovery issue, discuss a high-volume operation, get help with an existing Audit, or explore a partnership, choose the path that fits. We will route your request to the right next step.
             </p>
-            <p className="max-w-xl text-[14px] text-[#8C9BA6] leading-relaxed italic">
+            <p className="max-w-xl font-google-sans text-[13px] italic leading-6 tracking-tight text-[#8C9BA6]">
               You do not need to explain Margin. Just tell us what is stuck, what you are trying to establish, or what you want to do next.
             </p>
           </section>
@@ -113,7 +115,7 @@ export default function Contact() {
           {!selectedRoute && (
             <div className="space-y-12">
               <h2 className="text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6]">What brings you here?</h2>
-              <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+              <section className="mb-24 grid gap-x-8 gap-y-4 md:grid-cols-2 lg:grid-cols-3">
                 <IntentCard 
                   icon={ShieldCheck}
                   title="I want to check my Amazon recovery"
@@ -173,7 +175,7 @@ export default function Contact() {
                   </button>
                 </div>
 
-                <div className="border-y border-[#D8E3E8] bg-white overflow-hidden">
+                <div className="contact-route-panel overflow-hidden border-y bg-white">
                   {selectedRoute === 'audit' && (
                     <div className="p-8 md:p-12 space-y-8">
                       <div className="max-w-2xl space-y-4">
@@ -528,7 +530,7 @@ export default function Contact() {
           {/* Direct Contact Table */}
           <section className="mb-24">
             <h3 className="text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6] mb-8">Direct contact</h3>
-            <div className="border-y border-[#D8E3E8] bg-white overflow-hidden">
+            <div className="contact-route-panel overflow-hidden border-y bg-white">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#FAFAF7] border-b border-[#D8E3E8]">
@@ -591,7 +593,7 @@ export default function Contact() {
   );
 }
 
-function IntentCard({ icon: Icon, title, description, cta, onClick }: { icon: any, title: string, description: string, cta: string, onClick: () => void }) {
+function IntentCard({ icon: Icon, title, description, cta, onClick }: { icon: LucideIcon, title: string, description: string, cta: string, onClick: () => void }) {
   return (
     <button
       type="button"

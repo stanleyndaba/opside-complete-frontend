@@ -171,6 +171,24 @@ html, body, #root {
 .about-page table th {
   font-family: var(--font-google-sans) !important;
 }
+
+.contact-page h1,
+.contact-page h2,
+.contact-page h3,
+.contact-page h4,
+.contact-page .font-lora,
+.contact-page .font-mono,
+.contact-page [class*="text-[10px]"],
+.contact-page [class*="text-[11px]"],
+.contact-page [class*="text-[12px]"] {
+  font-family: var(--font-google-sans) !important;
+}
+
+.contact-page .contact-route-panel {
+  border-radius: 8px;
+  border-color: var(--margin-border) !important;
+  box-shadow: 0 18px 50px rgba(72, 103, 122, 0.08);
+}
 /* ============================================================
    PWA DESKTOP POLISH — "Website → App" native feel
    ============================================================ */
