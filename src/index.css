@@ -683,6 +683,11 @@ html, body, #root {
   }
 }
 /* Reconciled Matter landing-page surface system */
+.landing-google-sans > main > section.recovery-routing-section {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+
 .landing-google-sans {
   background: #F1EFE8 !important;
 }
