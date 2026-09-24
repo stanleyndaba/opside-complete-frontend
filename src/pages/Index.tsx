@@ -542,9 +542,7 @@ function GuardrailListVisual() {
     { title: "Case rejected by Amazon", detail: "Rebuilding the case from objection…", status: "Rework", tone: "text-[#7A5147]" },
   ];
   return (
-    <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[4px] border border-[#BFC5C1] bg-[#D7D9D5]" aria-label="Guardrails evidence status list">
-      <img src="/recovery-harness-guardrails.png" alt="Seller reviewing evidence before approving a recovery" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
-      <div className="absolute inset-0 bg-[#263438]/42 backdrop-blur-[1px]" />
+    <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[4px] border-0 bg-white" aria-label="Guardrails evidence status list">
       <div className="relative flex h-full items-center justify-center p-3 sm:p-5">
         <div className="w-full max-w-[390px] space-y-2.5">
           {items.map(({ title, detail, status, tone }) => (
@@ -631,6 +629,7 @@ function RecoveryHarnessSection() {
         <div className="mt-10 grid gap-5 md:mt-14 md:grid-cols-3 md:gap-6">
           {recoveryHarnessPoints.map((point, index) => (
             <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className={`flex min-h-[330px] flex-col ${point.number === "01" ? "recovery-harness-card--guardrails bg-white" : "bg-transparent"}`}>
+              {point.number === "01" ? <GuardrailListVisual /> : null}
               {point.number === "02" ? <SettlementOutcomeVisual /> : null}
               {point.number === "03" ? <FulfillmentReportVisual /> : null}
               <h3 className="mt-6 px-6 font-lora text-[25px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:px-8 sm:text-[28px]">{point.title}</h3>
