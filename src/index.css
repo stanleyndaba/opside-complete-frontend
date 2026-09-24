@@ -869,6 +869,12 @@ html, body, #root {
   color: #0B74DE !important;
 }
 
+/* Recovery Harness is a pure-white surface, protected from the core section overrides. */
+.landing-google-sans > main > section.recovery-harness-surface {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+
 /* Section headings are Google Sans; the hero remains Lora. */
 .landing-google-sans .font-lora:not(#margin-hero-title),
 .landing-google-sans .font-lora:not(#margin-hero-title) * {
