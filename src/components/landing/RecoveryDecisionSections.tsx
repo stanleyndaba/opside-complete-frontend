@@ -110,9 +110,9 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
             
             return (
             <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} style={{ background: gradientStyle }} className={`relative rounded-[8px] p-6 sm:p-8 md:p-10 transition-[filter,opacity] duration-500 will-change-[filter,opacity] lg:min-w-0 lg:flex-1 ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#52616A]">{option.label}</p>
+              <p style={{ color: "#68655F" }} className="font-mono text-[11px] font-semibold uppercase tracking-tight">{option.label}</p>
               <h3 className="mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-[#344149] sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>{option.title}</h3>
-              <p className="mt-4 max-w-[520px] text-[14px] leading-6 text-[#344149] md:text-[15px] md:leading-7">{option.copy}</p>
+              <p style={{ color: "#55534E" }} className="mt-4 max-w-[520px] text-[14px] leading-6 md:text-[15px] md:leading-7">{option.copy}</p>
               <div className="mt-7 grid gap-0 border-y border-white/40 sm:grid-cols-2">
                 {option.items.map((item) => (
                   <div key={item} className="flex items-start gap-2 border-b border-[#7B8A82]/30 py-3 text-[12px] leading-5 text-[#344149] last:border-b-0 sm:pr-4 md:text-[13px]">
