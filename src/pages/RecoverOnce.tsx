@@ -52,7 +52,7 @@ export default function RecoverOnce() {
         <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
           <article className="min-w-0 rounded-[16px] bg-white px-5 py-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:px-6 sm:py-5" aria-labelledby="recover-once-title">
             <header className="border-b border-[#E8E7E1] pb-7">
-              <h1 id="recover-once-title" className="max-w-2xl font-lora text-[15px] leading-[1.2] tracking-[-0.02em] text-[#191B20] sm:text-[17px]">A complete view of your operation</h1>
+              <h1 id="recover-once-title" className="max-w-2xl text-[15px] leading-[1.2] tracking-[-0.02em] text-[#191B20] sm:text-[17px]">A complete view of your operation</h1>
               <p className="mt-2 inline-block max-w-2xl border-b border-[#D4D4D0] pb-1 text-[14px] leading-6 text-[#595E68] sm:text-[15px]">Investigation completed across <mark className="rounded-[2px] px-0.5 font-normal bg-[#E8EEF8] text-[#3F51A8]">10,442 placements</mark> in <mark className="rounded-[2px] px-0.5 font-normal bg-[#E9F3EC] text-[#26734D]">7 minutes</mark>.</p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">Margin reviewed <mark className="rounded-[2px] px-0.5 font-normal bg-[#F8EEDB] text-[#8A5A16]">3,214 orders, 41 inbound shipments, and 22 returns</mark> from <mark className="rounded-[2px] px-0.5 font-normal bg-[#F3E7F0] text-[#7A4268]">1 February through 30 April 2026</mark>, comparing shipment, receiving, inventory-adjustment, and available financial records.</p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">That comparison isolated <mark className="rounded-[2px] px-0.5 font-normal bg-[#E8EEF8] text-[#3F51A8]">one inbound-shipment discrepancy</mark> affecting <mark className="rounded-[2px] px-0.5 font-normal bg-[#E9F3EC] text-[#26734D]">17 units across two related shipments</mark>. Both shipments trace back to the same supplier delivery, with the activity concentrated in the week of 10 March.</p>
@@ -61,7 +61,7 @@ export default function RecoverOnce() {
 
             <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="what-margin-found">
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">The finding</p>
-              <h2 id="what-margin-found" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What Margin will handle</h2>
+              <h2 id="what-margin-found" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 text-[15px] font-normal leading-tight tracking-[-0.02em]">What Margin will handle</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The records currently substantiate <mark className="rounded-[2px] px-0.5 font-normal bg-[#F3E7F0] text-[#7A4268]">14 of the 17 affected units</mark>. The remaining 3 units are held for final verification rather than treated as confirmed.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">For the supported units, the shipment manifest, carrier receiving record, and inventory adjustment history align. The operational discrepancy is therefore evidenced. The remaining financial question is whether Amazon has already reimbursed any affected units and, if so, what amount remains outstanding.</p>
               <div className="mt-3 border-y border-[#E8E7E1] py-1.5">
@@ -85,7 +85,7 @@ export default function RecoverOnce() {
 
             <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="why-recover-once">
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">The fit</p>
-              <h2 id="why-recover-once" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">Why Recover Once</h2>
+              <h2 id="why-recover-once" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 text-[15px] font-normal leading-tight tracking-[-0.02em]">Why Recover Once</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">This is a <mark className="rounded-[2px] px-0.5 font-normal bg-[#E9F3EC] text-[#26734D]">bounded recovery issue</mark>: 2 shipments, 1 supplier delivery, 17 affected units, and 1 defined discrepancy.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">It does not currently indicate an ongoing pattern requiring a recurring Recovery Workspace.</p>
               <p className="mt-1.5 text-[14px] font-semibold leading-6 text-[#191B20]">Recover Once is designed for exactly this kind of defined issue.</p>
@@ -93,7 +93,7 @@ export default function RecoverOnce() {
 
             <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="fixed-fee">
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">The model</p>
-              <h2 id="fixed-fee" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">Why the $179 fixed fee makes sense</h2>
+              <h2 id="fixed-fee" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 text-[15px] font-normal leading-tight tracking-[-0.02em]">Why the $179 fixed fee makes sense</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">You are not paying Margin a percentage of the recovery.</p>
               <dl className="mt-2 border-y border-[#E8E7E1] py-1.5 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-[#E8E7E1]">
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 py-1.5 sm:block sm:px-3 sm:first:pl-0 sm:last:pr-0"><dt className="text-[10px] font-semibold uppercase tracking-tight text-[#777A82]">Recover Once</dt><dd className="text-right text-[16px] font-semibold tracking-[-0.03em] text-[#191B20] sm:mt-0.5 sm:text-left">$179 <span className="text-[13px] font-normal text-[#595E68]">fixed fee</span></dd></div>
@@ -109,7 +109,7 @@ export default function RecoverOnce() {
 
             <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="after-approval">
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">The operation</p>
-              <h2 id="after-approval" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What happens after approval</h2>
+              <h2 id="after-approval" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 text-[15px] font-normal leading-tight tracking-[-0.02em]">What happens after approval</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Once you approve and payment is completed, the <mark className="rounded-[2px] px-0.5 font-normal bg-[#E9F3EC] text-[#26734D]">typical first submission target is 1–2 business days after approval</mark>, assuming the available evidence is sufficient to prepare the response.</p>
               <div className="mt-2 grid gap-2 sm:grid-cols-2">{operationSteps.map((step, index) => <div key={step} className="flex items-start gap-3 px-1 py-1"><span className="w-5 shrink-0 font-mono text-[11px] font-semibold text-[#3F51A8]">{index + 1}</span><span className={`text-[13px] leading-5 ${index === operationSteps.length - 1 ? 'font-semibold text-[#191B20]' : 'text-[#595E68]'}`}>{step}</span></div>)}</div>
               <p className="mt-1.5 text-[12px] leading-5 text-[#595E68]">Amazon&apos;s response time and final decision are outside Margin&apos;s control.</p>
@@ -117,13 +117,13 @@ export default function RecoverOnce() {
 
             <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="evidence-and-outcomes">
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">The boundaries</p>
-              <h2 id="evidence-and-outcomes" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">If the evidence or outcome changes</h2>
+              <h2 id="evidence-and-outcomes" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 text-[15px] font-normal leading-tight tracking-[-0.02em]">If the evidence or outcome changes</h2>
               <div className="mt-1.5 grid gap-4 sm:grid-cols-2"><div><h3 className="text-[14px] font-semibold text-[#191B20]">What if Amazon asks for more evidence?</h3><p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">If additional evidence is required and Margin can obtain or organize it from the available records, <mark className="rounded-[2px] px-0.5 font-normal bg-[#F8EEDB] text-[#8A5A16]">the operation continues.</mark></p><p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">If the required evidence cannot be obtained or the issue cannot be substantiated further, Margin will show the case as <mark className="rounded-[2px] px-0.5 font-normal bg-[#F3E7F0] text-[#7A4268]">unresolved</mark> and explain why.</p><p className="mt-1.5 text-[14px] font-semibold leading-6 text-[#191B20]">Margin will never represent an unresolved case as recovered.</p></div><div><h3 className="text-[14px] font-semibold text-[#191B20]">What if Amazon says no?</h3><p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Amazon makes the final reimbursement decision. If Amazon rejects the case, Margin records the rejection and the reason available from Amazon.</p><p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The result will be shown as <mark className="rounded-[2px] px-0.5 font-normal bg-[#E8EEF8] text-[#3F51A8]">Recovered</mark> — reimbursement confirmed; <mark className="rounded-[2px] px-0.5 font-normal bg-[#E9F3EC] text-[#26734D]">Partially recovered</mark> — some reimbursement confirmed; or <mark className="rounded-[2px] px-0.5 font-normal bg-[#F8EEDB] text-[#8A5A16]">Unresolved</mark> — reimbursement not confirmed or the case could not be substantiated.</p><p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The $179 remains the fixed fee for carrying out the defined operation, regardless of Amazon&apos;s final decision.</p></div></div>
             </section>
 
             <section className="pt-8" aria-labelledby="completion">
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">The finish line</p>
-              <h2 id="completion" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">Completion</h2>
+              <h2 id="completion" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 text-[15px] font-normal leading-tight tracking-[-0.02em]">Completion</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The operation is complete when Margin has prepared and organized the available evidence, prepared the defined recovery response, obtained your approval before submission, submitted the response to Amazon, recorded Amazon&apos;s response, checked the resulting payout where the available data permits, and shown the final outcome as <mark className="rounded-[2px] px-0.5 font-normal bg-[#F3E7F0] text-[#7A4268]">Recovered, Partially recovered, or Unresolved.</mark></p>
               <p className="mt-1.5 text-[14px] font-semibold leading-6 text-[#191B20]">You will see what happened. The case will not simply disappear into a queue.</p>
             </section>
@@ -132,7 +132,7 @@ export default function RecoverOnce() {
           <aside className="lg:sticky lg:top-20" aria-label="Recover Once decision summary">
             <div className="rounded-[14px] border border-[#D7D7D1] bg-white p-5 shadow-[0_8px_24px_rgba(25,27,32,0.06)] sm:p-4">
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">Recovery quote</p>
-              <h2 className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">Permission</h2>
+              <h2 className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 text-[15px] font-normal leading-tight tracking-[-0.02em]">Permission</h2>
               <div className="mt-2 border-y border-[#E8E7E1] py-2"><div className="flex items-baseline justify-between gap-4"><p className="text-[10px] font-semibold uppercase tracking-tight text-[#777A82]">Estimated value</p><p className="text-[14px] font-semibold tracking-[-0.05em] text-[#191B20]">$6,240</p></div><p className="mt-0.5 text-[11px] leading-5 text-[#595E68]">Estimate only — not a guaranteed reimbursement.</p></div>
               <dl className="mt-1.5 divide-y divide-[#E8E7E1] border-y border-[#E8E7E1]"><div className="flex items-center justify-between gap-4 py-3"><dt className="text-[12px] text-[#595E68]">Fixed fee</dt><dd className="text-[13px] font-semibold text-[#191B20]">$179</dd></div><div className="flex items-center justify-between gap-4 py-3"><dt className="text-[12px] text-[#595E68]">Margin commission</dt><dd className="text-[13px] font-semibold text-[#191B20]">0%</dd></div><div className="flex items-center justify-between gap-4 py-3"><dt className="text-[12px] text-[#595E68]">Evidence</dt><dd className="text-[13px] font-semibold text-[#191B20]">14 of 17 supported</dd></div></dl>
               <div className="mt-1.5"><p className="text-[12px] font-semibold text-[#191B20]">Offer details</p><dl className="mt-1.5 space-y-2">{approvalItems.map(([label, value]) => <div key={label} className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3 text-[11px] leading-4"><dt className="text-[#777A82]">{label}</dt><dd className="text-right font-medium text-[#595E68]">{value}</dd></div>)}</dl></div>
