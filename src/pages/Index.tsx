@@ -238,7 +238,7 @@ function AccountingEvidenceSection() {
             </p>
             <div className="mt-8 border-t border-[#C9D1D6] pt-5">
               <p className="inline-flex w-fit max-w-full rounded-[10px] bg-[#EEF1F2] px-3 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#182026]">Amazon · Accounting · Settlements · Files · Email</p>
-              <div className="mt-4 flex flex-nowrap items-center gap-x-3 whitespace-nowrap font-mono text-[9px] font-semibold uppercase tracking-tight text-[#66737F]">
+              <div className="mt-4 flex flex-nowrap items-center gap-x-2 whitespace-nowrap font-mono text-[8px] font-semibold uppercase tracking-tight text-[#66737F] sm:gap-x-3 sm:text-[9px]">
                 <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
               </div>
             </div>
