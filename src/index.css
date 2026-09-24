@@ -875,6 +875,10 @@ html, body, #root {
   color: #182026 !important;
 }
 
+.landing-google-sans > main > section.recovery-harness-surface .recovery-harness-card--guardrails {
+  background-color: #FFFFFF !important;
+}
+
 /* Section headings are Google Sans; the hero remains Lora. */
 .landing-google-sans .font-lora:not(#margin-hero-title),
 .landing-google-sans .font-lora:not(#margin-hero-title) * {

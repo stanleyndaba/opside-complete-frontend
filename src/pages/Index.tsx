@@ -630,8 +630,7 @@ function RecoveryHarnessSection() {
         </motion.div>
         <div className="mt-10 grid gap-5 md:mt-14 md:grid-cols-3 md:gap-6">
           {recoveryHarnessPoints.map((point, index) => (
-            <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="flex min-h-[330px] flex-col bg-transparent">
-              {point.number === "01" ? <GuardrailListVisual /> : null}
+            <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className={`flex min-h-[330px] flex-col ${point.number === "01" ? "recovery-harness-card--guardrails bg-white" : "bg-transparent"}`}>
               {point.number === "02" ? <SettlementOutcomeVisual /> : null}
               {point.number === "03" ? <FulfillmentReportVisual /> : null}
               <h3 className="mt-6 px-6 font-lora text-[25px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:px-8 sm:text-[28px]">{point.title}</h3>
