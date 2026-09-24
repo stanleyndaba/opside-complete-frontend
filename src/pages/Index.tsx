@@ -1363,12 +1363,27 @@ function NestedRecoveryBrowsers() {
 }
 
 function FooterNestedRecoveryVisual() {
+  const navigate = useNavigate();
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof nestedRecoveryBrowsers>('progress');
 
   return (
     <section className="relative overflow-hidden bg-white py-10 sm:py-14 md:py-16" aria-label="Connected operational view visual">
       <div className={containerClass}>
+        <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden">Your process. Your rules. Your approvals.</h2>
         <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} />
+        <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
+          <label htmlFor="delegation-email-mobile" className="mb-1.5 block font-google-sans text-[11px] font-semibold text-[#66737F]">Email address</label>
+          <input id="delegation-email-mobile" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
+          <Button onClick={() => navigate("/audit-start")} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Get started for free</Button>
+          <div className="my-3 flex items-center gap-2 font-google-sans text-[9px] font-medium tracking-tight text-[#A1AEB7]">
+            <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
+          </div>
+          <p className="mb-2 font-google-sans text-[15px] font-semibold tracking-tight text-[#182026]">Delegate and forget</p>
+          <Button type="button" variant="outline" className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-3 text-[12px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">
+            <GoogleMark className="mr-2 h-4 w-4" />Continue with Google
+          </Button>
+          <p className="mt-3 max-w-[360px] text-center font-google-sans text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
+        </div>
       </div>
     </section>
   );
@@ -2122,21 +2137,6 @@ export default function Index() {
 
                 </div>
 
-                <div className="w-full md:hidden">
-                  <div className="mx-auto w-full max-w-[380px] p-0 text-[#182026]">
-                    <p className="mb-5 text-center font-lora text-[18px] leading-tight tracking-[-0.02em] text-[var(--margin-text-primary)]">Your process. Your rules. Your approvals.</p>
-                    <label htmlFor="delegation-email-mobile" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
-                    <input id="delegation-email-mobile" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
-                    <Button onClick={() => navigate("/audit-start")} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Get started for free</Button>
-                    <div className="my-3 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.18em] text-[#A1AEB7]">
-                      <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
-                    </div>
-                    <Button type="button" variant="outline" className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-3 text-[12px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">
-                      <GoogleMark className="mr-2 h-4 w-4" />Continue with Google
-                    </Button>
-                    <p className="mt-3 max-w-[360px] text-center text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
-                  </div>
-                </div>
               </div>
             </div>
           </section>
