@@ -237,7 +237,13 @@ function AccountingEvidenceSection() {
               <span className="font-semibold text-[#182026]">Now:</span> Relevant records come together in one place, so you can understand the situation without chasing information across systems.
             </p>
             <div className="mt-8 border-t border-[#C9D1D6] pt-5">
-              <p className="inline-flex w-fit max-w-full rounded-[10px] bg-[#EEF1F2] px-3 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#182026]">Amazon · Accounting · Settlements · Files · Email</p>
+              <div className="flex max-w-full flex-wrap gap-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em]">
+                <span className="context-source-badge context-source-badge--green">Amazon</span>
+                <span className="context-source-badge context-source-badge--red">Accounting</span>
+                <span className="context-source-badge context-source-badge--yellow">Settlements</span>
+                <span className="context-source-badge context-source-badge--orange">Files</span>
+                <span className="context-source-badge context-source-badge--blue">Email</span>
+              </div>
               <div className="mt-4 flex flex-nowrap items-center gap-x-2 whitespace-nowrap font-mono text-[8px] font-semibold uppercase tracking-tight text-[#66737F] sm:gap-x-3 sm:text-[9px]">
                 <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
               </div>

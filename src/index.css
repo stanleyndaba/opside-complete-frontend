@@ -819,6 +819,36 @@ html, body, #root {
   background-color: #FFFFFF !important;
 }
 
+.landing-google-sans > main > section.context-audit-surface .context-source-badge {
+  display: inline-flex;
+  align-items: center;
+  border: 0 !important;
+  border-radius: 999px;
+  padding: 0.5rem 0.7rem;
+  color: #FFFFFF !important;
+  line-height: 1;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--green {
+  background-color: #16A34A !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--red {
+  background-color: #DC2626 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--yellow {
+  background-color: #CA8A04 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--orange {
+  background-color: #F97316 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--blue {
+  background-color: #2563EB !important;
+}
+
 /* One Record is a pure-white editorial surface, protected from positional landing overrides. */
 .landing-google-sans > main > section.one-record-audit-surface {
   background-color: #FFFFFF !important;
