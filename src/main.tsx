@@ -1,33 +1,28 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import App from './App'
+import { GlobalErrorBoundary } from '@/components/error/GlobalErrorBoundary'
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const root = createRoot(document.getElementById('root')!);
 
-void Promise.all([
-  import('./App.tsx'),
-  import('@/components/error/GlobalErrorBoundary'),
-]).then(([{ default: App }, { GlobalErrorBoundary }]) => {
-  const app = (
-    <GlobalErrorBoundary>
-      <App />
-    </GlobalErrorBoundary>
-  );
+const app = (
+  <GlobalErrorBoundary>
+    <App />
+  </GlobalErrorBoundary>
+);
 
-  if (!clerkPublishableKey) {
-    root.render(app);
-    return;
-  }
-
-  return import('@clerk/react').then(({ ClerkProvider }) => {
+if (!clerkPublishableKey) {
+  root.render(app);
+} else {
+  void import('@clerk/react').then(({ ClerkProvider }) => {
     root.render(<ClerkProvider publishableKey={clerkPublishableKey}>{app}</ClerkProvider>);
+  }).catch((error) => {
+    console.error('Margin failed to load Clerk', error);
+    root.render(app);
   });
-}).catch((error) => {
-  console.error('Margin failed to bootstrap the application', error);
-  const message = error instanceof Error ? error.message : 'Unknown bootstrap error';
-  document.getElementById('root')!.innerHTML = `<main class="route-loading-shell" aria-label="Margin bootstrap error"><div class="route-loading-shell__brand"><span>Margin</span></div><p style="margin-top:16px;font:14px system-ui;color:#66737F">${message}</p></main>`;
-});
+}
 
 // Optional integrations are intentionally initialized after the first render path.
 void import('@/lib/pwaInstall').then(({ startPwaInstallManager }) => {
