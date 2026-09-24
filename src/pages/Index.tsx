@@ -1101,15 +1101,15 @@ function OneRecordAnalysisVisual() {
 
   function RecoveryWorkStatement() {
   return (
-    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-7 sm:py-8 md:py-11" aria-labelledby="trust-section-title">
+    <section className="one-record-audit-surface relative overflow-hidden bg-white py-7 sm:py-8 md:py-11" aria-labelledby="trust-section-title">
       <div className={containerClass}>
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
           <motion.div {...revealProps} className="flex flex-col justify-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">03 / ONE RECORD</p>
-            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>Make the evidence usable.</h2>
-            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Reconstruct the case from disconnected records and turn scattered details into an explanation you can actually stand behind.</p>
-            <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Extract the relevant facts, connect them to the records that support them, and show why the recovery exists—not just that it does.</p>
-            <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">You don&apos;t need to reconstruct what happened.</p>
+            <p className="one-record-eyebrow font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">03 / ONE RECORD</p>
+            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>Make the evidence usable.</h2>
+            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7"><span className="font-semibold text-[#182026]">Before:</span> Reconstruct the case from disconnected records and turn scattered details into an explanation you can actually stand behind.</p>
+            <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7"><span className="font-semibold text-[#182026]">Now:</span> Extract the relevant facts, connect them to the records that support them, and show why the recovery exists—not just that it does.</p>
+            <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8">You don&apos;t need to reconstruct what happened.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative">
             <OneRecordAnalysisVisual />

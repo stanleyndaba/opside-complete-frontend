@@ -819,6 +819,26 @@ html, body, #root {
   background-color: #FFFFFF !important;
 }
 
+/* One Record is a pure-white editorial surface, protected from positional landing overrides. */
+.landing-google-sans > main > section.one-record-audit-surface {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.one-record-audit-surface h2,
+.landing-google-sans > main > section.one-record-audit-surface p {
+  color: #4D5B66 !important;
+}
+
+.landing-google-sans > main > section.one-record-audit-surface h2,
+.landing-google-sans > main > section.one-record-audit-surface p span.font-semibold {
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.one-record-audit-surface .one-record-eyebrow {
+  color: #0B74DE !important;
+}
+
 /* Section headings are Google Sans; the hero remains Lora. */
 .landing-google-sans .font-lora:not(#margin-hero-title),
 .landing-google-sans .font-lora:not(#margin-hero-title) * {
