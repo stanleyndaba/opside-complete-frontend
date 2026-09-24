@@ -212,7 +212,7 @@ function AccountingEvidenceSection() {
                       transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 27, repeat: Infinity, ease: "linear" }}
                     >
                       {[...accountingRows[rowIndex], ...accountingRows[rowIndex]].map((source, index) => (
-                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[132px] w-[132px] shrink-0 items-center justify-center rounded-[10px] border-[7px] border-[#C9BCAF] bg-white shadow-[0_14px_28px_rgba(103,82,68,0.16)] sm:h-[150px] sm:w-[150px]">
+                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[132px] w-[132px] shrink-0 items-center justify-center sm:h-[150px] sm:w-[150px]">
                           <img src={source.src} alt={source.name} className="h-16 w-16 object-contain sm:h-[76px] sm:w-[76px]" />
                         </div>
                       ))}
@@ -237,8 +237,8 @@ function AccountingEvidenceSection() {
               <span className="font-semibold text-[#182026]">Now:</span> Relevant records come together in one place, so you can understand the situation without chasing information across systems.
             </p>
             <div className="mt-8 border-t border-[#C9D1D6] pt-5">
-              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Amazon · Accounting · Settlements · Files · Email</p>
-              <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[9px] font-semibold uppercase tracking-tight text-[#66737F]">
+              <p className="inline-flex w-fit max-w-full rounded-[10px] bg-[#EEF1F2] px-3 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#182026]">Amazon · Accounting · Settlements · Files · Email</p>
+              <div className="mt-4 flex flex-nowrap items-center gap-x-3 whitespace-nowrap font-mono text-[9px] font-semibold uppercase tracking-tight text-[#66737F]">
                 <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
               </div>
             </div>
