@@ -1752,7 +1752,7 @@ function ProductReframeSection() {
 
 function RiskSection() {
   return (
-    <section aria-labelledby="amazon-thread-title" className="relative overflow-hidden bg-[var(--margin-canvas)] py-7 sm:py-8 md:py-11">
+    <section aria-labelledby="amazon-thread-title" className="audit-palette-surface relative overflow-hidden bg-[#F6F8F9] py-7 sm:py-8 md:py-11">
       <div className={containerClass}>
         <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-12">
           <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
@@ -1777,7 +1777,7 @@ function RiskSection() {
 
 function RecoveryOutcomeExplorer() {
   return (
-    <section aria-labelledby="recovery-outcome-title" className="relative bg-[var(--margin-canvas)] py-10 md:py-12">
+    <section aria-labelledby="recovery-outcome-title" className="audit-palette-surface relative bg-[#F6F8F9] py-10 md:py-12">
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
           <motion.div {...revealProps} className="order-1 lg:order-2 lg:sticky lg:top-28">

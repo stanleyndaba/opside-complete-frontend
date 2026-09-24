@@ -791,6 +791,26 @@ html, body, #root {
   color: #52616A !important;
 }
 
+/* Amazon Thread and When Things Go Wrong share the protected Audit palette. */
+.landing-google-sans > main > section.audit-palette-surface {
+  background-color: #F6F8F9 !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.audit-palette-surface h2,
+.landing-google-sans > main > section.audit-palette-surface p {
+  color: #4D5B66 !important;
+}
+
+.landing-google-sans > main > section.audit-palette-surface h2,
+.landing-google-sans > main > section.audit-palette-surface p span.font-semibold {
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.audit-palette-surface .font-mono {
+  color: #0B74DE !important;
+}
+
 /* Context shares the Audit section's soft near-white surface and restrained text palette. */
 .landing-google-sans > main > section.context-audit-surface {
   background-color: #F6F8F9 !important;
