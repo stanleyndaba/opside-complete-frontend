@@ -939,3 +939,9 @@ html, body, #root {
   color: #66737F !important;
   -webkit-text-fill-color: #66737F !important;
 }
+
+/* Artifact visual field headings use normal sentence case and tight editorial tracking. */
+.landing-google-sans .recognition-artifacts-visual p.uppercase {
+  text-transform: none !important;
+  letter-spacing: -0.01em !important;
+}
