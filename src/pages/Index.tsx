@@ -292,7 +292,7 @@ function FinancialControlOperationsSection() {
             </h2>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative flex min-h-[330px] items-center justify-center overflow-hidden sm:min-h-[430px] [mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)]">
-            <div className="financial-control-word-stack relative flex w-full max-w-[585px] flex-col items-center justify-center gap-1.5 text-center sm:gap-2.5">
+            <div className="financial-control-word-stack relative flex w-full max-w-[585px] flex-col items-start justify-center gap-1.5 text-left sm:items-center sm:gap-2.5 sm:text-center">
               {visibleOperations.map(({ operation, offset, opacity }) => {
                 const isActive = offset === 0;
                 return (
@@ -307,7 +307,7 @@ function FinancialControlOperationsSection() {
                       scale: { duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] },
                     }}
                     className={`financial-control-stage font-lora text-[32px] leading-[1.05] tracking-[-0.045em] sm:text-[48px] md:text-[60px] ${isActive ? "text-[#182026]" : "text-[#A8B3B7]"}`}
-                    style={{ fontWeight: 400 }}
+                    style={{ fontFamily: '"Lora", Georgia, "Times New Roman", serif', fontWeight: 500 }}
                   >
                     {operation}
                   </motion.div>

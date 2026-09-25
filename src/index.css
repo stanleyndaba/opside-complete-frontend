@@ -953,6 +953,11 @@ html, body, #root {
   letter-spacing: -0.045em !important;
 }
 
+.landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-stage.font-lora:not(#margin-hero-title) {
+  font-family: "Lora", Georgia, "Times New Roman", serif !important;
+  font-weight: 500 !important;
+}
+
 /* Routing cards use a light smoke heading against the mineral surfaces. */
 .landing-google-sans > main > section.recovery-routing-section h3:not([class*="text-white"]) {
   color: #F4F1EC !important;
@@ -968,6 +973,16 @@ html, body, #root {
   }
 
   .landing-google-sans .product-reframe-stage.font-lora:not(#margin-hero-title) {
+    text-align: left !important;
+  }
+
+  .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-word-stack {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+
+  .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-stage.font-lora:not(#margin-hero-title) {
     text-align: left !important;
   }
 }
