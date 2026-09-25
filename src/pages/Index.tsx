@@ -525,6 +525,51 @@ const recoveryHarnessPoints = [
     outcome: "Context grounds the case.",
   },
 ];
+
+function ApprovalNotificationOrderVisual() {
+  const approvers = [
+    { number: "1", role: "Ops Manager", name: "Michael Thompson", badge: "Primary", badgeClass: "bg-[#EEEAFB] text-[#65519C]", avatarClass: "bg-[#A9B8B0]" },
+    { number: "2", role: "Senior Ops Lead", name: "Sarah Mitchell", badge: "Fallback", badgeClass: "bg-[#E9F8EC] text-[#4C9A62]", avatarClass: "bg-[#B4A99D]" },
+    { number: "3", role: "VP of Operations", name: "Lena Cruz", badge: "Escalation", badgeClass: "bg-[#FAF2E5] text-[#A67C3E]", avatarClass: "bg-[#B8B9C4]" },
+  ];
+
+  return (
+    <div className="relative mb-6 overflow-hidden rounded-[12px] border border-[#DCE3E6] bg-white p-4 shadow-[0_10px_28px_rgba(35,54,65,0.08)] sm:p-5" aria-label="Approval notification order">
+      <div className="flex items-start gap-3 border-b border-[#EEF1F2] pb-4">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-[#EEF5FF] text-[#2854C7]">
+          <ReceiptText className="h-5 w-5" strokeWidth={2.1} />
+        </span>
+        <div className="min-w-0">
+          <p className="text-[14px] font-semibold leading-5 tracking-tight text-[#182026]">Approval Notification Order</p>
+          <p className="mt-1 text-[10px] leading-4 tracking-tight text-[#7A858B]">Relay will notify approvers in the order shown below.</p>
+        </div>
+      </div>
+
+      <div className="relative mt-4 pl-10">
+        <span className="absolute left-[13px] top-6 bottom-6 border-l-2 border-dotted border-[#A6ADB3]" aria-hidden="true" />
+        <div className="space-y-3">
+          {approvers.map((approver, index) => (
+            <React.Fragment key={approver.number}>
+              <div className="relative rounded-[12px] border border-[#E6EAEC] bg-white px-3 py-3 shadow-[0_5px_16px_rgba(35,54,65,0.05)]">
+                <span className="absolute -left-[39px] top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-[#2D56C9] text-[12px] font-semibold text-white shadow-[0_3px_8px_rgba(45,86,201,0.2)]">{approver.number}</span>
+                <div className="flex items-center gap-2.5">
+                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] text-[10px] font-semibold text-white ${approver.avatarClass}`} aria-hidden="true">{approver.name.split(" ").map((part) => part[0]).join("")}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[11px] font-semibold leading-4 tracking-tight text-[#182026]">{approver.role}</span>
+                    <span className="mt-0.5 block text-[10px] leading-4 tracking-tight text-[#7A858B]">{approver.name}</span>
+                  </span>
+                  <span className={`shrink-0 rounded-[6px] px-2 py-1 text-[9px] font-semibold tracking-tight ${approver.badgeClass}`}>{approver.badge}</span>
+                </div>
+              </div>
+              {index < approvers.length - 1 ? <div className="ml-4 w-fit rounded-[6px] bg-[#F5F7F8] px-2.5 py-1.5 text-[9px] font-medium tracking-tight text-[#7A858B]">Wait 2 hr for a response</div> : null}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function GuardrailListVisual() {
   const items = [
     { title: "Blocked (Overcharged Fee FG34421)", detail: "Compiling complete evidence for this case", status: "Held", tone: "text-[#9A5A03]" },
@@ -618,7 +663,7 @@ function RecoveryHarnessSection() {
             <motion.article key={point.number} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className={`flex min-h-[330px] flex-col ${point.number === "01" ? "recovery-harness-card--guardrails bg-white" : "bg-transparent"}`}>
               {point.number === "01" ? <GuardrailListVisual /> : null}
               {point.number === "02" ? <SettlementOutcomeVisual /> : null}
-              {point.number === "03" ? <FulfillmentReportVisual /> : null}
+              {point.number === "03" ? <ApprovalNotificationOrderVisual /> : null}
               <p className="mb-3 px-6 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">{point.number === "01" ? "14 / THE RECOVERY HARNESS" : point.number === "02" ? "15 / LEARNING FROM OUTCOMES" : "16 / THE COMMERCE CONTEXT"}</p>
               <h3 className="mt-6 px-6 font-lora text-[25px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:px-8 sm:text-[28px]">{point.title}</h3>
               <p className="mt-5 px-6 text-[15px] font-semibold leading-6 tracking-[-0.01em] text-[#294B61] sm:px-8">{point.lead}</p>
