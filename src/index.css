@@ -948,12 +948,12 @@ html, body, #root {
 
 /* Financial Control animation: keep the rotating operation words in Lora despite the landing-wide font reset. */
 .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-stage {
-  font-family: var(--font-serif) !important;
+  font-family: "Lora", Georgia, "Times New Roman", serif !important;
   font-weight: 500 !important;
   letter-spacing: -0.045em !important;
 }
 
-@media (max-width: 639px) {
+@media (max-width: 767px) {
   .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-word-stack {
     align-items: flex-start !important;
     justify-content: flex-start !important;
