@@ -532,11 +532,25 @@ function ApprovalNotificationOrderVisual() {
     { number: "2", role: "Brand Portfolio Manager", name: "Sarah Mitchell", badge: "Fallback", badgeClass: "bg-[#E9F8EC] text-[#4C9A62]", avatarClass: "bg-[#B4A99D]", avatarSrc: "/approver-sarah-mitchell.jpg" },
     { number: "3", role: "VP of Operations", name: "Lena Cruz", badge: "Escalation", badgeClass: "bg-[#FAF2E5] text-[#A67C3E]", avatarClass: "bg-[#B8B9C4]", avatarSrc: "/approver-lena-cruz.jpg" },
   ];
+  const [visibleSteps, setVisibleSteps] = useState(1);
+
+  useEffect(() => {
+    const timers = [1, 2, 3, 4].map((step) => window.setTimeout(() => setVisibleSteps(step + 1), step * 1000));
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, []);
+
+  const sequence = [
+    { type: "approver", approver: approvers[0] },
+    { type: "wait" },
+    { type: "approver", approver: approvers[1] },
+    { type: "wait" },
+    { type: "approver", approver: approvers[2] },
+  ] as const;
 
   return (
     <div className="relative mb-6 overflow-hidden rounded-[12px] border border-[#DCE3E6] bg-white p-4 shadow-[0_10px_28px_rgba(35,54,65,0.08)] sm:p-5" aria-label="Approval notification order">
       <div className="flex items-start gap-3 border-b border-[#EEF1F2] pb-4">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-[#EEF5FF] text-[#2854C7]">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-white text-[#2854C7]">
           <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
         </span>
         <div className="min-w-0">
@@ -548,22 +562,23 @@ function ApprovalNotificationOrderVisual() {
       <div className="relative mt-4 pl-10">
         <span className="absolute left-[13px] top-6 bottom-6 border-l-2 border-dotted border-[#A6ADB3]" aria-hidden="true" />
         <div className="space-y-3">
-          {approvers.map((approver, index) => (
-            <React.Fragment key={approver.number}>
-              <div className="relative rounded-[12px] border border-[#E6EAEC] bg-white px-3 py-3 shadow-[0_5px_16px_rgba(35,54,65,0.05)]">
-                <span className="absolute -left-[39px] top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-[#2D56C9] text-[12px] font-semibold text-white shadow-[0_3px_8px_rgba(45,86,201,0.2)]">{approver.number}</span>
+          <AnimatePresence initial={false}>
+            {sequence.slice(0, visibleSteps).map((step, index) => step.type === "wait" ? (
+              <motion.div key={`wait-${index}`} initial={{ opacity: 0, y: -8, height: 0 }} animate={{ opacity: 1, y: 0, height: "auto" }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="ml-4 w-fit rounded-[6px] bg-[#F5F7F8] px-2.5 py-1.5 text-[9px] font-medium tracking-tight text-[#7A858B]">Wait 2 hr for a response</motion.div>
+            ) : (
+              <motion.div key={step.approver.number} initial={{ opacity: 0, y: 12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="relative rounded-[12px] border border-[#E6EAEC] bg-white px-3 py-3 shadow-[0_5px_16px_rgba(35,54,65,0.05)]">
+                <span className="absolute -left-[39px] top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-[#2D56C9] text-[12px] font-semibold text-white shadow-[0_3px_8px_rgba(45,86,201,0.2)]">{step.approver.number}</span>
                 <div className="flex items-center gap-2.5">
-                  <img src={approver.avatarSrc} alt={`${approver.name} headshot`} className="h-9 w-9 shrink-0 rounded-[9px] object-cover" />
+                  <img src={step.approver.avatarSrc} alt={`${step.approver.name} headshot`} className="h-9 w-9 shrink-0 rounded-[9px] object-cover" />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[11px] font-semibold leading-4 tracking-tight text-[#182026]">{approver.role}</span>
-                    <span className="mt-0.5 block text-[10px] leading-4 tracking-tight text-[#7A858B]">{approver.name}</span>
+                    <span className="block text-[11px] font-semibold leading-4 tracking-tight text-[#182026]">{step.approver.role}</span>
+                    <span className="mt-0.5 block text-[10px] leading-4 tracking-tight text-[#7A858B]">{step.approver.name}</span>
                   </span>
-                  <span className={`shrink-0 rounded-[6px] px-2 py-1 text-[9px] font-semibold tracking-tight ${approver.badgeClass}`}>{approver.badge}</span>
+                  <span className={`shrink-0 rounded-[6px] px-2 py-1 text-[9px] font-semibold tracking-tight ${step.approver.badgeClass}`}>{step.approver.badge}</span>
                 </div>
-              </div>
-              {index < approvers.length - 1 ? <div className="ml-4 w-fit rounded-[6px] bg-[#F5F7F8] px-2.5 py-1.5 text-[9px] font-medium tracking-tight text-[#7A858B]">Wait 2 hr for a response</div> : null}
-            </React.Fragment>
-          ))}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </div>
