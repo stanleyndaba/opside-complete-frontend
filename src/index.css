@@ -913,3 +913,8 @@ html, body, #root {
 .landing-google-sans h6 {
   font-family: "Google Sans", var(--font-sans) !important;
 }
+
+/* Section headings carry a 15% stronger weight; the hero title remains separately controlled. */
+.landing-google-sans > main > section h2 {
+  font-weight: 460 !important;
+}
