@@ -946,21 +946,28 @@ html, body, #root {
   letter-spacing: -0.01em !important;
 }
 
-/* Financial Control animation: keep the rotating operation words in Lora despite the landing-wide font reset. */
-.landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-stage {
+/* Product reframe animation: keep the rotating operation words in Lora despite the landing-wide font reset. */
+.landing-google-sans .product-reframe-stage {
   font-family: "Lora", Georgia, "Times New Roman", serif !important;
   font-weight: 500 !important;
   letter-spacing: -0.045em !important;
 }
 
+/* Routing cards use a light smoke heading against the mineral surfaces. */
+.landing-google-sans .recovery-routing-section h3 {
+  color: #F4F1EC !important;
+  -webkit-text-fill-color: #F4F1EC !important;
+  font-weight: 500 !important;
+}
+
 @media (max-width: 767px) {
-  .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-word-stack {
+  .landing-google-sans .product-reframe-word-stack {
     align-items: flex-start !important;
     justify-content: flex-start !important;
     text-align: left !important;
   }
 
-  .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-stage {
+  .landing-google-sans .product-reframe-stage {
     text-align: left !important;
   }
 }
