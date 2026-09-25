@@ -923,9 +923,9 @@ html, body, #root {
 .landing-google-sans > main > section h2:not([class*="text-white"]),
 .landing-google-sans > main > section h3:not([class*="text-white"]),
 .landing-google-sans > main > section h4:not([class*="text-white"]) {
-  background-image: linear-gradient(90deg, #182026 0%, #182026 48%, #66737F 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
+  background-image: linear-gradient(90deg, #182026 0%, #182026 42%, #66737F 64%, #66737F 100%) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
   color: transparent !important;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent !important;
 }
