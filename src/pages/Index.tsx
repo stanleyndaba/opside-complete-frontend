@@ -993,7 +993,7 @@ function MarginStandardSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 border-t border-[var(--margin-border)] lg:order-1">
-            <div className="relative flex min-h-[210px] items-center overflow-hidden border-b border-[var(--margin-border)] py-10 sm:min-h-[260px] sm:px-5 sm:py-12" aria-live="polite" aria-atomic="true">
+            <div className="relative flex min-h-[210px] items-center justify-start overflow-hidden border-b border-[var(--margin-border)] py-10 text-left sm:min-h-[260px] sm:px-5 sm:py-12" aria-live="polite" aria-atomic="true">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.p
                   key={activeStandardText}
@@ -1001,8 +1001,8 @@ function MarginStandardSection() {
                   animate={{ opacity: 1 }}
                   exit={reduceMotion ? { opacity: 1 } : { opacity: 0, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
                   transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="max-w-[620px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#20252A] sm:text-[46px] md:text-[58px]"
-                  style={{ fontWeight: 400 }}
+                  className="w-full max-w-[620px] self-start text-left font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#20252A] sm:text-[46px] md:text-[58px]"
+                  style={{ fontFamily: '"Lora", serif', fontWeight: 500 }}
                 >
                   {visibleStandardText || "\u00A0"}
                 </motion.p>
