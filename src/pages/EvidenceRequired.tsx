@@ -62,7 +62,7 @@ export default function EvidenceRequired() {
     setToast(`${item.file} opened for review`);
     window.setTimeout(() => setToast(null), 2600);
   };
-  return <main className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026]">
+  return <main className="preview-google-sans min-h-screen bg-[#FAFAF7] text-[#182026]">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
     <div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6 sm:py-6">
       <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">

@@ -141,6 +141,11 @@ html, body, #root {
 }
 .font-google-sans, .font-google-sans * { font-family: var(--font-google-sans) !important; }
 
+.preview-google-sans,
+.preview-google-sans * {
+  font-family: var(--font-google-sans) !important;
+}
+
 .about-page h1,
 .about-page h2,
 .about-page h3,
