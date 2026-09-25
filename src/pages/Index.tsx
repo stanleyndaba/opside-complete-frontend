@@ -532,13 +532,6 @@ function ApprovalNotificationOrderVisual() {
     { number: "2", role: "Brand Portfolio Manager", name: "Sarah Mitchell", badge: "Fallback", badgeClass: "bg-[#E9F8EC] text-[#4C9A62]", avatarClass: "bg-[#B4A99D]", avatarSrc: "/approver-sarah-mitchell.jpg" },
     { number: "3", role: "VP of Operations", name: "Lena Cruz", badge: "Escalation", badgeClass: "bg-[#FAF2E5] text-[#A67C3E]", avatarClass: "bg-[#B8B9C4]", avatarSrc: "/approver-lena-cruz.jpg" },
   ];
-  const [visibleSteps, setVisibleSteps] = useState(1);
-
-  useEffect(() => {
-    const timers = [1, 2, 3, 4].map((step) => window.setTimeout(() => setVisibleSteps(step + 1), step * 1000));
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, []);
-
   const sequence = [
     { type: "approver", approver: approvers[0] },
     { type: "wait" },
@@ -546,6 +539,14 @@ function ApprovalNotificationOrderVisual() {
     { type: "wait" },
     { type: "approver", approver: approvers[2] },
   ] as const;
+  const [visibleSteps, setVisibleSteps] = useState(1);
+
+  useEffect(() => {
+    const carousel = window.setInterval(() => {
+      setVisibleSteps((current) => current >= sequence.length ? 0 : current + 1);
+    }, 1000);
+    return () => window.clearInterval(carousel);
+  }, [sequence.length]);
 
   return (
     <div className="relative mb-6 overflow-hidden rounded-[12px] border border-[#DCE3E6] bg-white p-4 shadow-[0_10px_28px_rgba(35,54,65,0.08)] sm:p-5" aria-label="Approval notification order">
