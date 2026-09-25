@@ -528,16 +528,16 @@ const recoveryHarnessPoints = [
 
 function ApprovalNotificationOrderVisual() {
   const approvers = [
-    { number: "1", role: "Ops Manager", name: "Michael Thompson", badge: "Primary", badgeClass: "bg-[#EEEAFB] text-[#65519C]", avatarClass: "bg-[#A9B8B0]" },
-    { number: "2", role: "Senior Ops Lead", name: "Sarah Mitchell", badge: "Fallback", badgeClass: "bg-[#E9F8EC] text-[#4C9A62]", avatarClass: "bg-[#B4A99D]" },
-    { number: "3", role: "VP of Operations", name: "Lena Cruz", badge: "Escalation", badgeClass: "bg-[#FAF2E5] text-[#A67C3E]", avatarClass: "bg-[#B8B9C4]" },
+    { number: "1", role: "Ops Manager", name: "Michael Thompson", badge: "Primary", badgeClass: "bg-[#EEEAFB] text-[#65519C]", avatarClass: "bg-[#A9B8B0]", avatarSrc: "/approver-michael-thompson.jpg" },
+    { number: "2", role: "Senior Ops Lead", name: "Sarah Mitchell", badge: "Fallback", badgeClass: "bg-[#E9F8EC] text-[#4C9A62]", avatarClass: "bg-[#B4A99D]", avatarSrc: "/approver-sarah-mitchell.jpg" },
+    { number: "3", role: "VP of Operations", name: "Lena Cruz", badge: "Escalation", badgeClass: "bg-[#FAF2E5] text-[#A67C3E]", avatarClass: "bg-[#B8B9C4]", avatarSrc: "/approver-lena-cruz.jpg" },
   ];
 
   return (
     <div className="relative mb-6 overflow-hidden rounded-[12px] border border-[#DCE3E6] bg-white p-4 shadow-[0_10px_28px_rgba(35,54,65,0.08)] sm:p-5" aria-label="Approval notification order">
       <div className="flex items-start gap-3 border-b border-[#EEF1F2] pb-4">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-[#EEF5FF] text-[#2854C7]">
-          <ReceiptText className="h-5 w-5" strokeWidth={2.1} />
+          <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
         </span>
         <div className="min-w-0">
           <p className="text-[14px] font-semibold leading-5 tracking-tight text-[#182026]">Approval Notification Order</p>
@@ -553,7 +553,7 @@ function ApprovalNotificationOrderVisual() {
               <div className="relative rounded-[12px] border border-[#E6EAEC] bg-white px-3 py-3 shadow-[0_5px_16px_rgba(35,54,65,0.05)]">
                 <span className="absolute -left-[39px] top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-[#2D56C9] text-[12px] font-semibold text-white shadow-[0_3px_8px_rgba(45,86,201,0.2)]">{approver.number}</span>
                 <div className="flex items-center gap-2.5">
-                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] text-[10px] font-semibold text-white ${approver.avatarClass}`} aria-hidden="true">{approver.name.split(" ").map((part) => part[0]).join("")}</span>
+                  <img src={approver.avatarSrc} alt={`${approver.name} headshot`} className="h-9 w-9 shrink-0 rounded-[9px] object-cover" />
                   <span className="min-w-0 flex-1">
                     <span className="block text-[11px] font-semibold leading-4 tracking-tight text-[#182026]">{approver.role}</span>
                     <span className="mt-0.5 block text-[10px] leading-4 tracking-tight text-[#7A858B]">{approver.name}</span>
