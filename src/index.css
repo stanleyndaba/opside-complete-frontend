@@ -947,14 +947,14 @@ html, body, #root {
 }
 
 /* Product reframe animation: keep the rotating operation words in Lora despite the landing-wide font reset. */
-.landing-google-sans .product-reframe-stage {
+.landing-google-sans .product-reframe-stage.font-lora:not(#margin-hero-title) {
   font-family: "Lora", Georgia, "Times New Roman", serif !important;
   font-weight: 500 !important;
   letter-spacing: -0.045em !important;
 }
 
 /* Routing cards use a light smoke heading against the mineral surfaces. */
-.landing-google-sans .recovery-routing-section h3 {
+.landing-google-sans > main > section.recovery-routing-section h3:not([class*="text-white"]) {
   color: #F4F1EC !important;
   -webkit-text-fill-color: #F4F1EC !important;
   font-weight: 500 !important;
@@ -967,7 +967,7 @@ html, body, #root {
     text-align: left !important;
   }
 
-  .landing-google-sans .product-reframe-stage {
+  .landing-google-sans .product-reframe-stage.font-lora:not(#margin-hero-title) {
     text-align: left !important;
   }
 }
