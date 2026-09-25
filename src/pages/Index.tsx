@@ -223,10 +223,6 @@ function AccountingEvidenceSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:order-2 lg:pt-2">
-            <div className="mb-5 flex items-center gap-3">
-              <div className="h-px w-8 bg-[#0B74DE]" />
-              <span className="context-audit-eyebrow font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">02 / THE CONTEXT</span>
-            </div>
             <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
               <span className="heading-tone-dark">Bring it all</span> <span className="heading-tone-muted">together.</span>
             </h2>
@@ -374,7 +370,6 @@ function HistoricalVideoPreviewSections() {
         <section key={section.id} aria-labelledby={`${section.id}-title`} className="relative overflow-hidden bg-white py-7 sm:py-8 md:py-11">
           <div className={containerClass}>
             <motion.div {...revealProps} className="max-w-[900px]">
-              <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">{String(sectionIndex + 1).padStart(2, "0")} / {section.label}</span></div>
               <h2 id={`${section.id}-title`} className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">{section.darkTitle}</span> <span className="heading-tone-muted">{section.mutedTitle}</span></h2>
               <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">{section.body}</p>
             </motion.div>
@@ -440,10 +435,6 @@ function OneRecoverySection() {
       <div className={containerClass}>
         <div className="grid items-center gap-12 lg:grid-cols-1 xl:gap-24">
           <motion.div {...revealProps} className="order-1 lg:pt-2">
-            <div className="mb-5 flex items-center gap-3">
-              <div className="h-px w-8 bg-[var(--margin-blue)]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">01 / RECOGNITION</span>
-            </div>
             <h2 className="max-w-[700px] font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
               <span className="heading-tone-dark">One Recovery Operation</span> <span className="heading-tone-muted">for Your Amazon Business</span>
             </h2>
@@ -487,10 +478,6 @@ function RealityCheckSection() {
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.68fr)_minmax(0,1.32fr)] lg:gap-8">
         <div className="flex flex-col justify-center">
         <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">01 / RECOGNITION</span>
-          </div>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
             <span className="heading-tone-dark">Your FBA numbers don&apos;t</span> <span className="heading-tone-muted">tell the whole story.</span>
           </h2>
@@ -611,10 +598,6 @@ function RecoveryHarnessSection() {
     <section className="recovery-harness-surface relative overflow-hidden border-y border-[#D8E3EA] bg-white py-12 sm:py-14 md:py-20" aria-labelledby="recovery-harness-title">
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[760px]">
-          <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">10 / THE RECOVERY HARNESS</span>
-          </div>
           <h2 id="recovery-harness-title" className="font-lora text-[36px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
             <span className="heading-tone-dark">The Recovery</span> <span className="heading-tone-muted">Harness</span>
           </h2>
@@ -659,12 +642,6 @@ function MarginLifecycleSection() {
         </motion.div>
         <div className="order-1 flex flex-col justify-center lg:order-2">
         <motion.div {...revealProps} className="max-w-[980px]">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
-              05 / AUTONOMY
-            </span>
-          </div>
           <h2
             id="margin-lifecycle-title"
             className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]"
@@ -916,10 +893,6 @@ function ControlSection() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
           <motion.div {...revealProps} className="lg:sticky lg:top-28">
-            <div className="mb-5 flex items-center gap-3">
-              <div className="h-px w-8 bg-[var(--margin-blue)]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">09 / CONTROL</span>
-            </div>
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
               <span className="heading-tone-dark">Keep the recovery</span> <span className="heading-tone-muted">moving.</span>
             </h2>
@@ -1007,10 +980,6 @@ function MarginStandardSection() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
           <motion.div {...revealProps} className="order-1 max-w-[720px] lg:order-2">
-            <div className="mb-5 flex items-center gap-3">
-              <div className="h-px w-8 bg-[var(--margin-blue)]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">04 / THE MARGIN STANDARD</span>
-            </div>
             <h2 id="margin-standard-title" className="font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>
               <span className="heading-tone-dark">If something needs recovering,</span> <span className="heading-tone-muted">Margin handles it.</span>
             </h2>
@@ -1278,7 +1247,6 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
     <section className="relative overflow-hidden bg-[#FAFAF7] py-8 sm:py-10 md:py-12" aria-labelledby="recovery-thread-title">
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[860px]">
-          <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">08 / THE RECOVERY SYSTEM</span></div>
           <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">One recovery.</span> <span className="heading-tone-muted">Every step connected.</span></h2>
           <p className="mt-5 max-w-[840px] font-sans text-[18px] font-semibold leading-[1.45] tracking-[-0.025em] text-[#294B61] sm:text-[21px] md:text-[24px]">Find what happened. Establish what is supported. Build what is owed. Move the case forward. Verify the money.</p>
         </motion.div>
@@ -1342,7 +1310,6 @@ function NestedRecoveryBrowsers() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 lg:order-2">
-            <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">Connected operational view</span></div>
             <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">See how</span> <span className="heading-tone-muted">it got there.</span></h2>
             <div className="mt-6 max-w-[560px] space-y-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
               <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Reconstruct the history of a recovery from scattered records, messages, documents, and case notes to work out what was actually done.</p>
@@ -1434,12 +1401,6 @@ function FullRecoveryLoopSection() {
     >
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[900px]">
-          <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
-              12 / The full recovery loop
-            </span>
-          </div>
           <h2
             id="full-recovery-loop-title"
             className="font-lora text-[30px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[48px]"
@@ -1529,9 +1490,6 @@ function FullRecoveryLoopSection() {
           <p className="max-w-[700px] text-[17px] font-semibold leading-8 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[20px] sm:leading-9 md:text-[24px]">
             One continuous recovery lifecycle.
             <span className="mt-2 block font-sans text-[16px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[20px] md:text-[24px]">Not disconnected tools.</span>
-          </p>
-          <p className="mt-4 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--margin-blue)]">
-            That is the architecture.
           </p>
         </motion.div>
       </div>
@@ -1741,12 +1699,6 @@ function ProductReframeSection() {
     >
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[1040px]">
-          <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
-              14 / The product reframe
-            </span>
-          </div>
           <h2
             id="product-reframe-title"
             className="font-lora text-[36px] leading-[0.99] tracking-[-0.05em] text-[var(--margin-text-primary)] sm:text-[48px] md:text-[66px]"
@@ -1793,7 +1745,6 @@ function RiskSection() {
       <div className={containerClass}>
         <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-12">
           <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
-            <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">11 / THE AMAZON THREAD</span></div>
             <h2 id="amazon-thread-title" className="max-w-[620px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">The recovery stops</span> <span className="heading-tone-muted">living in your inbox.</span></h2>
             <p className="mt-6 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Search through Amazon messages, old case threads, and scattered notes to remember what was said and what it was about.</p>
             <p className="mt-5 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> The conversation stays with the recovery — what Amazon said, what Margin responded, what changed, and what still needs to happen.</p>
@@ -1815,7 +1766,6 @@ function RecoveryOutcomeExplorer() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
           <motion.div {...revealProps} className="order-1 lg:order-2 lg:sticky lg:top-28">
-            <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">12 / WHEN THINGS GO WRONG</span></div>
             <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Don&apos;t let a rejection</span> <span className="heading-tone-muted">stop the recovery.</span></h2>
             <div className="mt-6 max-w-[760px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
               <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> A rejection leaves you to figure out why Amazon said no, what was missing, and whether the case is worth fighting again.</p>
@@ -1840,7 +1790,6 @@ function FinancialReconciliationSection() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.76fr_1.24fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
-            <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / FINANCIAL RECONCILIATION</span></div>
             <h2 id="financial-reconciliation-title" className="max-w-[560px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Know it&apos;s</span> <span className="heading-tone-muted">closed.</span></h2>
             <div className="mt-6 max-w-[580px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
               <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> A recovery gets paid, but you&apos;re left checking settlements and records to make sure the numbers actually tie out.</p>
@@ -1897,7 +1846,6 @@ function EnterpriseReviewsSection() {
     <section className="hidden relative overflow-hidden border-y border-[#DCE5E7] bg-[#F4F8F8] py-12 sm:py-14 md:py-16" aria-labelledby="enterprise-reviews-title">
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto max-w-[760px] text-center">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">Seller perspectives</p>
           <h2 id="enterprise-reviews-title" className="mt-3 font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Recovery work</span> <span className="heading-tone-muted">that stays understandable.</span></h2>
           <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">A clearer operating record changes how finance, operations, and marketplace teams move through the work.</p>
         </motion.div>
@@ -1933,7 +1881,7 @@ function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boo
   return (
     <div className={`relative ${compactMobile ? "max-h-[80vh] overflow-y-auto overscroll-contain touch-pan-y sm:max-h-none sm:overflow-visible" : "overflow-hidden"}`}>
       <div className="mx-auto max-h-none w-full max-w-[900px] overflow-visible rounded-[10px] sm:max-h-[620px] sm:overflow-hidden border border-[#DCE8EE] bg-white text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.16)]">
-        <div className="flex items-start justify-between gap-4 border-b border-[#E9E9EC] px-4 pb-2.5 pt-3"><div><p className="text-[10px] text-[#8A99A5]">{isProof ? 'Proof required' : 'Finding detail'}</p><h3 className="mt-1 text-[20px] font-normal leading-tight tracking-tight">{isProof ? 'Evidence Margin will collect' : 'Fee Charge Review'}</h3><p className="mt-1 max-w-[610px] text-[10px] leading-4 tracking-tight text-[#6B7280]">{isProof ? 'Marginal subagents will check and assess connected sources first. If the proof cannot be found automatically, upload it in Evidence Records so the case can keep moving.' : 'A storage-related charge appears to have been applied more than the seller record supports. · $1484.80 charged vs $742.40 expected'}</p></div><button type="button" aria-label="Close preview" className="text-[18px] leading-none text-[#9CA3AF]">×</button></div>
+        <div className="flex items-start justify-between gap-4 border-b border-[#E9E9EC] px-4 pb-2.5 pt-3"><div><p className="text-[10px] text-[#8A99A5]">{isProof ? 'Proof required' : 'Finding detail'}</p><h3 className="mt-1 text-[20px] font-normal leading-tight tracking-tight">{isProof ? 'Artifacts Margin will collect.' : 'Fee Charge Review'}</h3><p className="mt-1 max-w-[610px] text-[10px] leading-4 tracking-tight text-[#6B7280]">{isProof ? 'Marginal subagents will check and assess connected sources first. If the proof cannot be found automatically, upload it in Evidence Records so the case can keep moving.' : 'A storage-related charge appears to have been applied more than the seller record supports. · $1484.80 charged vs $742.40 expected'}</p></div><button type="button" aria-label="Close preview" className="text-[18px] leading-none text-[#9CA3AF]">×</button></div>
         <div className="flex border-b border-[#E9E9EC] bg-[#FAFAFB] px-4 py-2"><button type="button" onClick={() => setMode('finding')} className={`mr-4 border-b-2 pb-1 text-[11px] font-medium tracking-tight ${!isProof ? 'border-[#0B74DE] text-[#0B74DE]' : 'border-transparent text-[#66737F]'}`}>View finding</button><button type="button" onClick={() => setMode('proof')} className={`border-b-2 pb-1 text-[11px] font-medium tracking-tight ${isProof ? 'border-[#0B74DE] text-[#0B74DE]' : 'border-transparent text-[#66737F]'}`}>Proof needed</button></div><div className="border-b border-[#E9E9EC] bg-white px-4 py-2"><p className="text-[10px] leading-4 tracking-tight text-[#66737F]">Amazon policy basis: <strong className="font-semibold text-[#182026]">Amazon selling and FBA fee schedule review</strong> · Deadline: <strong className="font-semibold text-[#182026]">28 days left · Feb 18, 2026</strong></p></div>
         {isProof ? <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]"><div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r"><div className="mb-3"><p className="mb-2 max-w-[560px] text-[10px] leading-4 tracking-tight text-[#98A5AE]">Amazon selling and FBA fee schedule review · Claim window: 28 days left · Deadline Feb 18, 2026 · ACM-FD-2604-0018 · Fee Charge Review</p><div className="flex gap-2"><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] text-[#182026]">Fee Charge Review</span><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] font-medium text-[#182026]">Claim candidate</span></div></div><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Required documentation</p><div className="mt-2 border-y border-[#E9E9EC] py-1">{[['Fee event or settlement row','The charged fee transaction, fee type, settlement ID, order ID, or shipment context.'],['Product and marketplace context','SKU/ASIN, marketplace, fulfilment channel, size tier, dimensions, weight, and category where available.'],['Expected fee basis','The schedule version, rate basis, or calculation inputs Margin is comparing against the charge.'],['Charged-versus-expected amount','The actual fee, expected fee, currency, and overcharge delta for the same event.']].map(([label,copy], index, items) => <div key={label} className="relative flex gap-3 py-3 first:pt-2 last:pb-2"><div className="relative flex w-3 shrink-0 justify-center"><span className="relative z-10 mt-1.5 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" />{index < items.length - 1 && <span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" />}</div><div className="min-w-0"><p className="text-[11px] font-medium tracking-tight text-[#4D5B66]">{label}</p><p className="mt-1 text-[10px] leading-4 text-[#66737F]">{copy}</p></div></div>)}</div><div className="mt-3 border-t border-[#E9E9EC] pt-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin already found</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">Margin connected the finding to Order <span className="rounded-[4px] bg-[#CFE6F5] px-1 text-[#182026]">113-9204451-1134623</span>, SKU <span className="rounded-[4px] bg-[#D7EBDD] px-1 text-[#182026]">ACME-DEMO-SKU-18</span>, ASIN <span className="rounded-[4px] bg-[#E3D9F2] px-1 text-[#182026]">B0ACME0018</span>, and Shipment <span className="rounded-[4px] bg-[#F6E3B8] px-1 text-[#182026]">FBA17ACME018</span> within Settlement <span className="rounded-[4px] bg-[#DCE3E7] px-1 text-[#182026]">SETTLE-ACME-003</span>. The record trail identifies the fee event as ACME-DESK-LAMP-OAK and keeps the order, product, shipment, and settlement context together.</p></div><div className="mt-4 border-t border-[#E9E9EC] pt-3"><div className="space-y-3">{[['If proof is missing','Subagents keep looking across connected repositories before asking the seller. If the required document is not found, upload it in Evidence Records and Margin can attach it to the filing workflow.'],['Why this proof matters','Margin checks the fee event against the available product, order, shipment, and fee basis before treating it as a supported case.']].map(([label,copy], index, items) => <div key={label} className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-1.5 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" />{index < items.length - 1 && <span className="absolute left-1/2 top-3 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" />}</div><div className="min-w-0"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">{copy}</p>{index === 0 && <p className="mt-1 text-[10px] leading-4 text-[#98A5AE]">An agent will continue the evidence search and keep the case moving.</p>}</div></div>)}</div></div></div><div className="px-4 py-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]">The evidence record keeps the source, policy basis, and claim window visible for review.</p></div></div> : <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]"><div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r"><div className="relative space-y-4 py-1"><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Amount under review</p><p className="mt-1 text-[11px] font-semibold leading-5 tracking-tight text-[#0B74DE]">$900.95</p></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Found on</p><p className="mt-1 text-[11px] font-semibold leading-5 text-[#182026]">Jan 21, 2026, 04:37 PM</p></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Amazon source / activity</p><p className="mt-1 text-[11px] font-semibold leading-5 text-[#182026]">Amazon FBA Settlement Activity</p><span className="mt-2 inline-flex rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-0.5 text-[10px] font-semibold text-[#182026]">Evidence-ready</span></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin found</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">A storage-related charge appears to have been applied more than the seller record supports. · <strong className="font-semibold text-[#182026]">$1484.80 charged vs $742.40 expected</strong></p><span className="mt-2 inline-flex rounded-[10px] border-0 bg-[#F6E3B8] px-2 py-0.5 text-[10px] font-semibold text-[#182026]">Fee discrepancy</span></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Margin analysis</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">Margin connected the Amazon activity, seller records, and expected outcome to identify the recovery gap.</p><span className="mt-2 inline-flex rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-0.5 text-[10px] font-semibold text-[#182026]">Investigation complete</span></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Why unresolved</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">Evidence is assembled; Margin is waiting for the filing gate to clear.</p></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence used</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">Order <strong className="font-semibold text-[#182026]">113-9204451-1885026</strong> · Settlement <strong className="font-semibold text-[#182026]">SETTLE-ACME-003</strong> · SKU <strong className="font-semibold text-[#182026]">ACME-DESK-LAMP-OAK</strong></p></div></div></div></div><div className="px-4 py-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]">The connected Amazon record shows a likely claim candidate, with 94% confidence, ready for review.</p></div></div>}
 
@@ -1960,10 +1908,6 @@ function ConsumerRecoverySection({ onCta }: { onCta: () => void }) {
             <span className="absolute bottom-3 right-5 z-10 text-[11px] font-semibold text-white/90 transition-colors group-hover:text-white sm:bottom-5 sm:right-7">Read more <ArrowRight className="ml-1 inline h-3 w-3" /></span>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="max-w-[620px]">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="h-px w-8 bg-[var(--margin-blue)]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">CONSUMER RECOVERY</span>
-            </div>
             <h2 id="consumer-recovery-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}>
               <span className="heading-tone-dark">The same recovery engine.</span><br /><span className="heading-tone-muted">Now for consumers.</span>
             </h2>
@@ -2030,10 +1974,6 @@ export default function Index() {
         <section className="relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
-              <div className="mb-5 flex items-center gap-3">
-                <div className="h-px w-8 bg-[var(--margin-blue)]" />
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">16 / TRUST / FAQ</span>
-              </div>
               <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
                 <span className="heading-tone-dark">Your questions</span> <span className="heading-tone-muted">answered</span>
               </h2>
@@ -2081,7 +2021,6 @@ export default function Index() {
 
                 {/* Left label */}
                 <motion.div {...revealProps} className="w-full shrink-0 lg:w-[360px]">
-                  <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)] mb-1">18 / DELEGATION &amp; CONTROL</p>
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
                     <span className="heading-tone-dark">You hand Margin the recovery.</span> <span className="heading-tone-muted">You stay in control.</span>
                   </h2>
