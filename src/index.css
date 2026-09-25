@@ -946,21 +946,21 @@ html, body, #root {
   letter-spacing: -0.01em !important;
 }
 
-/* Product reframe animation: keep the stage words in Lora despite the landing-wide font reset. */
-.landing-google-sans > main > section[aria-labelledby="product-reframe-title"] .product-reframe-stage {
+/* Financial Control animation: keep the rotating operation words in Lora despite the landing-wide font reset. */
+.landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-stage {
   font-family: var(--font-serif) !important;
   font-weight: 500 !important;
   letter-spacing: -0.045em !important;
 }
 
 @media (max-width: 639px) {
-  .landing-google-sans > main > section[aria-labelledby="product-reframe-title"] .product-reframe-word-stack {
+  .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-word-stack {
     align-items: flex-start !important;
     justify-content: flex-start !important;
     text-align: left !important;
   }
 
-  .landing-google-sans > main > section[aria-labelledby="product-reframe-title"] .product-reframe-stage {
+  .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-stage {
     text-align: left !important;
   }
 }

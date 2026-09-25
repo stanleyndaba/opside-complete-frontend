@@ -292,7 +292,7 @@ function FinancialControlOperationsSection() {
             </h2>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative flex min-h-[330px] items-center justify-center overflow-hidden sm:min-h-[430px] [mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)]">
-            <div className="relative flex w-full max-w-[585px] flex-col items-center justify-center gap-1.5 text-center sm:gap-2.5">
+            <div className="financial-control-word-stack relative flex w-full max-w-[585px] flex-col items-center justify-center gap-1.5 text-center sm:gap-2.5">
               {visibleOperations.map(({ operation, offset, opacity }) => {
                 const isActive = offset === 0;
                 return (
@@ -306,7 +306,7 @@ function FinancialControlOperationsSection() {
                       opacity: { duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] },
                       scale: { duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] },
                     }}
-                    className={`font-lora text-[32px] leading-[1.05] tracking-[-0.045em] sm:text-[48px] md:text-[60px] ${isActive ? "text-[#182026]" : "text-[#A8B3B7]"}`}
+                    className={`financial-control-stage font-lora text-[32px] leading-[1.05] tracking-[-0.045em] sm:text-[48px] md:text-[60px] ${isActive ? "text-[#182026]" : "text-[#A8B3B7]"}`}
                     style={{ fontWeight: 400 }}
                   >
                     {operation}
@@ -1713,7 +1713,7 @@ function ProductReframeSection() {
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }}>
             <div className="relative flex min-h-[330px] items-center justify-start overflow-hidden py-2 sm:min-h-[430px] sm:justify-center sm:py-4 [mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)]">
-              <div className="product-reframe-word-stack relative flex w-full max-w-[585px] flex-col items-start justify-center gap-1.5 text-left sm:items-center sm:gap-2.5 sm:text-center">
+            <div className="product-reframe-word-stack relative flex w-full max-w-[585px] flex-col items-start justify-center gap-1.5 text-left sm:items-center sm:gap-2.5 sm:text-center">
                 {visibleStages.map(({ stage, offset, opacity }) => {
                   const isActive = offset === 0;
                   return (
@@ -1722,8 +1722,8 @@ function ProductReframeSection() {
                       initial={false}
                       animate={{ opacity, scale: isActive ? 1.02 : 1 }}
                       transition={{ duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] }}
-                      className={`product-reframe-stage font-lora text-[32px] leading-[1.05] tracking-[-0.045em] sm:text-[48px] md:text-[60px] ${isActive ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
-                      style={{ fontWeight: 500 }}
+                    className={`product-reframe-stage font-lora text-[32px] leading-[1.05] tracking-[-0.045em] sm:text-[48px] md:text-[60px] ${isActive ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
+                    style={{ fontWeight: 500 }}
                     >
                       {stage}
                     </motion.div>
