@@ -228,7 +228,7 @@ function AccountingEvidenceSection() {
               <span className="context-audit-eyebrow font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">02 / THE CONTEXT</span>
             </div>
             <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              Bring it all together.
+              <span className="heading-tone-dark">Bring it all</span> <span className="heading-tone-muted">together.</span>
             </h2>
             <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
               <span className="font-semibold text-[#182026]">Before:</span> Search across Amazon, settlements, accounting, email, and files.
@@ -292,7 +292,7 @@ function FinancialControlOperationsSection() {
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-20">
           <motion.div {...revealProps}>
             <h2 id="financial-control-operations-title" className="max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Margin handles the work between a financial problem and its resolution
+              <span className="heading-tone-dark">Margin handles the work</span> <span className="heading-tone-muted">between a financial problem and its resolution</span>
             </h2>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative flex min-h-[330px] items-center justify-center overflow-hidden sm:min-h-[430px] [mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)]">
@@ -326,10 +326,10 @@ function FinancialControlOperationsSection() {
 }
 
 const historicalVideoSections = [
-  { id: "recovery-preview", label: "Recovery preview", title: "See the recovery taking shape.", body: "Margin turns the first signal into a record you can understand, with the underlying activity and evidence kept in view.", videos: ["/Evidentiary.mp4", "/DocumentAnalysis.mp4"] },
-  { id: "supporting-evidence-preview", label: "Supporting evidence", title: "The proof stays connected to the case.", body: "Supporting records, case preparation, and filing context remain connected instead of being rebuilt across separate tools.", videos: ["/superEvidence.mp4", "/CaseBuilding.mp4", "/CasesTable.mp4", "/Filing.mp4"] },
-  { id: "replies-preview", label: "Replies preview", title: "Amazon responses do not disappear into an inbox.", body: "Responses, rejection context, and the next supported action stay attached to the recovery record.", videos: ["/Replies.mp4", "/2026-07-27__12_58_06_a_m_-Appeals_Scene.mp4"] },
-  { id: "payout-reconciliation-preview", label: "Payout reconciliation", title: "The recovery is not complete until the money is checked.", body: "Margin keeps the case outcome connected to the payout record so approved value and actual settlement can be compared.", videos: ["/CasesTable.mp4", "/EvidenceCalibration.mp4"] },
+  { id: "recovery-preview", label: "Recovery preview", title: "See the recovery taking shape.", darkTitle: "See the recovery", mutedTitle: "taking shape.", body: "Margin turns the first signal into a record you can understand, with the underlying activity and evidence kept in view.", videos: ["/Evidentiary.mp4", "/DocumentAnalysis.mp4"] },
+  { id: "supporting-evidence-preview", label: "Supporting evidence", title: "The proof stays connected to the case.", darkTitle: "The proof stays", mutedTitle: "connected to the case.", body: "Supporting records, case preparation, and filing context remain connected instead of being rebuilt across separate tools.", videos: ["/superEvidence.mp4", "/CaseBuilding.mp4", "/CasesTable.mp4", "/Filing.mp4"] },
+  { id: "replies-preview", label: "Replies preview", title: "Amazon responses do not disappear into an inbox.", darkTitle: "Amazon responses do not", mutedTitle: "disappear into an inbox.", body: "Responses, rejection context, and the next supported action stay attached to the recovery record.", videos: ["/Replies.mp4", "/2026-07-27__12_58_06_a_m_-Appeals_Scene.mp4"] },
+  { id: "payout-reconciliation-preview", label: "Payout reconciliation", title: "The recovery is not complete until the money is checked.", darkTitle: "The recovery is not complete", mutedTitle: "until the money is checked.", body: "Margin keeps the case outcome connected to the payout record so approved value and actual settlement can be compared.", videos: ["/CasesTable.mp4", "/EvidenceCalibration.mp4"] },
 ] as const;
 
 function DeferredVideo({ src, label, className }: { src: string; label: string; className?: string }) {
@@ -375,7 +375,7 @@ function HistoricalVideoPreviewSections() {
           <div className={containerClass}>
             <motion.div {...revealProps} className="max-w-[900px]">
               <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">{String(sectionIndex + 1).padStart(2, "0")} / {section.label}</span></div>
-              <h2 id={`${section.id}-title`} className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}>{section.title}</h2>
+              <h2 id={`${section.id}-title`} className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">{section.darkTitle}</span> <span className="heading-tone-muted">{section.mutedTitle}</span></h2>
               <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">{section.body}</p>
             </motion.div>
             <div className={`mt-10 grid gap-5 ${section.videos.length > 2 ? "sm:grid-cols-2" : "lg:grid-cols-2"}`}>
@@ -445,7 +445,7 @@ function OneRecoverySection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">01 / RECOGNITION</span>
             </div>
             <h2 className="max-w-[700px] font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-              One Recovery Operation for Your Amazon Business
+              <span className="heading-tone-dark">One Recovery Operation</span> <span className="heading-tone-muted">for Your Amazon Business</span>
             </h2>
             <div className="mt-5 max-w-[620px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
               <p>When something needs recovering, Margin takes it from finding the problem to getting the outcome.</p>
@@ -492,7 +492,7 @@ function RealityCheckSection() {
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">01 / RECOGNITION</span>
           </div>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-            Your FBA numbers don&apos;t tell the whole story.
+            <span className="heading-tone-dark">Your FBA numbers don&apos;t</span> <span className="heading-tone-muted">tell the whole story.</span>
           </h2>
           <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Sales, fees, refunds, returns, inventory, cases, settlements, and payouts keep moving around the business. You cannot reasonably keep every financial relationship in your head.</p>
           <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
@@ -616,7 +616,7 @@ function RecoveryHarnessSection() {
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">10 / THE RECOVERY HARNESS</span>
           </div>
           <h2 id="recovery-harness-title" className="font-lora text-[36px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
-            The Recovery Harness
+            <span className="heading-tone-dark">The Recovery</span> <span className="heading-tone-muted">Harness</span>
           </h2>
           <p className="mt-5 max-w-[720px] text-[16px] leading-7 text-[var(--margin-text-secondary)] sm:text-[18px] sm:leading-8">
             You don&apos;t have to decide what deserves a case. Margin establishes what happened, what the evidence supports, and what is ready for your approval. Not every discrepancy becomes a claim; sometimes the answer is that the money is already right.
@@ -670,7 +670,7 @@ function MarginLifecycleSection() {
             className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
-            Let it be handled.
+            <span className="heading-tone-dark">Let it be</span> <span className="heading-tone-muted">handled.</span>
           </h2>
         </motion.div>
 
@@ -921,7 +921,7 @@ function ControlSection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">09 / CONTROL</span>
             </div>
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              Keep the recovery moving.
+              <span className="heading-tone-dark">Keep the recovery</span> <span className="heading-tone-muted">moving.</span>
             </h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
               <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Carry every case forward manually as evidence changes, submissions move, Amazon responds, and payouts arrive.
@@ -1012,7 +1012,7 @@ function MarginStandardSection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">04 / THE MARGIN STANDARD</span>
             </div>
             <h2 id="margin-standard-title" className="font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>
-              If something needs recovering, Margin handles it.
+              <span className="heading-tone-dark">If something needs recovering,</span> <span className="heading-tone-muted">Margin handles it.</span>
             </h2>
             <p className="mt-6 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
               Margin doesn&apos;t stop when it finds something. It stays with the money until the story is resolved.
@@ -1104,7 +1104,7 @@ function OneRecordAnalysisVisual() {
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
           <motion.div {...revealProps} className="flex flex-col justify-center">
             <p className="one-record-eyebrow font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">03 / ONE RECORD</p>
-            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>Make the evidence usable.</h2>
+            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Make the evidence</span> <span className="heading-tone-muted">usable.</span></h2>
             <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7"><span className="font-semibold text-[#182026]">Before:</span> Reconstruct the case from disconnected records and turn scattered details into an explanation you can actually stand behind.</p>
             <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7"><span className="font-semibold text-[#182026]">Now:</span> Extract the relevant facts, connect them to the records that support them, and show why the recovery exists—not just that it does.</p>
             <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8">You don&apos;t need to reconstruct what happened.</p>
@@ -1279,7 +1279,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[860px]">
           <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">08 / THE RECOVERY SYSTEM</span></div>
-          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>One recovery. Every step connected.</h2>
+          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">One recovery.</span> <span className="heading-tone-muted">Every step connected.</span></h2>
           <p className="mt-5 max-w-[840px] font-sans text-[18px] font-semibold leading-[1.45] tracking-[-0.025em] text-[#294B61] sm:text-[21px] md:text-[24px]">Find what happened. Establish what is supported. Build what is owed. Move the case forward. Verify the money.</p>
         </motion.div>
 
@@ -1343,7 +1343,7 @@ function NestedRecoveryBrowsers() {
         <div className="grid items-start gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 lg:order-2">
             <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">Connected operational view</span></div>
-            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}>See how it got there.</h2>
+            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">See how</span> <span className="heading-tone-muted">it got there.</span></h2>
             <div className="mt-6 max-w-[560px] space-y-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
               <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Reconstruct the history of a recovery from scattered records, messages, documents, and case notes to work out what was actually done.</p>
               <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Follow the recovery from the first finding through investigation, evidence, action, and outcome — with the underlying records connected at every step.</p>
@@ -1369,7 +1369,7 @@ function FooterNestedRecoveryVisual() {
   return (
     <section className="relative overflow-hidden bg-white py-10 sm:py-14 md:py-16" aria-label="Connected operational view visual">
       <div className={containerClass}>
-        <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden">Your process. Your rules. Your approvals.</h2>
+        <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Your process. Your rules.</span> <span className="heading-tone-muted">Your approvals.</span></h2>
         <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} />
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
           <label htmlFor="delegation-email-mobile" className="mb-1.5 block font-google-sans text-[11px] font-semibold text-[#66737F]">Email address</label>
@@ -1445,7 +1445,7 @@ function FullRecoveryLoopSection() {
             className="font-lora text-[30px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
-            From Amazon event to financial outcome.
+            <span className="heading-tone-dark">From Amazon event</span> <span className="heading-tone-muted">to financial outcome.</span>
           </h2>
         </motion.div>
 
@@ -1752,7 +1752,7 @@ function ProductReframeSection() {
             className="font-lora text-[36px] leading-[0.99] tracking-[-0.05em] text-[var(--margin-text-primary)] sm:text-[48px] md:text-[66px]"
             style={{ fontWeight: 400 }}
           >
-            Margin handles the work between a financial problem and its resolution.
+            <span className="heading-tone-dark">Margin handles the work</span> <span className="heading-tone-muted">between a financial problem and its resolution.</span>
           </h2>
         </motion.div>
 
@@ -1794,7 +1794,7 @@ function RiskSection() {
         <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-12">
           <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
             <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">11 / THE AMAZON THREAD</span></div>
-            <h2 id="amazon-thread-title" className="max-w-[620px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}>The recovery stops living in your inbox.</h2>
+            <h2 id="amazon-thread-title" className="max-w-[620px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">The recovery stops</span> <span className="heading-tone-muted">living in your inbox.</span></h2>
             <p className="mt-6 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Search through Amazon messages, old case threads, and scattered notes to remember what was said and what it was about.</p>
             <p className="mt-5 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> The conversation stays with the recovery — what Amazon said, what Margin responded, what changed, and what still needs to happen.</p>
             <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">No lost context. No starting over. A recovery with a history.</p>
@@ -1816,7 +1816,7 @@ function RecoveryOutcomeExplorer() {
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
           <motion.div {...revealProps} className="order-1 lg:order-2 lg:sticky lg:top-28">
             <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">12 / WHEN THINGS GO WRONG</span></div>
-            <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}>Don&apos;t let a rejection stop the recovery.</h2>
+            <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Don&apos;t let a rejection</span> <span className="heading-tone-muted">stop the recovery.</span></h2>
             <div className="mt-6 max-w-[760px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
               <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> A rejection leaves you to figure out why Amazon said no, what was missing, and whether the case is worth fighting again.</p>
               <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin examines the rejection, learns what Amazon challenged, rebuilds the case around what the response revealed, and handles the appeal when the evidence supports it.</p>
@@ -1841,7 +1841,7 @@ function FinancialReconciliationSection() {
         <div className="grid items-start gap-10 lg:grid-cols-[0.76fr_1.24fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
             <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / FINANCIAL RECONCILIATION</span></div>
-            <h2 id="financial-reconciliation-title" className="max-w-[560px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}>Know it&apos;s closed.</h2>
+            <h2 id="financial-reconciliation-title" className="max-w-[560px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Know it&apos;s</span> <span className="heading-tone-muted">closed.</span></h2>
             <div className="mt-6 max-w-[580px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
               <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> A recovery gets paid, but you&apos;re left checking settlements and records to make sure the numbers actually tie out.</p>
               <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin verifies what was expected, what Amazon credited, and what actually landed — then closes the recovery when the financial record reconciles.</p>
@@ -1898,7 +1898,7 @@ function EnterpriseReviewsSection() {
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto max-w-[760px] text-center">
           <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">Seller perspectives</p>
-          <h2 id="enterprise-reviews-title" className="mt-3 font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}>Recovery work that stays understandable.</h2>
+          <h2 id="enterprise-reviews-title" className="mt-3 font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Recovery work</span> <span className="heading-tone-muted">that stays understandable.</span></h2>
           <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">A clearer operating record changes how finance, operations, and marketplace teams move through the work.</p>
         </motion.div>
       </div>
@@ -1965,7 +1965,7 @@ function ConsumerRecoverySection({ onCta }: { onCta: () => void }) {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">CONSUMER RECOVERY</span>
             </div>
             <h2 id="consumer-recovery-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}>
-              The same recovery engine.<br />Now for consumers.
+              <span className="heading-tone-dark">The same recovery engine.</span><br /><span className="heading-tone-muted">Now for consumers.</span>
             </h2>
             <p className="mt-4 max-w-[580px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin investigates high-value consumer claims, builds the evidence, handles the recovery process, and keeps going until there&apos;s an outcome.</p>
             <p className="mt-4 text-[15px] font-medium leading-7 text-[var(--margin-text-primary)] sm:text-[17px]">Starting with high-value Amazon claims.</p>
@@ -2035,7 +2035,7 @@ export default function Index() {
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">16 / TRUST / FAQ</span>
               </div>
               <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
-                Your questions answered
+                <span className="heading-tone-dark">Your questions</span> <span className="heading-tone-muted">answered</span>
               </h2>
             </motion.div>
             <div className="mt-10 md:mt-14 max-w-4xl">
@@ -2083,7 +2083,7 @@ export default function Index() {
                 <motion.div {...revealProps} className="w-full shrink-0 lg:w-[360px]">
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)] mb-1">18 / DELEGATION &amp; CONTROL</p>
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
-                    You hand Margin the recovery. You stay in control.
+                    <span className="heading-tone-dark">You hand Margin the recovery.</span> <span className="heading-tone-muted">You stay in control.</span>
                   </h2>
                   <p className="mt-4 max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">You approve what matters. Margin owns the investigation, evidence, casework, follow-up, and verification.</p>
                   <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>You just need to know it&apos;s being handled.</p>
