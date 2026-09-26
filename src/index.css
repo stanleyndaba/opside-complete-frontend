@@ -693,51 +693,51 @@ html, body, #root {
 }
 
 /* Receipt paper: explanation and established record */
-.landing-google-sans > main > section:nth-child(5),
-.landing-google-sans > main > section:nth-child(8),
-.landing-google-sans > main > section:nth-child(17),
-.landing-google-sans > main > section:nth-child(19) {
+.landing-google-sans > main > section:nth-child(6),
+.landing-google-sans > main > section:nth-child(9),
+.landing-google-sans > main > section:nth-child(18),
+.landing-google-sans > main > section:nth-child(20) {
   background-color: #F1EFE8 !important;
 }
 
 /* Ledger grey: investigation, evidence, and operational work */
-.landing-google-sans > main > section:nth-child(4),
-.landing-google-sans > main > section:nth-child(6),
-.landing-google-sans > main > section:nth-child(9),
+.landing-google-sans > main > section:nth-child(5),
+.landing-google-sans > main > section:nth-child(7),
 .landing-google-sans > main > section:nth-child(10),
 .landing-google-sans > main > section:nth-child(11),
 .landing-google-sans > main > section:nth-child(12),
-.landing-google-sans > main > section:nth-child(15) {
+.landing-google-sans > main > section:nth-child(13),
+.landing-google-sans > main > section:nth-child(16) {
   background-color: #D7D9D5 !important;
   border-color: #BFC5C1 !important;
 }
 
 /* Oxidized paper: friction and unresolved records */
-.landing-google-sans > main > section:nth-child(3),
-.landing-google-sans > main > section:nth-child(13),
-.landing-google-sans > main > section:nth-child(14) {
+.landing-google-sans > main > section:nth-child(4),
+.landing-google-sans > main > section:nth-child(14),
+.landing-google-sans > main > section:nth-child(15) {
   background-color: #C7B8A8 !important;
 }
 
 /* Resolved graphite: decision and closure */
-.landing-google-sans > main > section:nth-child(16),
-.landing-google-sans > main > section:nth-child(18),
-.landing-google-sans > main > section:nth-child(20) {
+.landing-google-sans > main > section:nth-child(17),
+.landing-google-sans > main > section:nth-child(19),
+.landing-google-sans > main > section:nth-child(21) {
   background-color: #263438 !important;
   color: #F1EFE8;
 }
 
 /* Keep copy readable on resolved surfaces without recolouring hero internals. */
-.landing-google-sans > main > section:nth-child(20) h2,
-.landing-google-sans > main > section:nth-child(20) p,
-.landing-google-sans > main > section:nth-child(20) label {
+.landing-google-sans > main > section:nth-child(21) h2,
+.landing-google-sans > main > section:nth-child(21) p,
+.landing-google-sans > main > section:nth-child(21) label {
   color: #F1EFE8;
 }
 
 /* Evidence plates: filed rather than floating. */
-.landing-google-sans > main > section:nth-child(4) article,
-.landing-google-sans > main > section:nth-child(9) article,
-.landing-google-sans > main > section:nth-child(11) article {
+.landing-google-sans > main > section:nth-child(5) article,
+.landing-google-sans > main > section:nth-child(10) article,
+.landing-google-sans > main > section:nth-child(12) article {
   box-shadow: none !important;
   border-radius: 2px !important;
 }
@@ -745,6 +745,12 @@ html, body, #root {
 /* Small record-rule transition between surfaces. */
 .landing-google-sans > main > section:not(:first-child) {
   border-top: 1px solid rgba(24, 32, 38, 0.10);
+}
+
+/* The Reconstruction Gap is a soft editorial surface, protected from positional overrides. */
+.landing-google-sans > main > section.reconstruction-gap-surface {
+  background-color: #F6F8F9 !important;
+  color: #182026 !important;
 }
 
 /* Routing is intentionally a pure-white surface, regardless of section position. */

@@ -498,6 +498,25 @@ function RealityCheckSection() {
   );
 }
 
+function ReconstructionGapSection() {
+  return (
+    <section aria-labelledby="reconstruction-gap-title" className="reconstruction-gap-surface relative overflow-hidden bg-[#F6F8F9] py-10 md:py-14">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="max-w-[920px] border-l border-[#D8E3E8] pl-5 sm:pl-7 md:pl-10">
+          <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">02 / THE RECONSTRUCTION GAP</p>
+          <h2 id="reconstruction-gap-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}>
+            <span className="heading-tone-dark">You shouldn&apos;t have to reconstruct</span> <span className="heading-tone-muted">your own financial story.</span>
+          </h2>
+          <div className="mt-6 max-w-[780px] space-y-5 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
+            <p>When a number doesn&apos;t add up, finding the answer can mean jumping between transactions, settlements, reports, inventory records, and supporting documents — just to understand what happened to one financial event.</p>
+            <p className="font-semibold text-[var(--margin-text-primary)]">Margin connects the evidence, establishes what happened, and keeps the next action moving.</p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 const recoveryHarnessPoints = [
   {
     number: "01",
@@ -2043,6 +2062,7 @@ export default function Index() {
         {/* Recognition — Is this my problem? */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/audit-start"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
         <RealityCheckSection />
+        <ReconstructionGapSection />
 
         {/* Diagnosis — Why can’t I reasonably handle this myself? */}
         <AccountingEvidenceSection />
