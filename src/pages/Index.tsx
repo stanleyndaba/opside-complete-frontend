@@ -225,14 +225,10 @@ function AccountingEvidenceSection() {
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:order-2 lg:pt-2">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">03 / THE CONTEXT</p>
             <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Stop searching for the missing</span> <span className="heading-tone-muted">piece.</span>
+              <span className="heading-tone-dark">Stop spending hours trying to</span> <span className="heading-tone-muted">reconstruct what happened.</span>
             </h2>
-            <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              <span className="font-semibold text-[#182026]">Before:</span> Search across Amazon, settlements, accounting, email, and files.
-            </p>
-            <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              <span className="font-semibold text-[#182026]">Now:</span> Relevant records come together around the financial event.
-            </p>
+            <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">When something doesn&apos;t add up, you shouldn&apos;t have to become the investigator.</p>
+            <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Go from scattered records to a clear financial story — without chasing the missing pieces yourself.</p>
             <div className="mt-8 border-t border-[#C9D1D6] pt-5">
               <div className="flex max-w-full flex-wrap gap-2 font-mono text-[10px] font-semibold tracking-tight">
                 <span className="context-source-badge context-source-badge--green">Amazon</span>
