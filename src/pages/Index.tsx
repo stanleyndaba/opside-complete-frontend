@@ -225,7 +225,7 @@ function AccountingEvidenceSection() {
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:order-2 lg:pt-2">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">03 / THE CONTEXT</p>
             <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Stop spending hours trying to</span> <span className="heading-tone-muted">reconstruct what happened.</span>
+              <span className="heading-tone-dark">Stop searching for the missing</span> <span className="heading-tone-muted">piece.</span>
             </h2>
             <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">When something doesn&apos;t add up, you shouldn&apos;t have to become the investigator.</p>
             <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Go from scattered records to a clear financial story — without chasing the missing pieces yourself.</p>
@@ -1222,7 +1222,7 @@ function OneRecordAnalysisVisual() {
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
           <motion.div {...revealProps} className="flex flex-col justify-center">
             <p className="one-record-eyebrow font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">04 / ONE RECORD</p>
-            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Know what happened without</span> <span className="heading-tone-muted">reconstructing the story.</span></h2>
+            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Turn scattered records into one financial</span> <span className="heading-tone-muted">story.</span></h2>
             <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Stop piecing together disconnected records just to understand one financial event.</p>
             <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Get the full picture in one place — and know what happened, what remains unresolved, and what needs to happen next.</p>
             <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8">You get the answer without having to build the case yourself.</p>
