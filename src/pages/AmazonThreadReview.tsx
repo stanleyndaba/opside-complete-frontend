@@ -65,11 +65,11 @@ export default function AmazonThreadReview() {
     setToast(`${name} is available in the evidence record`);
     window.setTimeout(() => setToast(null), 2600);
   };
-  return <main className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026]">
+  return <main className="preview-google-sans min-h-screen bg-[#FAFAF7] text-[#182026]">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
     <div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6 sm:py-6">
       <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-3 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-4">
-        <div className="mb-3 border-b border-[#E7EEF2] pb-2"><p className="text-[10px] font-medium tracking-tight text-[#66737F]">Amazon records</p><h1 className="mt-0.5 font-lora text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[19px]">What Amazon said and what Margin sent</h1><p className="mt-1 text-[10px] leading-4 text-[#66737F]">Inspect Amazon&apos;s case state, messages, attachments, and the evidence-backed reply from this recovery record.</p></div>
+        <div className="mb-3 border-b border-[#E7EEF2] pb-2"><p className="text-[10px] font-medium tracking-tight text-[#66737F]">Amazon records</p><h1 className="mt-0.5 text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[19px]">What Amazon said and what Margin sent</h1><p className="mt-1 text-[10px] leading-4 text-[#66737F]">Inspect Amazon&apos;s case state, messages, attachments, and the evidence-backed reply from this recovery record.</p></div>
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2"><h2 className="text-[13px] font-semibold tracking-tight text-[#07111A]">Amazon Thread</h2><span className="rounded-full bg-[#F1F3F4] px-2 py-0.5 text-[9px] uppercase tracking-tight text-[#36404A]">Reimbursement recorded in thread</span></div>
           <p className="text-[10px] leading-4 text-[#6B7C88]">Thread states describe Amazon communication records. They do not, by themselves, establish verified payment or financial closure.</p>
