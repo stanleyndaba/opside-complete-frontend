@@ -482,15 +482,11 @@ function RealityCheckSection() {
         <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center">
           <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">01 / THE PROBLEM</p>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-            <span className="heading-tone-dark">Your Amazon numbers don&apos;t</span> <span className="heading-tone-muted">tell the whole story.</span>
+            <span className="heading-tone-dark">Strong performance doesn&apos;t</span> <span className="heading-tone-muted">mean the money adds up.</span>
           </h2>
-          <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Sales are only the beginning. Fees, refunds, returns, inventory, fulfillment, adjustments, reimbursements, settlements, and payouts keep moving through the business. The result is a financial trail that&apos;s difficult to reconstruct — especially when something doesn&apos;t add up.</p>
-          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Piece together Amazon records, settlements, accounting data, emails, and supporting documents to work out what happened.
-          </p>
-          <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> See what reconciles, what doesn&apos;t, what the evidence supports, and what needs to happen next.
-          </p>
+          <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Your sales tell you how the business is doing. They don&apos;t tell you whether every financial event has been accounted for — or whether the money that should have reached you actually did.</p>
+          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">When orders, returns, fees, inventory, settlements, and payouts move through Amazon, the financial story can become difficult to follow. Something can remain unresolved even when the business looks healthy.</p>
+          <p className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">Margin establishes what happened to the money, what the records support, and what still needs attention.</p>
         </motion.div>
         </div>
         <motion.div {...revealProps} className="relative">
