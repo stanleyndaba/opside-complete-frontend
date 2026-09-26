@@ -693,51 +693,51 @@ html, body, #root {
 }
 
 /* Receipt paper: explanation and established record */
-.landing-google-sans > main > section:nth-child(6),
-.landing-google-sans > main > section:nth-child(9),
-.landing-google-sans > main > section:nth-child(18),
-.landing-google-sans > main > section:nth-child(20) {
+.landing-google-sans > main > section:nth-child(7),
+.landing-google-sans > main > section:nth-child(10),
+.landing-google-sans > main > section:nth-child(19),
+.landing-google-sans > main > section:nth-child(21) {
   background-color: #F1EFE8 !important;
 }
 
 /* Ledger grey: investigation, evidence, and operational work */
-.landing-google-sans > main > section:nth-child(5),
-.landing-google-sans > main > section:nth-child(7),
-.landing-google-sans > main > section:nth-child(10),
+.landing-google-sans > main > section:nth-child(6),
+.landing-google-sans > main > section:nth-child(8),
 .landing-google-sans > main > section:nth-child(11),
 .landing-google-sans > main > section:nth-child(12),
 .landing-google-sans > main > section:nth-child(13),
-.landing-google-sans > main > section:nth-child(16) {
+.landing-google-sans > main > section:nth-child(14),
+.landing-google-sans > main > section:nth-child(17) {
   background-color: #D7D9D5 !important;
   border-color: #BFC5C1 !important;
 }
 
 /* Oxidized paper: friction and unresolved records */
-.landing-google-sans > main > section:nth-child(4),
-.landing-google-sans > main > section:nth-child(14),
-.landing-google-sans > main > section:nth-child(15) {
+.landing-google-sans > main > section:nth-child(5),
+.landing-google-sans > main > section:nth-child(15),
+.landing-google-sans > main > section:nth-child(16) {
   background-color: #C7B8A8 !important;
 }
 
 /* Resolved graphite: decision and closure */
-.landing-google-sans > main > section:nth-child(17),
-.landing-google-sans > main > section:nth-child(19),
-.landing-google-sans > main > section:nth-child(21) {
+.landing-google-sans > main > section:nth-child(18),
+.landing-google-sans > main > section:nth-child(20),
+.landing-google-sans > main > section:nth-child(22) {
   background-color: #263438 !important;
   color: #F1EFE8;
 }
 
 /* Keep copy readable on resolved surfaces without recolouring hero internals. */
-.landing-google-sans > main > section:nth-child(21) h2,
-.landing-google-sans > main > section:nth-child(21) p,
-.landing-google-sans > main > section:nth-child(21) label {
+.landing-google-sans > main > section:nth-child(22) h2,
+.landing-google-sans > main > section:nth-child(22) p,
+.landing-google-sans > main > section:nth-child(22) label {
   color: #F1EFE8;
 }
 
 /* Evidence plates: filed rather than floating. */
-.landing-google-sans > main > section:nth-child(5) article,
-.landing-google-sans > main > section:nth-child(10) article,
-.landing-google-sans > main > section:nth-child(12) article {
+.landing-google-sans > main > section:nth-child(6) article,
+.landing-google-sans > main > section:nth-child(11) article,
+.landing-google-sans > main > section:nth-child(13) article {
   box-shadow: none !important;
   border-radius: 2px !important;
 }
@@ -750,6 +750,12 @@ html, body, #root {
 /* The Reconstruction Gap is a soft editorial surface, protected from positional overrides. */
 .landing-google-sans > main > section.reconstruction-gap-surface {
   background-color: #F6F8F9 !important;
+  color: #182026 !important;
+}
+
+/* Financial Work Proof is a white editorial surface, protected from positional overrides. */
+.landing-google-sans > main > section.financial-work-proof-surface {
+  background-color: #FFFFFF !important;
   color: #182026 !important;
 }
 
