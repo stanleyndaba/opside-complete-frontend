@@ -539,26 +539,51 @@ function ApprovalNotificationOrderVisual() {
     { type: "wait" },
     { type: "approver", approver: approvers[2] },
   ] as const;
-  const [visibleSteps, setVisibleSteps] = useState(1);
+  const [visibleSteps, setVisibleSteps] = useState(0);
 
   useEffect(() => {
-    const carousel = window.setInterval(() => {
-      setVisibleSteps((current) => current >= sequence.length ? 0 : current + 1);
-    }, 1000);
-    return () => window.clearInterval(carousel);
+    let timer: number | undefined;
+    let cancelled = false;
+
+    const runCarousel = () => {
+      setVisibleSteps(0);
+      timer = window.setTimeout(() => {
+        if (cancelled) return;
+        let step = 1;
+        setVisibleSteps(step);
+
+        const showNextStep = () => {
+          if (cancelled) return;
+          if (step < sequence.length) {
+            timer = window.setTimeout(() => {
+              step += 1;
+              setVisibleSteps(step);
+              showNextStep();
+            }, 2000);
+          } else {
+            timer = window.setTimeout(runCarousel, 3000);
+          }
+        };
+
+        showNextStep();
+      }, 1500);
+    };
+
+    runCarousel();
+    return () => {
+      cancelled = true;
+      if (timer) window.clearTimeout(timer);
+    };
   }, [sequence.length]);
 
   return (
     <div className="relative mb-6 min-h-[350px] overflow-hidden rounded-[12px] border border-[#DCE3E6] bg-white p-3 shadow-[0_10px_28px_rgba(35,54,65,0.08)] sm:min-h-[360px] sm:p-4" aria-label="Approval notification order">
-      <motion.div animate={{ opacity: visibleSteps === 0 ? 0 : 1, y: visibleSteps === 0 ? -6 : 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="flex items-start gap-2.5 border-b border-[#EEF1F2] pb-3">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-white text-[#2854C7]">
-          <img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain" />
-        </span>
+      <div className="border-b border-[#EEF1F2] pb-3">
         <div className="min-w-0">
           <p className="text-[12px] font-semibold leading-4 tracking-tight text-[#182026]">Approval Notification Order</p>
           <p className="mt-0.5 text-[9px] leading-3.5 tracking-tight text-[#7A858B]">Relay will notify approvers in the order shown below.</p>
         </div>
-      </motion.div>
+      </div>
 
       <div className="relative mt-3 pl-8">
         <span className="absolute left-[11px] top-5 bottom-5 border-l-2 border-dotted border-[#A6ADB3]" aria-hidden="true" />
