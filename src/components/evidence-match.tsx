@@ -132,7 +132,7 @@ function MatchAnalysisViz() {
 
       <div className="mt-4 border-t border-[#DCE8EE] pt-3">
         <div className="space-y-2">
-          <div className="space-y-1.5 font-mono text-[11px] leading-5 text-[#25313A]">
+          <div className="space-y-1.5 font-google-sans text-[11px] leading-5 text-[#25313A]">
             <p>
               <span className="font-medium uppercase tracking-tight text-[#66737F]">Shipment</span>{' '}
               Shipment <MetadataHighlight active={isActive('r-ship-id')} tone="yellow">FBA17ACME001</MetadataHighlight> ·{' '}
@@ -151,7 +151,7 @@ function MatchAnalysisViz() {
             </p>
           </div>
 
-          <div className="border-t border-[#E8EFF3] pt-2 font-mono text-[11px] leading-5 text-[#25313A]">
+          <div className="border-t border-[#E8EFF3] pt-2 font-google-sans text-[11px] leading-5 text-[#25313A]">
             <p>
               <span className="font-medium uppercase tracking-tight text-[#66737F]">Case readiness</span>{' '}
               <MetadataHighlight active={isActive('r-candidate')} tone="emerald">Claim candidate</MetadataHighlight> · Deadline{' '}
@@ -168,7 +168,7 @@ function MatchAnalysisViz() {
               animate={{ opacity: 1, y: 0 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="h-8 w-full rounded-[4px] bg-[#182026] font-mono text-[11px] font-medium tracking-tight text-white hover:bg-[#303334]"
+              className="h-8 w-full rounded-[4px] bg-black font-google-sans text-[11px] font-medium tracking-tight text-white hover:bg-[#182026]"
               type="button"
             >
               Evidence Match Confirmed
@@ -227,14 +227,14 @@ export default function EvidenceMatch() {
   const isDocumentMatch = (id: string) => documentMatches.has(id);
 
   return (
-    <main className="min-h-screen bg-[#FAFAF7] p-4 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1180px] items-center">
-      <section className="grid min-h-[620px] w-full grid-cols-1 gap-0 overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] lg:grid-cols-2">
+    <main className="min-h-screen overflow-x-auto bg-[#FAFAF7] p-4 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:overflow-x-hidden lg:p-8">
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] min-w-[760px] max-w-[1180px] items-center lg:min-w-0">
+      <section className="grid min-h-[620px] w-full grid-cols-2 gap-0 overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
         <div className="relative flex min-h-0 flex-col overflow-hidden border-b border-[#DCE8EE] bg-white lg:border-b-0 lg:border-r">
           <div className="z-10 flex items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-[#66737F]" />
-              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
+              <span className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
                 Shipment_FBA17ACME001.pdf
               </span>
             </div>
@@ -297,17 +297,16 @@ export default function EvidenceMatch() {
         <div className="flex min-h-0 flex-col overflow-hidden border-t border-[#DCE8EE] bg-[#F8FAFC] lg:border-l lg:border-t-0">
           <div className="flex items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
             <div>
-              <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
+              <div className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
                 Evidence matching protocol
               </div>
               <h1
-                className="mt-1 text-[16px] font-semibold leading-tight tracking-[-0.035em] text-[#182026]"
-                style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+                className="mt-1 font-google-sans text-[16px] font-semibold leading-tight tracking-[-0.035em] text-[#182026]"
               >
                 Inbound shipment shortage
               </h1>
             </div>
-            <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
+            <div className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
               Ready
             </div>
           </div>
