@@ -18,6 +18,24 @@ const METADATA = [
   { label: 'Delivered: Nov 10 · 14:22:01' },
 ];
 
+const EVIDENCE_MATCH_SEQUENCE = [
+  ['gap', 300],
+  ['units', 680],
+  ['ont8', 1120],
+  ['received', 1580],
+  ['policy', 2140],
+  ['order', 2620],
+  ['shipment', 3080],
+  ['sku', 3480],
+  ['shortage', 3860],
+  ['record', 4320],
+  ['sp-api', 4740],
+  ['sync', 5120],
+  ['case', 5480],
+  ['deadline', 5840],
+  ['candidate', 6200],
+] as const;
+
 const spring = { type: 'spring' as const, stiffness: 260, damping: 24 };
 
 type HighlightTone = 'blue' | 'amber' | 'emerald';
@@ -85,6 +103,7 @@ function CompilingCheck() {
 export default function ReportGeneration() {
   const [phase, setPhase] = useState<Phase>('extracting');
   const [extractedCount, setExtractedCount] = useState(0);
+  const [evidenceMatches, setEvidenceMatches] = useState<Set<string>>(new Set());
   const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
@@ -95,7 +114,7 @@ export default function ReportGeneration() {
         timers.push(window.setTimeout(() => setExtractedCount(index + 1), index * 550 + 400));
       });
 
-      timers.push(window.setTimeout(() => setPhase('compiling'), METADATA.length * 550 + 650));
+      timers.push(window.setTimeout(() => setPhase('compiling'), 7000));
       return () => timers.forEach((timer) => window.clearTimeout(timer));
     }
 
@@ -104,6 +123,17 @@ export default function ReportGeneration() {
       return () => window.clearTimeout(timer);
     }
   }, [phase]);
+
+  useEffect(() => {
+    const timeouts = EVIDENCE_MATCH_SEQUENCE.map(([id, delay]) =>
+      window.setTimeout(() => {
+        setEvidenceMatches((previous) => new Set(previous).add(id));
+      }, delay),
+    );
+    return () => timeouts.forEach((timeout) => window.clearTimeout(timeout));
+  }, []);
+
+  const isEvidenceMatchActive = (id: string) => evidenceMatches.has(id);
 
   const downloadReport = async () => {
     const { jsPDF } = await import('jspdf');
@@ -141,70 +171,57 @@ export default function ReportGeneration() {
                 <div className="relative min-h-[390px] overflow-hidden border border-[#DCE8EE] bg-white p-6 sm:p-7">
                   <div className="flex items-start justify-between border-b border-[#DCE8EE] pb-4">
                     <div>
-                      <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Carrier Proof of Delivery</p>
-                      <h2 className="mt-1 text-base font-semibold text-[#182026]">Inbound Shipment Receipt</h2>
-                      <p className="mt-1 text-[11px] text-[#8A99A4]">Amazon FBA receiving documentation</p>
+                      <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Evidence match</p>
+                      <h2 className="mt-1 text-base font-semibold text-[#182026]">Inbound shipment shortage</h2>
+                      <p className="mt-1 text-[11px] text-[#8A99A4]">Shipment, receipt, and reimbursement records</p>
                     </div>
                     <FileText className="h-5 w-5 text-[#B9C4CC]" />
                   </div>
 
-                  <div className="mt-5 grid grid-cols-3 gap-3">
-                    <div className="border border-[#E4ECF1] bg-[#F8FAFC] p-3">
-                      <p className="font-google-sans text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Shipment ID</p>
-                      <p className="mt-1 text-[11px] font-semibold text-[#182026]">
-                        <MetadataHighlight active={extractedCount >= 1} tone="blue">FBA15JJ4K7L1</MetadataHighlight>
-                      </p>
-                    </div>
-                    <div className="border border-[#E4ECF1] bg-[#F8FAFC] p-3">
-                      <p className="font-google-sans text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Units Shipped</p>
-                      <p className="mt-1 text-[11px] font-semibold text-[#182026]">
-                        <MetadataHighlight active={extractedCount >= 2} tone="amber">120 units</MetadataHighlight>
-                      </p>
-                    </div>
-                    <div className="border border-[#E4ECF1] bg-[#F8FAFC] p-3">
-                      <p className="font-google-sans text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Carrier Weight</p>
-                      <p className="mt-1 text-[11px] font-semibold text-[#182026]">
-                        <MetadataHighlight active={extractedCount >= 3} tone="amber">45.2 lb</MetadataHighlight>
-                      </p>
-                    </div>
+                  <div className="mt-5 space-y-3 text-[12px] leading-6 text-[#4D5B66] sm:text-[13px]">
+                    <p>
+                      Amazon received fewer units than the inbound shipment record shows were shipped.{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">60 shipped, 46 received</MetadataHighlight>{' '}
+                      with a{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('gap')} tone="amber">14-unit gap at ONT8</MetadataHighlight>.
+                    </p>
+                    <p>
+                      Inbound discrepancy details are being matched to the evidence trail.{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('case')} tone="amber">What Margin found</MetadataHighlight>{' '}
+                      confirms the claim path.
+                    </p>
+                    <p>
+                      Current filing movement is ready to file when filing gates allow it.{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Next action: Open case.</MetadataHighlight>
+                    </p>
+                    <p>Margin is comparing shipment, receipt, and reimbursement records to determine whether the gap can move into a case.</p>
                   </div>
 
-                  <div className="mt-5 border border-[#DCE8EE]">
-                    <div className="flex items-center justify-between border-b border-[#E4ECF1] px-4 py-2.5">
-                      <span className="text-[10px] text-[#8A99A4]">Carrier</span>
-                      <span className="text-[11px] font-medium text-[#182026]">
-                        <MetadataHighlight active={extractedCount >= 4} tone="blue">UPS Freight</MetadataHighlight>
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between border-b border-[#E4ECF1] px-4 py-2.5">
-                      <span className="text-[10px] text-[#8A99A4]">Tracking ID</span>
-                      <span className="text-[11px] font-medium text-[#182026]">
-                        <MetadataHighlight active={extractedCount >= 5} tone="blue">1Z84A07Y0391842216</MetadataHighlight>
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between px-4 py-2.5">
-                      <span className="text-[10px] text-[#8A99A4]">Receiving status</span>
-                      <span className="text-[11px] font-medium text-emerald-700">
-                        <MetadataHighlight active={extractedCount >= 6} tone="emerald">Signed and accepted</MetadataHighlight>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 grid grid-cols-2 gap-3">
-                    <div className="border border-[#CFEADC] bg-[#F4FBF7] p-3">
-                      <p className="font-google-sans text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Received By</p>
-                      <p className="mt-1 text-xs font-semibold text-[#182026]">
-                        <MetadataHighlight active={extractedCount >= 7} tone="emerald">J. Smith</MetadataHighlight>
+                  <div className="mt-4 border-t border-[#DCE8EE] pt-3">
+                    <div className="space-y-2 font-google-sans text-[11px] leading-5 text-[#25313A]">
+                      <p>
+                        <span className="font-medium uppercase tracking-tight text-[#66737F]">Shipment</span>{' '}
+                        Shipment <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">FBA17ACME001</MetadataHighlight> ·{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">60 shipped</MetadataHighlight>.
                       </p>
-                      <p className="mt-1 text-[10px] text-[#66737F]">Dock D-14 · Signature verified</p>
-                    </div>
-                    <div className="border border-[#E4ECF1] bg-[#F8FAFC] p-3">
-                      <p className="font-google-sans text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Delivery Event</p>
-                      <p className="mt-1 text-xs font-semibold text-[#182026]">
-                        <MetadataHighlight active={extractedCount >= 8} tone="amber">Nov 10, 2025</MetadataHighlight>
+                      <p>
+                        <span className="font-medium uppercase tracking-tight text-[#66737F]">Receipt</span>{' '}
+                        Amazon received <MetadataHighlight active={isEvidenceMatchActive('received')} tone="amber">46 units</MetadataHighlight> at{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('ont8')} tone="amber">ONT8</MetadataHighlight>.
                       </p>
-                      <p className="mt-1 text-[10px] text-[#66737F]">
-                        Timestamp <MetadataHighlight active={extractedCount >= 8} tone="amber">14:22:01 UTC</MetadataHighlight>
+                      <p>
+                        <span className="font-medium uppercase tracking-tight text-[#66737F]">Backend</span>{' '}
+                        Record <MetadataHighlight active={isEvidenceMatchActive('record')} tone="amber">00000000-000</MetadataHighlight> · Source{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('sp-api')} tone="amber">SP API</MetadataHighlight> · Sync{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('sync')} tone="amber">acme-sync-20260420</MetadataHighlight>
+                      </p>
+                    </div>
+                    <div className="mt-2 border-t border-[#E8EFF3] pt-2 font-google-sans text-[11px] leading-5 text-[#25313A]">
+                      <p>
+                        <span className="font-medium uppercase tracking-tight text-[#66737F]">Case readiness</span>{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Claim candidate</MetadataHighlight> · Deadline{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('deadline')} tone="emerald">Apr 2, 2026</MetadataHighlight> · Case link{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('case')} tone="emerald">ACME-CASE-2001</MetadataHighlight>
                       </p>
                     </div>
                   </div>
@@ -282,7 +299,7 @@ export default function ReportGeneration() {
               >
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-3">
-                    <h2 className="text-sm font-medium tracking-tight text-[#182026]">Claim Package Ready</h2>
+                    <h2 className="text-sm font-medium tracking-tight text-[#182026]">Case Built</h2>
                     <p className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</p>
                   </div>
 
