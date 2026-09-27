@@ -749,6 +749,11 @@ html, body, #root {
 }
 
 /* The Reconstruction Gap is a soft editorial surface, protected from positional overrides. */
+.landing-google-sans > main > section.problem-surface {
+  background-color: #F3F5F5 !important;
+  color: #182026 !important;
+}
+
 .landing-google-sans > main > section.reconstruction-gap-surface {
   background-color: #F6F8F9 !important;
   color: #182026 !important;
