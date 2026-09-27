@@ -759,10 +759,24 @@ html, body, #root {
   color: #182026 !important;
 }
 
-/* Financial Work Proof is a white editorial surface, protected from positional overrides. */
+/* Financial Work Proof is a black editorial surface with a white-to-grey hierarchy. */
 .landing-google-sans > main > section.financial-work-proof-surface {
-  background-color: #FFFFFF !important;
-  color: #182026 !important;
+  background-color: #050505 !important;
+  color: #FFFFFF !important;
+}
+
+.landing-google-sans > main > section.financial-work-proof-surface h2 .heading-tone-dark,
+.landing-google-sans > main > section.financial-work-proof-surface h3,
+.landing-google-sans > main > section.financial-work-proof-surface span.font-lora {
+  color: #FFFFFF !important;
+}
+
+.landing-google-sans > main > section.financial-work-proof-surface h2 .heading-tone-muted {
+  color: #D6DDE1 !important;
+}
+
+.landing-google-sans > main > section.financial-work-proof-surface p {
+  color: #8F9BA3 !important;
 }
 
 /* Routing is intentionally a pure-white surface, regardless of section position. */
