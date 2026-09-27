@@ -67,9 +67,9 @@ export default function EvidenceRequired() {
     setToast(`${item.file} opened for review`);
     window.setTimeout(() => setToast(null), 2600);
   };
-  return <main className="preview-google-sans min-h-screen bg-[#FAFAF7] text-[#182026]">
+  return <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] text-[#182026]">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
-    <div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6 sm:py-6">
+    <div className="mx-auto min-w-[620px] max-w-[1280px] px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
       <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
         <header className="border-b border-[#E7EEF2] px-5 pb-4 pt-5 sm:px-6">
           <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Supporting evidence</p>
@@ -84,13 +84,11 @@ export default function EvidenceRequired() {
               <span className="absolute left-0 top-[22px] z-10 h-[2px] w-[2px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" />
               {index === matchedDocuments.length - 1 ? <span className="absolute bottom-0 left-[-3px] h-1 w-2 bg-white" aria-hidden="true" /> : null}
               <p className="pb-2 pt-1 text-[10px] leading-4 tracking-tight text-[#66737F]">{item.connection}</p>
-              <div className="flex flex-col gap-3 rounded-[7px] bg-[#F1F3F3] px-3 py-3 sm:flex-row sm:items-center sm:px-4">
+              <div className="flex items-center gap-3 px-3 py-3 sm:px-4">
                 <div className="flex min-w-0 flex-1 items-center gap-2.5">
                   <img src={item.file.endsWith('.csv') ? '/evidence-csv-mark.png' : '/pdf-file-icon.webp'} alt={item.file.endsWith('.csv') ? 'CSV' : 'PDF'} className="h-6 w-6 shrink-0 object-contain" />
-                  <div className="min-w-0"><p className="truncate text-[11px] font-semibold tracking-tight text-[#36404A]">{item.file}</p><p className="mt-0.5 truncate text-[10px] tracking-tight text-[#66737F]">{item.title}</p></div>
+                  <div className="min-w-0 flex-1"><div className="flex min-w-0 items-center gap-3"><p className="min-w-0 truncate text-[11px] font-semibold tracking-tight text-[#36404A]">{item.file}</p><span className="shrink-0 text-[11px] font-semibold tracking-tight text-[#4D5B66]">{item.confidence}</span><button type="button" onClick={() => showDocument(item)} className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] hover:text-[#0B74DE]">Open<ArrowRight className="h-3.5 w-3.5" /></button></div><p className="mt-0.5 truncate text-[10px] tracking-tight text-[#66737F]">{item.title}</p></div>
                 </div>
-                <span className="shrink-0 text-[11px] font-semibold tracking-tight text-[#4D5B66]">{item.confidence}</span>
-                <button type="button" onClick={() => showDocument(item)} className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] hover:text-[#0B74DE]">Open<ArrowRight className="h-3.5 w-3.5" /></button>
               </div>
             </article>)}
           </div>
@@ -98,7 +96,7 @@ export default function EvidenceRequired() {
         <section className="border-t border-[#E7EEF2] px-5 pb-6 pt-5 sm:px-6">
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Evidence Log</h2><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
           <div className="space-y-3">
-            {evidenceLog.map((entry, index) => <div key={entry.file} className="relative grid grid-cols-[58px_24px_minmax(0,1fr)] gap-3 rounded-[7px] bg-[#F4F6F6] px-3 py-3 sm:grid-cols-[70px_26px_minmax(0,1fr)] sm:gap-4 sm:px-4">
+            {evidenceLog.map((entry, index) => <div key={entry.file} className="relative grid grid-cols-[58px_24px_minmax(0,1fr)] gap-3 px-3 py-3 sm:grid-cols-[70px_26px_minmax(0,1fr)] sm:gap-4 sm:px-4">
               {index < evidenceLog.length - 1 ? <span className="absolute bottom-[-14px] left-[68px] hidden h-3 w-px bg-[#C9D6DE] sm:block" aria-hidden="true" /> : null}
               <time className="pt-1 font-mono text-[10px] tracking-tight text-[#7B8991]">{entry.time}</time>
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded check"><Check className="h-3 w-3 text-white" strokeWidth={3} /></span>
