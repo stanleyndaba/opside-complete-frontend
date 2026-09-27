@@ -18,7 +18,6 @@ const METADATA = [
   { label: 'Delivered: Nov 10 · 14:22:01' },
 ];
 
-const TABS = ['Inputs', 'Reasoning', 'Screenshots', 'Output'];
 const spring = { type: 'spring' as const, stiffness: 260, damping: 24 };
 
 type HighlightTone = 'blue' | 'amber' | 'emerald';
@@ -39,7 +38,7 @@ function MetadataHighlight({
   tone: HighlightTone;
 }) {
   return (
-    <span className="relative -mx-1 inline-flex overflow-hidden rounded px-1">
+    <span className="relative -mx-1 inline-flex overflow-hidden rounded-[3px] px-1">
       <motion.span
         initial={false}
         animate={{ scaleX: active ? 1 : 0 }}
@@ -53,11 +52,11 @@ function MetadataHighlight({
 
 function PdfDocumentIcon() {
   return (
-    <div className="relative flex h-24 w-20 flex-col items-center rounded-xl border border-red-100 bg-white px-3 pt-4 shadow-xl shadow-red-100/60">
-      <div className="absolute right-0 top-0 h-5 w-5 rounded-bl-lg rounded-tr-xl bg-red-100" />
-      <div className="mt-2 w-full rounded-md bg-red-600 py-1.5 text-center text-[10px] font-bold text-white">PDF</div>
-      <div className="mt-3 h-1 w-full rounded bg-gray-200" />
-      <div className="mt-1.5 h-1 w-3/4 self-start rounded bg-gray-100" />
+    <div className="relative flex h-24 w-20 flex-col items-center rounded-[3px] border border-red-100 bg-white px-3 pt-4 shadow-xl shadow-red-100/60">
+      <div className="absolute right-0 top-0 h-5 w-5 rounded-[3px] bg-red-100" />
+      <div className="mt-2 w-full rounded-[3px] bg-red-600 py-1.5 text-center text-[10px] font-bold text-white">PDF</div>
+      <div className="mt-3 h-1 w-full rounded-[3px] bg-gray-200" />
+      <div className="mt-1.5 h-1 w-3/4 self-start rounded-[3px] bg-gray-100" />
     </div>
   );
 }
@@ -128,60 +127,22 @@ export default function ReportGeneration() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FAFAF7] p-4 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1180px] items-center">
+    <main className="min-h-screen overflow-x-auto bg-[#FAFAF7] p-4 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:overflow-x-hidden lg:p-8">
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] min-w-[920px] max-w-[1180px] items-center lg:min-w-0">
       <section
-        className={`flex min-h-[620px] w-full flex-col overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] ${
+        className={`flex min-h-[620px] w-full flex-col overflow-hidden rounded-[3px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] ${
           phase === 'output' ? 'h-[min(420px,calc(100vh-180px))]' : 'h-[min(620px,calc(100vh-180px))]'
         }`}
       >
         <header className="flex min-h-14 items-center justify-between border-b border-[#DCE8EE] bg-white px-4 sm:px-6">
-          {phase === 'output' ? (
-            <div className="flex min-w-0 items-center gap-4 sm:gap-6">
-              <span className="hidden font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F] sm:block">Run Output</span>
-              <div className="hidden h-5 w-px bg-[#DCE8EE] sm:block" />
-              <nav className="flex min-w-0 gap-5" aria-label="Report output">
-                {TABS.map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    className={`relative py-3 font-mono text-[10px] font-medium uppercase tracking-tight transition-colors ${
-                      tab === 'Output' ? 'text-[#182026]' : 'text-[#8A99A4] hover:text-[#66737F]'
-                    }`}
-                  >
-                    {tab}
-                    {tab === 'Output' && (
-                      <motion.span
-                        layoutId="report-output-tab"
-                        className="absolute -bottom-px left-0 h-px w-full bg-[#182026]"
-                        transition={spring}
-                      />
-                    )}
-                  </button>
-                ))}
-              </nav>
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center border border-[#CFE0EA] bg-[#F8FAFC] text-[#182026]">
+              {phase === 'extracting' ? <FileSearch className="h-5 w-5" /> : <Layers className="h-5 w-5" />}
             </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center border border-[#CFE0EA] bg-[#F8FAFC] text-[#182026]">
-                {phase === 'extracting' ? <FileSearch className="h-5 w-5" /> : <Layers className="h-5 w-5" />}
-              </div>
-              <div>
-                <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Evidence Pack Assembly</p>
-                <p className="text-[12px] text-[#66737F]">Dispute evidence pipeline</p>
-              </div>
+            <div>
+              <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Evidence Pack Assembly</p>
+              <p className="text-[12px] text-[#66737F]">Dispute evidence pipeline</p>
             </div>
-          )}
-
-          <div className="ml-3 flex shrink-0 items-center gap-2 border border-[#DCE8EE] bg-[#F8FAFC] px-3 py-1.5">
-            <motion.span
-              animate={phase === 'output' ? { opacity: 1 } : { opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 1.1, repeat: phase === 'output' ? 0 : Infinity }}
-              className={`h-2 w-2 rounded-full ${phase === 'output' ? 'bg-emerald-500' : 'bg-[#007AFF]'}`}
-            />
-            <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
-              {phase === 'output' ? 'Ready' : 'Generating'}
-            </span>
           </div>
         </header>
 
@@ -193,12 +154,12 @@ export default function ReportGeneration() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
-                className="absolute inset-0 grid gap-4 overflow-y-auto p-4 md:grid-cols-[minmax(0,1fr)_260px] md:p-6"
+                className="absolute inset-0 grid grid-cols-[minmax(0,1fr)_260px] gap-4 overflow-y-auto p-4 md:p-6"
               >
                 <div className="relative min-h-[390px] overflow-hidden border border-[#DCE8EE] bg-white p-6 sm:p-7">
                   <div className="flex items-start justify-between border-b border-[#DCE8EE] pb-4">
                     <div>
-                      <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Carrier Proof of Delivery</p>
+                      <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Carrier Proof of Delivery</p>
                       <h2 className="mt-1 text-base font-semibold text-[#182026]">Inbound Shipment Receipt</h2>
                       <p className="mt-1 text-[11px] text-[#8A99A4]">Amazon FBA receiving documentation</p>
                     </div>
@@ -207,19 +168,19 @@ export default function ReportGeneration() {
 
                   <div className="mt-5 grid grid-cols-3 gap-3">
                     <div className="border border-[#E4ECF1] bg-[#F8FAFC] p-3">
-                      <p className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Shipment ID</p>
+                      <p className="font-google-sans text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Shipment ID</p>
                       <p className="mt-1 text-[11px] font-semibold text-[#182026]">
                         <MetadataHighlight active={extractedCount >= 1} tone="blue">FBA15JJ4K7L1</MetadataHighlight>
                       </p>
                     </div>
                     <div className="border border-[#E4ECF1] bg-[#F8FAFC] p-3">
-                      <p className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Units Shipped</p>
+                      <p className="font-google-sans text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Units Shipped</p>
                       <p className="mt-1 text-[11px] font-semibold text-[#182026]">
                         <MetadataHighlight active={extractedCount >= 2} tone="amber">120 units</MetadataHighlight>
                       </p>
                     </div>
                     <div className="border border-[#E4ECF1] bg-[#F8FAFC] p-3">
-                      <p className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Carrier Weight</p>
+                      <p className="font-google-sans text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Carrier Weight</p>
                       <p className="mt-1 text-[11px] font-semibold text-[#182026]">
                         <MetadataHighlight active={extractedCount >= 3} tone="amber">45.2 lb</MetadataHighlight>
                       </p>
@@ -249,14 +210,14 @@ export default function ReportGeneration() {
 
                   <div className="mt-5 grid grid-cols-2 gap-3">
                     <div className="border border-[#CFEADC] bg-[#F4FBF7] p-3">
-                      <p className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Received By</p>
+                      <p className="font-google-sans text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Received By</p>
                       <p className="mt-1 text-xs font-semibold text-[#182026]">
                         <MetadataHighlight active={extractedCount >= 7} tone="emerald">J. Smith</MetadataHighlight>
                       </p>
                       <p className="mt-1 text-[10px] text-[#66737F]">Dock D-14 · Signature verified</p>
                     </div>
                     <div className="border border-[#E4ECF1] bg-[#F8FAFC] p-3">
-                      <p className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Delivery Event</p>
+                      <p className="font-google-sans text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Delivery Event</p>
                       <p className="mt-1 text-xs font-semibold text-[#182026]">
                         <MetadataHighlight active={extractedCount >= 8} tone="amber">Nov 10, 2025</MetadataHighlight>
                       </p>
@@ -269,8 +230,8 @@ export default function ReportGeneration() {
 
                 <aside className="border border-[#DCE8EE] bg-[#F8FAFC] p-4">
                   <div className="mb-4 flex items-center justify-between">
-                    <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Metadata Identified</p>
-                    <span className="font-mono text-[10px] font-medium text-[#8A99A4]">{extractedCount}/{METADATA.length}</span>
+                    <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Metadata Identified</p>
+                    <span className="font-google-sans text-[10px] font-medium text-[#8A99A4]">{extractedCount}/{METADATA.length}</span>
                   </div>
                   <div className="space-y-2">
                     <AnimatePresence>
@@ -350,7 +311,7 @@ export default function ReportGeneration() {
                       <div className="absolute inset-0 border border-[#DCE8EE] bg-white p-2.5">
                         <div className="flex items-center justify-between border-b border-[#E3E8ED] pb-1.5">
                           <span className="text-[7px] font-semibold uppercase tracking-tight text-[#182026]">Margin</span>
-                          <span className="font-mono text-[5.5px] uppercase tracking-tight text-[#A0A6AE]">Verified</span>
+                          <span className="font-google-sans text-[5.5px] uppercase tracking-tight text-[#A0A6AE]">Verified</span>
                         </div>
                         <div className="mt-2.5 space-y-1.5">
                           <div className="h-1.5 w-16 bg-[#182026]/80" />
@@ -358,7 +319,7 @@ export default function ReportGeneration() {
                           <div className="h-1 w-14 bg-[#E4E8EC]" />
                         </div>
                         <div className="mt-3 border-t border-[#E6E9EE] pt-2">
-                          <div className="grid grid-cols-[1fr_auto] gap-x-2 gap-y-1 font-mono text-[5.5px] uppercase tracking-tight">
+                          <div className="grid grid-cols-[1fr_auto] gap-x-2 gap-y-1 font-google-sans text-[5.5px] uppercase tracking-tight">
                             <span className="text-[#A0A6AE]">Case</span>
                             <span className="text-[#182026]">175207</span>
                             <span className="text-[#A0A6AE]">Ship</span>
@@ -376,7 +337,7 @@ export default function ReportGeneration() {
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
                       <h3 className="text-[15px] font-bold tracking-tight text-[#182026] sm:text-base">Claim Submission Package</h3>
-                      <p className="mt-1.5 font-mono text-[10px] uppercase tracking-tight text-[#8A8F98] sm:text-[11px]">
+                      <p className="mt-1.5 font-google-sans text-[10px] uppercase tracking-tight text-[#8A8F98] sm:text-[11px]">
                         FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: NOV 12 2025&nbsp;&nbsp; VERIFIED
                       </p>
 
@@ -398,7 +359,7 @@ export default function ReportGeneration() {
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
-                          className="flex h-8 items-center rounded-[4px] border border-[#182026] bg-[#182026] px-5 text-sm font-medium text-white transition-colors hover:border-[#303334] hover:bg-[#303334]"
+                          className="flex h-8 items-center rounded-[3px] border border-[#182026] bg-[#182026] px-5 text-sm font-medium text-white transition-colors hover:border-[#303334] hover:bg-[#303334]"
                         >
                           View
                         </button>
@@ -447,13 +408,13 @@ export default function ReportGeneration() {
               exit={{ opacity: 0, scale: 0.96, y: 16 }}
               transition={spring}
               onClick={(event) => event.stopPropagation()}
-              className="relative max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-gray-100 bg-white p-8 shadow-xl"
+              className="relative max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-[3px] border border-gray-100 bg-white p-8 shadow-xl"
             >
               <button
                 type="button"
                 onClick={() => setShowPreview(false)}
                 aria-label="Close report preview"
-                className="absolute right-4 top-4 rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+                className="absolute right-4 top-4 rounded-[3px] p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -464,7 +425,7 @@ export default function ReportGeneration() {
               <h3 className="text-sm font-semibold text-gray-900">Verified Evidence</h3>
               <div className="mt-4 space-y-3">
                 {METADATA.map((item) => (
-                  <div key={item.label} className="flex items-center gap-3 rounded-xl bg-gray-50 p-3 text-sm text-gray-700">
+                  <div key={item.label} className="flex items-center gap-3 rounded-[3px] bg-gray-50 p-3 text-sm text-gray-700">
                     <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                     {item.label}
                   </div>
