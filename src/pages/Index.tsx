@@ -383,21 +383,21 @@ function HistoricalVideoPreviewSections() {
   );
 }
 
-const heroSwarmParticles = Array.from({ length: 72 }, (_, index) => {
-  const column = index % 12;
-  const row = Math.floor(index / 12);
-  const startX = 8 + column * 7.1 + ((row * 13) % 7);
-  const startY = 14 + row * 13.2 + ((column * 9) % 8);
+const heroSwarmParticles = Array.from({ length: 240 }, (_, index) => {
+  const column = index % 24;
+  const row = Math.floor(index / 24);
+  const startX = 5 + column * 3.9 + ((row * 13) % 5);
+  const startY = 8 + row * 9.2 + ((column * 9) % 6);
   return {
     id: index,
     startX,
     startY,
-    formAX: column < 6 ? 45 + column * 2.5 : 59 + (column - 6) * 2.4,
-    formAY: row < 3 ? 28 + row * 7 : row < 6 ? 51 + (row - 3) * 7 : 72 + (row - 6) * 5,
-    formBX: column < 4 ? 43 + column * 4.7 : column < 8 ? 43 + (column - 4) * 4.7 : 52 + (column - 8) * 4.2,
-    formBY: row < 2 ? 30 + row * 10 : row < 5 ? 53 + (row - 2) * 9 : 78 + (row - 5) * 4,
-    radius: index % 7 === 0 ? 1.65 : index % 3 === 0 ? 1.35 : 1.05,
-    tone: index % 11 === 0 ? "#0B74DE" : index % 9 === 0 ? "#6C8798" : "#182026",
+    formAX: column < 12 ? 39 + column * 1.15 : 54 + (column - 12) * 1.15,
+    formAY: row < 3 ? 22 + row * 7 : row < 7 ? 46 + (row - 3) * 7 : 76 + (row - 7) * 4,
+    formBX: column < 8 ? 38 + column * 1.75 : column < 16 ? 40 + (column - 8) * 1.75 : 47 + (column - 16) * 1.75,
+    formBY: row < 2 ? 24 + row * 10 : row < 6 ? 49 + (row - 2) * 8 : 79 + (row - 6) * 5,
+    radius: index % 13 === 0 ? 0.18 : index % 5 === 0 ? 0.15 : 0.11,
+    tone: index % 17 === 0 ? "#0B74DE" : index % 11 === 0 ? "#6C8798" : index % 7 === 0 ? "#A7B1B8" : "#182026",
     delay: ((index * 37) % 100) / 100 * 1.2,
   };
 });
@@ -407,7 +407,7 @@ function HeroSwarmBackground({ reduceMotion }: { reduceMotion: boolean | null })
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_46%,rgba(11,116,222,0.08),transparent_28%),radial-gradient(circle_at_62%_72%,rgba(119,151,167,0.08),transparent_31%)]" />
-      <svg className="absolute right-[-18%] top-[11%] h-[76%] w-[92%] opacity-[0.66] sm:right-[-8%] sm:top-[7%] sm:h-[84%] sm:w-[76%] lg:right-[-2%] lg:w-[68%]" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <svg className="absolute right-[-18%] top-[11%] h-[76%] w-[92%] opacity-[0.82] sm:right-[-8%] sm:top-[7%] sm:h-[84%] sm:w-[76%] lg:right-[-2%] lg:w-[68%]" viewBox="0 0 100 100" preserveAspectRatio="none">
         <path d="M 18 22 C 34 12, 56 20, 78 38 S 66 70, 42 84" fill="none" stroke="#0B74DE" strokeDasharray="1 4" strokeLinecap="round" strokeWidth="0.22" opacity="0.18" />
         <path d="M 22 78 C 42 65, 52 38, 82 25" fill="none" stroke="#6C8798" strokeDasharray="0.7 5" strokeLinecap="round" strokeWidth="0.18" opacity="0.2" />
         {particles.map((particle) => (
