@@ -130,13 +130,13 @@ export default function ReportGeneration() {
     <main className="min-h-screen overflow-x-hidden bg-[#FAFAF7] p-4 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1180px] items-center">
       <section
-        className={`flex min-h-[620px] w-full flex-col overflow-hidden rounded-[3px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] ${
+        className={`flex min-h-[620px] w-full flex-col overflow-hidden border-0 bg-white shadow-none sm:rounded-[3px] sm:border sm:border-[#DCE8EE] sm:shadow-[0_1px_2px_rgba(24,32,38,0.03)] ${
           phase === 'output' ? 'h-[min(420px,calc(100vh-180px))]' : 'h-[min(620px,calc(100vh-180px))]'
         }`}
       >
         <header className="flex min-h-14 items-center justify-between border-b border-[#DCE8EE] bg-white px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center border border-[#CFE0EA] bg-[#F8FAFC] text-[#182026]">
+            <div className="hidden h-8 w-8 items-center justify-center border border-[#CFE0EA] bg-[#F8FAFC] text-[#182026] sm:flex">
               {phase === 'extracting' ? <FileSearch className="h-5 w-5" /> : <Layers className="h-5 w-5" />}
             </div>
             <div>
@@ -296,7 +296,7 @@ export default function ReportGeneration() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={spring}
-                className="absolute inset-0 overflow-y-auto p-4 sm:p-5"
+                className="absolute inset-0 overflow-y-auto px-3 py-4 sm:p-5"
               >
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-3">
@@ -305,7 +305,7 @@ export default function ReportGeneration() {
                   </div>
 
                   <article className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
-                    <div className="relative h-[116px] w-[86px] shrink-0">
+                    <div className="relative hidden h-[116px] w-[86px] shrink-0 sm:block">
                       <div className="absolute inset-0 translate-x-2.5 -rotate-2 border border-[#DCE8EE] bg-white/45" />
                       <div className="absolute inset-0 translate-x-1 rotate-1 border border-[#DCE8EE] bg-white/70" />
                       <div className="absolute inset-0 border border-[#DCE8EE] bg-white p-2.5">
@@ -337,25 +337,25 @@ export default function ReportGeneration() {
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
                       <h3 className="text-[15px] font-bold tracking-tight text-[#182026] sm:text-base">Claim Submission Package</h3>
-                      <p className="mt-1.5 font-google-sans text-[10px] uppercase tracking-tight text-[#8A8F98] sm:text-[11px]">
+                      <p className="mt-1 font-google-sans text-[9px] uppercase leading-5 tracking-tight text-[#8A8F98] sm:mt-1.5 sm:text-[11px] sm:leading-normal">
                         FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: NOV 12 2025&nbsp;&nbsp; VERIFIED
                       </p>
 
-                      <div className="mt-2.5 flex flex-wrap gap-1.5 sm:justify-start justify-center">
+                      <div className="mt-2 flex flex-wrap justify-center gap-1 sm:mt-2.5 sm:justify-start sm:gap-1.5">
                         {[
                           'Recovery summary', 'Claim type', 'Shipment timeline',
                           'Required evidence checklist', 'Invoice', 'BOL', 'POD',
                           'ASIN/FNSKU mapping', 'Quantity comparison', 'Cost basis',
                           'Case narrative', 'Attachment index', 'Filing deadline', 'Seller approval status'
                         ].map((item) => (
-                          <span key={item} className="inline-flex items-center gap-1 rounded-[2px] border-0 bg-[#EEF1F3] px-2 py-0.5 text-[9px] font-medium text-[#30373C]">
+                          <span key={item} className="inline-flex items-center gap-1 rounded-[2px] border-0 bg-[#EEF1F3] px-1.5 py-0.5 text-[8px] font-medium text-[#30373C] sm:px-2 sm:text-[9px]">
                             <Check className="h-2.5 w-2.5 text-emerald-500" />
                             {item}
                           </span>
                         ))}
                       </div>
 
-                      <div className="mt-4 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
+                      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:mt-4 sm:justify-start">
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
