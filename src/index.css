@@ -995,7 +995,14 @@ html, body, #root {
   -webkit-text-fill-color: #F4F6F7 !important;
   font-weight: 500 !important;
 }
-
+.landing-google-sans > main > section.financial-work-proof-surface h2 .heading-tone-dark {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+.landing-google-sans > main > section.financial-work-proof-surface h2 .heading-tone-muted {
+  color: #D6DDE1 !important;
+  -webkit-text-fill-color: #D6DDE1 !important;
+}
 @media (max-width: 767px) {
   .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-word-stack {
     align-items: flex-start !important;
