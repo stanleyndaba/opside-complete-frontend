@@ -20,13 +20,21 @@ const METADATA = [
 
 const EVIDENCE_MATCH_SEQUENCE = [
   ['gap', 300],
+  ['inbound-record', 520],
   ['units', 680],
+  ['evidence-trail', 920],
   ['ont8', 1120],
+  ['claim-path', 1320],
+  ['filing-gates', 1800],
   ['received', 1580],
   ['policy', 2140],
+  ['reimbursement-records', 2380],
   ['order', 2620],
+  ['unit-movement', 2920],
   ['shipment', 3080],
+  ['affected-product', 3280],
   ['sku', 3480],
+  ['reimbursement-outcome', 3660],
   ['shortage', 3860],
   ['record', 4320],
   ['sp-api', 4740],
@@ -190,21 +198,39 @@ export default function ReportGeneration() {
                   <div ref={evidenceScrollRef} className="h-full overflow-y-auto pr-2 [scrollbar-width:thin]">
                   <div className="mt-3 space-y-2 text-[11px] leading-5 text-[#4D5B66] sm:mt-5 sm:space-y-3 sm:text-[13px] sm:leading-6">
                     <p>
-                      Amazon received fewer units than the inbound shipment record shows were shipped.{' '}
+                      Amazon received fewer units than the{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('inbound-record')} tone="amber">inbound shipment record</MetadataHighlight>{' '}
+                      shows were shipped.{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">60 shipped, 46 received</MetadataHighlight>{' '}
                       with a{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('gap')} tone="amber">14-unit gap at ONT8</MetadataHighlight>.
                     </p>
                     <p>
-                      Inbound discrepancy details are being matched to the evidence trail.{' '}
+                      Inbound discrepancy details are being matched to the{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('evidence-trail')} tone="amber">evidence trail</MetadataHighlight>.{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('case')} tone="amber">What Margin found</MetadataHighlight>{' '}
-                      confirms the claim path.
+                      confirms the <MetadataHighlight active={isEvidenceMatchActive('claim-path')} tone="emerald">claim path</MetadataHighlight>.
                     </p>
                     <p>
-                      Current filing movement is ready to file when filing gates allow it.{' '}
+                      Current filing movement is ready to file when{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('filing-gates')} tone="emerald">filing gates allow it</MetadataHighlight>.{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Next action: Open case.</MetadataHighlight>
                     </p>
-                    <p>Margin is comparing shipment, receipt, and reimbursement records to determine whether the gap can move into a case.</p>
+                    <p>
+                      Margin is comparing <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">shipment</MetadataHighlight>,{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('received')} tone="amber">receipt</MetadataHighlight>, and{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('reimbursement-records')} tone="emerald">reimbursement records</MetadataHighlight>{' '}
+                      to determine whether the gap can move into a case.
+                    </p>
+                    <p>
+                      <MetadataHighlight active={isEvidenceMatchActive('policy')} tone="emerald">FBA inventory reimbursement review</MetadataHighlight>{' '}
+                      reconciles the <MetadataHighlight active={isEvidenceMatchActive('affected-product')} tone="emerald">affected product</MetadataHighlight>,{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('unit-movement')} tone="amber">unit movement</MetadataHighlight>, and{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('reimbursement-outcome')} tone="emerald">reimbursement outcome</MetadataHighlight>{' '}
+                      against Order <MetadataHighlight active={isEvidenceMatchActive('order')} tone="amber">113-8043372-9097841</MetadataHighlight>, SKU{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('sku')} tone="amber">ACME-TRAVEL-MUG-BLK</MetadataHighlight>, and a{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('shortage')} tone="amber">14-unit shortage</MetadataHighlight>.
+                    </p>
                   </div>
 
                   <div className="mt-3 border-t border-[#DCE8EE] pt-2 sm:mt-4 sm:pt-3">
