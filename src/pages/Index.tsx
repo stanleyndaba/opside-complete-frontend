@@ -833,9 +833,7 @@ function MarginLifecycleSection() {
       <div className={containerClass}>
         <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
         <motion.div {...revealProps} className="relative order-2 h-fit self-start lg:order-1">
-          <div className="isolate overflow-hidden rounded-[12px]" style={{ clipPath: "inset(0 round 12px)", WebkitClipPath: "inset(0 round 12px)" }}>
-            <DeferredVideo className="block aspect-[1.45] w-full scale-[1.04] object-contain shadow-[0_20px_60px_rgba(0,0,0,0.18)]" src="/workflow.mp4" label="How Margin handles recovery work" />
-          </div>
+          <FinalDelegationPreview compactMobile expandedMobile src="/evidence-match" title="Evidence match page preview" />
         </motion.div>
         <div className="order-1 flex flex-col justify-center lg:order-2">
         <motion.div {...revealProps} className="max-w-[980px]">

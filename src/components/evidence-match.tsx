@@ -297,9 +297,6 @@ export default function EvidenceMatch() {
         <div className="flex min-h-0 flex-col overflow-hidden border-t border-[#DCE8EE] bg-[#F8FAFC] lg:border-l lg:border-t-0">
           <div className="flex items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
             <div>
-              <div className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
-                Evidence matching protocol
-              </div>
               <h1
                 className="mt-1 font-google-sans text-[16px] font-semibold leading-tight tracking-[-0.035em] text-[#182026]"
               >
