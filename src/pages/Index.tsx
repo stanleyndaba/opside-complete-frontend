@@ -1982,7 +1982,7 @@ function RecoveryOutcomeExplorer() {
             <p className="mt-4 max-w-[760px] font-lora text-[19px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>The case gets stronger. The recovery keeps moving.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden lg:order-1">
-            <FinalDelegationPreview compactMobile src="/appeals-review" title="Appeals Review page preview" />
+            <FinalDelegationPreview compactMobile expandedMobile src="/appeals-review" title="Appeals Review page preview" />
           </motion.div>
         </div>
       </div>
