@@ -384,11 +384,12 @@ function HistoricalVideoPreviewSections() {
 }
 
 const heroSwirlPoint = (t: number, centerX: number, centerY: number, scale: number, phase: number) => {
-  const angle = t * Math.PI * 5.5 + phase;
-  const radius = scale * (0.08 + t * 0.92);
+  const angle = t * Math.PI * 3.7 + phase;
+  const radius = scale * (0.06 + t * 0.98);
+  const vein = Math.sin(t * Math.PI * 9 + phase) * scale * 0.2;
   return {
-    x: centerX + Math.cos(angle) * radius * 1.35,
-    y: centerY + Math.sin(angle) * radius * 0.78,
+    x: centerX + Math.cos(angle) * radius * 1.38 + vein,
+    y: centerY + Math.sin(angle) * radius * 0.62 + Math.sin(t * Math.PI * 4 + phase) * scale * 0.18 + (t - 0.5) * scale * 0.38,
   };
 };
 
