@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Check, CheckCircle2, Download, FileText, RefreshCw, X } from 'lucide-react';
+import { ArrowRight, Check, CheckCircle2, Download, FileText, X } from 'lucide-react';
 
 type Phase = 'extracting' | 'compiling' | 'output';
 
@@ -104,12 +104,6 @@ export default function ReportGeneration() {
       return () => window.clearTimeout(timer);
     }
   }, [phase]);
-
-  const restartSimulation = () => {
-    setShowPreview(false);
-    setExtractedCount(0);
-    setPhase('extracting');
-  };
 
   const downloadReport = async () => {
     const { jsPDF } = await import('jspdf');
@@ -284,7 +278,7 @@ export default function ReportGeneration() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={spring}
-                className="absolute inset-0 overflow-y-auto p-4 sm:p-5"
+                className="absolute inset-0 flex flex-col justify-center overflow-y-auto p-4 sm:p-5"
               >
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-3">
@@ -358,14 +352,6 @@ export default function ReportGeneration() {
                         >
                           <Download className="h-3.5 w-3.5" />
                           Download
-                        </button>
-                        <button
-                          type="button"
-                          onClick={restartSimulation}
-                          className="flex h-8 items-center gap-2 text-sm font-medium text-[#8A8F98] transition-colors hover:text-[#242424]"
-                        >
-                          <RefreshCw className="h-3.5 w-3.5" />
-                          Regenerate
                         </button>
                       </div>
                     </div>
