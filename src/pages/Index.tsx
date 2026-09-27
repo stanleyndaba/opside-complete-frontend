@@ -395,19 +395,19 @@ const heroShapePoint = (shape: number, t: number, centerX: number, centerY: numb
   return { x: centerX + Math.cos(angle) * scale * (0.45 + 0.3 * Math.sin(angle * 3)), y: centerY + Math.sin(angle) * scale * (0.8 + 0.18 * Math.cos(angle * 2)) };
 };
 
-const heroSwarmParticles = Array.from({ length: 420 }, (_, index) => {
-  const column = index % 30;
-  const row = Math.floor(index / 30);
-  const group = Math.floor(index / 84);
-  const t = (index % 84) / 84;
-  const startX = 3 + column * 3.05 + ((row * 17) % 7);
-  const startY = 6 + row * 7.2 + ((column * 11) % 6);
-  const shapeCenters = [[18, 24], [76, 24], [22, 73], [76, 72], [49, 49]] as const;
-  const alternateCenters = [[72, 70], [23, 70], [74, 25], [24, 24], [80, 48]] as const;
-  const center = shapeCenters[group % shapeCenters.length];
-  const alternateCenter = alternateCenters[group % alternateCenters.length];
-  const targetA = heroShapePoint(group % 5, t, center[0], center[1], group === 4 ? 11 : 8.5, group * 0.7);
-  const targetB = heroShapePoint((group + 2) % 5, t, alternateCenter[0], alternateCenter[1], group === 4 ? 9 : 7.5, group * 0.95);
+const heroSwarmParticles = Array.from({ length: 1260 }, (_, index) => {
+  const column = index % 42;
+  const row = Math.floor(index / 42);
+  const layer = Math.floor(index / 315);
+  const t = (index % 315) / 315;
+  const startX = 2 + column * 2.35 + ((row * 17) % 6);
+  const startY = 3 + row * 3.1 + ((column * 11) % 5);
+  const centerX = 50;
+  const centerY = 51;
+  const scale = 12.5 + layer * 1.7;
+  const targetA = heroShapePoint(1, t, centerX, centerY, scale, layer * 0.18);
+  const targetB = heroShapePoint(2, t, centerX, centerY, scale * 1.08, layer * 0.25);
+  const targetC = heroShapePoint(4, t, centerX, centerY, scale * 0.92, layer * 0.32);
   return {
     id: index,
     startX,
@@ -416,6 +416,8 @@ const heroSwarmParticles = Array.from({ length: 420 }, (_, index) => {
     formAY: targetA.y,
     formBX: targetB.x,
     formBY: targetB.y,
+    formCX: targetC.x,
+    formCY: targetC.y,
     radius: index % 13 === 0 ? 0.18 : index % 5 === 0 ? 0.16 : 0.14,
     tone: index % 17 === 0 ? "#0B74DE" : index % 11 === 0 ? "#52616A" : index % 7 === 0 ? "#8A99A3" : "#182026",
     delay: ((index * 37) % 100) / 100 * 1.2,
@@ -426,10 +428,8 @@ function HeroSwarmBackground({ reduceMotion }: { reduceMotion: boolean | null })
   const particles = useMemo(() => heroSwarmParticles, []);
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_46%,rgba(11,116,222,0.08),transparent_28%),radial-gradient(circle_at_62%_72%,rgba(119,151,167,0.08),transparent_31%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_52%,rgba(11,116,222,0.09),transparent_34%),radial-gradient(circle_at_50%_78%,rgba(119,151,167,0.08),transparent_36%)]" />
       <svg className="absolute left-[-8%] top-[8%] h-[84%] w-[116%] opacity-[0.9] sm:left-[-4%] sm:top-[6%] sm:h-[88%] sm:w-[108%]" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M 18 22 C 34 12, 56 20, 78 38 S 66 70, 42 84" fill="none" stroke="#0B74DE" strokeDasharray="1 4" strokeLinecap="round" strokeWidth="0.22" opacity="0.18" />
-        <path d="M 22 78 C 42 65, 52 38, 82 25" fill="none" stroke="#6C8798" strokeDasharray="0.7 5" strokeLinecap="round" strokeWidth="0.18" opacity="0.2" />
         {particles.map((particle) => (
           <motion.circle
             key={particle.id}
@@ -438,11 +438,11 @@ function HeroSwarmBackground({ reduceMotion }: { reduceMotion: boolean | null })
             r={particle.radius}
             fill={particle.tone}
             animate={reduceMotion ? { cx: particle.formAX, cy: particle.formAY, opacity: 0.42 } : {
-              cx: [particle.startX, particle.formAX, particle.formAX, particle.formBX, particle.formBX, particle.startX + ((particle.id % 5) - 2) * 2],
-              cy: [particle.startY, particle.formAY, particle.formAY, particle.formBY, particle.formBY, particle.startY + ((particle.id % 7) - 3) * 2],
-              opacity: [0.28, 0.72, 0.9, 0.68, 0.86, 0.28],
+              cx: [particle.startX, particle.formAX, particle.formAX, particle.formBX, particle.formBX, particle.formCX, particle.formCX, particle.startX + ((particle.id % 5) - 2) * 2],
+              cy: [particle.startY, particle.formAY, particle.formAY, particle.formBY, particle.formBY, particle.formCY, particle.formCY, particle.startY + ((particle.id % 7) - 3) * 2],
+              opacity: [0.28, 0.72, 0.9, 0.68, 0.86, 0.72, 0.9, 0.28],
             }}
-            transition={reduceMotion ? { duration: 0 } : { duration: 18, delay: particle.delay, repeat: Infinity, ease: "easeInOut", times: [0, 0.24, 0.38, 0.62, 0.76, 1] }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 24, delay: particle.delay, repeat: Infinity, ease: "easeInOut", times: [0, 0.16, 0.28, 0.42, 0.54, 0.68, 0.8, 1] }}
           />
         ))}
       </svg>
