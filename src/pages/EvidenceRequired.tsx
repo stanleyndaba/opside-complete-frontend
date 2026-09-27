@@ -9,6 +9,7 @@ type EvidenceItem = {
   confidence: string;
   detail: string;
   source: string;
+  connection: string;
 };
 
 const matchedDocuments: EvidenceItem[] = [
@@ -20,6 +21,7 @@ const matchedDocuments: EvidenceItem[] = [
     confidence: "98%",
     detail: "Signed carrier handoff for shipment FBA18QZ7M4K2, including carton count, ship-from address, destination fulfillment center ONT8, and delivery timestamp.",
     source: "Carrier delivery record · FBA18QZ7M4K2",
+    connection: "The shipment record establishes the original inbound event and the quantity Amazon was expected to receive.",
   },
   {
     kind: "invoice",
@@ -29,6 +31,7 @@ const matchedDocuments: EvidenceItem[] = [
     confidence: "96%",
     detail: "Commercial invoice supporting unit cost, supplier identity, invoice date, SKU NS-AIR-PURIFIER-3PK, and the cost basis used for the inbound shortage review.",
     source: "Supplier document · NS-AIR-PURIFIER-3PK",
+    connection: "The supplier invoice confirms the unit value used to translate the quantity variance into a recoverable amount.",
   },
   {
     kind: "po",
@@ -38,6 +41,7 @@ const matchedDocuments: EvidenceItem[] = [
     confidence: "94%",
     detail: "Seller purchase order connecting the expected quantity, SKU, ASIN, marketplace, agreed unit cost, and receiving expectation to the shipment record.",
     source: "Seller procurement record · US marketplace",
+    connection: "The purchase order ties the seller's expected inventory to the same SKU, ASIN, and shipment under review.",
   },
   {
     kind: "receiving",
@@ -47,6 +51,7 @@ const matchedDocuments: EvidenceItem[] = [
     confidence: "99%",
     detail: "Fulfillment-center receiving event showing the six-unit delta at ONT8, with receipt timestamp, shipment identifier, and received quantity tied back to the inbound plan.",
     source: "Amazon receiving record · ONT8",
+    connection: "The receiving event supplies the six-unit difference that connects the inbound plan to the unresolved financial outcome.",
   },
 ];
 
@@ -68,17 +73,25 @@ export default function EvidenceRequired() {
       <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
         <header className="border-b border-[#E7EEF2] px-5 pb-4 pt-5 sm:px-6">
           <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Supporting evidence</p>
-          <h1 className="mt-1 font-lora text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Evidentiary records for case &quot;RFD-16942-INB&quot;</h1>
+          <h1 className="mt-1 font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Evidentiary records for case &quot;RFD-16942-INB&quot;</h1>
           <p className="mt-2 text-[12px] leading-5 tracking-tight text-[#66737F]">Each item is supporting context for the case record. A document or event is not automatically proof of filing, payment, or closure.</p>
         </header>
         <section className="px-5 pb-5 pt-4 sm:px-6">
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Matched Documents</h2><span className="text-[11px] font-medium text-[#9AA7B0]">({matchedDocuments.length})</span><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
-          <div className="space-y-3">
-            {matchedDocuments.map((item) => <article key={item.file} className="flex items-center gap-3 rounded-[7px] border border-[#DCE8EE] bg-[#F9FAFB] px-3 py-3 sm:px-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-[#F0C9C9] bg-[#FFF8F8] p-1"><img src="/pdf-file-icon.webp" alt="PDF" className="h-full w-full object-contain" /></div>
-              <div className="min-w-0 flex-1"><p className="truncate text-[12px] font-semibold tracking-tight text-[#182026]">{item.title}</p><p className="mt-1 truncate text-[10px] tracking-tight text-[#66737F]">{item.subtitle}</p><p className="mt-1 truncate text-[10px] tracking-tight text-[#9AA7B0]">File: {item.file}</p></div>
-              <div className="hidden max-w-[310px] text-[10px] leading-4 text-[#66737F] lg:block">{item.detail}</div>
-              <div className="flex shrink-0 items-center gap-3"><span className="rounded-[6px] border border-[#DCE8EE] bg-white px-2 py-1 text-[10px] font-medium tracking-tight text-[#66737F]">{item.confidence}</span><button type="button" onClick={() => showDocument(item)} className="inline-flex items-center gap-2 text-[11px] font-medium tracking-tight text-[#0B74DE] hover:underline">View<ArrowRight className="h-3.5 w-3.5" /></button></div>
+          <div className="relative">
+            {matchedDocuments.map((item, index) => <article key={item.file} className="relative pl-5 sm:pl-6">
+              <div className="absolute bottom-0 left-[1px] top-0 w-px bg-[#C9D6DE]" aria-hidden="true" />
+              <span className="absolute left-0 top-[22px] z-10 h-[2px] w-[2px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" />
+              {index === matchedDocuments.length - 1 ? <span className="absolute bottom-0 left-[-3px] h-1 w-2 bg-white" aria-hidden="true" /> : null}
+              <p className="pb-2 pt-1 text-[10px] leading-4 tracking-tight text-[#66737F]">{item.connection}</p>
+              <div className="flex flex-col gap-3 rounded-[7px] bg-[#F1F3F3] px-3 py-3 sm:flex-row sm:items-center sm:px-4">
+                <div className="flex min-w-0 flex-1 items-center gap-2.5">
+                  <img src={item.file.endsWith('.csv') ? '/evidence-csv-mark.png' : '/pdf-file-icon.webp'} alt={item.file.endsWith('.csv') ? 'CSV' : 'PDF'} className="h-6 w-6 shrink-0 object-contain" />
+                  <div className="min-w-0"><p className="truncate text-[11px] font-semibold tracking-tight text-[#36404A]">{item.file}</p><p className="mt-0.5 truncate text-[10px] tracking-tight text-[#66737F]">{item.title}</p></div>
+                </div>
+                <span className="shrink-0 text-[11px] font-semibold tracking-tight text-[#4D5B66]">{item.confidence}</span>
+                <button type="button" onClick={() => showDocument(item)} className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] hover:text-[#0B74DE]">Open<ArrowRight className="h-3.5 w-3.5" /></button>
+              </div>
             </article>)}
           </div>
         </section>
