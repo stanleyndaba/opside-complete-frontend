@@ -54,7 +54,7 @@ export default function FinancialReconciliation() {
           <div className="mt-5">
             {verifiedOutcomes.map(([outcome, seller, registry, amazonCase, reimbursed, closeout, settlement, recorded], index) => <article key={registry} className="relative grid grid-cols-[20px_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[22px_minmax(0,1fr)] sm:gap-4">
               {index < verifiedOutcomes.length - 1 ? <span className="absolute bottom-[-1px] left-[9px] top-[38px] w-px bg-[#C9D6DE] sm:left-[10px]" aria-hidden="true" /> : null}
-              <span className="relative z-10 mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Reconciliation verified"><Check className="h-2.5 w-2.5 text-white" strokeWidth={3} /></span>
+              <span className="relative z-10 mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#0B74DE]" aria-label="Reconciliation verified"><Check className="h-2.5 w-2.5 text-white" strokeWidth={3} /></span>
               <div className="min-w-0"><div className="flex flex-wrap items-center gap-x-3 gap-y-1"><p className="text-[11px] font-semibold tracking-tight text-[#182026]">{outcome}</p><span className="text-[11px] font-semibold tabular-nums text-[#182026]">{reimbursed}</span><span className="text-[10px] text-[#66737F]">{recorded}</span></div><p className="mt-0.5 text-[10px] text-[#66737F]">{seller} · {registry} · Amazon case {amazonCase}</p><p className="mt-1 text-[10px] leading-4 text-[#4D5B66]">{closeout} · Settlement {settlement}</p></div>
             </article>)}
           </div>
@@ -68,7 +68,7 @@ export default function FinancialReconciliation() {
               <h1 id="reconciliation-title" className="font-google-sans text-[14px] leading-tight tracking-[-0.045em] text-[#182026] sm:text-[20px]">Recovery Closed</h1>
               <p className="mt-1 text-[12px] text-[#66737F]">RFD-16942-INB · Inbound shipment shortage</p>
             </div>
-            <div className="inline-flex items-center gap-2 self-start rounded-full bg-[#E5F4EC] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-[#23734D] lg:self-auto"><Check className="h-3.5 w-3.5" strokeWidth={2.5} /> Financial outcome reconciled</div>
+            <div className="inline-flex items-center gap-2 self-start rounded-full bg-[#E8F1FB] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE] lg:self-auto"><Check className="h-3.5 w-3.5" strokeWidth={2.5} /> Financial outcome reconciled</div>
           </div>
           <p className="mt-3 max-w-[680px] text-[13px] leading-5 text-[#4D5B66]">The expected entitlement, Amazon response, settlement evidence, and verified outcome all reconcile to the same amount. There is no remaining balance to carry forward.</p>
         </section>
@@ -91,7 +91,7 @@ export default function FinancialReconciliation() {
                 <div><dt className="text-[#71818A]">Payment attribution</dt><dd className="mt-1 text-[#182026]">Payment confidently attributed to this recovery</dd></div>
               </dl>
             </div>
-            <div className="mt-5 border-l-2 border-[#198A68] pl-4">
+            <div className="mt-5 border-l-2 border-[#0B74DE] pl-4">
               <p className="text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Next state</p>
               <p className="mt-1 text-[14px] font-medium text-[#182026]">Recovery closed. No further action required.</p>
             </div>
@@ -104,7 +104,7 @@ export default function FinancialReconciliation() {
               <div className="absolute bottom-2 left-[4px] top-2 w-px bg-[#CFE0E0]" />
               {timeline.map(([title, detail]) => (
                 <div key={title} className="relative">
-                  <div className="absolute -left-[25px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-[#FAFAF7] bg-[#198A68]"><Check className="h-2 w-2 text-white" strokeWidth={3} /></div>
+                  <div className="absolute -left-[25px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-[#FAFAF7] bg-[#0B74DE]"><Check className="h-2 w-2 text-white" strokeWidth={3} /></div>
                   <p className="text-[13px] font-semibold text-[#182026]">{title}</p>
                   <p className="mt-1 text-[12px] leading-5 text-[#66737F]">{detail}</p>
                 </div>
