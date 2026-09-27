@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   animate,
   motion,
@@ -383,6 +383,58 @@ function HistoricalVideoPreviewSections() {
   );
 }
 
+const heroSwarmParticles = Array.from({ length: 72 }, (_, index) => {
+  const column = index % 12;
+  const row = Math.floor(index / 12);
+  const startX = 8 + column * 7.1 + ((row * 13) % 7);
+  const startY = 14 + row * 13.2 + ((column * 9) % 8);
+  return {
+    id: index,
+    startX,
+    startY,
+    formAX: column < 6 ? 45 + column * 2.5 : 59 + (column - 6) * 2.4,
+    formAY: row < 3 ? 28 + row * 7 : row < 6 ? 51 + (row - 3) * 7 : 72 + (row - 6) * 5,
+    formBX: column < 4 ? 43 + column * 4.7 : column < 8 ? 43 + (column - 4) * 4.7 : 52 + (column - 8) * 4.2,
+    formBY: row < 2 ? 30 + row * 10 : row < 5 ? 53 + (row - 2) * 9 : 78 + (row - 5) * 4,
+    radius: index % 7 === 0 ? 1.65 : index % 3 === 0 ? 1.35 : 1.05,
+    tone: index % 11 === 0 ? "#0B74DE" : index % 9 === 0 ? "#6C8798" : "#182026",
+    delay: ((index * 37) % 100) / 100 * 1.2,
+  };
+});
+
+function HeroSwarmBackground({ reduceMotion }: { reduceMotion: boolean | null }) {
+  const particles = useMemo(() => heroSwarmParticles, []);
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_46%,rgba(11,116,222,0.08),transparent_28%),radial-gradient(circle_at_62%_72%,rgba(119,151,167,0.08),transparent_31%)]" />
+      <svg className="absolute right-[-18%] top-[11%] h-[76%] w-[92%] opacity-[0.66] sm:right-[-8%] sm:top-[7%] sm:h-[84%] sm:w-[76%] lg:right-[-2%] lg:w-[68%]" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path d="M 18 22 C 34 12, 56 20, 78 38 S 66 70, 42 84" fill="none" stroke="#0B74DE" strokeDasharray="1 4" strokeLinecap="round" strokeWidth="0.22" opacity="0.18" />
+        <path d="M 22 78 C 42 65, 52 38, 82 25" fill="none" stroke="#6C8798" strokeDasharray="0.7 5" strokeLinecap="round" strokeWidth="0.18" opacity="0.2" />
+        {particles.map((particle) => (
+          <motion.circle
+            key={particle.id}
+            cx={particle.startX}
+            cy={particle.startY}
+            r={particle.radius}
+            fill={particle.tone}
+            animate={reduceMotion ? { cx: particle.formAX, cy: particle.formAY, opacity: 0.42 } : {
+              cx: [particle.startX, particle.formAX, particle.formAX, particle.formBX, particle.formBX, particle.startX + ((particle.id % 5) - 2) * 2],
+              cy: [particle.startY, particle.formAY, particle.formAY, particle.formBY, particle.formBY, particle.startY + ((particle.id % 7) - 3) * 2],
+              opacity: [0.14, 0.4, 0.58, 0.42, 0.62, 0.14],
+            }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 18, delay: particle.delay, repeat: Infinity, ease: "easeInOut", times: [0, 0.24, 0.38, 0.62, 0.76, 1] }}
+          />
+        ))}
+      </svg>
+      <motion.div
+        className="absolute right-[15%] top-[49%] h-16 w-16 rounded-full border border-[#0B74DE]/15"
+        animate={reduceMotion ? undefined : { scale: [0.8, 1, 0.8], opacity: [0.08, 0.22, 0.08] }}
+        transition={reduceMotion ? undefined : { duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </div>
+  );
+}
+
 function KineticHeroSection({
   onAuditCta,
   onReportCta,
@@ -401,25 +453,24 @@ function KineticHeroSection({
   return (
     <motion.section
       style={{ scale: reduceMotion ? 1 : heroScale, opacity: reduceMotion ? 1 : heroOpacity }}
-      data-navbar-theme="dark"
-      className="relative isolate flex min-h-svh overflow-hidden agentic-scan-subtle bg-[radial-gradient(circle_at_20%_18%,rgba(255,255,255,0.08),transparent_30%),radial-gradient(circle_at_76%_28%,rgba(190,190,190,0.06),transparent_32%),linear-gradient(135deg,#1B1B1B_0%,#101010_54%,#080808_100%)] px-4 pb-16 pt-28 text-white sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
+      data-navbar-theme="light"
+      className="relative isolate flex min-h-svh overflow-hidden bg-white px-4 pb-16 pt-28 text-[#182026] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
       aria-labelledby="margin-hero-title"
     >
-      <div className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-screen" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E\")" }} />
-      <div className="pointer-events-none absolute inset-0 overflow-hidden"><motion.div className="absolute left-[-16%] top-[42%] h-px w-[62%] origin-left bg-gradient-to-r from-transparent via-[rgba(11,116,222,0.52)] to-transparent opacity-60" animate={reduceMotion ? undefined : { x: ["0%", "118%"], opacity: [0, 0.62, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} style={{ rotate: "-8deg" }} /></div>
+      <HeroSwarmBackground reduceMotion={reduceMotion} />
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[1040px]">
           <div id="margin-hero-title" className="mt-6 max-w-[1040px] font-lora text-[42px] leading-[0.96] tracking-[-0.045em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] md:text-[82px] lg:text-[96px]" style={{ fontWeight: 400 }}>
-            <motion.span className="block text-white" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Financial recovery and reconciliation infrastructure for Amazon businesses.</motion.span>
+            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Financial recovery and reconciliation infrastructure for Amazon businesses.</motion.span>
           </div>
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] text-[15px] leading-7 text-[#B7CFDC] sm:mt-8 sm:text-[18px] sm:leading-8">Margin establishes what happened, identifies what doesn&apos;t reconcile, and handles what needs to be resolved — from the first finding to the final payout.</motion.p>
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Margin establishes what happened, identifies what doesn&apos;t reconcile, and handles what needs to be resolved — from the first finding to the final payout.</motion.p>
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-start gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-6">
             <Button onClick={onAuditCta} aria-label="Reconcile the account" className="landing-pressable group relative h-[54px] w-fit max-w-[270px] justify-start overflow-hidden rounded-[8px] bg-[#E5E5E0] px-5 text-[15px] font-bold text-[#111111] shadow-[0_18px_48px_rgba(0,0,0,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#D4D4CF] sm:h-[56px] sm:w-auto sm:max-w-none sm:justify-center sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />Reconcile the account <ArrowRight className="ml-2 h-5 w-5" /></Button>
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1 }} className="mt-5 flex w-full max-w-[780px] flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[11px] font-medium text-slate-300 sm:mt-8 sm:justify-start sm:gap-x-5 sm:text-left sm:text-[12px]">
-            <span>No-cost audits</span><span className="text-slate-600">·</span><span>Read-only access</span><span className="text-slate-600">·</span><span>You approve every submission</span>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1 }} className="mt-5 flex w-full max-w-[780px] flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[11px] font-medium text-[#66737F] sm:mt-8 sm:justify-start sm:gap-x-5 sm:text-left sm:text-[12px]">
+            <span>No-cost audits</span><span className="text-[#A7B1B8]">·</span><span>Read-only access</span><span className="text-[#A7B1B8]">·</span><span>You approve every submission</span>
           </motion.div>
-          {isFull ? <div className="mt-5 max-w-[430px] rounded-[8px] bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl"><div>We are onboarding a small batch of sellers right now.</div><div>Next batch opens in {nextBatchHours ?? 24} hours.</div></div> : null}
+          {isFull ? <div className="mt-5 max-w-[430px] rounded-[8px] bg-[#F5F7F8] p-4 text-sm leading-6 text-[#52616A] shadow-[inset_0_0_0_1px_rgba(24,32,38,0.10)] backdrop-blur-xl"><div>We are onboarding a small batch of sellers right now.</div><div>Next batch opens in {nextBatchHours ?? 24} hours.</div></div> : null}
         </div>
       </div>
     </motion.section>
