@@ -54,18 +54,9 @@ export default function FinancialReconciliation() {
             </div>
             <Link to="/approved-reimbursements" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE] hover:text-[#075AAB]">View impact report <ArrowRight className="h-3.5 w-3.5" /></Link>
           </div>
-          <div className="mt-4 grid gap-0 border-y border-[#E2E8E7] sm:grid-cols-3">
-            {[
-              ['Reconciliation evidence', '9 recorded', 'Each displayed outcome has filing-linked approval truth.'],
-              ['Verified paid', '$17,383.40', 'Positive reimbursement events matched to these outcomes.'],
-              ['Payout proof', '7 linked', 'Each entry exposes a recorded settlement, payout batch, or event reference.'],
-            ].map(([label, value, detail], index) => (
-              <div key={label} className={`px-3 py-2 sm:px-4 ${index < 2 ? 'border-b border-[#E2E8E7] sm:border-b-0 sm:border-r' : ''}`}>
-                <p className="text-[10px] font-medium uppercase tracking-tight text-[#71818A]">{label}</p>
-                <p className="mt-1 font-google-sans text-[17px] tracking-[-0.03em] text-[#182026]">{value}</p>
-                <p className="mt-0.5 text-[10px] leading-4 text-[#66737F]">{detail}</p>
-              </div>
-            ))}
+          <div className="mt-5 max-w-[820px] text-[12px] leading-6 text-[#4D5B66]">
+            <p><span className="font-semibold text-[#182026]">Reconciliation evidence:</span> 9 recorded outcomes carry filing-linked approval truth. Across those outcomes, <span className="font-semibold text-[#182026]">$17,383.40</span> has been verified as paid through positive reimbursement events.</p>
+            <p className="mt-2"><span className="font-semibold text-[#182026]">Payout proof:</span> 7 entries expose a recorded settlement, payout batch, or event reference, so the financial record can be followed from approval to payment.</p>
           </div>
           <div className="mt-3 flex items-center gap-3 rounded-[8px] border border-[#E2E8E7] bg-white px-3 py-2 text-[11px] text-[#8A99A5]">
             <span className="text-[16px]">⌕</span><span className="flex-1">Query outcomes by case ID, seller, or amount...</span><span className="rounded-[5px] bg-[#F1F3F4] px-2 py-1 font-google-sans text-[10px] text-[#66737F]">⌘ K</span>
