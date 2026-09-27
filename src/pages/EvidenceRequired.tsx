@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 
 type EvidenceItem = {
   kind: string;
@@ -56,9 +56,9 @@ const matchedDocuments: EvidenceItem[] = [
 ];
 
 const evidenceLog = [
-  ["Receiving report", "ONT8 received 42 of 48 expected units; six-unit delta remains unresolved.", "RECEIVE-ONT8-1847.csv"],
-  ["Settlement activity", "No reimbursement credit matched to the six-unit inbound shortage in settlement 205-771.", "SETTLE-205-771.csv"],
-  ["Inventory ledger", "Seller ledger retains the six units at the verified $64.75 unit cost.", "LEDGER-NS-1847.csv"],
+  { time: "09:18:42", label: "Receiving report", detail: "ONT8 received 42 of 48 expected units; six-unit delta remains unresolved.", file: "RECEIVE-ONT8-1847.csv" },
+  { time: "09:19:06", label: "Settlement activity", detail: "No reimbursement credit matched to the six-unit inbound shortage in settlement 205-771.", file: "SETTLE-205-771.csv" },
+  { time: "09:19:31", label: "Inventory ledger", detail: "Seller ledger retains the six units at the verified $64.75 unit cost.", file: "LEDGER-NS-1847.csv" },
 ];
 
 export default function EvidenceRequired() {
@@ -97,8 +97,13 @@ export default function EvidenceRequired() {
         </section>
         <section className="border-t border-[#E7EEF2] px-5 pb-6 pt-5 sm:px-6">
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Evidence Log</h2><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
-          <div className="divide-y divide-[#E7EEF2] rounded-[7px] border border-[#DCE8EE] bg-[#FBFCFD]">
-            {evidenceLog.map(([label, detail, file]) => <div key={file} className="grid gap-2 px-4 py-3 sm:grid-cols-[150px_1fr_210px] sm:items-center"><div className="flex items-center gap-2 text-[11px] font-semibold tracking-tight text-[#36404A]"><CheckCircle2 className="h-3.5 w-3.5 text-[#26704E]" />{label}</div><p className="text-[11px] leading-4 tracking-tight text-[#66737F]">{detail}</p><p className="text-[10px] tracking-tight text-[#9AA7B0] sm:text-right">{file}</p></div>)}
+          <div className="space-y-3">
+            {evidenceLog.map((entry, index) => <div key={entry.file} className="relative grid grid-cols-[58px_24px_minmax(0,1fr)] gap-3 rounded-[7px] bg-[#F4F6F6] px-3 py-3 sm:grid-cols-[70px_26px_minmax(0,1fr)] sm:gap-4 sm:px-4">
+              {index < evidenceLog.length - 1 ? <span className="absolute bottom-[-14px] left-[68px] hidden h-3 w-px bg-[#C9D6DE] sm:block" aria-hidden="true" /> : null}
+              <time className="pt-1 font-mono text-[10px] tracking-tight text-[#7B8991]">{entry.time}</time>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded check"><Check className="h-3 w-3 text-white" strokeWidth={3} /></span>
+              <div className="min-w-0"><p className="text-[11px] font-semibold tracking-tight text-[#36404A]">{entry.label}</p><p className="mt-1 text-[11px] leading-4 tracking-tight text-[#66737F]">{entry.detail}</p><p className="mt-1 truncate text-[10px] tracking-tight text-[#9AA7B0]">{entry.file}</p></div>
+            </div>)}
           </div>
         </section>
       </section>
