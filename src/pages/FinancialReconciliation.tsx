@@ -61,11 +61,12 @@ export default function FinancialReconciliation() {
           <div className="mt-3 flex items-center gap-3 rounded-[8px] border border-[#E2E8E7] bg-white px-3 py-2 text-[11px] text-[#8A99A5]">
             <span className="text-[16px]">⌕</span><span className="flex-1">Query outcomes by case ID, seller, or amount...</span><span className="rounded-[5px] bg-[#F1F3F4] px-2 py-1 font-google-sans text-[10px] text-[#66737F]">⌘ K</span>
           </div>
-          <div className="mt-3 overflow-x-auto rounded-[8px] border border-[#E2E8E7] bg-white">
-            <table className="w-full min-w-[900px] border-collapse text-left">
-              <thead><tr className="border-b border-[#E2E8E7] text-[10px] font-medium tracking-tight text-[#71818A]"><th className="px-3 py-2">Recovery outcome</th><th className="px-3 py-2">Registry reference</th><th className="px-3 py-2">Amazon case</th><th className="px-3 py-2 text-right">Reimbursed</th><th className="px-3 py-2">Closeout</th><th className="px-3 py-2">Recorded</th></tr></thead>
-              <tbody>{verifiedOutcomes.map(([outcome, seller, registry, amazonCase, reimbursed, closeout, settlement, recorded]) => <tr key={registry} className="border-b border-[#EEF1F0] last:border-b-0"><td className="px-3 py-2.5"><p className="text-[11px] font-semibold text-[#182026]">{outcome}</p><p className="mt-0.5 text-[10px] text-[#66737F]">{seller}</p></td><td className="px-3 py-2.5 font-google-sans text-[10px] text-[#4D5B66]">{registry}</td><td className="px-3 py-2.5 font-google-sans text-[10px] text-[#4D5B66]">{amazonCase}</td><td className="px-3 py-2.5 text-right text-[12px] font-semibold tabular-nums text-[#182026]">{reimbursed}</td><td className="px-3 py-2.5"><p className="text-[10px] font-semibold text-[#182026]">{closeout}</p><p className="mt-0.5 font-google-sans text-[9px] text-[#66737F]">{settlement}</p></td><td className="px-3 py-2.5 font-google-sans text-[9px] text-[#66737F]">{recorded}</td></tr>)}</tbody>
-            </table>
+          <div className="mt-5">
+            {verifiedOutcomes.map(([outcome, seller, registry, amazonCase, reimbursed, closeout, settlement, recorded], index) => <article key={registry} className="relative grid grid-cols-[20px_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[22px_minmax(0,1fr)] sm:gap-4">
+              {index < verifiedOutcomes.length - 1 ? <span className="absolute bottom-[-1px] left-[9px] top-[38px] w-px bg-[#C9D6DE] sm:left-[10px]" aria-hidden="true" /> : null}
+              <span className="relative z-10 mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Reconciliation verified"><Check className="h-2.5 w-2.5 text-white" strokeWidth={3} /></span>
+              <div className="min-w-0"><div className="flex flex-wrap items-center gap-x-3 gap-y-1"><p className="text-[11px] font-semibold tracking-tight text-[#182026]">{outcome}</p><span className="text-[11px] font-semibold tabular-nums text-[#182026]">{reimbursed}</span><span className="text-[10px] text-[#66737F]">{recorded}</span></div><p className="mt-0.5 text-[10px] text-[#66737F]">{seller} · {registry} · Amazon case {amazonCase}</p><p className="mt-1 text-[10px] leading-4 text-[#4D5B66]">{closeout} · Settlement {settlement}</p></div>
+            </article>)}
           </div>
           <p className="mt-2 text-[11px] text-[#8A99A5]">Showing 9 of 9 reconciled cases</p>
         </section>
