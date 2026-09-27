@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, CheckCircle2, Download, FileSearch, FileText, Layers, RefreshCw, X } from 'lucide-react';
+import { ArrowRight, Check, CheckCircle2, Download, FileSearch, FileText, Layers, RefreshCw, X } from 'lucide-react';
 
 type Phase = 'extracting' | 'compiling' | 'output';
 
@@ -140,7 +140,7 @@ export default function ReportGeneration() {
               {phase === 'extracting' ? <FileSearch className="h-5 w-5" /> : <Layers className="h-5 w-5" />}
             </div>
             <div>
-              <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Evidence Pack Assembly</p>
+              <p className="font-google-sans text-[10px] font-medium tracking-[0.18em] text-[#0B74DE]">Evidence pack assembly</p>
               <p className="text-[12px] text-[#66737F]">Dispute evidence pipeline</p>
             </div>
           </div>
@@ -348,7 +348,7 @@ export default function ReportGeneration() {
                           'ASIN/FNSKU mapping', 'Quantity comparison', 'Cost basis',
                           'Case narrative', 'Attachment index', 'Filing deadline', 'Seller approval status'
                         ].map((item) => (
-                          <span key={item} className="inline-flex items-center gap-1 border border-[#E6E9EE] bg-[#F8FAFC] px-2 py-0.5 text-[9px] font-medium text-[#66737F]">
+                          <span key={item} className="inline-flex items-center gap-1 rounded-[2px] border-0 bg-[#EEF1F3] px-2 py-0.5 text-[9px] font-medium text-[#30373C]">
                             <Check className="h-2.5 w-2.5 text-emerald-500" />
                             {item}
                           </span>
@@ -359,9 +359,9 @@ export default function ReportGeneration() {
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
-                          className="flex h-8 items-center rounded-[3px] border border-[#182026] bg-[#182026] px-5 text-sm font-medium text-white transition-colors hover:border-[#303334] hover:bg-[#303334]"
+                          className="flex h-8 items-center gap-2 rounded-[3px] border border-[#182026] bg-black px-5 text-sm font-medium text-white transition-colors hover:border-[#303334] hover:bg-[#303334]"
                         >
-                          View
+                          Open claim package <ArrowRight className="h-3.5 w-3.5" />
                         </button>
                         <button
                           type="button"
