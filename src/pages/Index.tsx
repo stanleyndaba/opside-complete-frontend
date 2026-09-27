@@ -383,36 +383,25 @@ function HistoricalVideoPreviewSections() {
   );
 }
 
-const heroSwirlPoint = (t: number, centerX: number, centerY: number, scale: number, phase: number) => {
-  const angle = t * Math.PI * 3.7 + phase;
-  const radius = scale * (0.06 + t * 0.98);
-  const vein = Math.sin(t * Math.PI * 9 + phase) * scale * 0.2;
-  return {
-    x: centerX + Math.cos(angle) * radius * 1.38 + vein,
-    y: centerY + Math.sin(angle) * radius * 0.62 + Math.sin(t * Math.PI * 4 + phase) * scale * 0.18 + (t - 0.5) * scale * 0.38,
-  };
-};
-
 const heroSwarmParticles = Array.from({ length: 2460 }, (_, index) => {
   const column = index % 60;
   const row = Math.floor(index / 60);
-  const layer = Math.floor(index / 315);
-  const t = (index % 315) / 315;
   const startX = 1 + column * 1.68 + ((row * 17) % 5);
   const startY = 2 + row * 2.25 + ((column * 11) % 4);
-  const centerX = 50;
-  const centerY = 51;
-  const scale = 10 + layer * 1.6;
-  const targetA = heroSwirlPoint(t, centerX, centerY, scale, layer * 0.08);
-  const targetB = heroSwirlPoint(t, centerX, centerY, scale * 1.04, layer * 0.1);
+  const drift = ((index * 29) % 100) / 100;
+  const current = ((index * 47) % 100) / 100;
+  const currentWidth = 9 + (index % 5) * 2.2;
+  const currentHeight = 8 + (index % 7) * 1.6;
+  const wave = (index % 3) * 0.7;
   return {
     id: index,
     startX,
     startY,
-    formAX: targetA.x,
-    formAY: targetA.y,
-    formBX: targetB.x,
-    formBY: targetB.y,
+    flowX: 10 + current * 78,
+    flowY: 18 + drift * 66,
+    flowWidth: currentWidth,
+    flowHeight: currentHeight,
+    wave,
     radius: index % 13 === 0 ? 0.18 : index % 5 === 0 ? 0.16 : 0.14,
     tone: index % 17 === 0 ? "#0B74DE" : index % 11 === 0 ? "#52616A" : index % 7 === 0 ? "#8A99A3" : "#182026",
     delay: ((index * 37) % 100) / 100 * 1.2,
@@ -432,12 +421,12 @@ function HeroSwarmBackground({ reduceMotion }: { reduceMotion: boolean | null })
             cy={particle.startY}
             r={particle.radius}
             fill={particle.tone}
-            animate={reduceMotion ? { cx: particle.formAX, cy: particle.formAY, opacity: 0.42 } : {
-              cx: [particle.startX, particle.formAX, particle.formAX, particle.formBX, particle.formBX, particle.startX + ((particle.id % 5) - 2) * 2],
-              cy: [particle.startY, particle.formAY, particle.formAY, particle.formBY, particle.formBY, particle.startY + ((particle.id % 7) - 3) * 2],
-              opacity: [0.28, 0.72, 0.9, 0.78, 0.9, 0.28],
+            animate={reduceMotion ? { cx: particle.startX, cy: particle.startY, opacity: 0.58 } : {
+              cx: [particle.startX, particle.flowX, particle.flowX + particle.flowWidth, particle.flowX + particle.flowWidth * 1.35, particle.startX],
+              cy: [particle.startY, particle.flowY + particle.wave, particle.flowY - particle.wave, particle.flowY + particle.flowHeight, particle.startY],
+              opacity: [0.22, 0.58, 0.82, 0.62, 0.22],
             }}
-            transition={reduceMotion ? { duration: 0 } : { duration: 24, delay: particle.delay, repeat: Infinity, ease: "easeInOut", times: [0, 0.28, 0.44, 0.62, 0.78, 1] }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 30 + (particle.id % 7), delay: particle.delay, repeat: Infinity, ease: "easeInOut", times: [0, 0.28, 0.52, 0.76, 1] }}
           />
         ))}
       </svg>
