@@ -2007,7 +2007,7 @@ function FinancialReconciliationSection() {
             <p className="mt-3 max-w-[580px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">An approval is not a recovery. A recovery is not complete until the money is accounted for.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden">
-            <FinalDelegationPreview compactMobile src="/financial-reconciliation" title="Financial reconciliation page preview" />
+            <FinalDelegationPreview compactMobile expandedMobile src="/financial-reconciliation" title="Financial reconciliation page preview" />
           </motion.div>
         </div>
       </div>
