@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Check, CheckCircle2, Download, FileSearch, FileText, Layers, RefreshCw, X } from 'lucide-react';
+import { ArrowRight, Check, CheckCircle2, Download, FileText, RefreshCw, X } from 'lucide-react';
 
 type Phase = 'extracting' | 'compiling' | 'output';
 
@@ -134,19 +134,7 @@ export default function ReportGeneration() {
           phase === 'output' ? 'h-[min(420px,calc(100vh-180px))]' : 'h-[min(620px,calc(100vh-180px))]'
         }`}
       >
-        <header className="flex min-h-14 items-center justify-between border-b border-[#DCE8EE] bg-white px-4 sm:px-6">
-          <div className="flex items-center gap-3">
-            <div className="hidden h-8 w-8 items-center justify-center border border-[#CFE0EA] bg-[#F8FAFC] text-[#182026] sm:flex">
-              {phase === 'extracting' ? <FileSearch className="h-5 w-5" /> : <Layers className="h-5 w-5" />}
-            </div>
-            <div>
-              <p className="font-google-sans text-[10px] font-medium tracking-tight text-[#0B74DE]">Evidence pack assembly</p>
-              <p className="text-[12px] text-[#66737F]">Dispute evidence pipeline</p>
-            </div>
-          </div>
-        </header>
-
-        <div className="relative flex-1 overflow-hidden border-t border-[#DCE8EE] bg-[#FAFAF7]">
+        <div className="relative flex-1 overflow-hidden bg-[#FAFAF7]">
           <AnimatePresence mode="wait">
             {phase === 'extracting' && (
               <motion.div
@@ -296,7 +284,7 @@ export default function ReportGeneration() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={spring}
-                className="absolute inset-0 overflow-y-auto px-3 py-4 sm:p-5"
+                className="absolute inset-0 overflow-y-auto p-4 sm:p-5"
               >
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-3">
@@ -304,7 +292,7 @@ export default function ReportGeneration() {
                     <p className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</p>
                   </div>
 
-                  <article className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
+                  <article className="mt-6 flex flex-col items-center gap-5 sm:mt-0 sm:flex-row sm:items-center">
                     <div className="relative hidden h-[116px] w-[86px] shrink-0 sm:block">
                       <div className="absolute inset-0 translate-x-2.5 -rotate-2 border border-[#DCE8EE] bg-white/45" />
                       <div className="absolute inset-0 translate-x-1 rotate-1 border border-[#DCE8EE] bg-white/70" />
@@ -337,25 +325,25 @@ export default function ReportGeneration() {
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
                       <h3 className="text-[15px] font-bold tracking-tight text-[#182026] sm:text-base">Claim Submission Package</h3>
-                      <p className="mt-1 font-google-sans text-[9px] uppercase leading-5 tracking-tight text-[#8A8F98] sm:mt-1.5 sm:text-[11px] sm:leading-normal">
+                      <p className="mt-1.5 font-google-sans text-[10px] uppercase tracking-tight text-[#8A8F98] sm:text-[11px]">
                         FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: NOV 12 2025&nbsp;&nbsp; VERIFIED
                       </p>
 
-                      <div className="mt-2 flex flex-wrap justify-center gap-1 sm:mt-2.5 sm:justify-start sm:gap-1.5">
+                      <div className="mt-2.5 flex flex-wrap gap-1.5 sm:justify-start justify-center">
                         {[
                           'Recovery summary', 'Claim type', 'Shipment timeline',
                           'Required evidence checklist', 'Invoice', 'BOL', 'POD',
                           'ASIN/FNSKU mapping', 'Quantity comparison', 'Cost basis',
                           'Case narrative', 'Attachment index', 'Filing deadline', 'Seller approval status'
                         ].map((item) => (
-                          <span key={item} className="inline-flex items-center gap-1 rounded-[2px] border-0 bg-[#EEF1F3] px-1.5 py-0.5 text-[8px] font-medium text-[#30373C] sm:px-2 sm:text-[9px]">
+                          <span key={item} className="inline-flex items-center gap-1 rounded-[2px] border-0 bg-[#EEF1F3] px-2 py-0.5 text-[9px] font-medium text-[#30373C]">
                             <Check className="h-2.5 w-2.5 text-emerald-500" />
                             {item}
                           </span>
                         ))}
                       </div>
 
-                      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:mt-4 sm:justify-start">
+                      <div className="mt-4 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
