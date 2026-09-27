@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Check, CheckCircle2, Download, FileText, X } from 'lucide-react';
 
@@ -105,6 +105,7 @@ export default function ReportGeneration() {
   const [extractedCount, setExtractedCount] = useState(0);
   const [evidenceMatches, setEvidenceMatches] = useState<Set<string>>(new Set());
   const [showPreview, setShowPreview] = useState(false);
+  const evidenceScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (phase === 'extracting') {
@@ -132,6 +133,14 @@ export default function ReportGeneration() {
     );
     return () => timeouts.forEach((timeout) => window.clearTimeout(timeout));
   }, []);
+
+  useEffect(() => {
+    if (phase !== 'extracting' || evidenceMatches.size === 0 || !evidenceScrollRef.current) return;
+    const frame = window.requestAnimationFrame(() => {
+      evidenceScrollRef.current?.scrollBy({ top: 42, behavior: 'smooth' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [evidenceMatches.size, phase]);
 
   const isEvidenceMatchActive = (id: string) => evidenceMatches.has(id);
 
@@ -168,7 +177,7 @@ export default function ReportGeneration() {
                 exit={{ opacity: 0, scale: 0.98 }}
                 className="absolute inset-0 grid grid-cols-1 gap-4 overflow-y-auto p-4 md:grid-cols-[minmax(0,1fr)_260px] md:p-6"
               >
-                <div className="relative min-h-[390px] overflow-hidden border border-[#DCE8EE] bg-white p-6 sm:p-7">
+                <div className="relative h-[390px] overflow-hidden border border-[#DCE8EE] bg-white p-6 sm:p-7">
                   <div className="flex items-start justify-between border-b border-[#DCE8EE] pb-4">
                     <div>
                       <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Evidence match</p>
@@ -178,6 +187,7 @@ export default function ReportGeneration() {
                     <FileText className="h-5 w-5 text-[#B9C4CC]" />
                   </div>
 
+                  <div ref={evidenceScrollRef} className="h-full overflow-y-auto pr-2 [scrollbar-width:thin]">
                   <div className="mt-5 space-y-3 text-[12px] leading-6 text-[#4D5B66] sm:text-[13px]">
                     <p>
                       Amazon received fewer units than the inbound shipment record shows were shipped.{' '}
@@ -224,6 +234,7 @@ export default function ReportGeneration() {
                         <MetadataHighlight active={isEvidenceMatchActive('case')} tone="emerald">ACME-CASE-2001</MetadataHighlight>
                       </p>
                     </div>
+                  </div>
                   </div>
                 </div>
 
