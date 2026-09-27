@@ -383,21 +383,41 @@ function HistoricalVideoPreviewSections() {
   );
 }
 
-const heroSwarmParticles = Array.from({ length: 240 }, (_, index) => {
-  const column = index % 24;
-  const row = Math.floor(index / 24);
-  const startX = 5 + column * 3.9 + ((row * 13) % 5);
-  const startY = 8 + row * 9.2 + ((column * 9) % 6);
+const heroShapePoint = (shape: number, t: number, centerX: number, centerY: number, scale: number, phase: number) => {
+  const angle = t * Math.PI * 2 + phase;
+  if (shape === 0) return { x: centerX + Math.cos(angle) * scale, y: centerY + Math.sin(angle) * scale * 0.78 };
+  if (shape === 1) {
+    const radius = scale * (0.78 + Math.cos(angle * 5) * 0.18);
+    return { x: centerX + Math.cos(angle) * radius, y: centerY + Math.sin(angle) * radius * 0.86 };
+  }
+  if (shape === 2) return { x: centerX + (t * 2 - 1) * scale * 1.25, y: centerY + Math.sin(t * Math.PI * 4 + phase) * scale * 0.7 };
+  if (shape === 3) return { x: centerX + Math.sin(angle * 2) * scale, y: centerY + Math.cos(angle * 3) * scale * 0.7 };
+  return { x: centerX + Math.cos(angle) * scale * (0.45 + 0.3 * Math.sin(angle * 3)), y: centerY + Math.sin(angle) * scale * (0.8 + 0.18 * Math.cos(angle * 2)) };
+};
+
+const heroSwarmParticles = Array.from({ length: 420 }, (_, index) => {
+  const column = index % 30;
+  const row = Math.floor(index / 30);
+  const group = Math.floor(index / 84);
+  const t = (index % 84) / 84;
+  const startX = 3 + column * 3.05 + ((row * 17) % 7);
+  const startY = 6 + row * 7.2 + ((column * 11) % 6);
+  const shapeCenters = [[18, 24], [76, 24], [22, 73], [76, 72], [49, 49]] as const;
+  const alternateCenters = [[72, 70], [23, 70], [74, 25], [24, 24], [80, 48]] as const;
+  const center = shapeCenters[group % shapeCenters.length];
+  const alternateCenter = alternateCenters[group % alternateCenters.length];
+  const targetA = heroShapePoint(group % 5, t, center[0], center[1], group === 4 ? 11 : 8.5, group * 0.7);
+  const targetB = heroShapePoint((group + 2) % 5, t, alternateCenter[0], alternateCenter[1], group === 4 ? 9 : 7.5, group * 0.95);
   return {
     id: index,
     startX,
     startY,
-    formAX: column < 12 ? 39 + column * 1.15 : 54 + (column - 12) * 1.15,
-    formAY: row < 3 ? 22 + row * 7 : row < 7 ? 46 + (row - 3) * 7 : 76 + (row - 7) * 4,
-    formBX: column < 8 ? 38 + column * 1.75 : column < 16 ? 40 + (column - 8) * 1.75 : 47 + (column - 16) * 1.75,
-    formBY: row < 2 ? 24 + row * 10 : row < 6 ? 49 + (row - 2) * 8 : 79 + (row - 6) * 5,
-    radius: index % 13 === 0 ? 0.18 : index % 5 === 0 ? 0.15 : 0.11,
-    tone: index % 17 === 0 ? "#0B74DE" : index % 11 === 0 ? "#6C8798" : index % 7 === 0 ? "#A7B1B8" : "#182026",
+    formAX: targetA.x,
+    formAY: targetA.y,
+    formBX: targetB.x,
+    formBY: targetB.y,
+    radius: index % 13 === 0 ? 0.18 : index % 5 === 0 ? 0.16 : 0.14,
+    tone: index % 17 === 0 ? "#0B74DE" : index % 11 === 0 ? "#52616A" : index % 7 === 0 ? "#8A99A3" : "#182026",
     delay: ((index * 37) % 100) / 100 * 1.2,
   };
 });
@@ -407,7 +427,7 @@ function HeroSwarmBackground({ reduceMotion }: { reduceMotion: boolean | null })
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_46%,rgba(11,116,222,0.08),transparent_28%),radial-gradient(circle_at_62%_72%,rgba(119,151,167,0.08),transparent_31%)]" />
-      <svg className="absolute right-[-18%] top-[11%] h-[76%] w-[92%] opacity-[0.82] sm:right-[-8%] sm:top-[7%] sm:h-[84%] sm:w-[76%] lg:right-[-2%] lg:w-[68%]" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <svg className="absolute left-[-8%] top-[8%] h-[84%] w-[116%] opacity-[0.9] sm:left-[-4%] sm:top-[6%] sm:h-[88%] sm:w-[108%]" viewBox="0 0 100 100" preserveAspectRatio="none">
         <path d="M 18 22 C 34 12, 56 20, 78 38 S 66 70, 42 84" fill="none" stroke="#0B74DE" strokeDasharray="1 4" strokeLinecap="round" strokeWidth="0.22" opacity="0.18" />
         <path d="M 22 78 C 42 65, 52 38, 82 25" fill="none" stroke="#6C8798" strokeDasharray="0.7 5" strokeLinecap="round" strokeWidth="0.18" opacity="0.2" />
         {particles.map((particle) => (
@@ -420,7 +440,7 @@ function HeroSwarmBackground({ reduceMotion }: { reduceMotion: boolean | null })
             animate={reduceMotion ? { cx: particle.formAX, cy: particle.formAY, opacity: 0.42 } : {
               cx: [particle.startX, particle.formAX, particle.formAX, particle.formBX, particle.formBX, particle.startX + ((particle.id % 5) - 2) * 2],
               cy: [particle.startY, particle.formAY, particle.formAY, particle.formBY, particle.formBY, particle.startY + ((particle.id % 7) - 3) * 2],
-              opacity: [0.14, 0.4, 0.58, 0.42, 0.62, 0.14],
+              opacity: [0.28, 0.72, 0.9, 0.68, 0.86, 0.28],
             }}
             transition={reduceMotion ? { duration: 0 } : { duration: 18, delay: particle.delay, repeat: Infinity, ease: "easeInOut", times: [0, 0.24, 0.38, 0.62, 0.76, 1] }}
           />
