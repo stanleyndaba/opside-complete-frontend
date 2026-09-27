@@ -566,18 +566,18 @@ function ReconstructionGapSection() {
 function FinancialWorkProofSection() {
   const proofPoints = [
     {
-      value: "84%",
-      title: "less time chasing evidence",
-      description: "Target reduction in the manual time spent finding records, tracing transactions, and assembling supporting evidence.",
+      value: "28+",
+      title: "hours saved per month",
+      description: "Estimated monthly time returned from finding records, tracing transactions, and assembling supporting evidence.",
     },
     {
       value: "26",
-      title: "detection algorithms",
+      title: "quantitative control models",
       description: "Purpose-built checks identify activity that may need investigation.",
     },
     {
       value: "11",
-      title: "specialized agents",
+      title: "financial operation agents",
       description: "A coordinated architecture supports the investigation and recovery workflow.",
     },
   ];
