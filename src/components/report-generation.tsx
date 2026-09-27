@@ -227,23 +227,26 @@ export default function ReportGeneration() {
                   </div>
                 </div>
 
-                <aside className="border border-[#DCE8EE] bg-[#F8FAFC] p-4">
-                  <div className="mb-4 flex items-center justify-between">
+                <aside className="flex min-h-[260px] flex-col bg-transparent px-1 py-2 md:min-h-0 md:py-0">
+                  <div className="flex items-center justify-between">
                     <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Metadata Identified</p>
                     <span className="font-google-sans text-[10px] font-medium text-[#8A99A4]">{extractedCount}/{METADATA.length}</span>
                   </div>
-                  <div className="space-y-2">
-                    <AnimatePresence>
+                  <div className="mt-auto flex flex-col-reverse gap-2 pt-4">
+                    <AnimatePresence initial={false}>
                       {METADATA.slice(0, extractedCount).map((item) => (
                         <motion.div
                           key={item.label}
-                          initial={{ opacity: 0, x: 24, scale: 0.96 }}
+                          layout
+                          initial={{ opacity: 0, x: 56, scale: 0.92 }}
                           animate={{ opacity: 1, x: 0, scale: 1 }}
                           transition={spring}
-                          className="flex items-center gap-2.5 border border-[#DCE8EE] bg-white px-3 py-2"
+                          className="flex items-center gap-2.5 rounded-[5px] bg-[#182026] px-3 py-2.5 text-white shadow-[0_8px_18px_rgba(24,32,38,0.12)]"
                         >
-                          <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
-                          <span className="text-[11px] font-medium text-[#33404A]">{item.label}</span>
+                          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white text-[#182026]">
+                            <Check className="h-2.5 w-2.5" strokeWidth={3} />
+                          </span>
+                          <span className="text-[11px] font-medium">{item.label}</span>
                         </motion.div>
                       ))}
                     </AnimatePresence>
