@@ -113,6 +113,7 @@ export default function ReportGeneration() {
   const [extractedCount, setExtractedCount] = useState(0);
   const [evidenceMatches, setEvidenceMatches] = useState<Set<string>>(new Set());
   const [showPreview, setShowPreview] = useState(false);
+  const [runId, setRunId] = useState(0);
   const evidenceScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -131,16 +132,28 @@ export default function ReportGeneration() {
       const timer = window.setTimeout(() => setPhase('output'), 3000);
       return () => window.clearTimeout(timer);
     }
+
+    if (phase === 'output') {
+      const timer = window.setTimeout(() => {
+        setShowPreview(false);
+        setExtractedCount(0);
+        setEvidenceMatches(new Set());
+        setPhase('extracting');
+        setRunId((current) => current + 1);
+      }, 5000);
+      return () => window.clearTimeout(timer);
+    }
   }, [phase]);
 
   useEffect(() => {
+    evidenceScrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
     const timeouts = EVIDENCE_MATCH_SEQUENCE.map(([id, delay]) =>
       window.setTimeout(() => {
         setEvidenceMatches((previous) => new Set(previous).add(id));
       }, delay),
     );
     return () => timeouts.forEach((timeout) => window.clearTimeout(timeout));
-  }, []);
+  }, [runId]);
 
   useEffect(() => {
     if (phase !== 'extracting' || evidenceMatches.size === 0 || !evidenceScrollRef.current) return;
