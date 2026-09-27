@@ -42,13 +42,13 @@ export default function AppealsReview() {
     setToast(`${item.id}: review opened`);
     window.setTimeout(() => setToast(null), 2600);
   };
-  return <main className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026]">
+  return <main className="preview-google-sans min-h-screen bg-[#FAFAF7] font-google-sans text-[#182026]">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
     <div className="mx-auto max-w-[1600px] px-4 py-4 sm:px-6 sm:py-6">
       <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
         <header className="border-b border-[#DCE8EE] px-5 py-5 sm:px-6">
           <div className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Response review</div>
-          <h1 className="mt-1 font-lora text-[20px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[23px]">Appeals review</h1>
+          <h1 className="mt-1 font-google-sans text-[20px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[23px]">Appeals review</h1>
           <p className="mt-2 max-w-4xl text-[12px] leading-5 tracking-tight text-[#66737F]">Review recorded Amazon responses, verify the evidence behind each decision, and decide whether resubmission is supportable.</p>
         </header>
         <div className="flex items-center justify-between gap-4 border-b border-[#DCE8EE] px-5 py-4 sm:px-6">
