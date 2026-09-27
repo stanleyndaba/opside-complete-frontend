@@ -33,49 +33,47 @@ export default function FinancialReconciliation() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-google-sans text-[#182026]">
-      <header className="border-b border-[#E2E6E3] bg-[#FAFAF7]/95 backdrop-blur">
-        <div className="mx-auto flex min-h-14 max-w-[1180px] items-center justify-between gap-4 px-5 sm:px-7">
-          <Link to="/" className="inline-flex items-center gap-2.5 rounded-md outline-none transition-opacity hover:opacity-75 focus-visible:ring-2 focus-visible:ring-[#0B74DE] focus-visible:ring-offset-2">
-            <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
-            <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#182026]">Margin</span>
-          </Link>
-          <span className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Financial reconciliation</span>
-        </div>
-      </header>
-
+    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026]">
       <main className="mx-auto max-w-[1180px] px-5 py-5 sm:px-7 sm:py-7">
         <section className="border-b border-[#DCE5E5] pb-5 sm:pb-6" aria-labelledby="approved-reimbursements-title">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Verified outcomes</p>
-              <h2 id="approved-reimbursements-title" className="mt-1 font-google-sans text-[22px] leading-tight tracking-[-0.035em] text-[#182026]">Reconciled cases</h2>
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Verified outcomes</p>
+              <h2 id="approved-reimbursements-title" className="mt-1 font-lora text-[22px] leading-tight tracking-[-0.035em] text-[#182026]">Reconciled cases</h2>
               <p className="mt-1 max-w-[680px] text-[12px] leading-5 text-[#66737F]">Cases with both a recorded approval and positive payment evidence linked to the tenant&apos;s financial event trail.</p>
             </div>
             <Link to="/approved-reimbursements" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE] hover:text-[#075AAB]">View impact report <ArrowRight className="h-3.5 w-3.5" /></Link>
           </div>
-          <div className="mt-5 max-w-[820px] text-[12px] leading-6 text-[#4D5B66]">
-            <p><span className="font-semibold text-[#182026]">Reconciliation evidence:</span> 9 recorded outcomes carry filing-linked approval truth. Across those outcomes, <span className="font-semibold text-[#182026]">$17,383.40</span> has been verified as paid through positive reimbursement events.</p>
-            <p className="mt-2"><span className="font-semibold text-[#182026]">Payout proof:</span> 7 entries expose a recorded settlement, payout batch, or event reference, so the financial record can be followed from approval to payment.</p>
+          <div className="mt-4 grid gap-0 border-y border-[#E2E8E7] sm:grid-cols-3">
+            {[
+              ['Reconciliation evidence', '9 recorded', 'Each displayed outcome has filing-linked approval truth.'],
+              ['Verified paid', '$17,383.40', 'Positive reimbursement events matched to these outcomes.'],
+              ['Payout proof', '7 linked', 'Each entry exposes a recorded settlement, payout batch, or event reference.'],
+            ].map(([label, value, detail], index) => (
+              <div key={label} className={`px-3 py-2 sm:px-4 ${index < 2 ? 'border-b border-[#E2E8E7] sm:border-b-0 sm:border-r' : ''}`}>
+                <p className="text-[10px] font-medium uppercase tracking-tight text-[#71818A]">{label}</p>
+                <p className="mt-1 font-lora text-[17px] tracking-[-0.03em] text-[#182026]">{value}</p>
+                <p className="mt-0.5 text-[10px] leading-4 text-[#66737F]">{detail}</p>
+              </div>
+            ))}
           </div>
           <div className="mt-3 flex items-center gap-3 rounded-[8px] border border-[#E2E8E7] bg-white px-3 py-2 text-[11px] text-[#8A99A5]">
-            <span className="text-[16px]">⌕</span><span className="flex-1">Query outcomes by case ID, seller, or amount...</span><span className="rounded-[5px] bg-[#F1F3F4] px-2 py-1 font-google-sans text-[10px] text-[#66737F]">⌘ K</span>
+            <span className="text-[16px]">⌕</span><span className="flex-1">Query outcomes by case ID, seller, or amount...</span><span className="rounded-[5px] bg-[#F1F3F4] px-2 py-1 font-mono text-[10px] text-[#66737F]">⌘ K</span>
           </div>
-          <div className="mt-5">
-            {verifiedOutcomes.map(([outcome, seller, registry, amazonCase, reimbursed, closeout, settlement, recorded], index) => <article key={registry} className="relative grid grid-cols-[20px_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[22px_minmax(0,1fr)] sm:gap-4">
-              {index < verifiedOutcomes.length - 1 ? <span className="absolute bottom-[-1px] left-[9px] top-[38px] w-px bg-[#C9D6DE] sm:left-[10px]" aria-hidden="true" /> : null}
-              <span className="relative z-10 mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Reconciliation verified"><Check className="h-2.5 w-2.5 text-white" strokeWidth={3} /></span>
-              <div className="min-w-0"><div className="flex flex-wrap items-center gap-x-3 gap-y-1"><p className="text-[11px] font-semibold tracking-tight text-[#182026]">{outcome}</p><span className="text-[11px] font-semibold tabular-nums text-[#182026]">{reimbursed}</span><span className="text-[10px] text-[#66737F]">{recorded}</span></div><p className="mt-0.5 text-[10px] text-[#66737F]">{seller} · {registry} · Amazon case {amazonCase}</p><p className="mt-1 text-[10px] leading-4 text-[#4D5B66]">{closeout} · Settlement {settlement}</p></div>
-            </article>)}
+          <div className="mt-3 overflow-x-auto rounded-[8px] border border-[#E2E8E7] bg-white">
+            <table className="w-full min-w-[900px] border-collapse text-left">
+              <thead><tr className="border-b border-[#E2E8E7] text-[10px] font-medium tracking-tight text-[#71818A]"><th className="px-3 py-2">Recovery outcome</th><th className="px-3 py-2">Registry reference</th><th className="px-3 py-2">Amazon case</th><th className="px-3 py-2 text-right">Reimbursed</th><th className="px-3 py-2">Closeout</th><th className="px-3 py-2">Recorded</th></tr></thead>
+              <tbody>{verifiedOutcomes.map(([outcome, seller, registry, amazonCase, reimbursed, closeout, settlement, recorded]) => <tr key={registry} className="border-b border-[#EEF1F0] last:border-b-0"><td className="px-3 py-2.5"><p className="text-[11px] font-semibold text-[#182026]">{outcome}</p><p className="mt-0.5 text-[10px] text-[#66737F]">{seller}</p></td><td className="px-3 py-2.5 font-mono text-[10px] text-[#4D5B66]">{registry}</td><td className="px-3 py-2.5 font-mono text-[10px] text-[#4D5B66]">{amazonCase}</td><td className="px-3 py-2.5 text-right text-[12px] font-semibold tabular-nums text-[#182026]">{reimbursed}</td><td className="px-3 py-2.5"><p className="text-[10px] font-semibold text-[#182026]">{closeout}</p><p className="mt-0.5 font-mono text-[9px] text-[#66737F]">{settlement}</p></td><td className="px-3 py-2.5 font-mono text-[9px] text-[#66737F]">{recorded}</td></tr>)}</tbody>
+            </table>
           </div>
           <p className="mt-2 text-[11px] text-[#8A99A5]">Showing 9 of 9 reconciled cases</p>
         </section>
 
         <section className="border-b border-[#DCE5E5] pb-5 sm:pb-6" aria-labelledby="reconciliation-title">
-          <div className="flex items-center gap-3"><div className="h-px w-8 bg-[#0B74DE]" /><span className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Recovery financial outcome</span></div>
+          <div className="flex items-center gap-3"><div className="h-px w-8 bg-[#0B74DE]" /><span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Recovery financial outcome</span></div>
           <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 id="reconciliation-title" className="font-google-sans text-[14px] leading-tight tracking-[-0.045em] text-[#182026] sm:text-[20px]">Recovery Closed</h1>
+              <h1 id="reconciliation-title" className="font-lora text-[14px] leading-tight tracking-[-0.045em] text-[#182026] sm:text-[20px]">Recovery Closed</h1>
               <p className="mt-1 text-[12px] text-[#66737F]">RFD-16942-INB · Inbound shipment shortage</p>
             </div>
             <div className="inline-flex items-center gap-2 self-start rounded-full bg-[#E5F4EC] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-[#23734D] lg:self-auto"><Check className="h-3.5 w-3.5" strokeWidth={2.5} /> Financial outcome reconciled</div>
@@ -89,13 +87,13 @@ export default function FinancialReconciliation() {
 
         <section className="grid gap-6 border-b border-[#DCE5E5] py-6 sm:py-7 lg:grid-cols-[1fr_0.9fr] lg:gap-10">
           <div>
-            <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Closeout decision</p>
-            <h2 className="mt-1 font-google-sans text-[20px] leading-tight tracking-[-0.035em] text-[#182026]">Why this is closed</h2>
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Closeout decision</p>
+            <h2 className="mt-1 font-lora text-[20px] leading-tight tracking-[-0.035em] text-[#182026]">Why this is closed</h2>
             <p className="mt-2 max-w-[610px] text-[12px] leading-5 text-[#4D5B66]">Expected, paid, and verified amounts reconcile completely.</p>
             <div className="mt-5 border-t border-[#E2E8E7] pt-4">
               <p className="text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Financial evidence</p>
               <dl className="mt-3 grid gap-3 text-[12px] sm:grid-cols-2">
-                <div><dt className="text-[#71818A]">Settlement reference</dt><dd className="mt-1 font-google-sans text-[12px] text-[#182026]">SETTLE-ACME-PAYOUT-01</dd></div>
+                <div><dt className="text-[#71818A]">Settlement reference</dt><dd className="mt-1 font-mono text-[12px] text-[#182026]">SETTLE-ACME-PAYOUT-01</dd></div>
                 <div><dt className="text-[#71818A]">Settlement date</dt><dd className="mt-1 text-[#182026]">Jun 14, 2026</dd></div>
                 <div><dt className="text-[#71818A]">Settlement status</dt><dd className="mt-1 text-[#182026]">Paid</dd></div>
                 <div><dt className="text-[#71818A]">Payment attribution</dt><dd className="mt-1 text-[#182026]">Payment confidently attributed to this recovery</dd></div>
@@ -108,8 +106,8 @@ export default function FinancialReconciliation() {
           </div>
 
           <div>
-            <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Evidence chain</p>
-            <h2 className="mt-2 font-google-sans text-[26px] leading-tight tracking-[-0.035em] text-[#182026]">Recovery evidence chain</h2>
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Evidence chain</p>
+            <h2 className="mt-2 font-lora text-[26px] leading-tight tracking-[-0.035em] text-[#182026]">Recovery evidence chain</h2>
             <div className="relative mt-5 space-y-5 pl-6">
               <div className="absolute bottom-2 left-[4px] top-2 w-px bg-[#CFE0E0]" />
               {timeline.map(([title, detail]) => (
