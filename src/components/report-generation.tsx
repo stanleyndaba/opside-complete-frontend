@@ -127,8 +127,8 @@ export default function ReportGeneration() {
   };
 
   return (
-    <main className="min-h-screen overflow-x-auto bg-[#FAFAF7] p-4 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:overflow-x-hidden lg:p-8">
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] min-w-[920px] max-w-[1180px] items-center lg:min-w-0">
+    <main className="min-h-screen overflow-x-hidden bg-[#FAFAF7] p-4 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1180px] items-center">
       <section
         className={`flex min-h-[620px] w-full flex-col overflow-hidden rounded-[3px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] ${
           phase === 'output' ? 'h-[min(420px,calc(100vh-180px))]' : 'h-[min(620px,calc(100vh-180px))]'
@@ -154,7 +154,7 @@ export default function ReportGeneration() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
-                className="absolute inset-0 grid grid-cols-[minmax(0,1fr)_260px] gap-4 overflow-y-auto p-4 md:p-6"
+                className="absolute inset-0 grid grid-cols-1 gap-4 overflow-y-auto p-4 md:grid-cols-[minmax(0,1fr)_260px] md:p-6"
               >
                 <div className="relative min-h-[390px] overflow-hidden border border-[#DCE8EE] bg-white p-6 sm:p-7">
                   <div className="flex items-start justify-between border-b border-[#DCE8EE] pb-4">
