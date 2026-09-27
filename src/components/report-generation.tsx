@@ -140,7 +140,7 @@ export default function ReportGeneration() {
               {phase === 'extracting' ? <FileSearch className="h-5 w-5" /> : <Layers className="h-5 w-5" />}
             </div>
             <div>
-              <p className="font-google-sans text-[10px] font-medium tracking-[0.18em] text-[#0B74DE]">Evidence pack assembly</p>
+              <p className="font-google-sans text-[10px] font-medium tracking-tight text-[#0B74DE]">Evidence pack assembly</p>
               <p className="text-[12px] text-[#66737F]">Dispute evidence pipeline</p>
             </div>
           </div>
