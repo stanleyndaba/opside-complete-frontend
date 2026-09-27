@@ -742,9 +742,10 @@ html, body, #root {
   border-radius: 2px !important;
 }
 
-/* Small record-rule transition between surfaces. */
-.landing-google-sans > main > section:not(:first-child) {
-  border-top: 1px solid rgba(24, 32, 38, 0.10);
+/* Landing sections should meet cleanly without grey divider rules. */
+.landing-google-sans > main > section {
+  border-top: 0 !important;
+  border-bottom: 0 !important;
 }
 
 /* The Reconstruction Gap is a soft editorial surface, protected from positional overrides. */

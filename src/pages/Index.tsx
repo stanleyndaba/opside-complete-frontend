@@ -411,7 +411,7 @@ const heroSwarmParticles = Array.from({ length: 2460 }, (_, index) => {
 function HeroSwarmBackground({ reduceMotion }: { reduceMotion: boolean | null }) {
   const particles = useMemo(() => heroSwarmParticles, []);
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div className="pointer-events-none absolute inset-0 hidden overflow-hidden" aria-hidden="true">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_52%,rgba(11,116,222,0.09),transparent_34%),radial-gradient(circle_at_50%_78%,rgba(119,151,167,0.08),transparent_36%)]" />
       <svg className="absolute left-[-8%] top-[8%] h-[84%] w-[116%] opacity-[0.9] sm:left-[-4%] sm:top-[6%] sm:h-[88%] sm:w-[108%]" viewBox="0 0 100 100" preserveAspectRatio="none">
         {particles.map((particle) => (
