@@ -160,7 +160,7 @@ export default function ReportGeneration() {
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#FAFAF7] p-4 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
+    <main className="min-h-screen overflow-x-hidden bg-[#FAFAF7] p-0 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1180px] items-center">
       <section
         className={`flex min-h-[620px] w-full flex-col overflow-hidden border-0 bg-white shadow-none sm:rounded-[3px] sm:border sm:border-[#DCE8EE] sm:shadow-[0_1px_2px_rgba(24,32,38,0.03)] ${
@@ -175,9 +175,9 @@ export default function ReportGeneration() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
-                className="absolute inset-0 grid grid-cols-1 gap-4 overflow-y-auto p-4 md:grid-cols-[minmax(0,1fr)_260px] md:p-6"
+                className="absolute inset-0 grid grid-cols-1 gap-2 overflow-y-auto p-0 sm:gap-4 sm:p-4 md:grid-cols-[minmax(0,1fr)_260px] md:p-6"
               >
-                <div className="relative h-[390px] overflow-hidden border border-[#DCE8EE] bg-white p-6 sm:p-7">
+                <div className="relative h-[360px] overflow-hidden border border-[#DCE8EE] bg-white p-4 sm:h-[390px] sm:p-7">
                   <div className="flex items-start justify-between border-b border-[#DCE8EE] pb-4">
                     <div>
                       <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Evidence match</p>
@@ -188,7 +188,7 @@ export default function ReportGeneration() {
                   </div>
 
                   <div ref={evidenceScrollRef} className="h-full overflow-y-auto pr-2 [scrollbar-width:thin]">
-                  <div className="mt-5 space-y-3 text-[12px] leading-6 text-[#4D5B66] sm:text-[13px]">
+                  <div className="mt-3 space-y-2 text-[11px] leading-5 text-[#4D5B66] sm:mt-5 sm:space-y-3 sm:text-[13px] sm:leading-6">
                     <p>
                       Amazon received fewer units than the inbound shipment record shows were shipped.{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">60 shipped, 46 received</MetadataHighlight>{' '}
@@ -207,7 +207,7 @@ export default function ReportGeneration() {
                     <p>Margin is comparing shipment, receipt, and reimbursement records to determine whether the gap can move into a case.</p>
                   </div>
 
-                  <div className="mt-4 border-t border-[#DCE8EE] pt-3">
+                  <div className="mt-3 border-t border-[#DCE8EE] pt-2 sm:mt-4 sm:pt-3">
                     <div className="space-y-2 font-google-sans text-[11px] leading-5 text-[#25313A]">
                       <p>
                         <span className="font-medium uppercase tracking-tight text-[#66737F]">Shipment</span>{' '}
@@ -238,7 +238,7 @@ export default function ReportGeneration() {
                   </div>
                 </div>
 
-                <aside className="flex min-h-[260px] flex-col bg-transparent px-1 py-2 md:min-h-0 md:py-0">
+                <aside className="flex min-h-[230px] flex-col bg-transparent px-1 py-1 md:min-h-0 md:py-0">
                   <div className="flex items-center justify-between">
                     <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Metadata Identified</p>
                     <span className="font-google-sans text-[10px] font-medium text-[#8A99A4]">{extractedCount}/{METADATA.length}</span>
