@@ -313,7 +313,12 @@ export default function ReportGeneration() {
               >
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-3">
-                    <h2 className="text-sm font-medium tracking-tight text-[#182026]">Case Built</h2>
+                    <h2 className="flex items-center gap-2 text-sm font-medium tracking-tight text-[#182026]">
+                      Case Built
+                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#32B768] text-white shadow-[0_2px_6px_rgba(50,183,104,0.28)]" aria-label="Case built and verified">
+                        <Check className="h-2.5 w-2.5" strokeWidth={3.2} />
+                      </span>
+                    </h2>
                     <p className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</p>
                   </div>
 
