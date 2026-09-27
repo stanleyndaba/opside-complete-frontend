@@ -383,31 +383,27 @@ function HistoricalVideoPreviewSections() {
   );
 }
 
-const heroShapePoint = (shape: number, t: number, centerX: number, centerY: number, scale: number, phase: number) => {
-  const angle = t * Math.PI * 2 + phase;
-  if (shape === 0) return { x: centerX + Math.cos(angle) * scale, y: centerY + Math.sin(angle) * scale * 0.78 };
-  if (shape === 1) {
-    const radius = scale * (0.78 + Math.cos(angle * 5) * 0.18);
-    return { x: centerX + Math.cos(angle) * radius, y: centerY + Math.sin(angle) * radius * 0.86 };
-  }
-  if (shape === 2) return { x: centerX + (t * 2 - 1) * scale * 1.25, y: centerY + Math.sin(t * Math.PI * 4 + phase) * scale * 0.7 };
-  if (shape === 3) return { x: centerX + Math.sin(angle * 2) * scale, y: centerY + Math.cos(angle * 3) * scale * 0.7 };
-  return { x: centerX + Math.cos(angle) * scale * (0.45 + 0.3 * Math.sin(angle * 3)), y: centerY + Math.sin(angle) * scale * (0.8 + 0.18 * Math.cos(angle * 2)) };
+const heroSwirlPoint = (t: number, centerX: number, centerY: number, scale: number, phase: number) => {
+  const angle = t * Math.PI * 5.5 + phase;
+  const radius = scale * (0.08 + t * 0.92);
+  return {
+    x: centerX + Math.cos(angle) * radius * 1.35,
+    y: centerY + Math.sin(angle) * radius * 0.78,
+  };
 };
 
-const heroSwarmParticles = Array.from({ length: 1260 }, (_, index) => {
-  const column = index % 42;
-  const row = Math.floor(index / 42);
+const heroSwarmParticles = Array.from({ length: 2460 }, (_, index) => {
+  const column = index % 60;
+  const row = Math.floor(index / 60);
   const layer = Math.floor(index / 315);
   const t = (index % 315) / 315;
-  const startX = 2 + column * 2.35 + ((row * 17) % 6);
-  const startY = 3 + row * 3.1 + ((column * 11) % 5);
+  const startX = 1 + column * 1.68 + ((row * 17) % 5);
+  const startY = 2 + row * 2.25 + ((column * 11) % 4);
   const centerX = 50;
   const centerY = 51;
-  const scale = 12.5 + layer * 1.7;
-  const targetA = heroShapePoint(1, t, centerX, centerY, scale, layer * 0.18);
-  const targetB = heroShapePoint(2, t, centerX, centerY, scale * 1.08, layer * 0.25);
-  const targetC = heroShapePoint(4, t, centerX, centerY, scale * 0.92, layer * 0.32);
+  const scale = 10 + layer * 1.6;
+  const targetA = heroSwirlPoint(t, centerX, centerY, scale, layer * 0.08);
+  const targetB = heroSwirlPoint(t, centerX, centerY, scale * 1.04, layer * 0.1);
   return {
     id: index,
     startX,
@@ -416,8 +412,6 @@ const heroSwarmParticles = Array.from({ length: 1260 }, (_, index) => {
     formAY: targetA.y,
     formBX: targetB.x,
     formBY: targetB.y,
-    formCX: targetC.x,
-    formCY: targetC.y,
     radius: index % 13 === 0 ? 0.18 : index % 5 === 0 ? 0.16 : 0.14,
     tone: index % 17 === 0 ? "#0B74DE" : index % 11 === 0 ? "#52616A" : index % 7 === 0 ? "#8A99A3" : "#182026",
     delay: ((index * 37) % 100) / 100 * 1.2,
@@ -438,19 +432,14 @@ function HeroSwarmBackground({ reduceMotion }: { reduceMotion: boolean | null })
             r={particle.radius}
             fill={particle.tone}
             animate={reduceMotion ? { cx: particle.formAX, cy: particle.formAY, opacity: 0.42 } : {
-              cx: [particle.startX, particle.formAX, particle.formAX, particle.formBX, particle.formBX, particle.formCX, particle.formCX, particle.startX + ((particle.id % 5) - 2) * 2],
-              cy: [particle.startY, particle.formAY, particle.formAY, particle.formBY, particle.formBY, particle.formCY, particle.formCY, particle.startY + ((particle.id % 7) - 3) * 2],
-              opacity: [0.28, 0.72, 0.9, 0.68, 0.86, 0.72, 0.9, 0.28],
+              cx: [particle.startX, particle.formAX, particle.formAX, particle.formBX, particle.formBX, particle.startX + ((particle.id % 5) - 2) * 2],
+              cy: [particle.startY, particle.formAY, particle.formAY, particle.formBY, particle.formBY, particle.startY + ((particle.id % 7) - 3) * 2],
+              opacity: [0.28, 0.72, 0.9, 0.78, 0.9, 0.28],
             }}
-            transition={reduceMotion ? { duration: 0 } : { duration: 24, delay: particle.delay, repeat: Infinity, ease: "easeInOut", times: [0, 0.16, 0.28, 0.42, 0.54, 0.68, 0.8, 1] }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 24, delay: particle.delay, repeat: Infinity, ease: "easeInOut", times: [0, 0.28, 0.44, 0.62, 0.78, 1] }}
           />
         ))}
       </svg>
-      <motion.div
-        className="absolute right-[15%] top-[49%] h-16 w-16 rounded-full border border-[#0B74DE]/15"
-        animate={reduceMotion ? undefined : { scale: [0.8, 1, 0.8], opacity: [0.08, 0.22, 0.08] }}
-        transition={reduceMotion ? undefined : { duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-      />
     </div>
   );
 }
