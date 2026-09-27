@@ -38,7 +38,6 @@ export default function FinancialReconciliation() {
         <section className="border-b border-[#DCE5E5] pb-5 sm:pb-6" aria-labelledby="approved-reimbursements-title">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Verified outcomes</p>
               <h2 id="approved-reimbursements-title" className="mt-1 font-google-sans text-[22px] leading-tight tracking-[-0.035em] text-[#182026]">Reconciled cases</h2>
               <p className="mt-1 max-w-[680px] text-[12px] leading-5 text-[#66737F]">Cases with both a recorded approval and positive payment evidence linked to the tenant&apos;s financial event trail.</p>
             </div>
@@ -49,7 +48,7 @@ export default function FinancialReconciliation() {
             <p className="mt-2"><span className="font-semibold text-[#182026]">Payout proof:</span> 7 entries expose a recorded settlement, payout batch, or event reference, so the financial record can be followed from approval to payment.</p>
           </div>
           <div className="mt-3 flex items-center gap-3 rounded-[8px] border border-[#E2E8E7] bg-white px-3 py-2 text-[11px] text-[#8A99A5]">
-            <span className="text-[16px]">⌕</span><span className="flex-1">Query outcomes by case ID, seller, or amount...</span><span className="rounded-[5px] bg-[#F1F3F4] px-2 py-1 font-google-sans text-[10px] text-[#66737F]">⌘ K</span>
+            <span className="text-[16px]">⌕</span><span className="flex-1">Query outcomes by case ID</span><span className="rounded-[5px] bg-[#F1F3F4] px-2 py-1 font-google-sans text-[10px] text-[#66737F]">⌘ K</span>
           </div>
           <div className="mt-5">
             {verifiedOutcomes.map(([outcome, seller, registry, amazonCase, reimbursed, closeout, settlement, recorded], index) => <article key={registry} className="relative grid grid-cols-[20px_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[22px_minmax(0,1fr)] sm:gap-4">
