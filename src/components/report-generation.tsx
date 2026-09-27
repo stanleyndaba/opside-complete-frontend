@@ -241,9 +241,9 @@ export default function ReportGeneration() {
                           initial={{ opacity: 0, x: 56, scale: 0.92 }}
                           animate={{ opacity: 1, x: 0, scale: 1 }}
                           transition={spring}
-                          className="flex items-center gap-2.5 rounded-[5px] bg-[#182026] px-3 py-2.5 text-white shadow-[0_8px_18px_rgba(24,32,38,0.12)]"
+                          className="flex items-center gap-2.5 rounded-[5px] border border-[#DCE8EE] bg-white px-3 py-2.5 text-[#33404A] shadow-[0_8px_18px_rgba(24,32,38,0.12)]"
                         >
-                          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white text-[#182026]">
+                          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#182026] text-white">
                             <Check className="h-2.5 w-2.5" strokeWidth={3} />
                           </span>
                           <span className="text-[11px] font-medium">{item.label}</span>
