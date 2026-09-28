@@ -140,7 +140,7 @@ export default function ReportGeneration() {
         setEvidenceMatches(new Set());
         setPhase('extracting');
         setRunId((current) => current + 1);
-      }, 5000);
+      }, 3500);
       return () => window.clearTimeout(timer);
     }
   }, [phase]);
@@ -352,17 +352,17 @@ export default function ReportGeneration() {
               >
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-3">
-                    <h2 className="flex items-center gap-2 text-sm font-medium tracking-tight text-[#182026]">
+                    <motion.h2 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.12 }} className="flex items-center gap-2 text-sm font-medium tracking-tight text-[#182026]">
                       Case Built
-                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#32B768] text-white shadow-[0_2px_6px_rgba(50,183,104,0.28)]" aria-label="Case built and verified">
+                      <motion.span initial={{ opacity: 0, scale: 0.45 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', stiffness: 480, damping: 20, delay: 0.42 }} className="flex h-4 w-4 items-center justify-center rounded-full bg-[#32B768] text-white shadow-[0_2px_6px_rgba(50,183,104,0.28)]" aria-label="Case built and verified">
                         <Check className="h-2.5 w-2.5" strokeWidth={3.2} />
-                      </span>
-                    </h2>
-                    <p className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</p>
+                      </motion.span>
+                    </motion.h2>
+                    <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.3 }} className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</motion.p>
                   </div>
 
-                  <article className="mt-6 flex flex-col items-center gap-5 sm:mt-0 sm:flex-row sm:items-center">
-                    <div className="relative hidden h-[116px] w-[86px] shrink-0 sm:block">
+                  <motion.article initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: 'easeOut', delay: 0.48 }} className="mt-6 flex flex-col items-center gap-5 sm:mt-0 sm:flex-row sm:items-center">
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45, ease: 'easeOut', delay: 0.58 }} className="relative hidden h-[116px] w-[86px] shrink-0 sm:block">
                       <div className="absolute inset-0 translate-x-2.5 -rotate-2 border border-[#DCE8EE] bg-white/45" />
                       <div className="absolute inset-0 translate-x-1 rotate-1 border border-[#DCE8EE] bg-white/70" />
                       <div className="absolute inset-0 border border-[#DCE8EE] bg-white p-2.5">
@@ -390,29 +390,29 @@ export default function ReportGeneration() {
                         </div>
                         <span className="absolute bottom-1.5 right-2 text-[6px] text-[#B7C0C9]">1/14</span>
                       </div>
-                    </div>
+                    </motion.div>
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
-                      <h3 className="text-[15px] font-bold tracking-tight text-[#182026] sm:text-base">Claim Submission Package</h3>
-                      <p className="mt-1.5 font-google-sans text-[10px] uppercase tracking-tight text-[#8A8F98] sm:text-[11px]">
+                      <motion.h3 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.62 }} className="text-[15px] font-bold tracking-tight text-[#182026] sm:text-base">Claim Submission Package</motion.h3>
+                      <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.72 }} className="mt-1.5 font-google-sans text-[10px] uppercase tracking-tight text-[#8A8F98] sm:text-[11px]">
                         FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: NOV 12 2025&nbsp;&nbsp; VERIFIED
-                      </p>
+                      </motion.p>
 
-                      <div className="mt-2.5 flex flex-wrap gap-1.5 sm:justify-start justify-center">
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.82 }} className="mt-2.5 flex flex-wrap justify-center gap-1.5 sm:justify-start">
                         {[
                           'Recovery summary', 'Claim type', 'Shipment timeline',
                           'Required evidence checklist', 'Invoice', 'BOL', 'POD',
                           'ASIN/FNSKU mapping', 'Quantity comparison', 'Cost basis',
                           'Case narrative', 'Attachment index', 'Filing deadline', 'Seller approval status'
-                        ].map((item) => (
-                          <span key={item} className="inline-flex items-center gap-1 rounded-[2px] border-0 bg-[#EEF1F3] px-2 py-0.5 text-[9px] font-medium text-[#30373C]">
+                        ].map((item, index) => (
+                          <motion.span key={item} initial={{ opacity: 0, y: 7, scale: 0.94 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.28, ease: 'easeOut', delay: 0.84 + index * 0.055 }} className="inline-flex items-center gap-1 rounded-[2px] border-0 bg-[#EEF1F3] px-2 py-0.5 text-[9px] font-medium text-[#30373C]">
                             <Check className="h-2.5 w-2.5 text-emerald-500" />
                             {item}
-                          </span>
+                          </motion.span>
                         ))}
-                      </div>
+                      </motion.div>
 
-                      <div className="mt-4 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 1.7 }} className="mt-4 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
@@ -428,9 +428,9 @@ export default function ReportGeneration() {
                           <Download className="h-3.5 w-3.5" />
                           Download
                         </button>
-                      </div>
+                      </motion.div>
                     </div>
-                  </article>
+                  </motion.article>
                 </div>
               </motion.div>
             )}
