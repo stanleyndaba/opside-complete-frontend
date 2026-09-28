@@ -306,6 +306,7 @@ const App = () => (
                         <Route path='/evidence-required' element={<EvidenceRequired />} />
                         <Route path='/amazon-thread-review' element={<AmazonThreadReview />} />
                         <Route path='/progress-review' element={<ProgressReview />} />
+                        <Route path='/progress-preview' element={<ProgressReview />} />
                         <Route path='/financial-reconciliation' element={<FinancialReconciliation />} />
                         <Route path='/appeals-review' element={<AppealsReview />} />
                         <Route path="/login" element={<Login />} />
