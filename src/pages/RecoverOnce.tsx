@@ -34,8 +34,8 @@ export default function RecoverOnce() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
-      <header className="sticky top-0 z-50 border-b border-[#E8E7E1] bg-[#FBFAF7]/95 backdrop-blur">
+    <div className="min-h-screen overflow-x-hidden bg-white font-google-sans text-[#191B20]">
+      <header className="sticky top-0 z-50 border-b border-[#E8E7E1] bg-white backdrop-blur">
         <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-6">
           <div className="min-w-0 px-1.5 py-1.5">
             <p className="text-[11px] font-medium tracking-tight text-[#595E68]">FBA Selling Partner Audit</p>
@@ -43,7 +43,6 @@ export default function RecoverOnce() {
           </div>
           <Link to="/" title="Margin home" className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
             <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
-            <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
           </Link>
         </div>
       </header>
@@ -111,7 +110,7 @@ export default function RecoverOnce() {
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">The operation</p>
               <h2 id="after-approval" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 text-[15px] font-normal leading-tight tracking-[-0.02em]">What happens after approval</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Once you approve and payment is completed, the <mark className="rounded-[2px] px-0.5 font-normal bg-[#E9F3EC] text-[#26734D]">typical first submission target is 1–2 business days after approval</mark>, assuming the available evidence is sufficient to prepare the response.</p>
-              <div className="mt-2 grid gap-2 sm:grid-cols-2">{operationSteps.map((step, index) => <div key={step} className="flex items-start gap-3 px-1 py-1"><span className="w-5 shrink-0 font-mono text-[11px] font-semibold text-[#3F51A8]">{index + 1}</span><span className={`text-[13px] leading-5 ${index === operationSteps.length - 1 ? 'font-semibold text-[#191B20]' : 'text-[#595E68]'}`}>{step}</span></div>)}</div>
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">{operationSteps.map((step, index) => <div key={step} className="flex items-start gap-3 px-1 py-1"><span className="w-5 shrink-0 text-[11px] font-semibold text-[#3F51A8]">{index + 1}</span><span className={`text-[13px] leading-5 ${index === operationSteps.length - 1 ? 'font-semibold text-[#191B20]' : 'text-[#595E68]'}`}>{step}</span></div>)}</div>
               <p className="mt-1.5 text-[12px] leading-5 text-[#595E68]">Amazon&apos;s response time and final decision are outside Margin&apos;s control.</p>
             </section>
 
