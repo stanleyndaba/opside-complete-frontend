@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Check, CheckCircle2, Download, FileText, X } from 'lucide-react';
+import { ArrowRight, Check, CheckCircle2, Download, X } from 'lucide-react';
 
 type Phase = 'extracting' | 'compiling' | 'output';
 
@@ -201,15 +201,13 @@ export default function ReportGeneration() {
                 <div className="relative h-[360px] overflow-hidden border border-[#DCE8EE] bg-white p-4 sm:h-[390px] sm:p-7">
                   <div className="flex items-start justify-between border-b border-[#DCE8EE] pb-4">
                     <div>
-                      <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Evidence match</p>
-                      <h2 className="mt-1 text-base font-semibold text-[#182026]">Inbound shipment shortage</h2>
+                      <h2 className="text-base font-semibold tracking-tight text-[#182026]">Inbound shipment shortage</h2>
                       <p className="mt-1 text-[11px] text-[#8A99A4]">Shipment, receipt, and reimbursement records</p>
                     </div>
-                    <FileText className="h-5 w-5 text-[#B9C4CC]" />
                   </div>
 
                   <div ref={evidenceScrollRef} className="h-full overflow-y-auto pr-2 [scrollbar-width:thin]">
-                  <div className="mt-3 space-y-2 text-[11px] leading-5 text-[#4D5B66] sm:mt-5 sm:space-y-3 sm:text-[13px] sm:leading-6">
+                  <div className="mt-2 space-y-1.5 text-[10.5px] leading-[1.15rem] text-[#4D5B66] sm:mt-4 sm:space-y-2.5 sm:text-[13px] sm:leading-6">
                     <p>
                       Amazon received fewer units than the{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('inbound-record')} tone="amber">inbound shipment record</MetadataHighlight>{' '}
@@ -247,7 +245,7 @@ export default function ReportGeneration() {
                   </div>
 
                   <div className="mt-3 border-t border-[#DCE8EE] pt-2 sm:mt-4 sm:pt-3">
-                    <div className="space-y-2 font-google-sans text-[11px] leading-5 text-[#25313A]">
+                    <div className="space-y-1.5 font-google-sans text-[10.5px] leading-[1.15rem] text-[#25313A]">
                       <p>
                         <span className="font-medium uppercase tracking-tight text-[#66737F]">Shipment</span>{' '}
                         Shipment <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">FBA17ACME001</MetadataHighlight> ·{' '}
@@ -265,7 +263,7 @@ export default function ReportGeneration() {
                         <MetadataHighlight active={isEvidenceMatchActive('sync')} tone="amber">acme-sync-20260420</MetadataHighlight>
                       </p>
                     </div>
-                    <div className="mt-2 border-t border-[#E8EFF3] pt-2 font-google-sans text-[11px] leading-5 text-[#25313A]">
+                    <div className="mt-1.5 border-t border-[#E8EFF3] pt-1.5 font-google-sans text-[10.5px] leading-[1.15rem] text-[#25313A]">
                       <p>
                         <span className="font-medium uppercase tracking-tight text-[#66737F]">Case readiness</span>{' '}
                         <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Claim candidate</MetadataHighlight> · Deadline{' '}
