@@ -311,13 +311,13 @@ export default function ReportGeneration() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, scale: 1.04 }}
-                className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden p-8"
+                className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden p-6 text-center sm:p-8"
               >
-                <div className="relative flex h-56 w-full max-w-xl items-center justify-center">
+                <div className="relative flex h-56 w-full max-w-2xl items-center justify-center">
                   {METADATA.map((item, index) => (
                     <motion.div
                       key={item.label}
-                      initial={{ opacity: 1, x: -230, y: (index - (METADATA.length - 1) / 2) * 28, scale: 1 }}
+                      initial={{ opacity: 1, x: index % 2 === 0 ? -250 : 250, y: (index - (METADATA.length - 1) / 2) * 28, scale: 1 }}
                       animate={{ opacity: [1, 1, 0], x: 0, y: 0, scale: 0.7 }}
                       transition={{ duration: 1.4, delay: index * 0.12, ease: 'easeInOut' }}
                     className="absolute border border-[#DCE8EE] bg-white px-4 py-2.5 text-xs font-medium text-[#33404A]"
