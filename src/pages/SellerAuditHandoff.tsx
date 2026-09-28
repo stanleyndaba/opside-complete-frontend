@@ -77,12 +77,16 @@ export default function SellerAuditHandoff() {
         <div>
           <section className="mx-auto max-w-2xl rounded-[12px] bg-white/90 font-google-sans px-3.5 py-4 shadow-[0_16px_48px_rgba(50,78,96,0.1)] backdrop-blur-sm sm:px-8 sm:py-8" aria-labelledby="handoff-title">
             <div className="mx-auto border-b border-[#E4E6E8] pb-4 sm:pb-6">
-              <h1 id="handoff-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Let’s get your files to Margin.</h1>
-              <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">Give us the small amount of context we need to connect your files to the right audit conversation.</p>
+              <h1 id="handoff-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Send your files to Margin.</h1>
+              <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">Add two quick details, then send the Amazon records you already have. You can send multiple files at once.</p>
             </div>
 
             {!submitted ? (
               <form className="mx-auto mt-4 max-w-xl space-y-3.5 sm:mt-6 sm:space-y-4" onSubmit={(event) => { event.preventDefault(); continueToUpload(); }} noValidate>
+                <div className="rounded-[9px] bg-[#F5F7F8] px-3 py-3 text-[13px] leading-5 text-[#595E68]">
+                  <p className="font-semibold text-[#30343B]">Useful files can include:</p>
+                  <p className="mt-1">Amazon reports, settlement or payment reports, inventory or FBA reports, returns, and refunds. Send what you have—there is no need to organize everything perfectly.</p>
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="handoff-email" className="text-[13px] font-semibold text-[#30343B]">Email <span className="text-[#A73549]">*</span></Label>
                   <div className="relative"><Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777A82]" aria-hidden="true" /><Input id="handoff-email" type="email" autoComplete="email" placeholder="you@example.com" value={details.email} onChange={(event) => updateDetails('email', event.target.value)} className="h-10 rounded-[9px] border-[#D7D7D1] pl-10 text-[14px] focus-visible:ring-[#5165C7]" aria-invalid={Boolean(errors.email)} /></div>
@@ -106,13 +110,13 @@ export default function SellerAuditHandoff() {
               </form>
             ) : (
               <div className="mx-auto mt-6 max-w-xl border-t border-[#E4E6E8] pt-6">
-                <div className="flex items-start gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EEF0FB] text-[#3F51A8]"><Check className="h-4 w-4" aria-hidden="true" /></span><div><h2 className="text-[17px] font-semibold text-[#191B20]">You’re ready to send your files.</h2><p className="mt-1 text-[14px] leading-5 text-[#595E68]">Upload the Amazon files you have. You can send multiple files at once.</p></div></div>
+                <div className="flex items-start gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EEF0FB] text-[#3F51A8]"><Check className="h-4 w-4" aria-hidden="true" /></span><div><h2 className="text-[17px] font-semibold text-[#191B20]">Your upload step is ready.</h2><p className="mt-1 text-[14px] leading-5 text-[#595E68]">Send the Amazon files you have. Multiple files are fine, and you do not need to prepare a perfect package before you begin.</p></div></div>
                 <Button type="button" onClick={() => DROPBOX_REQUEST_URL ? window.open(DROPBOX_REQUEST_URL, '_blank', 'noopener,noreferrer') : toast({ variant: 'destructive', title: 'Upload link is being connected', description: 'The Dropbox File Request URL still needs to be configured.' })} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE] sm:w-auto">Upload my files <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
                 {!DROPBOX_REQUEST_URL ? <p className="mt-3 text-[12px] text-[#A73549]">Dropbox File Request URL is not configured yet.</p> : null}
               </div>
             )}
 
-            <p className="mx-auto mt-6 max-w-xl border-t border-[#E4E6E8] pt-4 text-[12px] leading-5 text-[#777A82]">If we need anything else for your review, Margin will reach out by email.</p>
+            <p className="mx-auto mt-6 max-w-xl border-t border-[#E4E6E8] pt-4 text-[12px] leading-5 text-[#777A82]">After the upload, Margin will review the records and contact you by email if anything else is needed.</p>
           </section>
         </div>
         </div>

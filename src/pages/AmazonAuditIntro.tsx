@@ -12,20 +12,20 @@ import { SITE_META } from '@/config/site';
  */
 const auditSteps = [
   {
-    title: 'Tell us who you are',
-    description: 'We’ll ask for a few quick details so we can associate your files with your Audit.',
+    title: 'Add your details',
+    description: 'Give us your email and seller or business name so we know whose records we are reviewing.',
   },
   {
-    title: 'Upload your Amazon files',
-    description: 'You’ll be taken to a secure upload page where you can send multiple files at once.',
+    title: 'Send the files you have',
+    description: 'Upload your Amazon reports and supporting records. Multiple files are fine, and you can send what you have available.',
   },
   {
-    title: 'Margin investigates',
-    description: 'We’ll review the records, identify what needs attention, and gather more information if necessary.',
+    title: 'Margin reviews the records',
+    description: 'We run the records through the audit and review the findings for meaningful discrepancies.',
   },
   {
-    title: 'We come back with the result',
-    description: 'Once the Audit is complete, we’ll show you what we found and what happens next.',
+    title: 'Receive your audit result',
+    description: 'We come back with what we found and the recovery path that best fits the result.',
   },
 ];
 
@@ -60,19 +60,17 @@ export default function AmazonAuditIntro() {
 
           {mobileStep === 1 ? (
             <div className="pt-4">
-              <p className="text-[14px] leading-6 text-[#595E68]">To investigate your account properly, Margin will first ask you for the Amazon files relevant to your Audit.</p>
-              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">These records give us a detailed view of what happened across your Amazon business — so we can look beyond a single issue and investigate what may have been missed.</p>
+              <p className="text-[14px] leading-6 text-[#595E68]">To start the Audit, send the Amazon files you already have available.</p>
+              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You do not need to know which discrepancy to look for or prepare a perfect package. The records give us the material to investigate what may have been missed.</p>
               <Button type="button" onClick={() => setMobileStep(2)} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE]">Understood <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             </div>
           ) : null}
 
           {mobileStep === 2 ? (
             <div className="pt-4">
-              <h2 className="font-google-sans text-[20px] font-normal tracking-[-0.015em] text-[#30343B]">Files come first</h2>
-              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Uploading your files gives Margin the broadest view of your account and allows us to perform a deeper Audit.</p>
-              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">If we need additional information to complete the investigation, we may ask you to connect your Amazon account through <strong className="font-semibold text-[#30343B]">Amazon SP-API</strong> so Margin can retrieve the additional records needed.</p>
-              <p className="mt-3 text-[14px] font-medium leading-6 text-[#30343B]">You don’t need to decide that now.</p>
-              <p className="mt-1 text-[14px] font-semibold leading-6 text-[#30343B]">We’ll tell you if we need anything else.</p>
+              <h2 className="font-google-sans text-[20px] font-normal tracking-[-0.015em] text-[#30343B]">Send what you have</h2>
+              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon reports, settlement or payment reports, inventory, FBA, returns, and refund records can all help. Multiple files are fine.</p>
+              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You do not need to organize the files perfectly or connect Amazon at this stage. Margin will tell you if anything else is needed.</p>
               <Button type="button" onClick={() => setMobileStep(3)} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE]">Continue <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             </div>
           ) : null}
@@ -95,18 +93,15 @@ export default function AmazonAuditIntro() {
 
         <section className="mx-auto hidden max-w-2xl rounded-[14px] bg-white/90 px-4 py-5 shadow-[0_20px_70px_rgba(50,78,96,0.12)] backdrop-blur-sm sm:px-8 sm:py-8 md:block" aria-labelledby="audit-intro-title">
           <div className="border-b border-[#E4E6E8] pb-6 sm:pb-8">
-            <p className="mb-3 text-[11px] font-medium text-[#777A82] sm:mb-4 sm:text-[12px]">File-first Audit</p>
-            <h1 id="audit-intro-title" className="font-lora text-[28px] font-normal leading-[1.06] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Let’s get your Amazon Audit started.</h1>
-            <p className="mt-4 max-w-xl text-[14px] leading-6 text-[#595E68]">To investigate your account properly, Margin will first ask you for the Amazon files relevant to your Audit.</p>
-            <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">These records give us a detailed view of what happened across your Amazon business — so we can look beyond a single issue and investigate what may have been missed.</p>
+            <h1 id="audit-intro-title" className="font-lora text-[28px] font-normal leading-[1.06] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Get your Amazon Audit started.</h1>
+            <p className="mt-4 max-w-xl text-[14px] leading-6 text-[#595E68]">Start by sending the Amazon files you already have available.</p>
+            <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">You do not need to know which discrepancy to look for or prepare a perfect package. The records give Margin the material to investigate what may have been missed.</p>
           </div>
 
           <div className="mt-5 border-b border-[#E4E6E8] pb-5 sm:mt-6 sm:pb-6">
-            <h2 className="font-lora text-[21px] font-normal tracking-[-0.015em] text-[#30343B] sm:text-[23px]">Files come first</h2>
-            <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Uploading your files gives Margin the broadest view of your account and allows us to perform a deeper Audit.</p>
-            <p className="mt-4 text-[14px] leading-6 text-[#595E68]">If we need additional information to complete the investigation, we may ask you to connect your Amazon account through <strong className="font-semibold text-[#30343B]">Amazon SP-API</strong> so Margin can retrieve the additional records needed.</p>
-            <p className="mt-4 text-[14px] font-medium leading-6 text-[#30343B]">You don’t need to decide that now.</p>
-            <p className="mt-1 text-[14px] font-semibold leading-6 text-[#30343B]">We’ll tell you if we need anything else.</p>
+            <h2 className="font-lora text-[21px] font-normal tracking-[-0.015em] text-[#30343B] sm:text-[23px]">Send what you have</h2>
+            <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon reports, settlement or payment reports, inventory, FBA, returns, and refund records can all help. Multiple files are fine.</p>
+            <p className="mt-4 text-[14px] leading-6 text-[#595E68]">You do not need to organize the files perfectly or connect Amazon at this stage. Margin will tell you if anything else is needed.</p>
           </div>
 
           <div className="mt-6 sm:mt-7" aria-labelledby="audit-next-title">
