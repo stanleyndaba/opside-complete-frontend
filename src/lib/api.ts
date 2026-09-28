@@ -1093,6 +1093,32 @@ export const api = {
   // Admin: Revenue analytics
   getAdminRevenue: () => requestJson<any>('/api/admin/revenue'),
 
+  submitSellerAuditIntake: (data: {
+    intake_type: 'seller_audit';
+    email: string;
+    business_name: string;
+    report_type?: string;
+    audit_period?: string;
+  }) => requestJson<{
+    success: boolean;
+    lead_id: string;
+    status: string;
+    created_at: string;
+    message: string;
+  }>('/api/sales-leads', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+
+  updateSellerAuditIntakeStatus: (leadId: string, status: 'upload_opened' | 'upload_confirmed') => requestJson<{
+    success: boolean;
+    lead_id: string;
+    intake_status: string;
+  }>(`/api/sales-leads/${encodeURIComponent(leadId)}/intake-status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  }),
+
   // Waitlist
   joinWaitlist: (data: {
     email: string;

@@ -1,9 +1,11 @@
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
+import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
+import { trackEvent } from '@/lib/analytics';
 
 /**
  * Design reminder: keep this page pure white, editorial, and reassuring.
@@ -25,13 +27,16 @@ const auditSteps = [
   },
   {
     title: 'Receive your audit result',
-    description: 'We come back with what we found and the recovery path that best fits the result.',
+    description: 'We come back with what we found and the recovery path that best fits the result, typically within one business day.',
   },
 ];
 
 export default function AmazonAuditIntro() {
   const navigate = useNavigate();
   const [mobileStep, setMobileStep] = useState(1);
+  useEffect(() => {
+    trackEvent(ANALYTICS_EVENTS.sellerAuditStarted, { source_page: '/audit-start' });
+  }, []);
 
   usePageMeta({
     title: 'Start Your Amazon Audit | Margin',
@@ -69,7 +74,7 @@ export default function AmazonAuditIntro() {
           {mobileStep === 2 ? (
             <div className="pt-4">
               <h2 className="font-google-sans text-[20px] font-normal tracking-[-0.015em] text-[#30343B]">Send what you have</h2>
-              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon reports, settlement or payment reports, inventory, FBA, returns, and refund records can all help. Multiple files are fine.</p>
+              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon reports, settlement or payment reports, inventory, FBA, returns, and refund records can all help. CSV, XLSX, PDF, and ZIP files are fine.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You do not need to organize the files perfectly or connect Amazon at this stage. Margin will tell you if anything else is needed.</p>
               <Button type="button" onClick={() => setMobileStep(3)} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE]">Continue <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             </div>
@@ -100,7 +105,7 @@ export default function AmazonAuditIntro() {
 
           <div className="mt-5 border-b border-[#E4E6E8] pb-5 sm:mt-6 sm:pb-6">
             <h2 className="font-lora text-[21px] font-normal tracking-[-0.015em] text-[#30343B] sm:text-[23px]">Send what you have</h2>
-            <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon reports, settlement or payment reports, inventory, FBA, returns, and refund records can all help. Multiple files are fine.</p>
+            <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon reports, settlement or payment reports, inventory, FBA, returns, and refund records can all help. CSV, XLSX, PDF, and ZIP files are fine.</p>
             <p className="mt-4 text-[14px] leading-6 text-[#595E68]">You do not need to organize the files perfectly or connect Amazon at this stage. Margin will tell you if anything else is needed.</p>
           </div>
 
