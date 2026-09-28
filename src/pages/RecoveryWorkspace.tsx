@@ -23,33 +23,32 @@ export default function RecoveryWorkspace() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
-      <header className="sticky top-0 z-50 border-b border-[#E8E7E1] bg-[#FBFAF7]/95 backdrop-blur">
-        <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-6">
+    <div className="min-h-screen overflow-x-hidden bg-white font-sans text-[#191B20]">
+      <header className="sticky top-0 z-50 bg-white">
+        <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-start gap-4 px-4 sm:px-6 lg:px-6">
           <div className="min-w-0 px-1.5 py-1.5">
             <p className="text-[11px] font-medium tracking-tight text-[#595E68]">FBA Selling Partner Audit</p>
             <p className="mt-0.5 text-[10px] tracking-tight text-[#858792]">27 June 2026 — 13:41 pm UTC</p>
           </div>
           <Link to="/" title="Margin home" className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
-            <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
             <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
           </Link>
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1180px] px-4 py-5 sm:px-6 sm:py-5 lg:px-6">
+      <main className="font-google-sans mx-auto max-w-[1180px] px-4 py-5 sm:px-6 sm:py-5 lg:px-6">
         <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
-          <article className="min-w-0 rounded-[16px] bg-white px-5 py-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:px-6 sm:py-5" aria-labelledby="recovery-workspace-title">
-            <header className="border-b border-[#E8E7E1] pb-7">
-              <h1 id="recovery-workspace-title" className="max-w-2xl font-lora text-[14px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[17px]">Complete view of your operation</h1>
+          <article className="order-1 min-w-0 rounded-none bg-white px-0 py-5 shadow-none sm:rounded-[16px] sm:px-6 sm:py-5 sm:shadow-[0_1px_2px_rgba(25,27,32,0.05)] lg:order-1" aria-labelledby="recovery-workspace-title">
+            <header className="pb-5">
+              <h1 id="recovery-workspace-title" className="max-w-2xl font-google-sans text-[14px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[17px]">Complete view of your operation</h1>
               <p className="mt-2 inline-block max-w-2xl text-[13px] leading-5 text-[#595E68] sm:text-[14px]">Investigation completed across <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">3,214 orders, 41 inbound shipments, 22 returns, 17 fee records, and 86 inventory movements</mark> in 7 minutes.</p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">We found the same type of recovery issue occurring across <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">4 independent incidents</mark> in separate periods.</p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">This is not one bounded event. The evidence indicates a <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">recurring recovery pattern</mark>.</p>
             </header>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="what-we-found">
-              <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">The pattern</mark></p>
-              <h2 id="what-we-found" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What we found</h2>
+            <section className="py-4" aria-labelledby="what-we-found">
+              <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">The pattern</mark></p>
+              <h2 id="what-we-found" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What we found</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">Inbound-shipment receiving discrepancies</mark> appeared in <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">4 independent incidents</mark>:</p>
               <ul className="mt-2 list-inside list-disc space-y-1.5 text-[14px] text-[#595E68]">
                 <li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">10 March 2026</mark> — 17 affected units across two related shipments; the receiving and inventory records diverge after the same supplier delivery</li>
@@ -59,30 +58,30 @@ export default function RecoveryWorkspace() {
               <p className="mt-2 text-[14px] leading-6 text-[#595E68]">These are separate incidents, not multiple records from one delivery, shipment, or event.</p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="what-this-means">
-              <h2 id="what-this-means" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What this means</h2>
+            <section className="py-4" aria-labelledby="what-this-means">
+              <h2 id="what-this-means" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What this means</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">A single recovery operation can address what has already happened.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">It does not address the fact that the same type of issue is continuing to appear.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">Recover Once closes a defined incident. Workspace keeps Margin responsible for the recurring recovery problem.</mark></p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="what-we-can-support">
-              <h2 id="what-we-can-support" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What we can support</h2>
+            <section className="py-4" aria-labelledby="what-we-can-support">
+              <h2 id="what-we-can-support" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What we can support</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Three incidents are supported enough to enter evidence preparation: the shipment manifests, carrier receiving records, and inventory adjustments align for 31 of the 44 affected units. One incident remains review-only while the settlement and payout records are reconciled.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">What remains unverified:</mark></p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">For 13 affected units, the available records do not yet establish whether Amazon has already reimbursed the units or what amount, if any, remains outstanding. Margin will not count those units as recovered or recoverable until that question is answered.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">We will not treat an unverified condition as a confirmed recovery opportunity.</p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="why-recovery-workspace">
-              <h2 id="why-recovery-workspace" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">Why Recovery Workspace</h2>
+            <section className="py-4" aria-labelledby="why-recovery-workspace">
+              <h2 id="why-recovery-workspace" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Why Recovery Workspace</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Your existing <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">3 qualifying incidents are included</mark> in Workspace.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">You do not pay another recovery fee to have Margin work on those incidents.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Workspace is for sellers who do not want recovery work to depend on remembering to look for the next problem after every incident.</p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="what-covers">
-              <h2 id="what-covers" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What $109/month covers</h2>
+            <section className="py-4" aria-labelledby="what-covers">
+              <h2 id="what-covers" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What $109/month covers</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Workspace includes:</p>
               <ul className="mt-2 list-inside list-disc space-y-1.5 text-[14px] text-[#595E68]">
                 <li>Recurring examination of the connected account data available to Margin</li>
@@ -107,8 +106,8 @@ export default function RecoveryWorkspace() {
               <p className="mt-3 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">If nothing new is found, Margin reports that honestly.</mark></p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="what-ongoing-means">
-              <h2 id="what-ongoing-means" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What "ongoing" means</h2>
+            <section className="py-4" aria-labelledby="what-ongoing-means">
+              <h2 id="what-ongoing-means" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What "ongoing" means</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Workspace examines the <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">connected account data available to Margin as new data becomes available</mark>.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">It is not a promise that a human or system checks every transaction every second.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">It means the recurring examination and recovery responsibility remains active while your Workspace subscription is active.</p>
@@ -118,16 +117,16 @@ export default function RecoveryWorkspace() {
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">There are <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">no percentage-based recovery fees</mark>. Margin takes <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">0% of Amazon reimbursements</mark>.</p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="existing-incidents">
-              <h2 id="existing-incidents" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">Existing incidents: what happens first</h2>
+            <section className="py-4" aria-labelledby="existing-incidents">
+              <h2 id="existing-incidents" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Existing incidents: what happens first</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Your <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">4 incidents already identified by this Audit are included</mark>.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Assuming the available evidence is sufficient, they typically enter evidence preparation within <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">1–2 business days after approval</mark>.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">New incidents follow their own preparation status and timing as new account data becomes available.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Amazon's response time is outside Margin's control.</p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="why-price">
-              <h2 id="why-price" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">Why $109/month?</h2>
+            <section className="py-4" aria-labelledby="why-price">
+              <h2 id="why-price" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Why $109/month?</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">You are not paying $109 because Margin promises a recovery every month.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">You are paying $109 so the <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">recurring examination, evidence work, follow-through, payout checking, and recovery history</mark> do not return to your own workload whenever the next issue appears.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">Recover Once means you bring each defined problem to Margin. Workspace means Margin keeps looking for the next one.</mark></p>
@@ -135,21 +134,21 @@ export default function RecoveryWorkspace() {
               <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">You keep 100% of whatever Amazon reimburses.</mark></p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="what-if-no">
-              <h2 id="what-if-no" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What happens if Amazon says no?</h2>
+            <section className="py-4" aria-labelledby="what-if-no">
+              <h2 id="what-if-no" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What happens if Amazon says no?</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">If Amazon rejects a recovery matter, Margin records the decision and reason, completes appropriate follow-up where the available evidence supports it, and records the final outcome.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">A rejected or unresolved matter is never represented as recovered.</p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="what-if-evidence">
-              <h2 id="what-if-evidence" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What if Amazon asks for more evidence?</h2>
+            <section className="py-4" aria-labelledby="what-if-evidence">
+              <h2 id="what-if-evidence" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What if Amazon asks for more evidence?</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">If the required evidence can be obtained from the connected account data or available sources, Margin continues the work.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">If the required evidence cannot be established, the matter is shown as <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">unresolved</mark> with the reason.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Margin does not manufacture evidence to keep a case alive.</p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="does-not-promise">
-              <h2 id="does-not-promise" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What Workspace does not promise</h2>
+            <section className="py-4" aria-labelledby="does-not-promise">
+              <h2 id="does-not-promise" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What Workspace does not promise</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Workspace does <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">not</mark> promise:</p>
               <ul className="mt-2 list-inside list-disc space-y-1.5 text-[14px] text-[#595E68]">
                 <li>A recovery every month</li>
@@ -162,8 +161,8 @@ export default function RecoveryWorkspace() {
               <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">Margin will tell you when that happens.</mark></p>
             </section>
 
-            <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="recover-once-vs-workspace">
-              <h2 id="recover-once-vs-workspace" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">Recover Once vs Workspace</h2>
+            <section className="py-4" aria-labelledby="recover-once-vs-workspace">
+              <h2 id="recover-once-vs-workspace" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Recover Once vs Workspace</h2>
               <div className="mt-3 grid gap-4 sm:grid-cols-2">
                 <div>
                   <h3 className="text-[14px] font-normal text-[#191B20]"><mark className="rounded-[2px] bg-[#FFF1A8] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">Recover Once</mark></h3>
@@ -177,9 +176,9 @@ export default function RecoveryWorkspace() {
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">If you would rather only resolve the <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">4 incidents already identified</mark>, Recover Once remains available for that defined scope.</p>
             </section>
 
-            <section className="pt-8" aria-labelledby="what-you-control">
-              <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">Seller-controlled</mark></p>
-              <h2 id="what-you-control" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What you control</h2>
+            <section className="pt-5" aria-labelledby="what-you-control">
+              <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Seller-controlled</mark></p>
+              <h2 id="what-you-control" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What you control</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">You remain in control of submissions.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">Nothing is filed or submitted to Amazon without your approval.</mark></p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You can cancel Workspace at any time.</p>
@@ -187,17 +186,17 @@ export default function RecoveryWorkspace() {
             </section>
           </article>
 
-          <aside className="lg:sticky lg:top-20" aria-label="Recovery Workspace decision summary">
-            <div className="rounded-[14px] border border-[#D7D7D1] bg-white p-5 shadow-[0_8px_24px_rgba(25,27,32,0.06)] sm:p-4">
-              <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">What happens after you approve</mark></p>
-              <h2 className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">The Workspace flow</h2>
+          <aside className="order-2 lg:sticky lg:top-20" aria-label="Recovery Workspace decision summary">
+            <div className="rounded-[14px] border border-[#D7D7D1] bg-white p-4 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-5">
+              <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">What happens after you approve</mark></p>
+              <h2 className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">The Workspace flow</h2>
               
-              <div className="mt-4 border-y border-[#E8E7E1] py-4">
+              <div className="mt-3 py-3">
                 <div className="grid gap-2">{operationSteps.map((step, index) => <div key={step} className="flex items-start gap-3 px-1 py-1"><span className="w-5 shrink-0 font-mono text-[11px] font-semibold text-[#3F51A8]">{index === 0 ? "✓" : "↓"}</span><span className={`text-[13px] leading-5 ${index === operationSteps.length - 1 ? 'font-normal text-[#191B20]' : 'text-[#595E68]'}`}>{index === operationSteps.length - 1 ? <mark className="rounded-[2px] bg-[#DDF4E5] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">{step}</mark> : step}</span></div>)}</div>
               </div>
 
               <div className="mt-4">
-                <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">What this costs</mark></p>
+                <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">What this costs</mark></p>
                 <div className="mt-1.5 flex items-baseline justify-between gap-4">
                   <p className="text-[24px] font-semibold tracking-[-0.05em] text-[#191B20]">$109<span className="text-[15px] font-normal text-[#595E68]">/month</span></p>
                 </div>
@@ -206,7 +205,7 @@ export default function RecoveryWorkspace() {
                 <p className="mt-1 text-[13px] leading-5 text-[#595E68]">No percentage of recovered money is charged.</p>
               </div>
               
-              <div className="mt-4 border-t border-[#E8E7E1] pt-5"><p className="text-[12px] font-normal text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">Before you continue</mark></p><p className="mt-1.5 text-[12px] italic leading-5 text-[#595E68]">I approve Margin to begin Recovery Workspace at $109/month. I understand that the 4 incidents identified in this Audit are included, that Workspace provides ongoing examination and recovery work for qualifying, evidence-supported issues, and that Amazon makes the final decision on any submitted recovery matter. I understand that nothing is submitted without my approval.</p></div>
+              <div className="mt-3 pt-3"><p className="text-[12px] font-normal text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">Before you continue</mark></p><p className="mt-1.5 text-[12px] italic leading-5 text-[#595E68]">I approve Margin to begin Recovery Workspace at $109/month. I understand that the 4 incidents identified in this Audit are included, that Workspace provides ongoing examination and recovery work for qualifying, evidence-supported issues, and that Amazon makes the final decision on any submitted recovery matter. I understand that nothing is submitted without my approval.</p></div>
               
               <button type="button" className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[8px] bg-[#3F51A8] px-4 text-[13px] font-medium text-white transition-colors hover:bg-[#31418D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">Start Recovery Workspace — $109/month</button>
               
@@ -214,8 +213,8 @@ export default function RecoveryWorkspace() {
                 <p className="text-[11px] font-medium text-[#595E68]">0% commission · Keep 100% of Amazon reimbursements · Cancel anytime</p>
               </div>
 
-              <div className="mt-4 border-t border-[#E8E7E1] pt-4 rounded-[8px] bg-[#F9F9F6] p-4 text-[12px] leading-5 text-[#595E68]">
-                <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">Not ready?</mark> Tell us what's unclear: the pattern found, what Workspace covers, what "ongoing" means, the price, or how it differs from Recover Once.
+              <div className="mt-3 rounded-[8px] bg-[#F9F9F6] p-4 text-[12px] leading-5 text-[#595E68]">
+                <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Not ready?</mark> Tell us what's unclear: the pattern found, what Workspace covers, what "ongoing" means, the price, or how it differs from Recover Once.
               </div>
             </div>
           </aside>
