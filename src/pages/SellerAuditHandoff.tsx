@@ -65,8 +65,8 @@ export default function SellerAuditHandoff() {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#EAF1F5] font-sans text-[#182026]">
-      <main className="relative mx-auto flex min-h-screen max-w-[860px] items-start px-3 py-5 sm:items-center sm:px-6 sm:py-8 lg:px-8">
+    <div className="min-h-screen overflow-x-hidden bg-[#EAF1F5] font-google-sans text-[#182026]">
+      <main className="relative mx-auto flex min-h-screen max-w-[860px] items-center px-3 py-4 sm:items-center sm:px-6 sm:py-8 lg:px-8">
         <div className="pointer-events-none absolute -right-36 -top-40 h-[520px] w-[520px] rounded-full border-[74px] border-white/45" />
         <div className="pointer-events-none absolute -bottom-56 -left-40 h-[500px] w-[500px] rounded-full border-[64px] border-[#C7DCE8]/55" />
         <div className="relative z-10 w-full">
@@ -75,39 +75,39 @@ export default function SellerAuditHandoff() {
           <span className="font-merriweather text-[15px] font-semibold tracking-[-0.02em] text-[#30343B]">Margin</span>
         </div>
         <div>
-          <section className="mx-auto max-w-2xl rounded-[14px] bg-white/90 px-4 py-5 shadow-[0_20px_70px_rgba(50,78,96,0.12)] backdrop-blur-sm sm:px-8 sm:py-8" aria-labelledby="handoff-title">
-            <div className="mx-auto border-b border-[#E4E6E8] pb-5 sm:pb-6">
-              <h1 id="handoff-title" className="font-lora text-[28px] font-normal leading-[1.06] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Let’s get your files to Margin.</h1>
+          <section className="mx-auto max-w-2xl rounded-[12px] bg-white/90 px-3.5 py-4 shadow-[0_16px_48px_rgba(50,78,96,0.1)] backdrop-blur-sm sm:px-8 sm:py-8" aria-labelledby="handoff-title">
+            <div className="mx-auto border-b border-[#E4E6E8] pb-4 sm:pb-6">
+              <h1 id="handoff-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Let’s get your files to Margin.</h1>
               <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">Give us the small amount of context we need to connect your files to the right audit conversation.</p>
             </div>
 
             {!submitted ? (
-              <form className="mx-auto mt-5 max-w-xl space-y-4 sm:mt-6" onSubmit={(event) => { event.preventDefault(); continueToUpload(); }} noValidate>
+              <form className="mx-auto mt-4 max-w-xl space-y-3.5 sm:mt-6 sm:space-y-4" onSubmit={(event) => { event.preventDefault(); continueToUpload(); }} noValidate>
                 <div className="space-y-2">
                   <Label htmlFor="handoff-email" className="text-[13px] font-semibold text-[#30343B]">Email <span className="text-[#A73549]">*</span></Label>
-                  <div className="relative"><Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777A82]" aria-hidden="true" /><Input id="handoff-email" type="email" autoComplete="email" placeholder="you@example.com" value={details.email} onChange={(event) => updateDetails('email', event.target.value)} className="h-11 rounded-[10px] border-[#D7D7D1] pl-10 text-[14px] focus-visible:ring-[#5165C7]" aria-invalid={Boolean(errors.email)} /></div>
+                  <div className="relative"><Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777A82]" aria-hidden="true" /><Input id="handoff-email" type="email" autoComplete="email" placeholder="you@example.com" value={details.email} onChange={(event) => updateDetails('email', event.target.value)} className="h-10 rounded-[9px] border-[#D7D7D1] pl-10 text-[14px] focus-visible:ring-[#5165C7]" aria-invalid={Boolean(errors.email)} /></div>
                   {errors.email ? <p className="text-[12px] text-[#A73549]">{errors.email}</p> : null}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="handoff-business" className="text-[13px] font-semibold text-[#30343B]">Seller / business name <span className="text-[#A73549]">*</span></Label>
-                  <Input id="handoff-business" type="text" autoComplete="organization" placeholder="Acme Brands" value={details.businessName} onChange={(event) => updateDetails('businessName', event.target.value)} className="h-11 rounded-[10px] border-[#D7D7D1] px-3 text-[14px] focus-visible:ring-[#5165C7]" aria-invalid={Boolean(errors.businessName)} />
+                  <Input id="handoff-business" type="text" autoComplete="organization" placeholder="Acme Brands" value={details.businessName} onChange={(event) => updateDetails('businessName', event.target.value)} className="h-10 rounded-[9px] border-[#D7D7D1] px-3 text-[14px] focus-visible:ring-[#5165C7]" aria-invalid={Boolean(errors.businessName)} />
                   {errors.businessName ? <p className="text-[12px] text-[#A73549]">{errors.businessName}</p> : null}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="handoff-report-type" className="text-[13px] font-semibold text-[#30343B]">What are you sending? <span className="font-normal text-[#777A82]">(optional)</span></Label>
-                  <select id="handoff-report-type" value={details.reportType} onChange={(event) => updateDetails('reportType', event.target.value)} className="h-11 w-full rounded-[10px] border border-[#D7D7D1] bg-white px-3 text-[14px] text-[#191B20] outline-none transition-shadow focus:ring-2 focus:ring-[#5165C7]">
+                  <select id="handoff-report-type" value={details.reportType} onChange={(event) => updateDetails('reportType', event.target.value)} className="h-10 w-full rounded-[9px] border border-[#D7D7D1] bg-white px-3 text-[14px] text-[#191B20] outline-none transition-shadow focus:ring-2 focus:ring-[#5165C7]">
                     {reportOptions.map((option) => <option key={option} value={option}>{option}</option>)}
                   </select>
                 </div>
 
-                <Button type="submit" disabled={!canSubmit} className="h-11 w-full rounded-[10px] bg-[#3F51A8] px-5 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto">Continue to upload <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+                <Button type="submit" disabled={!canSubmit} className="h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE] disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto">Continue to upload <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
               </form>
             ) : (
-              <div className="mx-auto mt-7 max-w-xl border-t border-[#E4E6E8] pt-7">
+              <div className="mx-auto mt-6 max-w-xl border-t border-[#E4E6E8] pt-6">
                 <div className="flex items-start gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EEF0FB] text-[#3F51A8]"><Check className="h-4 w-4" aria-hidden="true" /></span><div><h2 className="text-[17px] font-semibold text-[#191B20]">You’re ready to send your files.</h2><p className="mt-1 text-[14px] leading-5 text-[#595E68]">Upload the Amazon files you have. You can send multiple files at once.</p></div></div>
-                <Button type="button" onClick={() => DROPBOX_REQUEST_URL ? window.open(DROPBOX_REQUEST_URL, '_blank', 'noopener,noreferrer') : toast({ variant: 'destructive', title: 'Upload link is being connected', description: 'The Dropbox File Request URL still needs to be configured.' })} className="mt-5 h-11 w-full rounded-[10px] bg-[#3F51A8] px-5 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] sm:w-auto">Upload my files <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+                <Button type="button" onClick={() => DROPBOX_REQUEST_URL ? window.open(DROPBOX_REQUEST_URL, '_blank', 'noopener,noreferrer') : toast({ variant: 'destructive', title: 'Upload link is being connected', description: 'The Dropbox File Request URL still needs to be configured.' })} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE] sm:w-auto">Upload my files <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
                 {!DROPBOX_REQUEST_URL ? <p className="mt-3 text-[12px] text-[#A73549]">Dropbox File Request URL is not configured yet.</p> : null}
               </div>
             )}
