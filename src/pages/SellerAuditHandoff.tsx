@@ -65,7 +65,7 @@ export default function SellerAuditHandoff() {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#EAF1F5] font-google-sans text-[#182026]">
+    <div className="min-h-screen overflow-x-hidden bg-[#EAF1F5] font-sans text-[#182026]">
       <main className="relative mx-auto flex min-h-screen max-w-[860px] items-center px-3 py-4 sm:items-center sm:px-6 sm:py-8 lg:px-8">
         <div className="pointer-events-none absolute -right-36 -top-40 h-[520px] w-[520px] rounded-full border-[74px] border-white/45" />
         <div className="pointer-events-none absolute -bottom-56 -left-40 h-[500px] w-[500px] rounded-full border-[64px] border-[#C7DCE8]/55" />
@@ -75,7 +75,7 @@ export default function SellerAuditHandoff() {
           <span className="font-merriweather text-[15px] font-semibold tracking-[-0.02em] text-[#30343B]">Margin</span>
         </div>
         <div>
-          <section className="mx-auto max-w-2xl rounded-[12px] bg-white/90 px-3.5 py-4 shadow-[0_16px_48px_rgba(50,78,96,0.1)] backdrop-blur-sm sm:px-8 sm:py-8" aria-labelledby="handoff-title">
+          <section className="mx-auto max-w-2xl rounded-[12px] bg-white/90 font-google-sans px-3.5 py-4 shadow-[0_16px_48px_rgba(50,78,96,0.1)] backdrop-blur-sm sm:px-8 sm:py-8" aria-labelledby="handoff-title">
             <div className="mx-auto border-b border-[#E4E6E8] pb-4 sm:pb-6">
               <h1 id="handoff-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Let’s get your files to Margin.</h1>
               <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">Give us the small amount of context we need to connect your files to the right audit conversation.</p>
