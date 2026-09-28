@@ -1102,7 +1102,7 @@ function ControlSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative overflow-hidden">
-            <FinalDelegationPreview compactMobile src="/filing-pipeline-preview" title="Recovery Pipeline page preview" />
+            <FinalDelegationPreview compactMobile expandedMobile src="/filing-pipeline-preview" title="Recovery Pipeline page preview" />
           </motion.div>
         </div>
       </div>
