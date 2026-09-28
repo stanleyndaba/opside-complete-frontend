@@ -183,6 +183,7 @@ const queryClient = new QueryClient({
 
 const PRELOAD_ROUTES = [
   () => import("./pages/Index"),
+  () => import("./components/report-generation"),
   () => import("./pages/PricingAdjust"),
   () => import("./pages/AboutMargin"),
   () => import("./pages/Sales"),
@@ -240,6 +241,7 @@ const PreserveSearchRedirect = ({ to }: { to: string }) => {
 
 const RoutePreloader = () => {
   useEffect(() => {
+    void import("./components/report-generation");
     const preloadRoutes = () => PRELOAD_ROUTES.forEach((loadRoute) => {
       void loadRoute();
     });

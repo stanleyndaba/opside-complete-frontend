@@ -833,7 +833,7 @@ function MarginLifecycleSection() {
       <div className={containerClass}>
         <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
         <motion.div {...revealProps} className="relative order-2 h-fit self-start lg:order-1">
-          <FinalDelegationPreview compactMobile expandedMobile src="/report-generation" title="Report generation page preview" />
+          <FinalDelegationPreview compactMobile expandedMobile priority src="/report-generation" title="Report generation page preview" />
         </motion.div>
         <div className="order-1 flex flex-col justify-center lg:order-2">
         <motion.div {...revealProps} className="max-w-[980px]">
