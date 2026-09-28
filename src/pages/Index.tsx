@@ -1512,15 +1512,46 @@ function NestedRecoveryVisual({
   );
 }
 
+const reconstructionGapBrowsers = {
+  progress: { label: 'Progress review', path: '/progress-preview' },
+  evidence: { label: 'Evidence required', path: '/evidence-required' },
+  amazonThread: { label: 'Amazon thread', path: '/amazon-thread-review' },
+} as const;
+
 function ReconstructionGapNestedVisual() {
-  const [activeBrowser, setActiveBrowser] = useState<keyof typeof nestedRecoveryBrowsers>('progress');
+  const [activeBrowser, setActiveBrowser] = useState<keyof typeof reconstructionGapBrowsers>('progress');
 
   return (
-    <NestedRecoveryVisual
-      activeBrowser={activeBrowser}
-      onBrowserChange={setActiveBrowser}
-      progressPath="/progress-preview"
-    />
+    <motion.div {...revealProps} className="relative min-h-[620px] overflow-hidden rounded-[12px] border border-[#C8DCE5]/80 bg-[#E5F0F3] p-2 shadow-[0_24px_70px_rgba(37,91,116,0.16)] sm:min-h-[570px] sm:p-4">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(135deg,#EAF5F9_0%,#DCECF2_52%,#F6FAFB_100%)]" />
+      <motion.div aria-hidden="true" className="absolute -left-14 -top-16 h-48 w-48 rounded-full bg-[#B9E0EF]/60 blur-3xl" animate={{ x: [0, 18, 0], y: [0, 14, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} />
+      <motion.div aria-hidden="true" className="absolute -bottom-16 -right-12 h-52 w-52 rounded-full bg-[#C9D5F0]/65 blur-3xl" animate={{ x: [0, -16, 0], y: [0, -12, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }} />
+      <div className="relative h-full min-h-[590px] sm:min-h-[538px]">
+        {(Object.keys(reconstructionGapBrowsers) as Array<keyof typeof reconstructionGapBrowsers>).map((key) => {
+          const browser = reconstructionGapBrowsers[key];
+          const isActive = activeBrowser === key;
+          const frameClass = key === 'progress'
+            ? 'left-[1%] top-[3%] h-[78%] w-[92%] sm:left-[3%] sm:top-[5%] sm:h-[76%] sm:w-[78%]'
+            : key === 'evidence'
+              ? 'bottom-[2%] right-[1%] h-[76%] w-[92%] sm:bottom-[3%] sm:right-[3%] sm:h-[73%] sm:w-[78%]'
+              : 'bottom-[1%] right-[0%] h-[40%] w-[72%] sm:bottom-[1%] sm:right-[1%] sm:h-[38%] sm:w-[62%]';
+          return (
+            <div
+              key={key}
+              role="button"
+              tabIndex={0}
+              onClick={() => setActiveBrowser(key)}
+              onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setActiveBrowser(key); }}
+              aria-label={`Show ${browser.label}`}
+              className={`absolute overflow-hidden rounded-[10px] border text-left transition-all duration-500 ${frameClass} ${isActive ? 'z-30 border-white/95 shadow-[0_24px_48px_rgba(37,73,91,0.25)]' : 'z-10 border-white/65 shadow-[0_12px_30px_rgba(37,73,91,0.14)]'}`}
+            >
+              <div className="flex h-7 items-center gap-1.5 border-b border-[#D9E2E6] bg-[#E9EEEC] px-2"><span className="h-2 w-2 rounded-full bg-[#D7DAD7]" /><span className="h-2 w-2 rounded-full bg-[#D7DAD7]" /><span className="h-2 w-2 rounded-full bg-[#D7DAD7]" /><span className="ml-2 min-w-0 flex-1 truncate text-center font-sans text-[9px] text-[#7A8B93]">{browser.path}</span></div>
+              <iframe title={`${browser.label} live preview`} src={browser.path} className={`h-[calc(100%-28px)] w-full border-0 bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`} loading="lazy" />
+            </div>
+          );
+        })}
+      </div>
+    </motion.div>
   );
 }
 
