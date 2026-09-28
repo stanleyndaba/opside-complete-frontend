@@ -1232,7 +1232,6 @@ function OneRecordAnalysisVisual() {
           <div className="rounded-[10px] border border-white/85 bg-white/58 p-3 shadow-[0_16px_34px_rgba(56,95,112,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl sm:p-4">
             <div className="flex items-center justify-between gap-3 border-b border-[#C9DDE5]/80 pb-2">
               <div>
-                <p className="text-[11px] font-medium tracking-tight text-[#66737F]">05 / EVIDENCE EXTRACTION</p>
                 <p className="mt-0.5 font-lora text-[14px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[15px]">Shortage variance (delta)</p>
               </div>
               <span className="rounded-full bg-[#E3F0F5] px-2 py-1 text-[10px] font-medium tracking-tight text-[#0B74DE]">Analyzed</span>
