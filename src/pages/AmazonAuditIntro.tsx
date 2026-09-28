@@ -42,7 +42,7 @@ export default function AmazonAuditIntro() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#EAF1F5] font-sans text-[#182026]">
-      <main className="relative mx-auto flex min-h-screen max-w-[860px] items-start px-3 py-5 sm:items-center sm:px-6 sm:py-8 lg:px-8">
+      <main className="relative mx-auto flex min-h-screen max-w-[860px] items-center px-3 py-4 sm:items-center sm:px-6 sm:py-8 lg:px-8">
         <div className="pointer-events-none absolute -right-36 -top-40 h-[520px] w-[520px] rounded-full border-[74px] border-white/45" />
         <div className="pointer-events-none absolute -bottom-56 -left-40 h-[500px] w-[500px] rounded-full border-[64px] border-[#C7DCE8]/55" />
         <div className="relative z-10 w-full">
@@ -51,36 +51,35 @@ export default function AmazonAuditIntro() {
           <span className="font-merriweather text-[15px] font-semibold tracking-[-0.02em] text-[#30343B]">Margin</span>
         </div>
 
-        <section className="mx-auto max-w-2xl rounded-[14px] bg-white/90 px-4 py-5 shadow-[0_20px_70px_rgba(50,78,96,0.12)] backdrop-blur-sm sm:px-8 sm:py-8 md:hidden" aria-labelledby="mobile-audit-title">
-          <div className="border-b border-[#E4E6E8] pb-5">
-            <p className="text-[11px] font-medium text-[#777A82]">File-first Audit</p>
-            <h1 id="mobile-audit-title" className="mt-3 font-lora text-[28px] font-normal leading-[1.06] tracking-[-0.035em] text-[#30343B]">
-              {mobileStep === 1 ? 'Let’s get your Amazon Audit started.' : mobileStep === 2 ? 'Almost there.' : 'A few things to keep in mind.'}
+        <section className="mx-auto max-w-2xl rounded-[12px] bg-white/90 font-google-sans px-3.5 py-4 shadow-[0_16px_48px_rgba(50,78,96,0.1)] backdrop-blur-sm md:hidden" aria-labelledby="mobile-audit-title">
+          <div className="border-b border-[#E4E6E8] pb-4">
+            <h1 id="mobile-audit-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-[-0.035em] text-[#30343B]">
+              {mobileStep === 1 ? 'Get your Amazon Audit started.' : mobileStep === 2 ? 'Almost there.' : 'A few things to keep in mind.'}
             </h1>
           </div>
 
           {mobileStep === 1 ? (
-            <div className="pt-5">
+            <div className="pt-4">
               <p className="text-[14px] leading-6 text-[#595E68]">To investigate your account properly, Margin will first ask you for the Amazon files relevant to your Audit.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">These records give us a detailed view of what happened across your Amazon business — so we can look beyond a single issue and investigate what may have been missed.</p>
-              <Button type="button" onClick={() => setMobileStep(2)} className="mt-6 h-11 w-full rounded-[10px] bg-[#3F51A8] px-5 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D]">Understood <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+              <Button type="button" onClick={() => setMobileStep(2)} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE]">Understood <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             </div>
           ) : null}
 
           {mobileStep === 2 ? (
-            <div className="pt-5">
-              <h2 className="font-lora text-[21px] font-normal tracking-[-0.015em] text-[#30343B]">Files come first</h2>
+            <div className="pt-4">
+              <h2 className="font-google-sans text-[20px] font-normal tracking-[-0.015em] text-[#30343B]">Files come first</h2>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Uploading your files gives Margin the broadest view of your account and allows us to perform a deeper Audit.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">If we need additional information to complete the investigation, we may ask you to connect your Amazon account through <strong className="font-semibold text-[#30343B]">Amazon SP-API</strong> so Margin can retrieve the additional records needed.</p>
               <p className="mt-3 text-[14px] font-medium leading-6 text-[#30343B]">You don’t need to decide that now.</p>
               <p className="mt-1 text-[14px] font-semibold leading-6 text-[#30343B]">We’ll tell you if we need anything else.</p>
-              <Button type="button" onClick={() => setMobileStep(3)} className="mt-6 h-11 w-full rounded-[10px] bg-[#3F51A8] px-5 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D]">Continue <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+              <Button type="button" onClick={() => setMobileStep(3)} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE]">Continue <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             </div>
           ) : null}
 
           {mobileStep === 3 ? (
-            <div className="pt-5">
-              <h2 className="font-lora text-[21px] font-normal tracking-[-0.015em] text-[#30343B]">What happens next?</h2>
+            <div className="pt-4">
+              <h2 className="font-google-sans text-[20px] font-normal tracking-[-0.015em] text-[#30343B]">What happens next?</h2>
               <div className="mt-4 divide-y divide-[#E4E6E8] border-y border-[#E4E6E8]">
                 {auditSteps.map(({ title }) => (
                   <div key={title} className="flex gap-3 py-3 text-[14px]">
@@ -88,7 +87,7 @@ export default function AmazonAuditIntro() {
                   </div>
                 ))}
               </div>
-              <Button type="button" onClick={() => navigate('/seller-audit')} className="mt-6 h-11 w-full rounded-[10px] bg-[#3F51A8] px-5 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D]">Proceed to Upload <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+              <Button type="button" onClick={() => navigate('/seller-audit')} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE]">Proceed to Upload <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
               <p className="mt-3 text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to figure out what to look for. That’s Margin’s job.</p>
             </div>
           ) : null}
