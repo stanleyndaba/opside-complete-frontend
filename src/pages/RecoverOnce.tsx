@@ -49,7 +49,11 @@ export default function RecoverOnce() {
 
       <main className="mx-auto max-w-[1180px] px-4 py-5 sm:px-6 sm:py-5 lg:px-6">
         <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
-          <article className="min-w-0 rounded-[16px] bg-white px-5 py-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:px-6 sm:py-5" aria-labelledby="recover-once-title">
+          <article className="order-2 min-w-0 rounded-none bg-white px-0 py-5 shadow-none sm:rounded-[16px] sm:px-6 sm:py-5 sm:shadow-[0_1px_2px_rgba(25,27,32,0.05)] lg:order-1" aria-labelledby="recover-once-title">
+            <div className="mb-5 border-y border-[#E8E7E1] py-3 sm:rounded-[8px] sm:border">
+              <div className="flex flex-wrap items-center justify-between gap-2 px-1 sm:px-3"><p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">Recovery operation</p><span className="inline-flex rounded-full bg-[#F1F4FC] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#3F51A8]">Seller approval required</span></div>
+              <div className="mt-3 grid gap-2 px-1 sm:grid-cols-4 sm:px-3"><div className="flex items-center gap-2 text-[11px] font-medium text-[#26734D]"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#4F8067] text-[9px] text-white">1</span>Investigation complete</div><div className="flex items-center gap-2 text-[11px] font-medium text-[#26734D]"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#4F8067] text-[9px] text-white">2</span>Evidence organized</div><div className="flex items-center gap-2 text-[11px] font-medium text-[#26734D]"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#4F8067] text-[9px] text-white">3</span>Response prepared</div><div className="flex items-center gap-2 text-[11px] font-semibold text-[#3F51A8]"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#3F51A8] text-[9px] text-white">4</span>Waiting for your approval</div></div>
+            </div>
             <header className="border-b border-[#E8E7E1] pb-7">
               <h1 id="recover-once-title" className="max-w-2xl text-[15px] leading-[1.2] tracking-[-0.02em] text-[#191B20] sm:text-[17px]">A complete view of your operation</h1>
               <p className="mt-2 inline-block max-w-2xl border-b border-[#D4D4D0] pb-1 text-[14px] leading-6 text-[#595E68] sm:text-[15px]">Investigation completed across <mark className="rounded-[2px] px-0.5 font-normal bg-[#E8EEF8] text-[#3F51A8]">10,442 placements</mark> in <mark className="rounded-[2px] px-0.5 font-normal bg-[#E9F3EC] text-[#26734D]">7 minutes</mark>.</p>
@@ -110,7 +114,7 @@ export default function RecoverOnce() {
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">The operation</p>
               <h2 id="after-approval" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 text-[15px] font-normal leading-tight tracking-[-0.02em]">What happens after approval</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Once you approve and payment is completed, the <mark className="rounded-[2px] px-0.5 font-normal bg-[#E9F3EC] text-[#26734D]">typical first submission target is 1–2 business days after approval</mark>, assuming the available evidence is sufficient to prepare the response.</p>
-              <div className="mt-2 grid gap-2 sm:grid-cols-2">{operationSteps.map((step, index) => <div key={step} className="flex items-start gap-3 px-1 py-1"><span className="w-5 shrink-0 text-[11px] font-semibold text-[#3F51A8]">{index + 1}</span><span className={`text-[13px] leading-5 ${index === operationSteps.length - 1 ? 'font-semibold text-[#191B20]' : 'text-[#595E68]'}`}>{step}</span></div>)}</div>
+              <div className="relative mt-3 space-y-0">{operationSteps.map((step, index) => <div key={step} className="relative flex items-start gap-3 py-1.5"><span className="absolute bottom-[-1px] left-[9px] top-0 w-px bg-[#C9D6DE]" aria-hidden="true" />{index === operationSteps.length - 1 ? null : <span className="absolute bottom-0 left-[7px] h-1 w-1 rounded-full bg-white" aria-hidden="true" />}<span className={`relative z-10 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white ${index === operationSteps.length - 1 ? 'bg-[#3F51A8]' : 'bg-[#4F8067]'}`}>{index + 1}</span><span className={`pt-0.5 text-[13px] leading-5 ${index === operationSteps.length - 1 ? 'font-semibold text-[#3F51A8]' : 'text-[#595E68]'}`}>{step}</span></div>)}</div>
               <p className="mt-1.5 text-[12px] leading-5 text-[#595E68]">Amazon&apos;s response time and final decision are outside Margin&apos;s control.</p>
             </section>
 
@@ -128,7 +132,7 @@ export default function RecoverOnce() {
             </section>
           </article>
 
-          <aside className="lg:sticky lg:top-20" aria-label="Recover Once decision summary">
+          <aside className="order-1 lg:order-2 lg:sticky lg:top-20" aria-label="Recover Once decision summary">
             <div className="rounded-[14px] border border-[#D7D7D1] bg-white p-5 shadow-[0_8px_24px_rgba(25,27,32,0.06)] sm:p-4">
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">Recovery quote</p>
               <h2 className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 text-[15px] font-normal leading-tight tracking-[-0.02em]">Permission</h2>
