@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowRight, Check, Mail, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Check, ClipboardList, ExternalLink, Mail, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,6 +32,8 @@ type StoredHandoff = HandoffDetails & {
   uploadOpenedAt?: string;
   uploadConfirmedAt?: string;
 };
+
+const phaseClass = (active: boolean) => active ? 'bg-[#182026] text-white' : 'bg-[#F5F7F8] text-[#777A82]';
 
 function readStoredHandoff(): StoredHandoff | null {
   if (typeof window === 'undefined') return null;
@@ -112,7 +114,7 @@ export default function SellerAuditHandoff() {
       window.localStorage.setItem(HANDOFF_STORAGE_KEY, JSON.stringify({ ...savedDetails, submittedAt: new Date().toISOString(), leadId: response.data.lead_id }));
       trackEvent(ANALYTICS_EVENTS.sellerAuditDetailsSubmitted, { source_page: '/seller-audit', lead_id: response.data.lead_id, report_type: savedDetails.reportType });
     } else {
-      setIntakeError('We saved your details on this device, but could not reach Margin’s intake service. You can still upload your files; please keep this page open until you finish.');
+      setIntakeError('Your details are saved on this device, but Margin’s intake service could not be reached. You can still upload your files; please keep this page open until you finish.');
       trackEvent(ANALYTICS_EVENTS.sellerAuditDetailsFailed, { source_page: '/seller-audit', error: response.error || 'intake_service_unavailable' });
     }
     setSubmitted(true);
@@ -167,15 +169,19 @@ export default function SellerAuditHandoff() {
             <span className="font-merriweather text-[15px] font-semibold tracking-[-0.02em] text-[#30343B]">Margin</span>
           </div>
           <section className="mx-auto max-w-2xl rounded-[12px] bg-white/90 px-3.5 py-4 font-google-sans shadow-[0_16px_48px_rgba(50,78,96,0.1)] backdrop-blur-sm sm:px-8 sm:py-8" aria-labelledby="handoff-title">
+            <div className="mb-4 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#777A82]" aria-label={submitted ? 'Step 2 of 2' : 'Step 1 of 2'}>
+              <span className={`flex h-6 w-6 items-center justify-center rounded-full ${phaseClass(!submitted)}`}>{submitted ? <Check className="h-3.5 w-3.5" /> : '1'}</span><span>Prepare</span><span className="h-px w-5 bg-[#D7D7D1]" />
+              <span className={`flex h-6 w-6 items-center justify-center rounded-full ${phaseClass(submitted)}`}>{uploadConfirmed ? <Check className="h-3.5 w-3.5" /> : '2'}</span><span>Send files</span>
+            </div>
             <div className="mx-auto border-b border-[#E4E6E8] pb-4 sm:pb-6">
-              <h1 id="handoff-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Send your files to Margin.</h1>
-              <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">Add two quick details, then send the Amazon records you already have. You can send multiple files at once.</p>
+              <h1 id="handoff-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">{submitted ? 'Your upload is ready.' : 'Send your files to Margin.'}</h1>
+              <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">{submitted ? 'The next step opens Margin’s Dropbox file request. It is hosted by Dropbox, but the files go directly to the Margin Audit team.' : 'Add two quick details, then send the Amazon records you already have. You can send multiple files at once.'}</p>
             </div>
             {!submitted ? (
               <form className="mx-auto mt-4 max-w-xl space-y-3.5 sm:mt-6 sm:space-y-4" onSubmit={(event) => { event.preventDefault(); void continueToUpload(); }} noValidate>
                 <div className="rounded-[9px] bg-[#F5F7F8] px-3 py-3 text-[13px] leading-5 text-[#595E68]">
-                  <p className="font-semibold text-[#30343B]">Useful files can include:</p>
-                  <p className="mt-1">Amazon reports, settlement or payment reports, inventory or FBA reports, returns, and refunds. CSV, XLSX, PDF, and ZIP files are fine. Send what you have—there is no need to organize everything perfectly.</p>
+                  <div className="flex items-start gap-2"><ClipboardList className="mt-0.5 h-4 w-4 shrink-0 text-[#3F51A8]" aria-hidden="true" /><div><p className="font-semibold text-[#30343B]">Send what you already have</p><p className="mt-1">You do not need to clean, rename, or organize a perfect package first. Partial records are okay; Margin will tell you if anything important is missing.</p></div></div>
+                  <p className="mt-3 border-t border-[#E4E6E8] pt-3"><span className="font-semibold text-[#30343B]">Useful files:</span> settlement or payment reports, inventory / FBA reports, shipment or receiving reports, returns, refunds, and other Amazon exports. CSV, XLSX, PDF, and ZIP files are fine.</p>
                   <p className="mt-2 font-semibold text-[#30343B]">Preferred period: last 3 months, or the period you want reviewed.</p>
                 </div>
                 <div className="space-y-2">
@@ -197,16 +203,16 @@ export default function SellerAuditHandoff() {
                 <Button type="submit" disabled={!canSubmit || isSaving} className="h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE] disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto">{isSaving ? 'Saving your details…' : 'Continue to upload'} {!isSaving ? <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /> : null}</Button>
               </form>
             ) : (
-              <div className="mx-auto mt-6 max-w-xl border-t border-[#E4E6E8] pt-6">
-                <div className="flex items-start gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EEF0FB] text-[#3F51A8]"><Check className="h-4 w-4" aria-hidden="true" /></span><div><h2 className="text-[17px] font-semibold text-[#191B20]">Your upload step is ready.</h2><p className="mt-1 text-[14px] leading-5 text-[#595E68]">Send the Amazon files you have. Multiple files are fine, and you do not need to prepare a perfect package before you begin.</p></div></div>
-                <div className="mt-4 flex items-start gap-2 rounded-[9px] bg-[#F5F7F8] px-3 py-3 text-[12px] leading-5 text-[#595E68]"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#3F51A8]" aria-hidden="true" /><span>Margin uses the files for the audit review. Nothing is submitted to Amazon without your approval.</span></div>
-                <Button type="button" onClick={openUpload} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE] sm:w-auto">{dropboxOpened ? 'Open upload page again' : 'Upload my files'} <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
-                {dropboxOpened && !uploadConfirmed ? <div className="mt-4 rounded-[9px] border border-[#DCE8EE] bg-white px-3 py-3 text-[13px] leading-5 text-[#595E68]"><p className="font-semibold text-[#30343B]">When you finish in the upload page</p><p className="mt-1">Come back here and confirm that you finished uploading so Margin can queue the review.</p><Button type="button" onClick={confirmUpload} className="mt-3 h-9 rounded-[8px] bg-[#3F51A8] px-3 text-[12px] font-semibold text-white shadow-none hover:bg-[#31418D]">I’ve finished uploading <Check className="ml-2 h-3.5 w-3.5" aria-hidden="true" /></Button></div> : null}
-                {uploadConfirmed ? <div className="mt-4 flex items-start gap-2 rounded-[9px] bg-[#EEF8F2] px-3 py-3 text-[13px] leading-5 text-[#23623F]"><Check className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /><span><strong>Upload marked complete.</strong> Margin will review the records and send the audit result by email within one business day.</span></div> : null}
+              <div className="mx-auto mt-6 max-w-xl pt-1">
+                <div className="rounded-[9px] bg-[#F5F7F8] px-3 py-3 text-[13px] leading-5 text-[#595E68]"><div className="flex items-start gap-2"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#3F51A8]" aria-hidden="true" /><div><p className="font-semibold text-[#30343B]">Your files stay under your control.</p><p className="mt-1">The files are used for Margin’s audit review only. They are not submitted to Amazon or used to pursue anything without your approval.</p></div></div></div>
+                <div className="mt-4 rounded-[9px] border border-[#DCE8EE] bg-white px-3 py-3 text-[13px] leading-5 text-[#595E68]"><p className="font-semibold text-[#30343B]">Dropbox handoff</p><p className="mt-1">Dropbox hosts the upload screen. Your files are sent to Margin’s Audit request, and you can upload multiple files in one visit.</p><Button type="button" onClick={openUpload} className="mt-4 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE] sm:w-auto">{dropboxOpened ? 'Open upload page again' : 'Upload my files'} <ExternalLink className="ml-2 h-3.5 w-3.5" aria-hidden="true" /></Button></div>
+                {dropboxOpened && !uploadConfirmed ? <div className="mt-4 rounded-[9px] bg-[#F5F7F8] px-3 py-3 text-[13px] leading-5 text-[#595E68]"><p className="font-semibold text-[#30343B]">After you upload</p><p className="mt-1">Dropbox sends the files to Margin. You can close the upload page when you are done; returning here and marking it complete is optional, but it helps us track the handoff.</p><Button type="button" onClick={confirmUpload} className="mt-3 h-9 rounded-[8px] bg-[#3F51A8] px-3 text-[12px] font-semibold text-white shadow-none hover:bg-[#31418D]">Mark upload complete <Check className="ml-2 h-3.5 w-3.5" aria-hidden="true" /></Button></div> : null}
+                {uploadConfirmed ? <div className="mt-4 rounded-[9px] bg-[#EEF8F2] px-3 py-3 text-[13px] leading-5 text-[#23623F]"><div className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /><span><strong>Handoff marked complete.</strong> Margin will review the records and send the audit result to <strong>{details.email}</strong> within one business day. If anything important is missing, we will contact you.</span></div></div> : null}
                 {intakeError ? <p className="mt-3 text-[12px] leading-5 text-[#A73549]">{intakeError}</p> : null}
+                <div className="mt-5 border-t border-[#E4E6E8] pt-4"><p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#777A82]">What happens next</p><div className="mt-3 grid gap-2 text-[13px] leading-5 text-[#595E68] sm:grid-cols-3"><div><span className="font-semibold text-[#30343B]">01</span><p className="mt-1">Margin reviews the records.</p></div><div><span className="font-semibold text-[#30343B]">02</span><p className="mt-1">We identify meaningful discrepancies.</p></div><div><span className="font-semibold text-[#30343B]">03</span><p className="mt-1">You receive the result and choose the next step.</p></div></div><p className="mt-3 text-[12px] leading-5 text-[#777A82]">Nothing is submitted or pursued without your approval.</p></div>
               </div>
             )}
-            {!submitted ? <p className="mx-auto mt-6 max-w-xl border-t border-[#E4E6E8] pt-4 text-[12px] leading-5 text-[#777A82]">After the upload, Margin will review the records and contact you by email if anything else is needed.</p> : null}
+            {!submitted ? <p className="mx-auto mt-6 max-w-xl border-t border-[#E4E6E8] pt-4 text-[12px] leading-5 text-[#777A82]">After the upload, Margin will review the records and email the result within one business day. If anything else is needed, we will tell you exactly what to send.</p> : null}
           </section>
         </div>
       </main>
