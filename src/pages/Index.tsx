@@ -618,32 +618,32 @@ function FinancialWorkProofSection() {
 const recoveryHarnessPoints = [
   {
     number: "01",
-    title: "Not everything becomes a claim.",
-    lead: "A good financial control system knows when not to act.",
-    body: "Margin applies evidence, rules, and guardrails before a recovery moves forward. You see what was found, why it matters, and approve the action before anything is submitted.",
-    outcome: "Find it. Prove it. Approve it.",
+    title: "Not every signal becomes a claim.",
+    lead: "A financial control system knows when to proceed, when to hold, and when to close.",
+    body: "Margin applies evidence, reconciliation rules, and approval guardrails before recovery work moves forward. You see what was found, what supports it, and approve the action before anything is submitted.",
+    outcome: "Accounted for. Held for evidence. Ready for action.",
   },
   {
     number: "02",
-    title: "Every outcome makes the next investigation more informed.",
-    lead: "A rejection, response, reversal, or recovery contains information.",
-    body: "Rejections, responses, recoveries, reversals, and successful outcomes become part of the evidence Margin learns from. What happens to one case can improve how the next case is investigated and handled.",
-    outcome: "What happens next makes Margin better.",
+    title: "Every outcome becomes controlled evidence.",
+    lead: "A rejection, response, reversal, or recovery changes what the next decision should consider.",
+    body: "Rejections, responses, recoveries, reversals, and successful outcomes remain attached to the record. The next review starts with the recorded outcome—not from zero.",
+    outcome: "A rejection becomes evidence, not lost effort.",
   },
   {
     number: "03",
-    title: "The transaction is only part of the story.",
-    lead: "Amazon activity sits inside a larger operating system.",
-    body: "When something doesn’t add up, you can see why—without reconstructing the entire chain yourself. Margin connects the surrounding records so the financial reality becomes clear.",
-    outcome: "Context grounds the case.",
+    title: "Consequential action requires approval.",
+    lead: "Margin handles the investigation. The business retains approval authority.",
+    body: "Margin connects the surrounding records, establishes the financial position, and routes the decision to the right owner before submission.",
+    outcome: "The right owner approves the next action.",
   },
 ];
 
 function ApprovalNotificationOrderVisual() {
   const approvers = [
-    { number: "1", role: "Ops Manager", name: "Michael Thompson", badge: "Primary", badgeClass: "bg-[#EEEAFB] text-[#65519C]", avatarClass: "bg-[#A9B8B0]", avatarSrc: "/approver-michael-thompson.jpg" },
-    { number: "2", role: "Brand Portfolio Manager", name: "Sarah Mitchell", badge: "Fallback", badgeClass: "bg-[#E9F8EC] text-[#4C9A62]", avatarClass: "bg-[#B4A99D]", avatarSrc: "/approver-sarah-mitchell.jpg" },
-    { number: "3", role: "VP of Operations", name: "Lena Cruz", badge: "Escalation", badgeClass: "bg-[#FAF2E5] text-[#A67C3E]", avatarClass: "bg-[#B8B9C4]", avatarSrc: "/approver-lena-cruz.jpg" },
+    { number: "1", role: "Finance / Ops Owner", name: "Michael Thompson", badge: "Primary", badgeClass: "bg-[#EEEAFB] text-[#65519C]", avatarClass: "bg-[#A9B8B0]", avatarSrc: "/approver-michael-thompson.jpg" },
+    { number: "2", role: "Business Lead", name: "Sarah Mitchell", badge: "Fallback", badgeClass: "bg-[#E9F8EC] text-[#4C9A62]", avatarClass: "bg-[#B4A99D]", avatarSrc: "/approver-sarah-mitchell.jpg" },
+    { number: "3", role: "Executive Owner", name: "Lena Cruz", badge: "Escalation", badgeClass: "bg-[#FAF2E5] text-[#A67C3E]", avatarClass: "bg-[#B8B9C4]", avatarSrc: "/approver-lena-cruz.jpg" },
   ];
   const sequence = [
     { type: "approver", approver: approvers[0] },
@@ -693,8 +693,8 @@ function ApprovalNotificationOrderVisual() {
     <div className="relative mb-6 min-h-[350px] overflow-hidden rounded-[12px] border border-[#DCE3E6] bg-white p-3 shadow-[0_10px_28px_rgba(35,54,65,0.08)] sm:min-h-[360px] sm:p-4" aria-label="Approval notification order">
       <div className="border-b border-[#EEF1F2] pb-3">
         <div className="min-w-0">
-          <p className="text-[12px] font-semibold leading-4 tracking-tight text-[#182026]">Approval Notification Order</p>
-          <p className="mt-0.5 text-[9px] leading-3.5 tracking-tight text-[#7A858B]">Relay will notify approvers in the order shown below.</p>
+          <p className="text-[12px] font-semibold leading-4 tracking-tight text-[#182026]">Consequential action requires approval</p>
+          <p className="mt-0.5 text-[9px] leading-3.5 tracking-tight text-[#7A858B]">Margin routes the decision to the right owner before submission.</p>
         </div>
       </div>
 
@@ -703,7 +703,7 @@ function ApprovalNotificationOrderVisual() {
         <div className="space-y-2">
           <AnimatePresence initial={false}>
             {sequence.slice(0, visibleSteps).map((step, index) => step.type === "wait" ? (
-              <motion.div key={`wait-${index}`} initial={{ opacity: 0, y: -8, height: 0 }} animate={{ opacity: 1, y: 0, height: "auto" }} exit={{ opacity: 0, y: -8, height: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="ml-3 w-fit rounded-[6px] bg-[#F5F7F8] px-2 py-1 text-[8px] font-medium tracking-tight text-[#7A858B]">Wait 2 hr for a response</motion.div>
+              <motion.div key={`wait-${index}`} initial={{ opacity: 0, y: -8, height: 0 }} animate={{ opacity: 1, y: 0, height: "auto" }} exit={{ opacity: 0, y: -8, height: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="ml-3 w-fit rounded-[6px] bg-[#F5F7F8] px-2 py-1 text-[8px] font-medium tracking-tight text-[#7A858B]">Awaiting owner decision</motion.div>
             ) : (
               <motion.div key={step.approver.number} initial={{ opacity: 0, y: 12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="relative rounded-[10px] border border-[#E6EAEC] bg-white px-2.5 py-2 shadow-[0_5px_16px_rgba(35,54,65,0.05)]">
                 <span className="absolute -left-[33px] top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-[#2D56C9] text-[10px] font-semibold text-white shadow-[0_3px_8px_rgba(45,86,201,0.2)]">{step.approver.number}</span>
@@ -726,9 +726,9 @@ function ApprovalNotificationOrderVisual() {
 
 function GuardrailListVisual() {
   const items = [
-    { title: "Blocked (Overcharged Fee FG34421)", detail: "Compiling complete evidence for this case", status: "Held", tone: "text-[#9A5A03]" },
-    { title: "Paused (Reversed Payment)", detail: "Investigating reversal…", status: "Review", tone: "text-[#52616A]" },
-    { title: "Case rejected by Amazon", detail: "Rebuilding the case from objection…", status: "Rework", tone: "text-[#7A5147]" },
+    { title: "Potential fee variance · Case held", detail: "Evidence is incomplete. No claim will move forward until the assessed charge is reconciled.", status: "Held", tone: "text-[#9A5A03]" },
+    { title: "Reversed payment · Outcome under review", detail: "The original recovery cannot be treated as complete until the reversal is reconciled.", status: "Review", tone: "text-[#52616A]" },
+    { title: "Amazon rejection · Basis reassessment", detail: "The rejection reason is recorded before Margin decides whether to add evidence, appeal, or close.", status: "Rework", tone: "text-[#7A5147]" },
   ];
   return (
     <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[4px] border-0 bg-white" aria-label="Guardrails evidence status list">
@@ -760,11 +760,11 @@ function RecoveryHarnessSection() {
         <img src="/gmaillist.png" alt="Gmail case correspondence showing a recorded recovery outcome" className="h-full w-full object-cover" loading="lazy" />
         <div className="absolute inset-x-2 bottom-3 rounded-[10px] bg-white px-3 py-2.5 shadow-[0_14px_30px_rgba(20,31,34,0.16)] backdrop-blur-xl sm:inset-x-3 sm:bottom-4 sm:px-4 sm:py-3">
           <div className="flex items-start justify-between gap-3">
-            <span className="text-[10px] font-semibold tracking-tight text-[#7B878D]">Case outcome</span>
-            <span className="flex items-center gap-1 text-[9px] font-semibold tracking-tight text-[#2D7B59]"><Check className="h-3 w-3" strokeWidth={2.5} /> Pattern learned</span>
+            <span className="text-[10px] font-semibold tracking-tight text-[#7B878D]">Outcome recorded</span>
+            <span className="flex items-center gap-1 text-[9px] font-semibold tracking-tight text-[#2D7B59]"><Check className="h-3 w-3" strokeWidth={2.5} /> Basis updated</span>
           </div>
-          <p className="mt-1 text-[11px] font-semibold leading-4 tracking-tight text-[#263438] sm:text-[12px]">Rejected → Reason identified → Evidence updated → Refiled</p>
-          <p className="mt-1 text-[9px] leading-3.5 tracking-tight text-[#667177]">Evidence requirement → updated (Agent Harness Recalibrated)</p>
+          <p className="mt-1 text-[11px] font-semibold leading-4 tracking-tight text-[#263438] sm:text-[12px]">Rejected → Reason classified → Evidence strengthened → Next action justified</p>
+          <p className="mt-1 text-[9px] leading-3.5 tracking-tight text-[#667177]">The next review starts with the recorded objection—not from zero.</p>
         </div>
       </div>
     );
@@ -805,11 +805,11 @@ function RecoveryHarnessSection() {
             <span className="heading-tone-dark">Not everything</span> <span className="heading-tone-muted">becomes a claim.</span>
           </h2>
           <p className="mt-5 max-w-[720px] text-[16px] leading-7 text-[var(--margin-text-secondary)] sm:text-[18px] sm:leading-8">
-            A good financial control system knows when not to act. Margin applies evidence, rules, and guardrails before a recovery moves forward. You see what was found, why it matters, what supports it, what remains uncertain, and what action is justified.
+            A financial control system knows when to proceed, when to hold, and when to close. Margin applies evidence, reconciliation rules, and approval guardrails before recovery work moves forward. You see what happened, what is supported, what remains uncertain, and what action is justified.
           </p>
           <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#52616A] sm:text-[11px]">
-            <span>NO RECOVERY · Evidence supports Amazon&apos;s charge</span>
-            <span>POTENTIAL DISCREPANCY · More evidence is required</span>
+            <span>ACCOUNTED FOR · Evidence supports Amazon&apos;s charge</span>
+            <span>ON HOLD · Financial position requires more evidence</span><span>ACTIONABLE · Recovery basis supports the next step</span>
           </div>
         </motion.div>
         <div className="mt-10 grid gap-5 md:mt-14 md:grid-cols-3 md:gap-6">
