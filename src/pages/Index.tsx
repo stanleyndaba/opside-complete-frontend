@@ -1121,7 +1121,7 @@ function MarginStandardSection() {
   const standardSteps = [
     "What happened?",
     "What should have happened?",
-    "What the evidence supports?",
+    "What does the evidence support?",
     "What should happen next?",
     "What was actually recovered?",
   ];
@@ -1184,14 +1184,14 @@ function MarginStandardSection() {
           <motion.div {...revealProps} className="order-1 max-w-[720px] lg:order-2">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">06 / THE MARGIN STANDARD</p>
             <h2 id="margin-standard-title" className="font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Find it. Prove it. Then decide what to do.</span>
+              <span className="heading-tone-dark">Know what the records can actually support.</span>
             </h2>
             <p className="mt-6 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              Margin does not turn every discrepancy into a claim. It establishes what happened first, then gives you a clear reason to act — or a clear reason not to.
+              A discrepancy is only useful when its financial basis is clear. Margin connects the event, the expected position, the observed outcome, and the supporting evidence before treating the difference as meaningful.
             </p>
-            <p className="mt-4 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">If the evidence supports recovery, Margin prepares the case. If the evidence is insufficient, the finding stays unresolved. If Amazon already got it right, the answer is simply that the money is accounted for. Either way, you get a decision instead of another open question.</p>
+            <p className="mt-4 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Margin separates what is established from what is estimated, missing, disputed, or already accounted for. If the evidence supports recovery, Margin prepares a defensible basis for action. If the evidence is incomplete, the uncertainty stays visible. If the records reconcile, Margin gives you a clear answer: nothing further needs to be recovered.</p>
             <p className="mt-6 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
-              No guessing. No unnecessary claims. No &quot;probably fine.&quot;
+              The standard is not &quot;find something.&quot; The standard is &quot;know what is true.&quot;
             </p>
           </motion.div>
 
