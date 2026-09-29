@@ -12,22 +12,22 @@ interface LandingAuditCtaProps {
 const pathOptions = [
   {
     label: "Recover Once",
-    title: "One supported recovery. One defined engagement. Nothing vague.",
-    copy: "When the Audit identifies a supported recovery, Margin prepares the proof, manages the approved action, follows the response, and keeps the outcome visible — so you do not have to carry the case yourself.",
-    price: "Personalized fixed quote after your Audit.",
-    cta: "See this recovery handled",
+    title: "One supported exposure. One accountable closeout.",
+    copy: "For a defined financial exposure, Recover Once gives you a fixed-scope operation with a clear beginning and end. Margin establishes entitlement, prepares the evidence, manages the approved submission, follows the response through settlement, and returns a closed financial record — not another claim to chase.",
+    price: "Personalized fixed scope after the Audit.",
+    cta: "Start the Audit — Recover Once",
     ctaLocation: "homepage_recover_once",
-    items: ["Evidence preparation", "Recovery preparation", "Approved submission", "Follow-up and eligible appeal handling", "Payout verification"],
+    items: ["Event-level entitlement", "Evidence-backed preparation", "Seller-approved submission", "Response and appeal control", "Settlement verification"],
   },
   {
     label: "Recovery Workspace",
-    title: "For recovery work that keeps coming back — and should stop becoming yours.",
-    copy: "If you keep carrying the same recovery work across spreadsheets, evidence, cases, and settlements, Workspace keeps the recurring work together over time — so your team can review decisions instead of managing the chase.",
+    title: "Keep the account under financial control.",
+    copy: "For sellers with recurring exposure, Workspace keeps the account under examination after the first Audit. Margin identifies new financial events, maintains evidence and case continuity, tracks responses and settlements, and keeps the unresolved position visible — so the next problem does not become your team's next project.",
     price: "$109/month",
-    subPrice: "0% recovery commission.",
-    cta: "Keep recovery handled",
+    subPrice: "0% recovery commission · 100% of Amazon reimbursements stay yours.",
+    cta: "Start the Audit — Workspace",
     ctaLocation: "homepage_recovery_workspace",
-    items: ["Recurring recovery work", "Evidence readiness", "Case continuity", "Payout and reversal tracking", "One ongoing recovery record"],
+    items: ["Recurring account examination", "New exposure detection", "Evidence and case continuity", "Response, reversal, and payout tracking", "One accountable financial record"],
   },
 ];
 
@@ -95,8 +95,8 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           <div className="mb-5 flex items-center gap-3">
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">23 / ROUTING</span>
           </div>
-          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>First establish what is happening. Then choose how much you want handled.</h2>
-          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Audit comes first. It establishes what is happening before asking you to decide whether anything is worth managing. From there, Margin routes the work according to what the evidence and your operating needs justify.</p>
+          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>First establish the financial position. Then choose how much responsibility Margin should carry.</h2>
+          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Audit is the underwriting step. It establishes the account&apos;s exposure, evidence position, and recurring pattern before you choose a service. From there, Margin routes the work into a defined recovery closeout or an ongoing financial control layer — so you invest in the operating outcome, not another dashboard.</p>
         </motion.div>
         <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
           {pathOptions.map((option, index) => {
@@ -129,8 +129,8 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           )})}
         </div>
         <motion.div {...revealProps} className="routing-note mt-9 border-l-2 border-[var(--margin-border)] pl-5">
-          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not ready to hand anything over? Start with clarity.</p>
-          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The Audit is free. Margin establishes what exists before asking you to decide whether any work is worth managing.</p>
+          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not ready to choose the operating path? Start with the financial position.</p>
+          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The Audit is free. It tells you whether the account carries a defined exposure, a recurring control problem, or no supported recovery to manage — before you pay or commit.</p>
         </motion.div>
       </div>
     </section>
