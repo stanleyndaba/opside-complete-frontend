@@ -250,14 +250,14 @@ function AccountingEvidenceSection() {
 }
 
 const financialControlOperations = [
-  "Find the discrepancy",
-  "Trace what happened",
-  "Prove what’s owed",
-  "Build the recovery",
-  "Handle the case",
-  "Manage rejections",
-  "Pursue appeals",
-  "Reconcile the outcome",
+  "Detect the variance",
+  "Reconstruct the event",
+  "Test the evidence",
+  "Quantify the exposure",
+  "Build the case",
+  "Manage the response",
+  "Handle the rejection",
+  "Reconcile the payout",
 ];
 
 function FinancialControlOperationsSection() {
@@ -287,7 +287,7 @@ function FinancialControlOperationsSection() {
           <motion.div {...revealProps}>
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">08 / FINANCIAL CONTROL</p>
             <h2 id="financial-control-operations-title" className="max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              <span className="heading-tone-dark">Margin handles the work</span> <span className="heading-tone-muted">between a financial problem and its resolution</span>
+              <span className="heading-tone-dark">Margin carries the problem</span> <span className="heading-tone-muted">from first signal to reconciled resolution</span>
             </h2>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative flex min-h-[330px] items-center justify-center overflow-hidden sm:min-h-[430px] [mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)]">
