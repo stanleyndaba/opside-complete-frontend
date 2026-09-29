@@ -12,20 +12,20 @@ interface LandingAuditCtaProps {
 const pathOptions = [
   {
     label: "Recover Once",
-    title: "One supported recovery. One defined engagement.",
-    copy: "When the Audit identifies a recovery Margin can take over, Margin prepares the proof, manages the approved action, follows the response, and keeps the outcome visible.",
+    title: "One supported recovery. One defined engagement. Nothing vague.",
+    copy: "When the Audit identifies a supported recovery, Margin prepares the proof, manages the approved action, follows the response, and keeps the outcome visible — so you do not have to carry the case yourself.",
     price: "Personalized fixed quote after your Audit.",
-    cta: "Handle this recovery",
+    cta: "See this recovery handled",
     ctaLocation: "homepage_recover_once",
     items: ["Evidence preparation", "Recovery preparation", "Approved submission", "Follow-up and eligible appeal handling", "Payout verification"],
   },
   {
     label: "Recovery Workspace",
-    title: "For recovery work that keeps coming back.",
-    copy: "If you keep carrying the same recovery work across spreadsheets, evidence, cases, and settlements, Workspace keeps the recurring work together over time.",
+    title: "For recovery work that keeps coming back — and should stop becoming yours.",
+    copy: "If you keep carrying the same recovery work across spreadsheets, evidence, cases, and settlements, Workspace keeps the recurring work together over time — so your team can review decisions instead of managing the chase.",
     price: "$109/month",
     subPrice: "0% recovery commission.",
-    cta: "Activate Recovery Workspace",
+    cta: "Keep recovery handled",
     ctaLocation: "homepage_recovery_workspace",
     items: ["Recurring recovery work", "Evidence readiness", "Case continuity", "Payout and reversal tracking", "One ongoing recovery record"],
   },
@@ -52,7 +52,7 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
             <p><span className="font-semibold text-[#182026]">Before:</span> The Audit starts with one question: Does everything actually reconcile?</p>
             <p><span className="font-semibold text-[#182026]">Now:</span> Margin examines your Amazon financial activity and shows what reconciles, what doesn&apos;t, what the evidence supports, what remains unresolved, and where recovery makes sense.</p>
           </div>
-          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit turns uncertainty into something you can act on.</p>
+          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit turns uncertainty into a clear next step — whether that means acting, waiting, or leaving it alone.</p>
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-2">
@@ -76,9 +76,9 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
             <div className="h-px w-8 bg-[#0B74DE]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">20 / ENTERPRISE</span>
           </div>
-          <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Don&apos;t make your team carry the financial history of every recovery.</h2>
-          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">As Amazon operations grow across marketplaces, entities, catalogs, and operating environments, financial recovery becomes harder to keep coordinated.</p>
-          <p className="mt-4 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin keeps the underlying records, decisions, cases, and outcomes connected across the operation. Margin keeps the recovery operation accountable to what actually happened.</p>
+          <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Your team should not have to carry the financial history of every recovery.</h2>
+          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">As Amazon operations grow across marketplaces, entities, catalogs, and operating environments, financial recovery becomes harder to keep coordinated — and easier to leave unresolved.</p>
+          <p className="mt-4 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin keeps the underlying records, decisions, cases, and outcomes connected across the operation. Your team sees what needs a decision; Margin keeps the recovery accountable to what actually happened.</p>
           <Link to="/sales" className="landing-pressable mt-6 inline-flex h-11 items-center rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Explore Margin for Enterprise <ArrowRight className="ml-2 h-4 w-4" /></Link>
           <div className="enterprise-routing-meta mt-4 border-l border-[#C8D2D9] pl-4 text-[13px] leading-6 text-[#98A5AE]"><p>US · CA · MX · UK · EU + More</p><p>Multiple markets. One financial record.</p></div>
         </motion.div>
@@ -132,8 +132,8 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           )})}
         </div>
         <motion.div {...revealProps} className="routing-note mt-9 border-l-2 border-[var(--margin-border)] pl-5">
-          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not ready to continue? That is fine.</p>
-          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The Audit is free. Margin establishes that a recovery exists before asking you to decide whether any work is worth managing.</p>
+          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not ready to hand anything over? Start with clarity.</p>
+          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The Audit is free. Margin establishes what exists before asking you to decide whether any work is worth managing.</p>
         </motion.div>
       </div>
     </section>

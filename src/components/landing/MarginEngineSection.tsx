@@ -11,8 +11,8 @@ export function MarginEngineSection() {
             <div className="h-px w-8 bg-[#0B74DE]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">06 / THE PROMISE</span>
           </div>
-          <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Less uncertainty. Less financial chasing. More confidence about what happened to the money.</h2>
-          <p className="mt-4 max-w-[620px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Know what happened. Resolve what matters. Move forward.</p>
+          <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Establish what happened. Handle what matters. Know the money is accounted for.</h2>
+          <p className="mt-4 max-w-[620px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Margin establishes the reality first. Then you decide how much of the recovery you want handled.</p>
         <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Margin owns the gap between what Amazon says happened and what actually happened to your money.</p>
         <p className="mt-3 max-w-[720px] text-[15px] leading-7 text-[#536872] sm:text-[17px]">Margin maintains that truth as records, reimbursements, reversals, and outcomes change—so each examination starts with established history.</p>
         </div>
@@ -21,7 +21,7 @@ export function MarginEngineSection() {
           <FinalDelegationPreview compactMobile tallMobile />
         </motion.div>
 
-        <p className="mt-10 text-center font-lora text-[18px] leading-tight tracking-tight text-[#34414A] sm:text-[22px]" style={{ fontWeight: 400 }}>Every financial discrepancy becomes a traceable decision.</p>
+        <p className="mt-10 text-center font-lora text-[18px] leading-tight tracking-tight text-[#34414A] sm:text-[22px]" style={{ fontWeight: 400 }}>Every financial discrepancy becomes a traceable decision — not another task added to your week.</p>
       </div>
     </section>
   );
