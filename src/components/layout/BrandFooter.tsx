@@ -237,10 +237,11 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
         {/* Display Wordmark Signature */}
         <div className="pointer-events-none relative mt-16 flex w-full justify-center select-none opacity-[0.035]">
           <h2 
-            className="whitespace-nowrap font-merriweather font-black uppercase leading-none tracking-[-0.07em]"
+            className="brand-wordmark whitespace-nowrap font-merriweather font-black uppercase leading-none tracking-[-0.07em]"
             style={{ 
               fontSize: 'clamp(50px, 22vw, 440px)',
-              color: '#FFFFFF'
+              color: '#FFFFFF',
+              fontFamily: "'Merriweather', Georgia, serif"
             }}
           >
             MARGIN
