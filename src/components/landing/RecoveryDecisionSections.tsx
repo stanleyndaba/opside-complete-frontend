@@ -68,17 +68,17 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[1.26fr_0.74fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-1">
-          <FinalDelegationPreview compactMobile tallMobile src="/speak-to-sales" title="Enterprise Recovery Program Review page preview" />
+          <FinalDelegationPreview compactMobile tallMobile src="/speak-to-sales" title="Enterprise Recovery Assessment page preview" />
         </motion.div>
         <motion.div {...revealProps} className="enterprise-routing-copy order-1 max-w-[780px] lg:order-2">
           <div className="mb-5 flex items-center gap-3">
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">20 / ENTERPRISE</span>
           </div>
-          <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Your team should not have to carry the financial history of every recovery.</h2>
-          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">As Amazon operations grow across marketplaces, entities, catalogs, and operating environments, financial recovery becomes harder to keep coordinated — and easier to leave unresolved.</p>
-          <p className="mt-4 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin keeps the underlying records, decisions, cases, and outcomes connected across the operation. Your team sees what needs a decision; Margin keeps the recovery accountable to what actually happened.</p>
-          <Link to="/sales" className="landing-pressable mt-6 inline-flex h-11 items-center rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Explore Margin for Enterprise <ArrowRight className="ml-2 h-4 w-4" /></Link>
-          <div className="enterprise-routing-meta mt-4 border-l border-[#C8D2D9] pl-4 text-[13px] leading-6 text-[#98A5AE]"><p>US · CA · MX · UK · EU + More</p><p>Multiple markets. One financial record.</p></div>
+          <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Your finance team should not have to reconstruct the business from every recovery.</h2>
+          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">At scale, recovery stops being a case-by-case task and becomes a control problem across marketplaces, legal entities, catalogs, settlement periods, and operating teams. What is not connected becomes exposure that remains unmeasured, unassigned, and unresolved.</p>
+          <p className="mt-4 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin gives the operation a financial control layer: records, decisions, evidence, submissions, responses, reversals, and cash outcomes remain attached to the event that caused them. Leadership sees the exposure and the next accountable decision; operators execute from an established record; finance can close the loop on what actually happened.</p>
+          <Link to="/sales" className="landing-pressable mt-6 inline-flex h-11 items-center rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Assess Margin for Enterprise <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          <div className="enterprise-routing-meta mt-4 border-l border-[#C8D2D9] pl-4 text-[13px] leading-6 text-[#98A5AE]"><p>US · CA · MX · UK · DE + More</p><p>Every market. One accountable financial record.</p></div>
         </motion.div>
       </div>
     </div>
