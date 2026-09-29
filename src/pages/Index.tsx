@@ -1096,19 +1096,19 @@ function ControlSection() {
           <motion.div {...revealProps} className="lg:sticky lg:top-28">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">13 / RECOVERY OPERATIONS</p>
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Keep the financial work moving</span> <span className="heading-tone-muted">without carrying it in your head.</span>
+              <span className="heading-tone-dark">The recovery moves</span> <span className="heading-tone-muted">while you keep the financial position.</span>
             </h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> As evidence changes, submissions move, Amazon responds, and payouts arrive, every recovery creates another decision to make.
+              <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> As evidence changes, submissions move, Amazon responds, and payouts arrive, every recovery creates another status to remember and another decision to carry.
             </p>
             <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin keeps the operation visible: what is ready to approve, what has been filed, what is waiting on Amazon, what needs evidence, what needs attention, and what has been resolved.
+              <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin keeps each recovery in a controlled operating position: ready for approval, filed, waiting on Amazon, blocked by evidence, under payout review, or reconciled. You see what changed and the next accountable action without rebuilding the queue.
             </p>
-            <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">You do not need to decide which anomalies deserve a case. Margin establishes what is real, what is supported, and what deserves your attention.</p>
+            <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">The operation advances. Your attention stays on the decisions that matter: what to approve, what to unblock, and what to close.</p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative overflow-hidden">
-            <FinalDelegationPreview compactMobile expandedMobile src="/filing-pipeline-preview" title="Recovery Pipeline page preview" />
+            <FinalDelegationPreview compactMobile expandedMobile src="/filing-pipeline-preview" title="Recovery operations page preview" />
           </motion.div>
         </div>
       </div>
