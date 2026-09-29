@@ -21,7 +21,7 @@ import { applyFoundingActivationState, hasFoundingReservationContext, markFoundi
 
 const sanitizeNextPath = (value: string | null, intent: string | null) => {
   if (typeof window === 'undefined') {
-    return '/app';
+    return '/audit-start';
   }
 
   const storedTenantSlug = normalizeTenantSlug(localStorage.getItem('active_tenant_slug'));
@@ -112,6 +112,7 @@ const PAYSTACK_REVIEW_EMAIL = String(
   import.meta.env.VITE_PAYSTACK_REVIEW_EMAIL || 'paystack-review@margin-finance.com'
 ).trim().toLowerCase();
 const MARGIN_SESSION_UPDATED_EVENT = 'margin:session-updated';
+const SELLER_AUTH_SUCCESS_PATH = '/audit-start';
 
 const isPaystackReviewerEmail = (value: string) => {
   return value.trim().toLowerCase() === PAYSTACK_REVIEW_EMAIL;
@@ -891,37 +892,14 @@ const Login = () => {
   };
 
   const buildPostAuthTargetPath = async (
-    intentRecord: AuditIntentRoute | null | undefined,
+    _intentRecord: AuditIntentRoute | null | undefined,
     resolvedTenantSlug: string,
   ) => {
-    if (intentRecord?.return_path) {
-      return sanitizeNextPath(intentRecord.return_path, null);
-    }
-
-    if (nextPath !== '/app' || next === '/app') {
-      return bindPathToTenant(nextPath, resolvedTenantSlug);
-    }
-
     if (resolvedTenantSlug === DEMO_TENANT_SLUG) {
       return `/app/${DEMO_TENANT_SLUG}/dashboard`;
     }
-
-    try {
-      const lifecycle = await api.getSellerLifecycle();
-      const destination = lifecycle.ok && lifecycle.data?.success
-        ? lifecycle.data.continuation.destination
-        : null;
-
-      if (destination && destination !== '/' && destination.startsWith('/') && !destination.startsWith('//') && !destination.startsWith('/login')) {
-        return bindPathToTenant(destination, resolvedTenantSlug);
-      }
-    } catch {
-      // The Audit remains the safe immediate-use destination if lifecycle lookup is temporarily unavailable.
-    }
-
-    return '/audit';
+    return SELLER_AUTH_SUCCESS_PATH;
   };
-
   const shouldGateOnboarding = (path: string) => path.includes('/connect-amazon');
 
   const routeWithCapacityGate = async (targetPath: string) => {
@@ -1015,6 +993,11 @@ const Login = () => {
         throw new Error('No active Clerk session is available for workspace routing.');
       }
 
+      if (isInternalDemoAccessEmail(clerkEmail)) {
+        seedDemoSession({ userEmail: clerkEmail });
+        navigate(`/app/${DEMO_TENANT_SLUG}/dashboard`, { replace: true });
+        return;
+      }
       const bootstrapResult = await bootstrapWorkspaceWithClerkToken(clerkEmail, sessionToken);
       const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
       
@@ -1413,7 +1396,7 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-y-auto bg-[#C1CED9] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+    <div className="relative min-h-screen overflow-y-auto bg-[#C1CED9] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', fontFamily: 'var(--font-google-sans)' }}>
       <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_48%_42%,#F1F5F7_0%,#D8E3EB_48%,#B6C5D2_100%)]" />
         <div className="absolute -bottom-[34vw] -left-[16vw] h-[76vw] w-[76vw] rounded-full border-[clamp(48px,7vw,150px)] border-[#E2EEF6] bg-[#AEC4D5]/45 shadow-[inset_18px_22px_42px_rgba(255,255,255,0.7),inset_-28px_-35px_58px_rgba(73,101,124,0.26),0_18px_60px_rgba(75,103,124,0.2)]" />
@@ -1446,7 +1429,7 @@ const Login = () => {
               </div>
 
               <div className="lg:hidden mb-6">
-                <h1 className="text-left text-[26px] font-bold leading-[1.15] tracking-[-0.035em] text-[#182026] sm:text-[30px] font-lora">
+                <h1 className="text-left text-[26px] font-bold leading-[1.15] tracking-[-0.035em] text-[#182026] sm:text-[30px] font-google-sans">
                   {heading}
                 </h1>
                 {mode === 'signup' && (
@@ -1771,7 +1754,7 @@ const Login = () => {
               </p>
             )}
             
-            <h1 className="text-left text-[36px] font-bold leading-[1.08] tracking-[-0.02em] text-[#182026] font-lora">
+            <h1 className="text-left text-[36px] font-bold leading-[1.08] tracking-[-0.02em] text-[#182026] font-google-sans">
               {heading}
             </h1>
 
@@ -1816,7 +1799,7 @@ const Login = () => {
                 <p className="text-[15px] leading-7 text-[#4D5B66]">
                   Your records, evidence, decisions, and recovery progress stay connected—so you can come back without having to piece everything together again.
                 </p>
-                <p className="pt-1 font-merriweather text-[14px] font-semibold leading-6 tracking-tight text-[#182026]">
+                <p className="pt-1 font-google-sans text-[14px] font-semibold leading-6 tracking-tight text-[#182026]">
                   Clear recovery work. You stay in control.
                 </p>
               </div>
@@ -1828,7 +1811,7 @@ const Login = () => {
       <Dialog open={sessionModalOpen} onOpenChange={setSessionModalOpen}>
         <DialogContent className="max-w-[420px] rounded-[14px] border-[#D8E3EA] bg-white p-6 text-[#182026] shadow-[0_24px_80px_rgba(37,49,58,0.14)] sm:p-7">
           <DialogHeader className="space-y-2 pr-8 text-left">
-            <DialogTitle className="font-lora text-[24px] font-semibold leading-tight tracking-[-0.025em] text-[#182026]">
+            <DialogTitle className="font-google-sans text-[24px] font-semibold leading-tight tracking-[-0.025em] text-[#182026]">
               You’re already signed in
             </DialogTitle>
             <DialogDescription className="text-[14px] leading-6 text-[#66737F]">
