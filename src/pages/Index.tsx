@@ -2054,14 +2054,14 @@ function FinancialReconciliationSection() {
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">19 / RECONCILIATION</p>
             <h2 id="financial-reconciliation-title" className="max-w-[560px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">A recovery isn&apos;t complete until the money is</span> <span className="heading-tone-muted">accounted for.</span></h2>
             <div className="mt-6 max-w-[580px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
-              <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> An approval is not a recovery. A recovery is not complete when Amazon says it paid.</p>
-              <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin verifies what was expected, what Amazon credited, what actually landed, and what changed afterward. Then the recovery closes when the financial record reconciles — so “paid” does not quietly become “resolved.”</p>
+              <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> An approval is not a cash receipt. A recovery is not closed because Amazon marked it paid.</p>
+              <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin reconciles the expected entitlement, Amazon&apos;s decision, settlement credit, and downstream financial evidence. It verifies what should have landed, what did land, and whether any balance, reversal, or attribution issue remains before the record is closed.</p>
             </div>
             <p className="mt-4 max-w-[580px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>The money is accounted for. The record is closed.</p>
-            <p className="mt-3 max-w-[580px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">An approval is not a recovery. A recovery is not complete until the money is accounted for.</p>
+            <p className="mt-3 max-w-[580px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">A case is not closed on approval. It is closed when the expected, credited, and settled amounts reconcile.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden">
-            <FinalDelegationPreview compactMobile expandedMobile src="/financial-reconciliation" title="Financial reconciliation page preview" />
+            <FinalDelegationPreview compactMobile expandedMobile src="/financial-reconciliation" title="Financial closeout page preview" />
           </motion.div>
         </div>
       </div>
