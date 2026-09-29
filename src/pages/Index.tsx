@@ -553,11 +553,11 @@ function ReconstructionGapSection() {
           <motion.div {...revealProps} className="order-1 max-w-[920px] border-l border-[#D8E3E8] pl-5 sm:pl-7 md:pl-10 lg:order-1">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">02 / THE RECONSTRUCTION GAP</p>
             <h2 id="reconstruction-gap-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">You shouldn&apos;t have to reconstruct</span> <span className="heading-tone-muted">your own financial story.</span>
+              <span className="heading-tone-dark">One unresolved number</span> <span className="heading-tone-muted">shouldn&apos;t require an investigation.</span>
             </h2>
             <div className="mt-6 max-w-[780px] space-y-5 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
-              <p>When a number does not add up, finding the answer can mean jumping between transactions, settlements, reports, inventory records, and supporting documents — just to understand one financial event. You should not have to become the investigator of your own Amazon business.</p>
-              <p className="font-semibold text-[var(--margin-text-primary)]">Margin connects the evidence, establishes what happened, and makes the next action clear — without handing you another investigation to manage.</p>
+              <p>The answer may exist across a settlement, fee report, inventory movement, return, or supporting document. But finding several pieces of information is not the same as establishing what happened.</p>
+              <p className="font-semibold text-[var(--margin-text-primary)]">Margin connects the records around the event, establishes the financial reality, and makes the next defensible action clear—without asking the operator to become the investigator.</p>
             </div>
           </motion.div>
           <div className="relative order-2 min-w-0 lg:order-2">
