@@ -854,10 +854,10 @@ function MarginLifecycleSection() {
         </motion.div>
 
           <motion.p {...revealProps} className="mt-6 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Investigate the records yourself, piece together and work through transactions, metadata, and supporting records to figure out whether a case can actually be supported.
+            <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Reconstruct the financial event yourself—moving between settlement lines, shipment records, inventory adjustments, and supporting documents to decide whether the variance is real, attributable, and recoverable.
           </motion.p>
           <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> The relevant evidence is examined, the case is built, and the next step is ready when you are — not waiting for you to reconstruct the file first.
+            <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin performs that reconciliation, separates supported exposure from unresolved items, and prepares the next controlled action. You receive a defined case position—not another file to investigate.
           </motion.p>
         </div>
         </div>

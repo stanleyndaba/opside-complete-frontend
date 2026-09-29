@@ -9,13 +9,13 @@ type Phase = 'extracting' | 'compiling' | 'output';
 
 const METADATA = [
   { label: 'Shipment: FBA15JJ4K7L1' },
-  { label: 'Units: 120' },
-  { label: 'Weight: 45.2lb' },
+  { label: 'Units: 60 shipped · 46 received' },
+  { label: 'Weight: 45.2 lb' },
   { label: 'Carrier: UPS Freight' },
   { label: 'Tracking: 1Z84...2216' },
   { label: 'Status: Signed & accepted' },
   { label: 'Signature: J. Smith' },
-  { label: 'Delivered: Nov 10 · 14:22:01' },
+  { label: 'Delivered: 10 Mar · 14:22 UTC' },
 ];
 
 const EVIDENCE_MATCH_SEQUENCE = [
@@ -170,13 +170,13 @@ export default function ReportGeneration() {
     const report = new jsPDF();
 
     report.setFontSize(20);
-    report.text('Dispute Claim Report', 20, 28);
+    report.text('Financial Recovery Case File', 20, 28);
     report.setFontSize(11);
-    report.text('Amazon FBA Shipment Investigation', 20, 42);
+    report.text('Northstar Home US · Inbound receiving variance', 20, 42);
     report.text('Carrier Weight: 45.2lb', 20, 60);
     report.text('Signature: J. Smith', 20, 70);
     report.text('Timestamp: 14:22:01', 20, 80);
-    report.text('Finding: Delivery evidence verified and bound to the dispute.', 20, 100);
+    report.text('Finding: Receiving variance reconciled and bound to the case.', 20, 100);
     report.save('dispute-investigation-report.pdf');
   };
 
@@ -201,46 +201,46 @@ export default function ReportGeneration() {
                 <div className="relative h-[360px] overflow-hidden border border-[#DCE8EE] bg-white p-4 sm:h-[390px] sm:p-7">
                   <div className="flex items-start justify-between border-b border-[#DCE8EE] pb-4">
                     <div>
-                      <h2 className="text-base font-semibold tracking-tight text-[#182026]">Inbound shipment shortage</h2>
-                      <p className="mt-1 text-[11px] text-[#8A99A4]">Shipment, receipt, and reimbursement records</p>
+                      <h2 className="text-base font-semibold tracking-tight text-[#182026]">Inbound shipment receiving variance</h2>
+                      <p className="mt-1 text-[11px] text-[#8A99A4]">Northstar Home US · Shipment, receiving, inventory, and settlement records</p>
                     </div>
                   </div>
 
                   <div ref={evidenceScrollRef} className="h-full overflow-y-auto pr-2 [scrollbar-width:thin]">
                   <div className="mt-2 space-y-1.5 text-[10.5px] leading-[1.15rem] text-[#4D5B66] sm:mt-4 sm:space-y-2.5 sm:text-[13px] sm:leading-6">
                     <p>
-                      Amazon received fewer units than the{' '}
+                      Amazon receiving records show fewer units than the{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('inbound-record')} tone="amber">inbound shipment record</MetadataHighlight>{' '}
                       shows were shipped.{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">60 shipped, 46 received</MetadataHighlight>{' '}
                       with a{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('gap')} tone="amber">14-unit gap at ONT8</MetadataHighlight>.
+                      <MetadataHighlight active={isEvidenceMatchActive('gap')} tone="amber">14-unit receiving variance at ONT8</MetadataHighlight>.
                     </p>
                     <p>
-                      Inbound discrepancy details are being matched to the{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('evidence-trail')} tone="amber">evidence trail</MetadataHighlight>.{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('case')} tone="amber">What Margin found</MetadataHighlight>{' '}
-                      confirms the <MetadataHighlight active={isEvidenceMatchActive('claim-path')} tone="emerald">claim path</MetadataHighlight>.
+                      The variance is being reconciled against the{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('evidence-trail')} tone="amber">evidence chain</MetadataHighlight>.{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('case')} tone="amber">Reconciled finding</MetadataHighlight>{' '}
+                      confirms the <MetadataHighlight active={isEvidenceMatchActive('claim-path')} tone="emerald">recovery path</MetadataHighlight>.
                     </p>
                     <p>
-                      Current filing movement is ready to file when{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('filing-gates')} tone="emerald">filing gates allow it</MetadataHighlight>.{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Next action: Open case.</MetadataHighlight>
+                      Recovery eligibility is ready for review when{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('filing-gates')} tone="emerald">case controls pass</MetadataHighlight>.{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Next action: Open recovery case.</MetadataHighlight>
                     </p>
                     <p>
-                      Margin is comparing <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">shipment</MetadataHighlight>,{' '}
+                      Margin is reconciling <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">shipment</MetadataHighlight>,{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('received')} tone="amber">receipt</MetadataHighlight>, and{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('reimbursement-records')} tone="emerald">reimbursement records</MetadataHighlight>{' '}
-                      to determine whether the gap can move into a case.
+                      <MetadataHighlight active={isEvidenceMatchActive('reimbursement-records')} tone="emerald">settlement and reimbursement records</MetadataHighlight>{' '}
+                      to determine whether the variance is supported and not already credited.
                     </p>
                     <p>
-                      <MetadataHighlight active={isEvidenceMatchActive('policy')} tone="emerald">FBA inventory reimbursement review</MetadataHighlight>{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('policy')} tone="emerald">FBA inventory reimbursement control review</MetadataHighlight>{' '}
                       reconciles the <MetadataHighlight active={isEvidenceMatchActive('affected-product')} tone="emerald">affected product</MetadataHighlight>,{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('unit-movement')} tone="amber">unit movement</MetadataHighlight>, and{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('reimbursement-outcome')} tone="emerald">reimbursement outcome</MetadataHighlight>{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('reimbursement-outcome')} tone="emerald">settlement outcome</MetadataHighlight>{' '}
                       against Order <MetadataHighlight active={isEvidenceMatchActive('order')} tone="amber">113-8043372-9097841</MetadataHighlight>, SKU{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('sku')} tone="amber">ACME-TRAVEL-MUG-BLK</MetadataHighlight>, and a{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('shortage')} tone="amber">14-unit shortage</MetadataHighlight>.
+                      <MetadataHighlight active={isEvidenceMatchActive('sku')} tone="amber">NS-TRAVEL-MUG-BLK</MetadataHighlight>, and a{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('shortage')} tone="amber">14-unit receiving variance</MetadataHighlight>.
                     </p>
                   </div>
 
@@ -248,7 +248,7 @@ export default function ReportGeneration() {
                     <div className="space-y-1.5 font-google-sans text-[10.5px] leading-[1.15rem] text-[#25313A]">
                       <p>
                         <span className="font-medium uppercase tracking-tight text-[#66737F]">Shipment</span>{' '}
-                        Shipment <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">FBA17ACME001</MetadataHighlight> ·{' '}
+                        Shipment <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">FBA15JJ4K7L1</MetadataHighlight> ·{' '}
                         <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">60 shipped</MetadataHighlight>.
                       </p>
                       <p>
@@ -258,17 +258,17 @@ export default function ReportGeneration() {
                       </p>
                       <p>
                         <span className="font-medium uppercase tracking-tight text-[#66737F]">Backend</span>{' '}
-                        Record <MetadataHighlight active={isEvidenceMatchActive('record')} tone="amber">00000000-000</MetadataHighlight> · Source{' '}
+                        Record <MetadataHighlight active={isEvidenceMatchActive('record')} tone="amber">rec-2026-04-20-ont8</MetadataHighlight> · Source{' '}
                         <MetadataHighlight active={isEvidenceMatchActive('sp-api')} tone="amber">SP API</MetadataHighlight> · Sync{' '}
-                        <MetadataHighlight active={isEvidenceMatchActive('sync')} tone="amber">acme-sync-20260420</MetadataHighlight>
+                        <MetadataHighlight active={isEvidenceMatchActive('sync')} tone="amber">northstar-sync-20260420</MetadataHighlight>
                       </p>
                     </div>
                     <div className="mt-1.5 border-t border-[#E8EFF3] pt-1.5 font-google-sans text-[10.5px] leading-[1.15rem] text-[#25313A]">
                       <p>
                         <span className="font-medium uppercase tracking-tight text-[#66737F]">Case readiness</span>{' '}
-                        <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Claim candidate</MetadataHighlight> · Deadline{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Recovery case candidate</MetadataHighlight> · Deadline{' '}
                         <MetadataHighlight active={isEvidenceMatchActive('deadline')} tone="emerald">Apr 2, 2026</MetadataHighlight> · Case link{' '}
-                        <MetadataHighlight active={isEvidenceMatchActive('case')} tone="emerald">ACME-CASE-2001</MetadataHighlight>
+                        <MetadataHighlight active={isEvidenceMatchActive('case')} tone="emerald">NS-FBA-CASE-2001</MetadataHighlight>
                       </p>
                     </div>
                   </div>
@@ -277,7 +277,7 @@ export default function ReportGeneration() {
 
                 <aside className="flex min-h-[230px] flex-col bg-transparent px-1 py-1 md:min-h-0 md:py-0">
                   <div className="flex items-center justify-between">
-                    <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Metadata Identified</p>
+                    <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence attributes identified</p>
                     <span className="font-google-sans text-[10px] font-medium text-[#8A99A4]">{extractedCount}/{METADATA.length}</span>
                   </div>
                   <div className="mt-auto flex flex-col-reverse gap-2 pt-4">
@@ -334,8 +334,8 @@ export default function ReportGeneration() {
                   </motion.div>
                 </div>
 
-                <h2 className="text-lg font-semibold text-[#182026]">Compiling Report...</h2>
-                <p className="mt-2 text-sm text-[#8A99A4]">Binding verified evidence and investigation reasoning</p>
+                <h2 className="text-lg font-semibold text-[#182026]">Building recovery case...</h2>
+                <p className="mt-2 text-sm text-[#8A99A4]">Connecting source records, control checks, and case rationale</p>
                 <CompilingCheck />
               </motion.div>
             )}
@@ -351,12 +351,12 @@ export default function ReportGeneration() {
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-3">
                     <motion.h2 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.12 }} className="flex items-center gap-2 text-sm font-medium tracking-tight text-[#182026]">
-                      Case Built
-                      <motion.span initial={{ opacity: 0, scale: 0.45 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', stiffness: 480, damping: 20, delay: 0.42 }} className="flex h-4 w-4 items-center justify-center rounded-full bg-[#32B768] text-white shadow-[0_2px_6px_rgba(50,183,104,0.28)]" aria-label="Case built and verified">
+                      Recovery case built
+                      <motion.span initial={{ opacity: 0, scale: 0.45 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', stiffness: 480, damping: 20, delay: 0.42 }} className="flex h-4 w-4 items-center justify-center rounded-full bg-[#32B768] text-white shadow-[0_2px_6px_rgba(50,183,104,0.28)]" aria-label="Recovery case built and verified">
                         <Check className="h-2.5 w-2.5" strokeWidth={3.2} />
                       </motion.span>
                     </motion.h2>
-                    <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.3 }} className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</motion.p>
+                    <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.3 }} className="mt-1 text-sm font-normal text-[#8A8F98]">Evidence chain reconciled and case controls passed.</motion.p>
                   </div>
 
                   <motion.article initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: 'easeOut', delay: 0.48 }} className="mt-6 flex flex-col items-center gap-5 sm:mt-0 sm:flex-row sm:items-center">
@@ -391,17 +391,17 @@ export default function ReportGeneration() {
                     </motion.div>
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
-                      <motion.h3 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.62 }} className="text-[15px] font-bold tracking-tight text-[#182026] sm:text-base">Claim Submission Package</motion.h3>
+                      <motion.h3 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.62 }} className="text-[15px] font-bold tracking-tight text-[#182026] sm:text-base">Inbound receiving variance case file</motion.h3>
                       <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.72 }} className="mt-1.5 font-google-sans text-[10px] uppercase tracking-tight text-[#8A8F98] sm:text-[11px]">
-                        FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: NOV 12 2025&nbsp;&nbsp; VERIFIED
+                        FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: APR 30 2026&nbsp;&nbsp; VERIFIED
                       </motion.p>
 
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.82 }} className="mt-2.5 flex flex-wrap justify-center gap-1.5 sm:justify-start">
                         {[
-                          'Recovery summary', 'Claim type', 'Shipment timeline',
-                          'Required evidence checklist', 'Invoice', 'BOL', 'POD',
-                          'ASIN/FNSKU mapping', 'Quantity comparison', 'Cost basis',
-                          'Case narrative', 'Attachment index', 'Filing deadline', 'Seller approval status'
+                          'Reconciliation summary', 'Finding classification', 'Shipment timeline',
+                          'Evidence requirements', 'Commercial invoice', 'Bill of lading', 'POD',
+                          'ASIN/FNSKU mapping', 'Quantity variance', 'Cost basis',
+                          'Case rationale', 'Evidence index', 'Filing deadline', 'Seller approval status'
                         ].map((item, index) => (
                           <motion.span key={item} initial={{ opacity: 0, y: 7, scale: 0.94 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.28, ease: 'easeOut', delay: 0.84 + index * 0.055 }} className="inline-flex items-center gap-1 rounded-[2px] border-0 bg-[#EEF1F3] px-2 py-0.5 text-[9px] font-medium text-[#30373C]">
                             <Check className="h-2.5 w-2.5 text-emerald-500" />
@@ -416,7 +416,7 @@ export default function ReportGeneration() {
                           onClick={() => setShowPreview(true)}
                           className="flex h-8 items-center gap-2 rounded-[3px] border border-[#182026] bg-black px-5 text-sm font-medium text-white transition-colors hover:border-[#303334] hover:bg-[#303334]"
                         >
-                          Open claim package <ArrowRight className="h-3.5 w-3.5" />
+                          Open recovery case file <ArrowRight className="h-3.5 w-3.5" />
                         </button>
                         <button
                           type="button"
@@ -449,7 +449,7 @@ export default function ReportGeneration() {
             <motion.div
               role="dialog"
               aria-modal="true"
-              aria-label="Dispute Claim Report preview"
+              aria-label="Financial Recovery Case File preview"
               initial={{ opacity: 0, scale: 0.96, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 16 }}
@@ -466,10 +466,10 @@ export default function ReportGeneration() {
                 <X className="h-5 w-5" />
               </button>
               <p className="text-xs font-semibold uppercase text-[#007AFF]">Margin</p>
-              <h2 className="mt-4 text-2xl font-semibold text-gray-900">Dispute Claim Report</h2>
-              <p className="mt-2 text-sm text-gray-400">Created Nov 12, 2025</p>
+              <h2 className="mt-4 text-2xl font-semibold text-gray-900">Financial Recovery Case File</h2>
+              <p className="mt-2 text-sm text-gray-400">Created Apr 30, 2026</p>
               <div className="my-6 h-px bg-gray-100" />
-              <h3 className="text-sm font-semibold text-gray-900">Verified Evidence</h3>
+              <h3 className="text-sm font-semibold text-gray-900">Reconciled Evidence</h3>
               <div className="mt-4 space-y-3">
                 {METADATA.map((item) => (
                   <div key={item.label} className="flex items-center gap-3 rounded-[3px] bg-gray-50 p-3 text-sm text-gray-700">
@@ -479,7 +479,7 @@ export default function ReportGeneration() {
                 ))}
               </div>
               <p className="mt-6 text-sm leading-6 text-gray-600">
-                Carrier records, receiving metadata, and the verified warehouse signature establish physical delivery of the disputed shipment.
+                Carrier records, receiving metadata, inventory movement, and the signed warehouse record establish the receiving variance and support the defined recovery case.
               </p>
             </motion.div>
           </motion.div>
