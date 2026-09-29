@@ -259,6 +259,12 @@ html, body, #root {
   letter-spacing: -0.025em;
 }
 
+/* Footer wordmarks live inside the landing Google Sans scope; keep the brand serif authoritative there. */
+.landing-google-sans .brand-wordmark,
+.landing-google-sans .brand-wordmark * {
+  font-family: 'Merriweather', Georgia, serif !important;
+}
+
 #margin-hero-title, #margin-hero-title * {
   font-family: var(--font-serif) !important;
   font-weight: 430 !important;
