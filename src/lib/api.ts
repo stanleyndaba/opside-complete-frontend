@@ -1095,6 +1095,7 @@ export const api = {
 
   submitSellerAuditIntake: (data: {
     intake_type: 'seller_audit';
+    idempotency_key?: string;
     email: string;
     business_name: string;
     report_type?: string;
@@ -1102,6 +1103,8 @@ export const api = {
   }) => requestJson<{
     success: boolean;
     lead_id: string;
+    handoff_token?: string;
+    already_submitted?: boolean;
     status: string;
     created_at: string;
     message: string;
@@ -1110,13 +1113,13 @@ export const api = {
     body: JSON.stringify(data),
   }),
 
-  updateSellerAuditIntakeStatus: (leadId: string, status: 'upload_opened' | 'upload_confirmed') => requestJson<{
+  updateSellerAuditIntakeStatus: (leadId: string, handoffToken: string, status: 'upload_opened' | 'upload_confirmed') => requestJson<{
     success: boolean;
     lead_id: string;
     intake_status: string;
   }>(`/api/sales-leads/${encodeURIComponent(leadId)}/intake-status`, {
     method: 'PATCH',
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status, handoff_token: handoffToken }),
   }),
 
   // Waitlist
