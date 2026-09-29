@@ -529,11 +529,11 @@ function RealityCheckSection() {
         <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center">
           <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">01 / THE PROBLEM</p>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-            <span className="heading-tone-dark">Strong performance doesn&apos;t</span> <span className="heading-tone-muted">mean the money adds up.</span>
+            <span className="heading-tone-dark">Your business can be doing well—</span> <span className="heading-tone-muted">and still have money you can&apos;t explain.</span>
           </h2>
-          <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Your sales tell you how the business is doing. They do not tell you whether every financial event has been accounted for — or whether the money that should have reached you actually did.</p>
-          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">When orders, returns, fees, inventory, settlements, and payouts move through Amazon, the financial story becomes difficult to follow. Something can remain unresolved even when the business looks healthy — not because you missed something obvious, but because the story is spread across too many records.</p>
-          <p className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">Margin establishes what happened to the money, what the records support, and what still needs attention — so you can see the problem before deciding whether anything should be done.</p>
+          <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Performance tells you how the business is doing. Reconciliation tells you whether the money actually adds up.</p>
+          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">As the business grows, the financial story spreads across orders, returns, fees, inventory, settlements, and payouts. Nothing looks obviously wrong—but no single view tells you what happened, what remains unresolved, or what deserves attention.</p>
+          <p className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">Margin establishes the financial reality before you decide what to do next.</p>
         </motion.div>
         </div>
         <motion.div {...revealProps} className="relative">
