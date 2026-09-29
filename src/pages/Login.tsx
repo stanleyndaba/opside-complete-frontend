@@ -359,6 +359,7 @@ const Login = () => {
   const clerkFinalizeBootstrapRef = useRef<Promise<ClerkLoginResult> | null>(null);
   const showPasswordStep = mode === 'recovery' || emailStepComplete || Boolean(clerkVerificationStep);
   const socialOAuthHandledRef = useRef(false);
+  const googleStartHandledRef = useRef(false);
 
   // B5 Fix: Track latest Clerk state in a ref to handle initialization races silently
   const clerkStateRef = useRef({ loaded: clerkAuthLoaded, signIn, signUp });
@@ -1055,6 +1056,14 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (searchParams.get('start') !== 'google' || googleStartHandledRef.current || mode !== 'signup' || !clerkAuthLoaded) {
+      return;
+    }
+    googleStartHandledRef.current = true;
+    void startSocialOAuth('google');
+  }, [clerkAuthLoaded, mode, searchParams]);
 
   useEffect(() => {
     if (!isSocialOAuthReturn || socialOAuthHandledRef.current || !clerkAuthLoaded || !clerkSignedIn || !clerkUserId || !sessionChecked || !activeSessionEmail) {
