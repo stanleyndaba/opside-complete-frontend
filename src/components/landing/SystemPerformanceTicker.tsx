@@ -77,7 +77,7 @@ export function SystemPerformanceTicker() {
 
       <div className="mx-auto w-full max-w-[1280px] border-x border-[#DCE8EE] bg-white/42 max-md:border-x-0">
         <div className="px-5 pb-10 pt-14 sm:px-8 md:px-12 md:pb-14 md:pt-20">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#7A8994]">
             Recovery does not disappear when things go wrong
           </p>
           <h2

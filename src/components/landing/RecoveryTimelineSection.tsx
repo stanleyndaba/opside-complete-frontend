@@ -54,7 +54,7 @@ export const RecoveryTimelineSection: React.FC = () => {
         >
           <div className="mb-5 flex items-center gap-3">
             <div className="h-px w-8 bg-white/20" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-blue-300">Inspectability</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-slate-400">Inspectability</span>
           </div>
           <h2 id="inspectability-title" className="font-lora text-[42px] leading-[0.98] tracking-[-0.045em] text-white sm:text-[56px] md:text-[78px]" style={{ fontWeight: 400 }}>
             Know why every recovery is in front of you.

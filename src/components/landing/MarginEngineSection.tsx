@@ -8,8 +8,7 @@ export function MarginEngineSection() {
       <div className="relative mx-auto w-full max-w-[1240px] px-5 sm:px-8">
         <div className="mb-10 max-w-[720px] md:mb-14">
           <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-8 bg-[#0B74DE]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">06 / THE PROMISE</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">06 / THE PROMISE</span>
           </div>
           <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Establish what happened. Handle what matters. Know the money is accounted for.</h2>
           <p className="mt-4 max-w-[620px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Margin establishes the reality first. Then you decide how much of the recovery you want handled.</p>

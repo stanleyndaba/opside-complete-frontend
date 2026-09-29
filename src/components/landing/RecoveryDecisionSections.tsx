@@ -44,8 +44,7 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
           <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-8 bg-[#0B74DE]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">21 / THE AUDIT</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">21 / THE AUDIT</span>
           </div>
           <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Know what&apos;s actually happening.</h2>
           <div className="audit-routing-body mt-6 max-w-[760px] space-y-4 text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">
@@ -56,7 +55,7 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-2">
-          <FinalDelegationPreview compactMobile src="/recovery-workspace" title="Recovery Workspace page preview" />
+          <FinalDelegationPreview compactMobile tallMobile src="/recovery-workspace" title="Recovery Workspace page preview" />
         </motion.div>
       </div>
 
@@ -69,12 +68,11 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[1.26fr_0.74fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-1">
-          <FinalDelegationPreview compactMobile src="/speak-to-sales" title="Enterprise Recovery Program Review page preview" />
+          <FinalDelegationPreview compactMobile tallMobile src="/speak-to-sales" title="Enterprise Recovery Program Review page preview" />
         </motion.div>
         <motion.div {...revealProps} className="enterprise-routing-copy order-1 max-w-[780px] lg:order-2">
           <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-8 bg-[#0B74DE]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">20 / ENTERPRISE</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">20 / ENTERPRISE</span>
           </div>
           <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Your team should not have to carry the financial history of every recovery.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">As Amazon operations grow across marketplaces, entities, catalogs, and operating environments, financial recovery becomes harder to keep coordinated — and easier to leave unresolved.</p>
@@ -95,8 +93,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
       <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
         <motion.div {...revealProps} className="routing-copy max-w-[760px]">
           <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-8 bg-[#0B74DE]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">23 / ROUTING</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">23 / ROUTING</span>
           </div>
           <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>First establish what is happening. Then choose how much you want handled.</h2>
           <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Audit comes first. It establishes what is happening before asking you to decide whether anything is worth managing. From there, Margin routes the work according to what the evidence and your operating needs justify.</p>
