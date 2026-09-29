@@ -1429,7 +1429,7 @@ const Login = () => {
               </div>
 
               <div className="lg:hidden mb-6">
-                <h1 className="text-left text-[26px] font-bold leading-[1.15] tracking-[-0.035em] text-[#182026] sm:text-[30px] font-google-sans">
+                <h1 className="text-left text-[26px] font-bold leading-[1.15] tracking-[-0.035em] text-[#182026] sm:text-[30px] font-lora">
                   {heading}
                 </h1>
                 {mode === 'signup' && (
@@ -1754,7 +1754,7 @@ const Login = () => {
               </p>
             )}
             
-            <h1 className="text-left text-[36px] font-bold leading-[1.08] tracking-[-0.02em] text-[#182026] font-google-sans">
+            <h1 className="text-left text-[36px] font-bold leading-[1.08] tracking-[-0.02em] text-[#182026] font-lora">
               {heading}
             </h1>
 
