@@ -1594,13 +1594,13 @@ function FooterNestedRecoveryVisual() {
   return (
     <section className="relative overflow-hidden bg-white py-10 sm:py-14 md:py-16" aria-label="Connected operational view visual">
       <div className={containerClass}>
-        <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Your records. Your decisions.</span> <span className="heading-tone-muted">Your control.</span></h2>
+        <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Your records. Your decisions.</span> <span className="heading-tone-muted">Your financial certainty.</span></h2>
         <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} />
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
-          <p className="mb-3 font-google-sans text-[15px] font-semibold tracking-tight text-[#182026]">Delegate and forget</p>
+          <p className="mb-3 font-google-sans text-[15px] font-semibold tracking-tight text-[#182026]">Start with the financial position</p>
           <label htmlFor="delegation-email-mobile" className="mb-1.5 block font-google-sans text-[11px] font-semibold text-[#66737F]">Email address</label>
           <input id="delegation-email-mobile" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
-          <Button onClick={beginSellerSignup} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Reconcile the account</Button>
+          <Button onClick={beginSellerSignup} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Start the free Audit</Button>
           <div className="my-3 flex items-center gap-2 font-google-sans text-[9px] font-medium tracking-tight text-[#A1AEB7]">
             <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
           </div>
@@ -1608,7 +1608,7 @@ function FooterNestedRecoveryVisual() {
             <GoogleMark className="mr-2 h-4 w-4" />Continue with Google
           </Button>
           <p className="mt-3 max-w-[360px] text-center font-google-sans text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
-          <p className="mt-3 max-w-[360px] text-center font-google-sans text-[11px] leading-5 text-[#52616A]">You are starting with an Audit, not approving a recovery program. Margin reviews the records first, then you decide.</p>
+          <p className="mt-3 max-w-[360px] text-center font-google-sans text-[11px] leading-5 text-[#52616A]">Read-only start. No recovery is submitted without your approval. Margin reviews the records first, then you decide.</p>
         </div>
       </div>
     </section>
@@ -2288,15 +2288,15 @@ export default function Index() {
                 <motion.div {...revealProps} className="w-full shrink-0 lg:w-[360px]">
                   <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">25 / DELEGATION &amp; CONTROL</p>
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
-                    <span className="heading-tone-dark">You hand Margin the recovery.</span> <span className="heading-tone-muted">You stay in control.</span>
+                    <span className="heading-tone-dark">Secure the financial outcome.</span> <span className="heading-tone-muted">Keep the decision rights.</span>
                   </h2>
-                  <p className="mt-4 max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">You approve what matters. Margin owns the investigation, evidence, casework, follow-up, and verification.</p>
-                  <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>You should not have to manage the chase. You just need to know it is being handled.</p>
-                  <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You can operate without Margin. You should not have to operate without knowing what happened to your money — or whether someone is still responsible for resolving it.</p>
+                  <p className="mt-4 max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Start with the free Audit. Then decide whether Margin should close one supported exposure or keep the account under ongoing financial control.</p>
+                  <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>When the next shipment moves tomorrow, you should know who is responsible for what happens to the money.</p>
+                  <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You approve submissions and material decisions. Margin carries the investigation, evidence, follow-through, response handling, and settlement verification — with the financial record kept visible.</p>
                   <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block">
                     <label htmlFor="delegation-email" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
                     <input id="delegation-email" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
-                    <Button onClick={() => navigate('/login?mode=signup&next=%2Faudit-start')} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Get started for free</Button>
+                    <Button onClick={() => navigate('/login?mode=signup&next=%2Faudit-start')} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Start the free Audit</Button>
                     <div className="my-3 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.18em] text-[#A1AEB7]">
                       <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
                     </div>
@@ -2304,7 +2304,7 @@ export default function Index() {
                       <GoogleMark className="mr-2 h-4 w-4" />Continue with Google
                     </Button>
                     <p className="mt-3 max-w-[360px] text-center text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
-                    <p className="mt-3 max-w-[360px] text-center text-[11px] leading-5 text-[#52616A]">You are starting with an Audit, not approving a recovery program. Margin reviews the records first, then you decide.</p>
+                    <p className="mt-3 max-w-[360px] text-center text-[11px] leading-5 text-[#52616A]">Read-only start. No recovery is submitted without your approval. Margin reviews the records first, then you decide.</p>
                   </div>
                 </motion.div>
 
@@ -2314,14 +2314,14 @@ export default function Index() {
                   {/* Card 1 — warm aurora */}
                   <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-[4px] p-6 sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 20% 80%, #d4956a 0%, transparent 55%), radial-gradient(ellipse at 70% 20%, #c9a0c4 0%, transparent 50%), radial-gradient(ellipse at 40% 40%, #d4b896 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #e8c4a0 0%, transparent 45%), linear-gradient(145deg, #cba4b8 0%, #d5b8a0 40%, #c9a888 100%)' }}>
                     <h3 className="text-[22px] font-semibold tracking-tight text-white leading-tight sm:text-[24px]">
-                      You don&apos;t have to wonder.
+                      Know the position before you commit.
                     </h3>
                     <p className="mt-3 text-[15px] leading-relaxed text-white/80 font-medium">
-                      See what happened, what is unresolved, and what deserves action.
+                      Start with a free Audit. See what happened, what remains unresolved, and what deserves action.
                     </p>
                     <div className="mt-auto pt-10 sm:pt-16">
                       <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
-                        Start Audit Now <ArrowRight className="h-4 w-4 text-white/60" />
+                        Start the free Audit <ArrowRight className="h-4 w-4 text-white/60" />
                       </Button>
                     </div>
                   </motion.div>
@@ -2329,14 +2329,14 @@ export default function Index() {
                   {/* Card 2 — cool sage earth */}
                   <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-[4px] p-6 sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 30% 70%, #4a5e3a 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, #8a9a7e 0%, transparent 50%), radial-gradient(ellipse at 50% 30%, #b0b8a8 0%, transparent 50%), radial-gradient(ellipse at 20% 20%, #c4c8be 0%, transparent 45%), linear-gradient(145deg, #b8bdb0 0%, #8a9680 40%, #5a6e4a 100%)' }}>
                     <h3 className="text-[22px] font-semibold tracking-tight text-white leading-tight sm:text-[24px]">
-                      Let it be handled.
+                      Put the recovery under ownership.
                     </h3>
                     <p className="mt-3 text-[15px] leading-relaxed text-white/75 font-medium">
-                      You run the business. Margin runs the recovery operation — every discrepancy, case, rejection, and follow-up.
+                      You run the business. Margin runs the recovery operation — every discrepancy, case, rejection, follow-up, and settlement check.
                     </p>
                     <div className="mt-auto pt-10 sm:pt-16">
-                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_handled"); navigate("/audit-start"); }} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
-                        Get It Handled <ArrowRight className="h-4 w-4 text-white/60" />
+                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_handled"); navigate("/contact"); }} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
+                        Talk to Margin about your account <ArrowRight className="h-4 w-4 text-white/60" />
                       </Button>
                     </div>
                   </motion.div>
