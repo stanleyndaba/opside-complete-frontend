@@ -1895,9 +1895,6 @@ function OutcomeWorkspace({ state, index, reduceMotion }: { state: (typeof recov
       className="absolute inset-0 flex flex-col justify-between p-5 sm:p-7 md:p-9"
     >
       <div className="flex items-center justify-between gap-4 border-b border-[var(--margin-border)] pb-4">
-        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">
-          Outcome state / {String(index + 1).padStart(2, "0")}
-        </span>
         <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
           Margin keeps it moving
         </span>

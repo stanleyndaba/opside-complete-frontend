@@ -726,9 +726,6 @@ export function ScrollytellingCoverage() {
       <div className="sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden py-10 md:py-0">
         <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-6 md:px-8">
           {/* Section header */}
-          <div className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE] sm:text-[11px]">
-            Coverage Examples
-          </div>
           <h2 className="mt-2 max-w-[680px] text-[19px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] sm:mt-3 sm:text-[28px] md:text-[34px]">
             One discrepancy. Every answer.
           </h2>
@@ -761,9 +758,6 @@ export function ScrollytellingCoverage() {
                   transition={{ duration: dur, ease }}
                   className="relative"
                 >
-                  <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]/90 sm:text-[12px]">
-                    {workflows[activeIndex].label}
-                  </div>
                   <h3 className="mt-2 max-w-[480px] text-[18px] font-bold leading-[1.08] tracking-[-0.035em] text-[#182026] sm:mt-4 sm:text-[24px] md:text-[38px]">
                     {workflows[activeIndex].title}
                   </h3>
