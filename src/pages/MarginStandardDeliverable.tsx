@@ -109,7 +109,7 @@ function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; i
     <button
       type="button"
       onClick={onSelect}
-      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[10px] px-2 py-2 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F5F8FB]"}`}
+      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[10px] border-b border-[#D6DCE0] px-2 py-2 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F5F8FB]"}`}
       aria-pressed={selected}
     >
       <span className={`flex h-5 w-5 items-center justify-center rounded-[6px] ${selected ? "bg-[#1689E5]" : "bg-transparent text-[#9AA5AE]"}`}>
@@ -141,8 +141,7 @@ export default function MarginStandardDeliverable() {
                 <Check className="h-2.5 w-2.5" strokeWidth={3} />
               </span>
               <div className="min-w-0">
-                <h1 className="truncate text-[14px] font-normal leading-tight tracking-tight text-[#1D272E] sm:text-[16px]">FR</h1>
-                <p className="mt-0.5 truncate text-[10px] text-[#8A949C] sm:text-[11px]">Reconciliation control · Northstar Commerce LLC · Amazon US</p>
+                <h1 className="truncate text-[11px] font-medium leading-tight tracking-tight text-[#1D272E] sm:text-[12px]">Reconciliation control · Northstar Commerce LLC · Amazon US</h1>
               </div>
             </div>
             <div className="flex items-center gap-1 rounded-full bg-[#F4F6F7] p-1">
@@ -164,7 +163,7 @@ export default function MarginStandardDeliverable() {
           </div>
         </div>
 
-        <div className="mt-3 grid grid-cols-[32px_88px_30px_minmax(0,1fr)] gap-2 px-2.5 text-[9px] font-semibold uppercase tracking-[0.02em] text-[#A0A9AF] sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 sm:text-[10px]">
+        <div className="mt-3 grid grid-cols-[32px_88px_30px_minmax(0,1fr)] gap-2 border-b border-[#D6DCE0] px-2.5 pb-2 text-[9px] font-semibold uppercase tracking-[0.02em] text-[#A0A9AF] sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 sm:text-[10px]">
           <span aria-hidden="true" />
           <span>Reference</span>
           <span aria-hidden="true" />

@@ -1598,7 +1598,7 @@ function MarginStandardDeliverableSection() {
           <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>No vague findings. No unsupported claims. No open question disguised as a result.</p>
         </motion.div>
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 w-full max-w-[1040px] sm:mt-10 lg:mt-12">
-          <div className="h-[760px] overflow-hidden rounded-[10px] border border-[#C9D7DB] bg-white shadow-[0_24px_70px_rgba(37,73,91,0.16)] sm:h-[800px] lg:h-[min(72vh,820px)]">
+          <div className="h-[456px] overflow-hidden rounded-[10px] border border-[#C9D7DB] bg-white shadow-[0_24px_70px_rgba(37,73,91,0.16)] sm:h-[800px] lg:h-[min(72vh,820px)]">
             <iframe title="Representative Margin Audit deliverable" src="/margin-standard-deliverable" className="h-full w-full border-0 bg-[#F3F7F7]" loading="lazy" />
           </div>
         </motion.div>
