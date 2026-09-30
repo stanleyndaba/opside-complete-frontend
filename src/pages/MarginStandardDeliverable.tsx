@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AlertCircle, BarChart3, Check, ChevronDown, ChevronUp, Circle, Minus, Plus } from "lucide-react";
+import { AlertCircle, BarChart3, Check, Circle, Minus, Plus } from "lucide-react";
 
 const findingRows = [
   {
@@ -92,7 +92,7 @@ type ControlRow = (typeof findingRows)[number];
 
 const stateStyles: Record<RowState, { icon: React.ReactNode; className: string }> = {
   exception: { icon: <AlertCircle className="h-3.5 w-3.5" strokeWidth={3} />, className: "bg-[#F1464D] text-white" },
-  review: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#2395E8] text-white" },
+  review: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#7E8A92] text-white" },
   action: { icon: <Minus className="h-3.5 w-3.5" strokeWidth={3} />, className: "bg-[#F39A45] text-white" },
   supported: { icon: <Check className="h-3.5 w-3.5" strokeWidth={3} />, className: "bg-[#35C56B] text-white" },
   held: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#9AA8B7] text-white" },
@@ -105,17 +105,17 @@ function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; i
     <button
       type="button"
       onClick={onSelect}
-      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[14px] px-2.5 py-3 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3.5 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F4F7FA]"}`}
+      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[14px] px-2 py-2.5 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#E2E6E9]" : "bg-transparent hover:bg-[#F5F6F7]"}`}
       aria-pressed={selected}
     >
-      <span className={`flex h-7 w-7 items-center justify-center rounded-[8px] ${selected ? "bg-[#1689E5]" : "bg-transparent text-[#9AA5AE]"}`}>
+      <span className={`flex h-7 w-7 items-center justify-center rounded-[8px] ${selected ? "bg-[#66747D]" : "bg-transparent text-[#9AA5AE]"}`}>
         {selected ? <Check className="h-4 w-4 text-white" strokeWidth={3} /> : <BarChart3 className="h-4 w-4" strokeWidth={2.5} />}
       </span>
-      <span className="truncate text-[11px] font-medium tracking-tight text-[#8A949C] sm:text-[12px]">{row.reference}</span>
+      <span className="truncate text-[11px] font-medium tracking-tight text-[#8A949C] sm:text-[11px]">{row.reference}</span>
       <span className={`flex h-7 w-7 items-center justify-center rounded-full ${state.className}`}>{state.icon}</span>
       <span className="min-w-0">
-        <span className={`block truncate text-[12px] font-semibold leading-5 tracking-[-0.015em] sm:text-[14px] ${selected ? "text-[#17242D]" : "text-[#26343D]"}`}>{row.title}</span>
-        <span className="block truncate text-[10px] leading-4 text-[#8B969E] sm:text-[11px]">{row.detail}</span>
+        <span className={`block truncate text-[12px] font-semibold leading-5 tracking-[-0.015em] sm:text-[13px] ${selected ? "text-[#17242D]" : "text-[#26343D]"}`}>{row.title}</span>
+        <span className="block truncate text-[10px] leading-4 text-[#8B969E] sm:text-[10px]">{row.detail}</span>
       </span>
       <span className="hidden truncate text-right text-[11px] font-semibold text-[#56636D] sm:block">{row.value}</span>
     </button>
@@ -128,15 +128,15 @@ export default function MarginStandardDeliverable() {
   const rows = view === "finding" ? findingRows : closeoutRows;
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#F1F2F4] px-3 py-8 font-google-sans text-[#202A31] sm:px-6 sm:py-12 lg:px-10 lg:py-16">
-      <section className="mx-auto w-full max-w-[1050px] rounded-[24px] border border-white/80 bg-white/75 p-4 shadow-[0_24px_70px_rgba(49,62,72,0.10)] backdrop-blur-sm sm:rounded-[30px] sm:p-7 lg:p-9" aria-label="Margin Standard actuarial control board">
+    <main className="min-h-screen overflow-x-hidden bg-[#E7E9EB] px-2 py-5 font-google-sans text-[#202A31] sm:px-5 sm:py-9 lg:px-8 lg:py-12">
+      <section className="mx-auto w-full max-w-[980px] rounded-[18px] border border-white/75 bg-white/65 p-3 shadow-[0_22px_60px_rgba(49,62,72,0.12)] backdrop-blur-xl sm:rounded-[26px] sm:p-6 lg:p-8" aria-label="Amazon Financial Review actuarial control board">
         <header className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.55)] sm:h-9 sm:w-9">
-              <Check className="h-4 w-4" strokeWidth={3} />
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.55)] sm:h-8 sm:w-8">
+              <Check className="h-3.5 w-3.5" strokeWidth={3} />
             </span>
             <div className="min-w-0">
-              <h1 className="truncate text-[21px] font-medium leading-tight tracking-[-0.04em] text-[#1D272E] sm:text-[27px]">Margin Standard</h1>
+              <h1 className="truncate text-[18px] font-medium leading-tight tracking-[-0.04em] text-[#1D272E] sm:text-[24px]">Amazon Financial Review</h1>
               <p className="mt-0.5 truncate text-[10px] text-[#8A949C] sm:text-[11px]">Actuarial reconciliation control · Northstar Commerce LLC · Amazon US</p>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function MarginStandardDeliverable() {
           </div>
         </div>
 
-        <div className="mt-3 grid grid-cols-[32px_88px_30px_minmax(0,1fr)] gap-2 px-2.5 text-[9px] font-semibold uppercase tracking-[0.02em] text-[#A0A9AF] sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3.5 sm:text-[10px]">
+        <div className="mt-3 grid grid-cols-[32px_88px_30px_minmax(0,1fr)] gap-2 px-2.5 text-[9px] font-semibold uppercase tracking-[0.02em] text-[#A0A9AF] sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 sm:text-[10px]">
           <span aria-hidden="true" />
           <span>Reference</span>
           <span aria-hidden="true" />
