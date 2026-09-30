@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AlertCircle, BarChart3, Check, Circle, Minus, Plus } from "lucide-react";
+import { AlertCircle, Check, Circle, Minus, Plus } from "lucide-react";
 
 const findingRows = [
   {
@@ -91,12 +91,16 @@ type RowState = "exception" | "review" | "action" | "supported" | "held";
 type ControlRow = (typeof findingRows)[number];
 
 const stateStyles: Record<RowState, { icon: React.ReactNode; className: string }> = {
-  exception: { icon: <AlertCircle className="h-3 w-3" strokeWidth={3} />, className: "bg-[#F1464D] text-white" },
+  exception: { icon: <AlertCircle className="h-3 w-3" strokeWidth={3} />, className: "bg-[#2D7FF9] text-white" },
   review: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#7E8A92] text-white" },
   action: { icon: <Minus className="h-3 w-3" strokeWidth={3} />, className: "bg-[#F39A45] text-white" },
   supported: { icon: <Check className="h-3 w-3" strokeWidth={3} />, className: "bg-[#35C56B] text-white" },
   held: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#9AA8B7] text-white" },
 };
+
+function ThreeStrokeMark() {
+  return <span className="flex h-3 w-3 items-end justify-center gap-[1px]" aria-hidden="true"><i className="h-1.5 w-px rounded-full bg-current" /><i className="h-2.5 w-px rounded-full bg-current" /><i className="h-2 w-px rounded-full bg-current" /></span>;
+}
 
 function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; index: number; selected: boolean; onSelect: () => void }) {
   const state = stateStyles[row.state as RowState];
@@ -105,11 +109,11 @@ function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; i
     <button
       type="button"
       onClick={onSelect}
-      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[10px] px-2 py-2 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#E2E6E9]" : "bg-transparent hover:bg-[#F5F6F7]"}`}
+      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[10px] px-2 py-2 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F5F8FB]"}`}
       aria-pressed={selected}
     >
-      <span className={`flex h-5 w-5 items-center justify-center rounded-[6px] ${selected ? "bg-[#66747D]" : "bg-transparent text-[#9AA5AE]"}`}>
-        {selected ? <Check className="h-3 w-3 text-white" strokeWidth={3} /> : <BarChart3 className="h-3 w-3" strokeWidth={2.5} />}
+      <span className={`flex h-5 w-5 items-center justify-center rounded-[6px] ${selected ? "bg-[#1689E5]" : "bg-transparent text-[#9AA5AE]"}`}>
+        {selected ? <Check className="h-3 w-3 text-white" strokeWidth={3} /> : <ThreeStrokeMark />}
       </span>
       <span className="truncate text-[11px] font-medium tracking-tight text-[#8A949C] sm:text-[11px]">{row.reference}</span>
       <span className={`flex h-5 w-5 items-center justify-center rounded-full ${state.className}`}>{state.icon}</span>
@@ -129,7 +133,7 @@ export default function MarginStandardDeliverable() {
 
   return (
     <main className="min-h-screen overflow-x-auto bg-[#E7E9EB] font-google-sans text-[#202A31]">
-      <div className="mx-auto min-w-[760px] max-w-[1280px] px-4 py-4 sm:px-6 sm:py-6"><section className="rounded-[10px] border border-white/80 bg-white/72 p-4 shadow-[0_1px_2px_rgba(49,62,72,0.04)] backdrop-blur-xl sm:p-5" aria-label="Amazon Financial Review actuarial control board">
+      <div className="mx-auto min-w-[600px] max-w-[820px] px-3 py-3 sm:px-4 sm:py-4"><section className="rounded-[8px] border border-white/80 bg-white/72 p-3 shadow-[0_1px_2px_rgba(49,62,72,0.04)] backdrop-blur-xl sm:p-4" aria-label="Amazon Financial Review actuarial control board">
         <header className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.55)] sm:h-8 sm:w-8">
@@ -172,15 +176,8 @@ export default function MarginStandardDeliverable() {
           ))}
         </div>
 
-        <footer className="mt-5 grid gap-3 rounded-[10px] bg-[#F4F5F6] px-3 py-3 sm:grid-cols-[1fr_auto] sm:items-center sm:px-5">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-tight text-[#8E989F]">Financial position</p>
-            <p className="mt-1 text-[11px] leading-5 text-[#596770] sm:text-[12px]">{view === "finding" ? "Supported exposure is stated separately from unresolved or unsubstantiated variance." : "The expected position and credited amount reconcile to a zero residual variance."}</p>
-          </div>
-          <div className="text-left sm:text-right">
-            <p className="text-[10px] text-[#8E989F]">{view === "finding" ? "Supported exposure" : "Residual variance"}</p>
-            <p className={`mt-0.5 text-[17px] font-semibold tracking-tight ${view === "finding" ? "text-[#26343D]" : "text-[#2E9D62]"}`}>{view === "finding" ? "$1,184.60" : "$0.00"}</p>
-          </div>
+        <footer className="mt-4 rounded-[8px] bg-[#F4F5F6] px-3 py-2.5 sm:px-4">
+          <p className="text-[10px] font-semibold tracking-tight text-[#596770] sm:text-[11px]">{view === "finding" ? "Supported exposure of $1,184.60 is stated separately from unresolved or unsubstantiated variance." : "The expected position and credited amount reconcile to a $0.00 residual variance."}</p>
         </footer>
       </section></div>
     </main>
