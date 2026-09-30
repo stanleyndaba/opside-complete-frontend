@@ -13,7 +13,7 @@ const findingRows = [
   {
     reference: "REC-013",
     state: "review",
-    label: "Actuarial basis",
+    label: "Evidence basis",
     title: "Expected reimbursement exposure calculated from supported units",
     detail: "14 × $84.614 unit value = $1,184.60 gross exposure",
     value: "$1,184.60",
@@ -91,10 +91,10 @@ type RowState = "exception" | "review" | "action" | "supported" | "held";
 type ControlRow = (typeof findingRows)[number];
 
 const stateStyles: Record<RowState, { icon: React.ReactNode; className: string }> = {
-  exception: { icon: <AlertCircle className="h-3.5 w-3.5" strokeWidth={3} />, className: "bg-[#F1464D] text-white" },
+  exception: { icon: <AlertCircle className="h-3 w-3" strokeWidth={3} />, className: "bg-[#F1464D] text-white" },
   review: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#7E8A92] text-white" },
-  action: { icon: <Minus className="h-3.5 w-3.5" strokeWidth={3} />, className: "bg-[#F39A45] text-white" },
-  supported: { icon: <Check className="h-3.5 w-3.5" strokeWidth={3} />, className: "bg-[#35C56B] text-white" },
+  action: { icon: <Minus className="h-3 w-3" strokeWidth={3} />, className: "bg-[#F39A45] text-white" },
+  supported: { icon: <Check className="h-3 w-3" strokeWidth={3} />, className: "bg-[#35C56B] text-white" },
   held: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#9AA8B7] text-white" },
 };
 
@@ -108,11 +108,11 @@ function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; i
       className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[10px] px-2 py-2 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#E2E6E9]" : "bg-transparent hover:bg-[#F5F6F7]"}`}
       aria-pressed={selected}
     >
-      <span className={`flex h-7 w-7 items-center justify-center rounded-[8px] ${selected ? "bg-[#66747D]" : "bg-transparent text-[#9AA5AE]"}`}>
-        {selected ? <Check className="h-4 w-4 text-white" strokeWidth={3} /> : <BarChart3 className="h-4 w-4" strokeWidth={2.5} />}
+      <span className={`flex h-5 w-5 items-center justify-center rounded-[6px] ${selected ? "bg-[#66747D]" : "bg-transparent text-[#9AA5AE]"}`}>
+        {selected ? <Check className="h-3 w-3 text-white" strokeWidth={3} /> : <BarChart3 className="h-3 w-3" strokeWidth={2.5} />}
       </span>
       <span className="truncate text-[11px] font-medium tracking-tight text-[#8A949C] sm:text-[11px]">{row.reference}</span>
-      <span className={`flex h-7 w-7 items-center justify-center rounded-full ${state.className}`}>{state.icon}</span>
+      <span className={`flex h-5 w-5 items-center justify-center rounded-full ${state.className}`}>{state.icon}</span>
       <span className="min-w-0">
         <span className={`block truncate text-[12px] font-medium leading-5 tracking-tight sm:text-[13px] ${selected ? "text-[#17242D]" : "text-[#26343D]"}`}>{row.title}</span>
         <span className="block truncate text-[10px] leading-4 text-[#8B969E] sm:text-[10px]">{row.detail}</span>
@@ -133,11 +133,11 @@ export default function MarginStandardDeliverable() {
         <header className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.55)] sm:h-8 sm:w-8">
-              <Check className="h-3.5 w-3.5" strokeWidth={3} />
+              <Check className="h-3 w-3" strokeWidth={3} />
             </span>
             <div className="min-w-0">
-              <h1 className="truncate text-[17px] font-normal leading-tight tracking-tight text-[#1D272E] sm:text-[20px]">Amazon Financial Review</h1>
-              <p className="mt-0.5 truncate text-[10px] text-[#8A949C] sm:text-[11px]">Actuarial reconciliation control · Northstar Commerce LLC · Amazon US</p>
+              <h1 className="truncate text-[14px] font-normal leading-tight tracking-tight text-[#1D272E] sm:text-[16px]">FR</h1>
+              <p className="mt-0.5 truncate text-[10px] text-[#8A949C] sm:text-[11px]">Reconciliation control · Northstar Commerce LLC · Amazon US</p>
             </div>
           </div>
           <button type="button" className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#D8DDE1] bg-white px-3.5 py-2 text-[11px] font-medium text-[#29353D] shadow-[0_1px_2px_rgba(25,35,42,0.04)] transition-colors hover:bg-[#F7F9FA] sm:px-5 sm:py-2.5 sm:text-[12px]">
@@ -174,7 +174,7 @@ export default function MarginStandardDeliverable() {
 
         <footer className="mt-5 grid gap-3 rounded-[10px] bg-[#F4F5F6] px-3 py-3 sm:grid-cols-[1fr_auto] sm:items-center sm:px-5">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-tight text-[#8E989F]">Actuarial position</p>
+            <p className="text-[10px] font-semibold uppercase tracking-tight text-[#8E989F]">Financial position</p>
             <p className="mt-1 text-[11px] leading-5 text-[#596770] sm:text-[12px]">{view === "finding" ? "Supported exposure is stated separately from unresolved or unsubstantiated variance." : "The expected position and credited amount reconcile to a zero residual variance."}</p>
           </div>
           <div className="text-left sm:text-right">
