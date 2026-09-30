@@ -1585,6 +1585,28 @@ function NestedRecoveryBrowsers() {
   );
 }
 
+function MarginStandardDeliverableSection() {
+  return (
+    <section className="relative overflow-hidden bg-[#F3F7F7] py-12 sm:py-16 lg:min-h-screen lg:py-20" aria-labelledby="margin-standard-deliverable-title">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="mx-auto max-w-[820px] text-center">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#71818A]">22 / THE MARGIN STANDARD</p>
+          <h2 id="margin-standard-deliverable-title" className="mx-auto mt-4 max-w-[760px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>
+            <span className="heading-tone-dark">See the work before you decide</span> <span className="heading-tone-muted">what to hand over.</span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">A material finding should not end as another signal or score. Margin turns it into an inspectable financial record: the source evidence, reconstructed event, expected position, remaining variance, confidence, and next justified action.</p>
+          <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>No vague findings. No unsupported claims. No open question disguised as a result.</p>
+        </motion.div>
+        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 w-full max-w-[1040px] sm:mt-10 lg:mt-12">
+          <div className="h-[760px] overflow-hidden rounded-[10px] border border-[#C9D7DB] bg-white shadow-[0_24px_70px_rgba(37,73,91,0.16)] sm:h-[800px] lg:h-[min(72vh,820px)]">
+            <iframe title="Representative Margin Audit deliverable" src="/margin-standard-deliverable" className="h-full w-full border-0 bg-[#F3F7F7]" loading="lazy" />
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 function FooterNestedRecoveryVisual() {
   const navigate = useNavigate();
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof nestedRecoveryBrowsers>('progress');
@@ -2233,12 +2255,13 @@ export default function Index() {
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
         <EnterpriseReviewsSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
+        <MarginStandardDeliverableSection />
 
         {/* Section 14 — Trust / FAQ */}
         <section className="relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
-              <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">22 / TRUST / FAQ</p>
+              <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">24 / TRUST / FAQ</p>
               <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
                 <span className="heading-tone-dark">Your questions</span> <span className="heading-tone-muted">answered.</span>
               </h2>
