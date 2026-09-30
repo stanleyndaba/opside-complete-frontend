@@ -1,98 +1,188 @@
 import React, { useState } from "react";
-import { Check } from "lucide-react";
+import { AlertCircle, BarChart3, Check, ChevronDown, ChevronUp, Circle, Minus, Plus } from "lucide-react";
 
-const timeline = [
-  ["Shipment record", "60 units shipped on FBA17-ONT8-260114."],
-  ["Amazon receiving record", "46 units received at ONT8."],
-  ["Variance established", "14 units remain outside the receiving record."],
-  ["Settlement review", "No corresponding credit found through SETTLE-2026-0418."],
-  ["Recovery basis", "Evidence supports a seller-approved recovery submission."],
+const findingRows = [
+  {
+    reference: "REC-014",
+    state: "exception",
+    label: "Exception",
+    title: "Inbound receiving variance — 14 units under reconciliation",
+    detail: "FBA17-ONT8-260114 · 60 dispatched / 46 received at ONT8",
+    value: "$1,184.60",
+  },
+  {
+    reference: "REC-013",
+    state: "review",
+    label: "Actuarial basis",
+    title: "Expected reimbursement exposure calculated from supported units",
+    detail: "14 × $84.614 unit value = $1,184.60 gross exposure",
+    value: "$1,184.60",
+  },
+  {
+    reference: "REC-012",
+    state: "action",
+    label: "Decision",
+    title: "Seller approval required before recovery submission",
+    detail: "Evidence threshold met · response remains subject to seller control",
+    value: "Approval",
+  },
+  {
+    reference: "REC-011",
+    state: "supported",
+    label: "Supported",
+    title: "Shipment and receiving records establish the unit variance",
+    detail: "Manifest, carrier receiving record, and inventory history aligned",
+    value: "14 units",
+  },
+  {
+    reference: "REC-010",
+    state: "supported",
+    label: "Reconciled",
+    title: "Settlement attribution tested against the expected position",
+    detail: "SETTLE-2026-0418 · Amazon credit identified: $0.00",
+    value: "$0.00",
+  },
+  {
+    reference: "REC-009",
+    state: "held",
+    label: "Held",
+    title: "Residual variance remains outside the supportable basis",
+    detail: "No unsupported amount is treated as recovered or payable",
+    value: "Unresolved",
+  },
 ];
 
-const closeoutTimeline = [
-  ["Expected position", "$1,184.60 supported by the reviewed event record."],
-  ["Amazon attribution", "$1,184.60 credit identified in the settlement record."],
-  ["Settlement confirmed", "SETTLE-2026-0418 matches the expected recovery."],
-  ["Financial closeout", "$0.00 variance remains."],
+const closeoutRows = [
+  {
+    reference: "REC-014",
+    state: "supported",
+    label: "Verified",
+    title: "Inbound variance carried to a supported recovery position",
+    detail: "14 units × $84.614 = $1,184.60 expected reimbursement",
+    value: "$1,184.60",
+  },
+  {
+    reference: "REC-013",
+    state: "supported",
+    label: "Attributed",
+    title: "Amazon credit matched to the expected financial position",
+    detail: "Settlement SETTLE-2026-0418 records $1,184.60 credited",
+    value: "$1,184.60",
+  },
+  {
+    reference: "REC-012",
+    state: "supported",
+    label: "Closed",
+    title: "Residual variance tested to zero at settlement closeout",
+    detail: "$1,184.60 expected − $1,184.60 credited = $0.00 variance",
+    value: "$0.00",
+  },
+  {
+    reference: "REC-011",
+    state: "supported",
+    label: "Recorded",
+    title: "Outcome recorded against the underlying evidence trail",
+    detail: "Financial position closed without extending assumptions",
+    value: "Complete",
+  },
 ];
 
-function Timeline({ items, closeout = false }: { items: string[][]; closeout?: boolean }) {
+type RowState = "exception" | "review" | "action" | "supported" | "held";
+type ControlRow = (typeof findingRows)[number];
+
+const stateStyles: Record<RowState, { icon: React.ReactNode; className: string }> = {
+  exception: { icon: <AlertCircle className="h-3.5 w-3.5" strokeWidth={3} />, className: "bg-[#F1464D] text-white" },
+  review: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#2395E8] text-white" },
+  action: { icon: <Minus className="h-3.5 w-3.5" strokeWidth={3} />, className: "bg-[#F39A45] text-white" },
+  supported: { icon: <Check className="h-3.5 w-3.5" strokeWidth={3} />, className: "bg-[#35C56B] text-white" },
+  held: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#9AA8B7] text-white" },
+};
+
+function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; index: number; selected: boolean; onSelect: () => void }) {
+  const state = stateStyles[row.state as RowState];
+
   return (
-    <ol className="relative ml-1 border-l border-[#C9D6DE] pl-6">
-      {items.map(([title, detail], index) => (
-        <li key={title} className="relative pb-5 last:pb-0">
-          <span className={`absolute -left-[31px] top-0.5 flex h-4 w-4 items-center justify-center rounded-full ${closeout ? "bg-[#2EAD7B]" : index === items.length - 1 ? "bg-[#2EAD7B]" : "bg-[#315C70]"}`} aria-hidden="true">
-            <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />
-          </span>
-          <p className="text-[11px] font-semibold leading-4 text-[#25313A]">{title}</p>
-          <p className="mt-1 text-[11px] leading-5 text-[#595E68]">{detail}</p>
-        </li>
-      ))}
-    </ol>
+    <button
+      type="button"
+      onClick={onSelect}
+      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[14px] px-2.5 py-3 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3.5 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F4F7FA]"}`}
+      aria-pressed={selected}
+    >
+      <span className={`flex h-7 w-7 items-center justify-center rounded-[8px] ${selected ? "bg-[#1689E5]" : "bg-transparent text-[#9AA5AE]"}`}>
+        {selected ? <Check className="h-4 w-4 text-white" strokeWidth={3} /> : <BarChart3 className="h-4 w-4" strokeWidth={2.5} />}
+      </span>
+      <span className="truncate text-[11px] font-medium tracking-tight text-[#8A949C] sm:text-[12px]">{row.reference}</span>
+      <span className={`flex h-7 w-7 items-center justify-center rounded-full ${state.className}`}>{state.icon}</span>
+      <span className="min-w-0">
+        <span className={`block truncate text-[12px] font-semibold leading-5 tracking-[-0.015em] sm:text-[14px] ${selected ? "text-[#17242D]" : "text-[#26343D]"}`}>{row.title}</span>
+        <span className="block truncate text-[10px] leading-4 text-[#8B969E] sm:text-[11px]">{row.detail}</span>
+      </span>
+      <span className="hidden truncate text-right text-[11px] font-semibold text-[#56636D] sm:block">{row.value}</span>
+    </button>
   );
 }
 
 export default function MarginStandardDeliverable() {
   const [view, setView] = useState<"finding" | "closeout">("finding");
-  const isCloseout = view === "closeout";
+  const [selected, setSelected] = useState(1);
+  const rows = view === "finding" ? findingRows : closeoutRows;
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-white px-4 py-5 font-google-sans text-[#191B20] sm:px-6 sm:py-5 lg:px-6">
-      <section className="mx-auto mt-0 w-full max-w-[980px] text-left sm:mt-0" aria-label="Margin reconciliation record">
-        <header className="px-0 pb-3 pt-0 sm:pt-1">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="text-[18px] font-semibold leading-tight tracking-tight sm:text-[21px]">Northstar Commerce LLC</h2>
-              <p className="mt-1 text-[11px] leading-4 text-[#858792]">Amazon US · Jan–Mar 2026 · Account reconciliation record</p>
+    <main className="min-h-screen overflow-x-hidden bg-[#F1F2F4] px-3 py-8 font-google-sans text-[#202A31] sm:px-6 sm:py-12 lg:px-10 lg:py-16">
+      <section className="mx-auto w-full max-w-[1050px] rounded-[24px] border border-white/80 bg-white/75 p-4 shadow-[0_24px_70px_rgba(49,62,72,0.10)] backdrop-blur-sm sm:rounded-[30px] sm:p-7 lg:p-9" aria-label="Margin Standard actuarial control board">
+        <header className="flex items-start justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.55)] sm:h-9 sm:w-9">
+              <Check className="h-4 w-4" strokeWidth={3} />
+            </span>
+            <div className="min-w-0">
+              <h1 className="truncate text-[21px] font-medium leading-tight tracking-[-0.04em] text-[#1D272E] sm:text-[27px]">Margin Standard</h1>
+              <p className="mt-0.5 truncate text-[10px] text-[#8A949C] sm:text-[11px]">Actuarial reconciliation control · Northstar Commerce LLC · Amazon US</p>
             </div>
-            <div className="flex items-center gap-2 text-[10px] font-semibold text-[#2E7D5B]"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#2EAD7B]"><Check className="h-2.5 w-2.5 text-white" strokeWidth={3} /></span> {isCloseout ? "Reconciled" : "Completed"}</div>
           </div>
-          <div className="mt-5 flex gap-4">
-            <button type="button" onClick={() => setView("finding")} className={`border-b-2 pb-2 text-[11px] font-semibold tracking-normal ${!isCloseout ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#595E68]"}`}>Supported finding</button>
-            <button type="button" onClick={() => setView("closeout")} className={`border-b-2 pb-2 text-[11px] font-semibold tracking-normal ${isCloseout ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#595E68]"}`}>Closeout record</button>
-          </div>
+          <button type="button" className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#D8DDE1] bg-white px-3.5 py-2 text-[11px] font-medium text-[#29353D] shadow-[0_1px_2px_rgba(25,35,42,0.04)] transition-colors hover:bg-[#F7F9FA] sm:px-5 sm:py-2.5 sm:text-[12px]">
+            <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+            <span className="hidden sm:inline">Add finding</span>
+            <span className="sm:hidden">Add</span>
+          </button>
         </header>
 
-        {!isCloseout ? (
-          <div className="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="px-4 py-5 sm:px-6">
-              <p className="text-[10px] font-semibold uppercase tracking-tight text-[#595E68]">Inbound inventory variance</p>
-              <h3 className="mt-2 text-[16px] font-normal leading-tight tracking-tight sm:text-[20px]">14 units remain unaccounted for.</h3>
-              <p className="mt-5 max-w-[680px] border-l-2 border-[#315C70] pl-4 text-[12px] leading-6 text-[#595E68]">For shipment <strong className="font-semibold text-[#25313A]">FBA17-ONT8-260114</strong>, SKU <strong className="font-semibold text-[#25313A]">NCS-48OZ-BLK</strong> records 60 units dispatched against 46 units received at ONT8; the resulting 14-unit variance is the exposure under reconciliation.</p>
-              <div className="mt-6"><p className="mb-3 text-[10px] font-semibold uppercase tracking-tight text-[#595E68]">Financial evidence trail</p><Timeline items={timeline} /></div>
-            </div>
-            <aside className="px-4 py-5 sm:px-6 lg:px-5">
-              <p className="text-[10px] font-semibold uppercase tracking-tight text-[#595E68]">Financial position</p>
-              <div className="mt-4 space-y-3">
-                {[['Expected reimbursement value', '$1,184.60'], ['Amazon credited to date', '$0.00'], ['Supported exposure', '$1,184.60']].map(([label, value], index) => <div key={label} className={`flex items-end justify-between gap-3 ${index === 2 ? 'pt-3' : ''}`}><span className="text-[11px] leading-4 text-[#595E68]">{label}</span><span className={`text-right text-[15px] font-semibold ${index === 2 ? 'text-[#0B74DE]' : 'text-[#25313A]'}`}>{value}</span></div>)}
-              </div>
-              <div className="mt-6 pt-4"><h4 className="text-[13px] font-semibold tracking-tight text-[#25313A]">Evidence confidence</h4><p className="mt-2 text-[12px] leading-5 text-[#595E68]">High. The unit variance is independently stated by the shipment and receiving records, and no corresponding settlement credit is present.</p></div>
-              <div className="mt-5 pt-4"><h4 className="text-[13px] font-semibold tracking-tight text-[#25313A]">Recommended action</h4><p className="mt-2 text-[12px] leading-5 text-[#595E68]">60 shipped − 46 received = 14 units unresolved. At $84.614 per unit, the supported exposure is 14 × $84.614 = $1,184.60. Seller approval is required before any submission.</p></div>
-            </aside>
+        <div className="mt-7 flex items-center justify-between gap-4 sm:mt-9">
+          <div className="flex items-center gap-2 text-[11px] font-semibold text-[#4D5B64] sm:text-[12px]">
+            <span className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#E9EDF0] text-[#65727B]"><Minus className="h-3.5 w-3.5" strokeWidth={2.5} /></span>
+            <span>{view === "finding" ? "Audit findings" : "Closeout record"}</span>
           </div>
-        ) : (
-          <div className="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="px-4 py-5 sm:px-6">
-              <p className="text-[10px] font-semibold uppercase tracking-tight text-[#595E68]">Settlement closeout</p>
-              <h3 className="mt-2 text-[16px] font-normal leading-tight tracking-tight sm:text-[20px]">The money is accounted for.</h3>
-              <p className="mt-3 max-w-[560px] text-[12px] leading-5 text-[#595E68]">The expected position, Amazon attribution, and settlement record now agree.</p>
-              <div className="mt-6"><p className="mb-3 text-[10px] font-semibold uppercase tracking-tight text-[#595E68]">Closeout trail</p><Timeline items={closeoutTimeline} closeout /></div>
-            </div>
-            <aside className="px-4 py-5 sm:px-6 lg:px-5"><div className="pt-4"><span className="inline-flex items-center gap-2 rounded-full bg-[#FFF8D8] px-2.5 py-1.5 text-[10px] font-semibold tracking-tight text-[#6C5A15]"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#F2C94C] text-white"><Check className="h-2.5 w-2.5" strokeWidth={3} /></span>Financial status · Reconciled</span></div><dl className="mt-5 text-[11px]"><div className="flex items-center justify-between gap-4 py-2.5"><dt className="text-[#595E68]">Amazon credited</dt><dd className="font-semibold text-[#25313A]">$1,184.60</dd></div><div className="flex items-center justify-between gap-4 py-2.5"><dt className="text-[#595E68]">Variance remaining</dt><dd className="font-semibold text-[#2E7D5B]">$0.00</dd></div><div className="flex items-center justify-between gap-4 py-2.5"><dt className="text-[#595E68]">Settlement reference</dt><dd className="font-semibold text-[#25313A]">SETTLE-2026-0418</dd></div></dl><p className="mt-4 border-l-2 border-[#F2C94C] pl-3 text-[11px] font-semibold leading-5 text-[#2E7D5B]">Outcome verified against settlement evidence.</p></aside>
+          <div className="flex items-center gap-1 rounded-full bg-[#F4F6F7] p-1">
+            <button type="button" onClick={() => setView("finding")} className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${view === "finding" ? "bg-white text-[#26343D] shadow-sm" : "text-[#929CA3]"}`}>Open basis</button>
+            <button type="button" onClick={() => setView("closeout")} className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${view === "closeout" ? "bg-white text-[#26343D] shadow-sm" : "text-[#929CA3]"}`}>Reconciled</button>
           </div>
-        )}
-      </section>
-
-      <section className="mx-auto mt-10 w-full max-w-[980px] border-[#D7D7D1] pt-7 text-left" aria-labelledby="audit-result-explanation">
-        <h2 id="audit-result-explanation" className="text-[18px] font-semibold tracking-tight text-[#25313A] sm:text-[21px]">What the account record establishes</h2>
-        <p className="mt-3 max-w-[760px] text-[12px] leading-6 text-[#595E68] sm:text-[13px] sm:leading-7">The audit isolates one inbound receiving event for Northstar Commerce LLC and keeps its financial position separate from assumptions about other shipments, periods, or settlement cycles.</p>
-        <div className="mt-6 grid gap-6 sm:grid-cols-3 sm:gap-8">
-          <div className="pt-3"><h3 className="text-[13px] font-semibold tracking-tight text-[#25313A]">Coverage</h3><p className="mt-2 text-[12px] leading-5 text-[#595E68]">Shipment FBA17-ONT8-260114, SKU NCS-48OZ-BLK, receiving node ONT8, and settlement SETTLE-2026-0418 resolve to the same event record.</p></div>
-          <div className="pt-3"><h3 className="text-[13px] font-semibold tracking-tight text-[#25313A]">Control test</h3><p className="mt-2 text-[12px] leading-5 text-[#595E68]">The receiving quantity is 46 against 60 dispatched. The 14-unit difference is not treated as recovered, cleared, or credited without a matching financial record.</p></div>
-          <div className="pt-3"><h3 className="text-[13px] font-semibold tracking-tight text-[#25313A]">Account position</h3><p className="mt-2 text-[12px] leading-5 text-[#595E68]">Expected reimbursement $1,184.60 − Amazon credit $0.00 = supported exposure $1,184.60. The finding remains open pending the seller&apos;s decision.</p></div>
         </div>
-      </section>
 
+        <div className="mt-3 grid grid-cols-[32px_88px_30px_minmax(0,1fr)] gap-2 px-2.5 text-[9px] font-semibold uppercase tracking-[0.02em] text-[#A0A9AF] sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3.5 sm:text-[10px]">
+          <span aria-hidden="true" />
+          <span>Reference</span>
+          <span aria-hidden="true" />
+          <span>Financial control item</span>
+          <span className="hidden text-right sm:block">Position</span>
+        </div>
+
+        <div className="mt-2 space-y-1.5">
+          {rows.map((row, index) => (
+            <ControlRowView key={row.reference} row={row} index={index} selected={selected === index} onSelect={() => setSelected(index)} />
+          ))}
+        </div>
+
+        <footer className="mt-7 grid gap-4 rounded-[14px] bg-[#F7F8F9] px-3.5 py-3.5 sm:grid-cols-[1fr_auto] sm:items-center sm:px-5">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-tight text-[#8E989F]">Actuarial position</p>
+            <p className="mt-1 text-[11px] leading-5 text-[#596770] sm:text-[12px]">{view === "finding" ? "Supported exposure is stated separately from unresolved or unsubstantiated variance." : "The expected position and credited amount reconcile to a zero residual variance."}</p>
+          </div>
+          <div className="text-left sm:text-right">
+            <p className="text-[10px] text-[#8E989F]">{view === "finding" ? "Supported exposure" : "Residual variance"}</p>
+            <p className={`mt-0.5 text-[17px] font-semibold tracking-tight ${view === "finding" ? "text-[#26343D]" : "text-[#2E9D62]"}`}>{view === "finding" ? "$1,184.60" : "$0.00"}</p>
+          </div>
+        </footer>
+      </section>
     </main>
   );
 }
