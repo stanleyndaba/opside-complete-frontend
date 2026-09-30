@@ -1063,3 +1063,27 @@ html, body, #root {
   color: #66737F !important;
   -webkit-text-fill-color: #66737F !important;
 }
+
+/* Routing card palette guard: the cards use soft white typography over their own warm surfaces. */
+.landing-google-sans > main > section.recovery-routing-section .routing-card-label,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-copy,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-item,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-item-icon,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-price,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-subprice {
+  color: #F0EEEA !important;
+  -webkit-text-fill-color: #F0EEEA !important;
+}
+.landing-google-sans > main > section.recovery-routing-section .routing-card-heading {
+  color: #F7F5F2 !important;
+  -webkit-text-fill-color: #F7F5F2 !important;
+}
+.landing-google-sans > main > section.recovery-routing-section .routing-card-price {
+  color: #FFFCF8 !important;
+  -webkit-text-fill-color: #FFFCF8 !important;
+}
+.landing-google-sans > main > section.recovery-routing-section .routing-card-button,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-button * {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}

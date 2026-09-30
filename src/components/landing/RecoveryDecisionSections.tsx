@@ -107,21 +107,21 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
             
             return (
             <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} style={{ background: gradientStyle }} className={`relative rounded-[8px] p-6 sm:p-8 md:p-10 transition-[filter,opacity] duration-500 will-change-[filter,opacity] lg:min-w-0 lg:flex-1 ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
-              <p style={{ color: "#68655F" }} className="font-mono text-[11px] font-semibold uppercase tracking-tight">{option.label}</p>
+              <p style={{ color: "#68655F" }} className="routing-card-label font-mono text-[11px] font-semibold uppercase tracking-tight">{option.label}</p>
               <h3 className="routing-card-heading mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] sm:text-[36px] md:text-[42px]" style={{ fontWeight: 500 }}>{option.title}</h3>
-              <p style={{ color: "#55534E" }} className="mt-4 max-w-[520px] text-[14px] leading-6 md:text-[15px] md:leading-7">{option.copy}</p>
+              <p style={{ color: "#F0EEEA" }} className="routing-card-copy mt-4 max-w-[520px] text-[14px] leading-6 md:text-[15px] md:leading-7">{option.copy}</p>
               <div className="mt-7 grid gap-0 border-y border-white/40 sm:grid-cols-2">
                 {option.items.map((item) => (
-                  <div key={item} className="flex items-start gap-2 border-b border-[#7B8A82]/30 py-3 text-[12px] leading-5 text-[#344149] last:border-b-0 sm:pr-4 md:text-[13px]">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#52616A]" />
+                  <div key={item} className="routing-card-item flex items-start gap-2 border-b border-[#7B8A82]/30 py-3 text-[12px] leading-5 text-[#F6F4F0] last:border-b-0 sm:pr-4 md:text-[13px]">
+                    <Check className="routing-card-item-icon mt-0.5 h-4 w-4 shrink-0 text-[#F6F4F0]" />
                     <span>{item}</span>
                   </div>
                 ))}
               </div>
               <div className="mt-7 pt-2">
-                <p className="text-[26px] font-semibold tracking-[-0.05em] text-[#344149] md:text-[30px]">{option.price}</p>
-                {option.subPrice && <p className="mt-1 text-[13px] font-medium text-[#52616A]">{option.subPrice}</p>}
-                <Button onClick={() => onAuditCta(option.ctaLocation)} className="mt-6 h-12 rounded-[6px] bg-[#0B74DE] px-6 text-[14px] font-semibold text-white shadow-sm hover:bg-[#075EBA]">
+                <p className="routing-card-price text-[26px] font-semibold tracking-[-0.05em] text-[#FFFCF8] md:text-[30px]">{option.price}</p>
+                {option.subPrice && <p className="routing-card-subprice mt-1 text-[13px] font-medium text-[#E5E1DB]">{option.subPrice}</p>}
+                <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button mt-6 h-12 rounded-[6px] bg-[#0B74DE] px-6 text-[14px] font-semibold text-white shadow-sm hover:bg-[#075EBA]">
                   {option.cta}<ArrowRight className="ml-2 h-4 w-4 text-white" />
                 </Button>
               </div>
