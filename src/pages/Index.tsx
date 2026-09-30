@@ -2258,7 +2258,7 @@ export default function Index() {
         <MarginStandardDeliverableSection />
 
         {/* Section 14 — Trust / FAQ */}
-        <section className="relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
+        <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">24 / TRUST / FAQ</p>

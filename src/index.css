@@ -1020,3 +1020,27 @@ html, body, #root {
     text-align: left !important;
   }
 }
+
+/* Final FAQ palette guard: this section is intentionally white, not graphite. */
+.landing-google-sans > main > section.trust-faq-section {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+.landing-google-sans > main > section.trust-faq-section h2,
+.landing-google-sans > main > section.trust-faq-section h2 .heading-tone-dark {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans > main > section.trust-faq-section h2 .heading-tone-muted {
+  color: #66737F !important;
+  -webkit-text-fill-color: #66737F !important;
+}
+.landing-google-sans > main > section.trust-faq-section button {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans > main > section.trust-faq-section [data-radix-accordion-content],
+.landing-google-sans > main > section.trust-faq-section [data-radix-accordion-content] p {
+  color: #66737F !important;
+  -webkit-text-fill-color: #66737F !important;
+}
