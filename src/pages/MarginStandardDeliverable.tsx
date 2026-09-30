@@ -135,13 +135,19 @@ export default function MarginStandardDeliverable() {
     <main className="min-h-screen overflow-x-auto bg-[#E7E9EB] font-google-sans text-[#202A31]">
       <div className="mx-auto min-w-[600px] max-w-[820px] px-3 py-3 sm:px-4 sm:py-4"><section className="rounded-[8px] border border-white/80 bg-white/72 p-3 shadow-[0_1px_2px_rgba(49,62,72,0.04)] backdrop-blur-xl sm:p-4" aria-label="Amazon Financial Review actuarial control board">
         <header className="flex items-start justify-between gap-4">
-          <div className="flex min-w-0 items-center gap-3">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.55)] sm:h-8 sm:w-8">
-              <Check className="h-3 w-3" strokeWidth={3} />
-            </span>
-            <div className="min-w-0">
-              <h1 className="truncate text-[14px] font-normal leading-tight tracking-tight text-[#1D272E] sm:text-[16px]">FR</h1>
-              <p className="mt-0.5 truncate text-[10px] text-[#8A949C] sm:text-[11px]">Reconciliation control · Northstar Commerce LLC · Amazon US</p>
+          <div className="flex min-w-0 flex-col items-start gap-2">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.55)] sm:h-6 sm:w-6">
+                <Check className="h-2.5 w-2.5" strokeWidth={3} />
+              </span>
+              <div className="min-w-0">
+                <h1 className="truncate text-[14px] font-normal leading-tight tracking-tight text-[#1D272E] sm:text-[16px]">FR</h1>
+                <p className="mt-0.5 truncate text-[10px] text-[#8A949C] sm:text-[11px]">Reconciliation control · Northstar Commerce LLC · Amazon US</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 rounded-full bg-[#F4F6F7] p-1">
+              <button type="button" onClick={() => setView("finding")} className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${view === "finding" ? "bg-white text-[#26343D] shadow-sm" : "text-[#929CA3]"}`}>Open basis</button>
+              <button type="button" onClick={() => setView("closeout")} className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${view === "closeout" ? "bg-white text-[#26343D] shadow-sm" : "text-[#929CA3]"}`}>Reconciled</button>
             </div>
           </div>
           <button type="button" className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#D8DDE1] bg-white px-3.5 py-2 text-[11px] font-medium text-[#29353D] shadow-[0_1px_2px_rgba(25,35,42,0.04)] transition-colors hover:bg-[#F7F9FA] sm:px-5 sm:py-2.5 sm:text-[12px]">
@@ -155,10 +161,6 @@ export default function MarginStandardDeliverable() {
           <div className="flex items-center gap-2 text-[11px] font-semibold text-[#4D5B64] sm:text-[12px]">
             <span className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#E9EDF0] text-[#65727B]"><Minus className="h-3.5 w-3.5" strokeWidth={2.5} /></span>
             <span>{view === "finding" ? "Audit findings" : "Closeout record"}</span>
-          </div>
-          <div className="flex items-center gap-1 rounded-full bg-[#F4F6F7] p-1">
-            <button type="button" onClick={() => setView("finding")} className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${view === "finding" ? "bg-white text-[#26343D] shadow-sm" : "text-[#929CA3]"}`}>Open basis</button>
-            <button type="button" onClick={() => setView("closeout")} className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${view === "closeout" ? "bg-white text-[#26343D] shadow-sm" : "text-[#929CA3]"}`}>Reconciled</button>
           </div>
         </div>
 
