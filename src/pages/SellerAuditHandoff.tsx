@@ -20,6 +20,7 @@ const reportOptions = [
   'Not sure — I’ll send what I have',
 ];
 const HANDOFF_STORAGE_KEY = 'margin_seller_handoff';
+const PREFILL_EMAIL_KEY = 'margin:prefill-email';
 
 type HandoffDetails = {
   email: string;
@@ -48,6 +49,17 @@ function readStoredHandoff(): StoredHandoff | null {
   }
 }
 
+function readPrefillEmail(): string {
+  if (typeof window === 'undefined') return '';
+  try {
+    const email = window.sessionStorage.getItem(PREFILL_EMAIL_KEY) || '';
+    window.sessionStorage.removeItem(PREFILL_EMAIL_KEY);
+    return email;
+  } catch {
+    return '';
+  }
+}
+
 export default function SellerAuditHandoff() {
   usePageMeta({
     title: 'Seller File Handoff | Margin',
@@ -58,8 +70,9 @@ export default function SellerAuditHandoff() {
 
   const { toast } = useToast();
   const storedHandoff = useMemo(readStoredHandoff, []);
+  const prefillEmail = useMemo(readPrefillEmail, []);
   const [details, setDetails] = useState<HandoffDetails>({
-    email: storedHandoff?.email || '',
+    email: storedHandoff?.email || prefillEmail || '',
     businessName: storedHandoff?.businessName || '',
     reportType: storedHandoff?.reportType || reportOptions[0],
   });

@@ -1610,7 +1610,12 @@ function MarginStandardDeliverableSection() {
 function FooterNestedRecoveryVisual() {
   const navigate = useNavigate();
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof nestedRecoveryBrowsers>('progress');
-  const beginSellerSignup = () => navigate('/login?mode=signup&next=%2Faudit-start');
+  const [delegationEmail, setDelegationEmail] = useState('');
+  const beginSellerSignup = () => {
+    const email = delegationEmail.trim();
+    if (email && typeof window !== 'undefined') window.sessionStorage.setItem('margin:prefill-email', email);
+    navigate('/login?mode=signup&next=%2Faudit-start');
+  };
   const continueWithGoogle = () => navigate('/login?mode=signup&start=google&next=%2Faudit-start');
 
   return (
@@ -1621,7 +1626,7 @@ function FooterNestedRecoveryVisual() {
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
           <p className="mb-3 font-google-sans text-[15px] font-semibold tracking-tight text-[#182026]">Start with the financial position</p>
           <label htmlFor="delegation-email-mobile" className="mb-1.5 block font-google-sans text-[11px] font-semibold text-[#66737F]">Email address</label>
-          <input id="delegation-email-mobile" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
+          <input id="delegation-email-mobile" type="email" autoComplete="email" placeholder="you@example.com" value={delegationEmail} onChange={(event) => setDelegationEmail(event.target.value)} className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
           <Button onClick={beginSellerSignup} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Start the free Audit</Button>
           <div className="my-3 flex items-center gap-2 font-google-sans text-[9px] font-medium tracking-tight text-[#A1AEB7]">
             <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
@@ -2211,11 +2216,17 @@ export default function Index() {
   const { isFull, nextBatchHours } = useOnboardingCapacity();
 
   const [isBusy, setIsBusy] = useState(false);
+  const [delegationEmail, setDelegationEmail] = useState('');
   const reduceMotion = useReducedMotion();
 
-  const handleClaimAccessClick = (location: string, sourceType: 'sp_api' | 'csv_upload' = 'sp_api') => {
+  const handleClaimAccessClick = (location: string) => {
     trackEarlyAccessCtaClicked(location);
-    navigate(sourceType === 'sp_api' ? '/audit' : '/data-upload');
+    navigate('/audit-start');
+  };
+  const startAuditFromClosingForm = () => {
+    const email = delegationEmail.trim();
+    if (email && typeof window !== 'undefined') window.sessionStorage.setItem('margin:prefill-email', email);
+    navigate('/login?mode=signup&next=%2Faudit-start');
   };
 
   return (
@@ -2238,7 +2249,7 @@ export default function Index() {
         <MarginEngineSection />
         <MarginLifecycleSection />
         <FinancialControlOperationsSection />
-        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
+        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit")} />
         <NestedRecoveryBrowsers />
 
         {/* Proof and control — Can I trust it without giving up control? */}
@@ -2315,8 +2326,8 @@ export default function Index() {
                   <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You approve submissions and material decisions. Margin carries the investigation, evidence, follow-through, response handling, and settlement verification — with the financial record kept visible.</p>
                   <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block">
                     <label htmlFor="delegation-email" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
-                    <input id="delegation-email" type="email" placeholder="you@example.com" className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
-                    <Button onClick={() => navigate('/login?mode=signup&next=%2Faudit-start')} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Start the free Audit</Button>
+                    <input id="delegation-email" type="email" autoComplete="email" placeholder="you@example.com" value={delegationEmail} onChange={(event) => setDelegationEmail(event.target.value)} className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
+                    <Button onClick={startAuditFromClosingForm} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Start the free Audit</Button>
                     <div className="my-3 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.18em] text-[#A1AEB7]">
                       <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
                     </div>
