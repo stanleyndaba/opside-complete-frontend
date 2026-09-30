@@ -2261,7 +2261,7 @@ export default function Index() {
         <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
-              <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">24 / TRUST / FAQ</p>
+              <p className="trust-faq-eyebrow mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#182026]">24 / TRUST / FAQ</p>
               <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
                 <span className="heading-tone-dark">Your questions</span> <span className="heading-tone-muted">answered.</span>
               </h2>
@@ -2279,10 +2279,10 @@ export default function Index() {
                     value={`faq-${index}`}
                     className="border-b border-[var(--margin-border)] px-0"
                   >
-                    <AccordionTrigger className="py-6 text-left text-[18px] font-semibold tracking-[-0.035em] text-[var(--margin-text-primary)] hover:no-underline md:py-7 md:text-[22px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-[var(--margin-text-muted)]">
+                    <AccordionTrigger className="faq-trigger py-6 text-left text-[18px] font-semibold tracking-[-0.035em] text-[var(--margin-text-primary)] hover:no-underline md:py-7 md:text-[22px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-[var(--margin-text-muted)]">
                       {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="pb-7 pr-10 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+                    <AccordionContent className="faq-answer pb-7 pr-10 text-[15px] leading-7 text-[#3F4650] md:text-[17px] md:leading-8">
                       <p>{item.answer}</p>
                     </AccordionContent>
                   </AccordionItem>
@@ -2291,7 +2291,7 @@ export default function Index() {
               <Button
                 type="button"
                 onClick={() => setShowAllFaqs((current) => !current)}
-                className="landing-pressable mt-7 h-11 rounded-[7px] bg-[var(--margin-blue)] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] hover:bg-[var(--margin-blue-hover)]"
+                className="faq-more-button landing-pressable mt-7 h-11 rounded-[7px] bg-[var(--margin-blue)] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] hover:bg-[var(--margin-blue-hover)]"
               >
                 {showAllFaqs ? "Show fewer answers" : "More answers to your questions"}
                 <ArrowRight className="ml-2 h-4 w-4" />

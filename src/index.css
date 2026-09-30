@@ -1021,6 +1021,25 @@ html, body, #root {
   }
 }
 
+/* Final FAQ palette guard: keep the FAQ hierarchy explicit against landing-wide color rules. */
+.landing-google-sans > main > section.trust-faq-section .trust-faq-eyebrow {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans > main > section.trust-faq-section .faq-trigger {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans > main > section.trust-faq-section .faq-answer,
+.landing-google-sans > main > section.trust-faq-section .faq-answer p {
+  color: #3F4650 !important;
+  -webkit-text-fill-color: #3F4650 !important;
+}
+.landing-google-sans > main > section.trust-faq-section .faq-more-button,
+.landing-google-sans > main > section.trust-faq-section .faq-more-button * {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
 /* Final FAQ palette guard: this section is intentionally white, not graphite. */
 .landing-google-sans > main > section.trust-faq-section {
   background-color: #FFFFFF !important;
