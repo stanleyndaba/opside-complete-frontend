@@ -105,7 +105,7 @@ function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; i
     <button
       type="button"
       onClick={onSelect}
-      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[14px] px-2 py-2.5 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#E2E6E9]" : "bg-transparent hover:bg-[#F5F6F7]"}`}
+      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[10px] px-2 py-2 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#E2E6E9]" : "bg-transparent hover:bg-[#F5F6F7]"}`}
       aria-pressed={selected}
     >
       <span className={`flex h-7 w-7 items-center justify-center rounded-[8px] ${selected ? "bg-[#66747D]" : "bg-transparent text-[#9AA5AE]"}`}>
@@ -114,7 +114,7 @@ function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; i
       <span className="truncate text-[11px] font-medium tracking-tight text-[#8A949C] sm:text-[11px]">{row.reference}</span>
       <span className={`flex h-7 w-7 items-center justify-center rounded-full ${state.className}`}>{state.icon}</span>
       <span className="min-w-0">
-        <span className={`block truncate text-[12px] font-semibold leading-5 tracking-[-0.015em] sm:text-[13px] ${selected ? "text-[#17242D]" : "text-[#26343D]"}`}>{row.title}</span>
+        <span className={`block truncate text-[12px] font-medium leading-5 tracking-tight sm:text-[13px] ${selected ? "text-[#17242D]" : "text-[#26343D]"}`}>{row.title}</span>
         <span className="block truncate text-[10px] leading-4 text-[#8B969E] sm:text-[10px]">{row.detail}</span>
       </span>
       <span className="hidden truncate text-right text-[11px] font-semibold text-[#56636D] sm:block">{row.value}</span>
@@ -128,15 +128,15 @@ export default function MarginStandardDeliverable() {
   const rows = view === "finding" ? findingRows : closeoutRows;
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#E7E9EB] px-2 py-5 font-google-sans text-[#202A31] sm:px-5 sm:py-9 lg:px-8 lg:py-12">
-      <section className="mx-auto w-full max-w-[980px] rounded-[18px] border border-white/75 bg-white/65 p-3 shadow-[0_22px_60px_rgba(49,62,72,0.12)] backdrop-blur-xl sm:rounded-[26px] sm:p-6 lg:p-8" aria-label="Amazon Financial Review actuarial control board">
+    <main className="min-h-screen overflow-x-auto bg-[#E7E9EB] font-google-sans text-[#202A31]">
+      <div className="mx-auto min-w-[760px] max-w-[1280px] px-4 py-4 sm:px-6 sm:py-6"><section className="rounded-[10px] border border-white/80 bg-white/72 p-4 shadow-[0_1px_2px_rgba(49,62,72,0.04)] backdrop-blur-xl sm:p-5" aria-label="Amazon Financial Review actuarial control board">
         <header className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.55)] sm:h-8 sm:w-8">
               <Check className="h-3.5 w-3.5" strokeWidth={3} />
             </span>
             <div className="min-w-0">
-              <h1 className="truncate text-[18px] font-medium leading-tight tracking-[-0.04em] text-[#1D272E] sm:text-[24px]">Amazon Financial Review</h1>
+              <h1 className="truncate text-[17px] font-normal leading-tight tracking-tight text-[#1D272E] sm:text-[20px]">Amazon Financial Review</h1>
               <p className="mt-0.5 truncate text-[10px] text-[#8A949C] sm:text-[11px]">Actuarial reconciliation control · Northstar Commerce LLC · Amazon US</p>
             </div>
           </div>
@@ -147,7 +147,7 @@ export default function MarginStandardDeliverable() {
           </button>
         </header>
 
-        <div className="mt-7 flex items-center justify-between gap-4 sm:mt-9">
+        <div className="mt-5 flex items-center justify-between gap-4 sm:mt-6">
           <div className="flex items-center gap-2 text-[11px] font-semibold text-[#4D5B64] sm:text-[12px]">
             <span className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#E9EDF0] text-[#65727B]"><Minus className="h-3.5 w-3.5" strokeWidth={2.5} /></span>
             <span>{view === "finding" ? "Audit findings" : "Closeout record"}</span>
@@ -172,7 +172,7 @@ export default function MarginStandardDeliverable() {
           ))}
         </div>
 
-        <footer className="mt-7 grid gap-4 rounded-[14px] bg-[#F7F8F9] px-3.5 py-3.5 sm:grid-cols-[1fr_auto] sm:items-center sm:px-5">
+        <footer className="mt-5 grid gap-3 rounded-[10px] bg-[#F4F5F6] px-3 py-3 sm:grid-cols-[1fr_auto] sm:items-center sm:px-5">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-tight text-[#8E989F]">Actuarial position</p>
             <p className="mt-1 text-[11px] leading-5 text-[#596770] sm:text-[12px]">{view === "finding" ? "Supported exposure is stated separately from unresolved or unsubstantiated variance." : "The expected position and credited amount reconcile to a zero residual variance."}</p>
@@ -182,7 +182,7 @@ export default function MarginStandardDeliverable() {
             <p className={`mt-0.5 text-[17px] font-semibold tracking-tight ${view === "finding" ? "text-[#26343D]" : "text-[#2E9D62]"}`}>{view === "finding" ? "$1,184.60" : "$0.00"}</p>
           </div>
         </footer>
-      </section>
+      </section></div>
     </main>
   );
 }
