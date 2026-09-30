@@ -38,12 +38,7 @@ export default function MarginStandardDeliverable() {
 
   return (
     <main className="landing-google-sans min-h-screen bg-[#F3F5F5] px-4 py-7 text-[#182026] sm:px-8 sm:py-10 lg:flex lg:min-h-[700px] lg:flex-col lg:items-center lg:justify-center lg:px-10 lg:py-12">
-      <div className="w-full max-w-[860px] text-center">
-        <h1 className="mx-auto mt-3 max-w-[700px] font-google-sans text-[27px] font-semibold leading-[1.04] tracking-tight sm:text-[36px] md:text-[46px]">Do not buy a promise. <span className="font-normal text-[#74838B]">Review the work.</span></h1>
-        <p className="mx-auto mt-4 max-w-[650px] text-[13px] leading-6 text-[#5B6A72] sm:text-[15px] sm:leading-7">Every material finding becomes an inspectable financial record: what happened, what supports it, what remains uncertain, and what action is justified.</p>
-      </div>
-
-      <section className="mx-auto mt-7 w-full max-w-[860px] text-left sm:mt-9" aria-label="Margin reconciliation record">
+      <section className="mx-auto mt-0 w-full max-w-[860px] text-left sm:mt-0" aria-label="Margin reconciliation record">
         <header className="border-b border-[#E9E9EC] px-0 pb-3 pt-0 sm:pt-1">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -71,8 +66,8 @@ export default function MarginStandardDeliverable() {
               <div className="mt-4 space-y-3">
                 {[['Expected reimbursement value', '$1,184.60'], ['Amazon credited to date', '$0.00'], ['Supported exposure', '$1,184.60']].map(([label, value], index) => <div key={label} className={`flex items-end justify-between gap-3 ${index === 2 ? 'border-t border-[#E9E9EC] pt-3' : ''}`}><span className="text-[11px] leading-4 text-[#66737F]">{label}</span><span className={`text-right text-[15px] font-semibold ${index === 2 ? 'text-[#0B74DE]' : 'text-[#25313A]'}`}>{value}</span></div>)}
               </div>
-              <div className="mt-5 flex items-center justify-between border-t border-[#2EAD7B] pt-3 text-[#2E7D5B]"><span className="text-[10px] font-semibold uppercase tracking-normal">Evidence confidence</span><span className="text-[12px] font-bold">HIGH</span></div>
-              <div className="mt-4 border-l-2 border-[#2EAD7B] bg-[#F4FAF6] px-3 py-3"><p className="text-[10px] font-semibold text-[#25313A]">Recommended action</p><p className="mt-1 text-[11px] leading-5 text-[#52616A]">Evidence supports recovery. Submission requires seller approval.</p><p className="mt-2 text-[10px] font-semibold text-[#2E7D5B]">Margin prepares the case and tracks the outcome.</p></div>
+              <div className="mt-6 border-t border-[#E9E9EC] pt-4"><h4 className="text-[13px] font-semibold tracking-tight text-[#25313A]">Evidence confidence</h4><p className="mt-2 text-[12px] leading-5 text-[#52616A]">High. The unit variance is independently stated by the shipment and receiving records, and no corresponding settlement credit is present.</p></div>
+              <div className="mt-5 border-t border-[#E9E9EC] pt-4"><h4 className="text-[13px] font-semibold tracking-tight text-[#25313A]">Recommended action</h4><p className="mt-2 text-[12px] leading-5 text-[#52616A]">60 shipped − 46 received = 14 units unresolved. At $84.614 per unit, the supported exposure is 14 × $84.614 = $1,184.60. Seller approval is required before any submission.</p></div>
             </aside>
           </div>
         ) : (
@@ -83,9 +78,19 @@ export default function MarginStandardDeliverable() {
               <p className="mt-3 max-w-[560px] text-[12px] leading-5 text-[#52616A]">The expected position, Amazon attribution, and settlement record now agree.</p>
               <div className="mt-6"><p className="mb-3 text-[10px] font-semibold uppercase tracking-normal text-[#66737F]">Closeout trail</p><Timeline items={closeoutTimeline} closeout /></div>
             </div>
-            <aside className="px-4 py-5 sm:px-6 lg:px-5"><div className="flex h-12 w-12 items-center justify-center rounded-[5px] bg-[#2EAD7B] text-white"><Check className="h-7 w-7" strokeWidth={3} /></div><p className="mt-4 text-[10px] font-semibold uppercase tracking-normal text-[#66737F]">Financial status</p><p className="mt-1 text-[20px] font-semibold tracking-tight text-[#2E7D5B]">Reconciled</p><div className="mt-5 space-y-3 border-t border-[#E9E9EC] pt-4 text-[11px]"><div className="flex justify-between gap-3"><span className="text-[#66737F]">Amazon credited</span><span className="font-semibold text-[#25313A]">$1,184.60</span></div><div className="flex justify-between gap-3"><span className="text-[#66737F]">Variance remaining</span><span className="font-semibold text-[#2E7D5B]">$0.00</span></div><div className="flex justify-between gap-3"><span className="text-[#66737F]">Settlement reference</span><span className="font-semibold text-[#25313A]">SETTLE-2026-0418</span></div></div><div className="mt-5 border-t border-[#2EAD7B] pt-3 text-[10px] font-semibold leading-4 text-[#2E7D5B]">Outcome verified against settlement evidence.</div></aside>
+            <aside className="px-4 py-5 sm:px-6 lg:px-5"><div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-[#F2C94C] text-white"><Check className="h-4 w-4" strokeWidth={3} /></div><p className="mt-4 text-[10px] font-semibold uppercase tracking-normal text-[#66737F]">Financial status</p><p className="mt-1 text-[20px] font-semibold tracking-tight text-[#2E7D5B]">Reconciled</p><div className="mt-5 space-y-3 border-t border-[#E9E9EC] pt-4 text-[11px]"><div className="flex justify-between gap-3"><span className="text-[#66737F]">Amazon credited</span><span className="font-semibold text-[#25313A]">$1,184.60</span></div><div className="flex justify-between gap-3"><span className="text-[#66737F]">Variance remaining</span><span className="font-semibold text-[#2E7D5B]">$0.00</span></div><div className="flex justify-between gap-3"><span className="text-[#66737F]">Settlement reference</span><span className="font-semibold text-[#25313A]">SETTLE-2026-0418</span></div></div><div className="mt-5 border-t border-[#2EAD7B] pt-3 text-[10px] font-semibold leading-4 text-[#2E7D5B]">Outcome verified against settlement evidence.</div></aside>
           </div>
         )}
+      </section>
+
+      <section className="mx-auto mt-10 w-full max-w-[860px] border-t border-[#DCE3E5] pt-7 text-left" aria-labelledby="audit-result-explanation">
+        <h2 id="audit-result-explanation" className="text-[18px] font-semibold tracking-tight text-[#25313A] sm:text-[21px]">What the account record establishes</h2>
+        <p className="mt-3 max-w-[760px] text-[12px] leading-6 text-[#52616A] sm:text-[13px] sm:leading-7">The audit isolates one inbound receiving event for Northstar Commerce LLC and keeps its financial position separate from assumptions about other shipments, periods, or settlement cycles.</p>
+        <div className="mt-6 grid gap-6 sm:grid-cols-3 sm:gap-8">
+          <div className="border-t border-[#E9E9EC] pt-3"><h3 className="text-[13px] font-semibold tracking-tight text-[#25313A]">Coverage</h3><p className="mt-2 text-[12px] leading-5 text-[#66737F]">Shipment FBA17-ONT8-260114, SKU NCS-48OZ-BLK, receiving node ONT8, and settlement SETTLE-2026-0418 resolve to the same event record.</p></div>
+          <div className="border-t border-[#E9E9EC] pt-3"><h3 className="text-[13px] font-semibold tracking-tight text-[#25313A]">Control test</h3><p className="mt-2 text-[12px] leading-5 text-[#66737F]">The receiving quantity is 46 against 60 dispatched. The 14-unit difference is not treated as recovered, cleared, or credited without a matching financial record.</p></div>
+          <div className="border-t border-[#E9E9EC] pt-3"><h3 className="text-[13px] font-semibold tracking-tight text-[#25313A]">Account position</h3><p className="mt-2 text-[12px] leading-5 text-[#66737F]">Expected reimbursement $1,184.60 − Amazon credit $0.00 = supported exposure $1,184.60. The finding remains open pending the seller&apos;s decision.</p></div>
+        </div>
       </section>
 
     </main>
