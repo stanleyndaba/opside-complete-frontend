@@ -1604,22 +1604,22 @@ function MarginStandardDeliverableSection() {
 
 function AutoSubmitSection() {
   return (
-    <section className="relative overflow-hidden bg-white py-12 sm:py-16 lg:py-20" aria-labelledby="auto-submit-title">
+    <section className="auto-submit-section relative overflow-hidden bg-white py-12 sm:py-16 lg:py-20" aria-labelledby="auto-submit-title">
       <div className={containerClass}>
         <div className="grid items-center gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:gap-20">
           <motion.div {...revealProps} className="max-w-[660px]">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#71818A]">23 / AUTO SUBMIT</p>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#586872]">23 / AUTO SUBMIT</p>
             <h2 id="auto-submit-title" className="mt-5 font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
               <span className="heading-tone-dark">Once the basis is proven,</span>{" "}
               <span className="heading-tone-muted">stop carrying the submission.</span>
             </h2>
-            <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">
+            <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#3F4C55] md:text-[17px] md:leading-8">
               Auto Submit lets Margin move qualifying recoveries from verified finding to Amazon submission without asking you to lift another finger. The work continues while you run the business.
             </p>
-            <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">
+            <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#3F4C55] md:text-[17px] md:leading-8">
               This is not blind automation. Margin submits only when the event reconstruction, evidence basis, policy window, and recovery threshold are satisfied. Weak evidence, exceptions, and unresolved variance stay held for review.
             </p>
-            <p className="mt-6 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>
+            <p className="mt-6 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#274F62] sm:text-[24px]" style={{ fontWeight: 400 }}>
               You authorize the rule once. Margin carries the routine action—and keeps the financial record accountable through outcome.
             </p>
           </motion.div>

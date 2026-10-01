@@ -1,64 +1,160 @@
 import React, { useState } from "react";
-import { Check, ShieldCheck } from "lucide-react";
+import { Check, Circle } from "lucide-react";
+
+type CaseStatus = "ready" | "submitted" | "approved";
+
+type AutoSubmitCase = {
+  reference: string;
+  status: CaseStatus;
+  statusLabel: string;
+  title: string;
+  detail: string;
+  amount: string;
+  date: string;
+  docs: string[];
+};
+
+const cases: AutoSubmitCase[] = [
+  {
+    reference: "REC-014",
+    status: "ready",
+    statusLabel: "Ready to submit",
+    title: "Inbound receiving variance",
+    detail: "14 units · ONT8 · evidence basis verified",
+    amount: "$1,184.60",
+    date: "Today · 08:42",
+    docs: ["ShipmentPlan-FBA17-ONT8-260114.pdf", "ReceivingReport-ONT8.csv"],
+  },
+  {
+    reference: "REC-013",
+    status: "submitted",
+    statusLabel: "Submitted",
+    title: "Fee overcharge correction",
+    detail: "FBA fee event · case packet accepted by Amazon",
+    amount: "$388.50",
+    date: "30 Sep · 14:18",
+    docs: ["CasePacket-NTH-FBA-2601-0047.pdf", "SubmissionReceipt.pdf"],
+  },
+  {
+    reference: "REC-012",
+    status: "approved",
+    statusLabel: "Approved",
+    title: "Inventory adjustment reimbursement",
+    detail: "Settlement credit identified · payout verification pending",
+    amount: "$742.00",
+    date: "29 Sep · 11:06",
+    docs: ["AmazonResponse-19822888381.pdf", "Settlement-205-771.csv"],
+  },
+];
+
+const statusStyles: Record<CaseStatus, { dot: string; text: string; badge: string }> = {
+  ready: { dot: "bg-[#1689E5]", text: "text-[#0B74DE]", badge: "bg-[#EAF4FC]" },
+  submitted: { dot: "bg-[#F39A45]", text: "text-[#B96515]", badge: "bg-[#FFF3E6]" },
+  approved: { dot: "bg-[#35C56B]", text: "text-[#23834A]", badge: "bg-[#EAF8F0]" },
+};
+
+function EvidenceIcon({ file }: { file: string }) {
+  const isCsv = file.toLowerCase().endsWith(".csv");
+  return (
+    <span className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-[3px] bg-white shadow-[0_1px_2px_rgba(32,42,49,0.1)]">
+      <img src={isCsv ? "/evidence-csv-mark.png" : "/pdf-file-icon.webp"} alt={isCsv ? "CSV evidence" : "PDF evidence"} className="h-4 w-4 object-contain" />
+    </span>
+  );
+}
+
+function CaseTimelineRow({ item }: { item: AutoSubmitCase }) {
+  const tone = statusStyles[item.status];
+  return (
+    <article className="relative pl-6 sm:pl-7">
+      <span className={`absolute left-[-4px] top-4 flex h-3 w-3 items-center justify-center rounded-full ring-4 ring-[#F4F6F7] ${tone.dot}`} aria-hidden="true">
+        {item.status === "approved" ? <Check className="h-2 w-2 text-white" strokeWidth={4} /> : <Circle className="h-1.5 w-1.5 fill-white text-white" strokeWidth={0} />}
+      </span>
+      <div className="rounded-[7px] border border-[#D7DDE1] bg-white/72 px-3 py-2.5 shadow-[0_1px_2px_rgba(32,42,49,0.03)] sm:px-3.5 sm:py-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="truncate text-[9px] font-semibold tracking-tight text-[#8A949C] sm:text-[10px]">{item.reference}</span>
+              <span className={`rounded-full px-1.5 py-0.5 text-[8px] font-semibold ${tone.badge} ${tone.text}`}>{item.statusLabel}</span>
+            </div>
+            <h3 className="mt-1 truncate text-[11px] font-semibold leading-4 tracking-tight text-[#1D272E] sm:text-[12px]">{item.title}</h3>
+            <p className="truncate text-[9px] leading-4 text-[#71808A] sm:text-[10px]">{item.detail}</p>
+          </div>
+          <div className="shrink-0 text-right">
+            <p className="text-[11px] font-semibold tracking-tight text-[#26343D] sm:text-[12px]">{item.amount}</p>
+            <p className="mt-0.5 text-[8px] text-[#97A1A8] sm:text-[9px]">{item.date}</p>
+          </div>
+        </div>
+        <div className="mt-2 flex items-center gap-1.5 border-t border-[#E2E6E8] pt-2">
+          {item.docs.map((file) => (
+            <span key={file} className="flex min-w-0 items-center gap-1 text-[8px] text-[#6B7881] sm:text-[9px]">
+              <EvidenceIcon file={file} />
+              <span className="max-w-[150px] truncate">{file}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export default function AutoSubmitPreview() {
   const [enabled, setEnabled] = useState(true);
 
   return (
-    <main className="min-h-screen overflow-x-auto bg-[#E7E9EB] font-google-sans text-[#202A31]">
-      <div className="mx-auto min-w-[600px] max-w-[820px] px-3 py-3 sm:px-4 sm:py-4">
+    <main className="min-h-screen overflow-x-auto bg-[#F4F6F7] font-google-sans text-[#202A31]">
+      <div className="mx-auto min-w-[520px] max-w-[820px] px-2 py-2 sm:min-w-0 sm:px-4 sm:py-4">
         <section
-          className="rounded-[8px] border border-[#D2D7DB] bg-white/78 p-3 shadow-[0_1px_2px_rgba(49,62,72,0.04)] backdrop-blur-xl sm:p-4"
-          aria-label="Auto Submit control for Northstar Commerce LLC"
+          className="rounded-[8px] border border-[#D2D7DB] bg-white/78 p-2.5 shadow-[0_1px_2px_rgba(49,62,72,0.04)] backdrop-blur-xl sm:p-4"
+          aria-label="Auto Submit control and case queue for Northstar Commerce LLC"
         >
-          <header className="flex items-center gap-2.5 border-b border-[#C8CED3] pb-3">
+          <header className="flex items-center gap-2 border-b border-[#C8CED3] pb-2.5 sm:gap-2.5 sm:pb-3">
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white sm:h-6 sm:w-6">
               <Check className="h-2.5 w-2.5" strokeWidth={3} />
             </span>
-            <h1 className="truncate text-[11px] font-medium leading-tight tracking-tight text-[#1D272E] sm:text-[12px]">
+            <h1 className="truncate text-[10px] font-medium leading-tight tracking-tight text-[#1D272E] sm:text-[12px]">
               Reconciliation control · Northstar Commerce LLC · Amazon US
             </h1>
           </header>
 
-          <div className="mx-auto max-w-[560px] py-8 text-center sm:py-12">
-            <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[#EAF4FC] text-[#1689E5] sm:h-10 sm:w-10">
-              <ShieldCheck className="h-4 w-4 sm:h-[18px] sm:w-[18px]" strokeWidth={2.2} />
+          <div className="grid items-start gap-4 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-5 sm:py-5">
+            <aside className="border-b border-[#D9DEE1] pb-4 sm:border-b-0 sm:border-r sm:pb-0 sm:pr-4">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.02em] text-[#7B8790] sm:text-[10px]">Submission control</p>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={enabled}
+                onClick={() => setEnabled((current) => !current)}
+                className={`mt-3 flex items-center gap-2 rounded-full px-1.5 py-1.5 pr-2.5 transition-colors ${enabled ? "bg-[#1689E5]" : "bg-[#9AA8B2]"}`}
+              >
+                <span className={`flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-[0_1px_3px_rgba(28,47,59,0.2)] transition-transform ${enabled ? "translate-x-0" : "translate-x-[18px]"}`}>
+                  <Check className={`h-3 w-3 ${enabled ? "text-[#1689E5]" : "text-[#9AA8B2]"}`} strokeWidth={3} />
+                </span>
+                <span className="min-w-[52px] text-left text-[10px] font-semibold text-white">{enabled ? "Auto Submit" : "Paused"}</span>
+              </button>
+              <p className="mt-3 max-w-[135px] text-[9px] leading-4 text-[#56646D] sm:text-[10px] sm:leading-5">
+                {enabled ? "Qualified cases file automatically after evidence and confidence controls pass." : "Cases remain in review until you approve submission."}
+              </p>
+              <p className="mt-3 text-[9px] leading-4 text-[#8A959C]">Exceptions stay held.</p>
+            </aside>
+
+            <div className="min-w-0">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[12px] font-semibold tracking-tight text-[#26343D] sm:text-[13px]">Auto Submit queue</p>
+                  <p className="mt-0.5 text-[9px] text-[#7B8790] sm:text-[10px]">Three controlled recovery states</p>
+                </div>
+                <span className="rounded-full bg-[#F1F4F5] px-2 py-1 text-[8px] font-semibold text-[#6B7881]">1 tab</span>
+              </div>
+              <div className="relative space-y-2.5 border-l border-[#C8D0D5] py-0.5">
+                {cases.map((item) => <CaseTimelineRow key={item.reference} item={item} />)}
+              </div>
             </div>
-            <h2 className="mt-4 text-[18px] font-medium tracking-[-0.025em] text-[#1D272E] sm:text-[21px]">
-              Auto Submit
-            </h2>
-            <p className="mx-auto mt-2 max-w-[420px] text-[11px] leading-5 text-[#748089] sm:text-[12px] sm:leading-6">
-              When enabled, Margin submits only recovery findings that pass the configured evidence and confidence controls.
-            </p>
-
-            <button
-              type="button"
-              role="switch"
-              aria-checked={enabled}
-              onClick={() => setEnabled((current) => !current)}
-              className={`mx-auto mt-6 flex items-center gap-3 rounded-full px-2 py-2 pr-3 transition-colors ${enabled ? "bg-[#1689E5]" : "bg-[#9AA8B2]"}`}
-            >
-              <span className={`flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-[0_1px_3px_rgba(28,47,59,0.2)] transition-transform ${enabled ? "translate-x-0" : "translate-x-[22px]"}`}>
-                <Check className={`h-3.5 w-3.5 ${enabled ? "text-[#1689E5]" : "text-[#9AA8B2]"}`} strokeWidth={3} />
-              </span>
-              <span className="min-w-[64px] text-left text-[11px] font-semibold text-white">
-                {enabled ? "Enabled" : "Paused"}
-              </span>
-            </button>
-
-            <p className="mx-auto mt-5 max-w-[460px] text-[11px] leading-5 text-[#56646D] sm:text-[12px] sm:leading-6">
-              {enabled
-                ? "Qualifying findings move from verified evidence to Amazon submission without another seller review step. Exceptions, weak evidence, and unresolved variance remain held for review."
-                : "No finding is submitted automatically. Qualified recoveries remain available for seller review before filing."}
-            </p>
           </div>
 
-          <div className="border-t border-[#C8CED3] pt-3 text-[10px] leading-5 text-[#7B8790] sm:text-[11px]">
+          <footer className="border-t border-[#C8CED3] pt-2.5 text-[9px] leading-4 text-[#7B8790] sm:text-[10px] sm:leading-5">
             <span className="font-semibold text-[#596770]">Control state:</span>{" "}
-            {enabled
-              ? "pre-authorized recovery submission · evidence threshold enforced · seller approval retained for exceptions"
-              : "manual submission path · seller approval required before filing"}
-          </div>
+            {enabled ? "pre-authorized submission · evidence threshold enforced · exceptions retained for review" : "manual submission path · seller approval required before filing"}
+          </footer>
         </section>
       </div>
     </main>
