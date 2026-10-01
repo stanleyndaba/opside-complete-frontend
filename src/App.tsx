@@ -89,6 +89,7 @@ const AmazonThreadReview = lazy(() => import('./pages/AmazonThreadReview'));
 const ProgressReview = lazy(() => import('./pages/ProgressReview'));
 const FinancialReconciliation = lazy(() => import('./pages/FinancialReconciliation'));
 const MarginStandardDeliverable = lazy(() => import('./pages/MarginStandardDeliverable'));
+const AutoSubmitPreview = lazy(() => import('./pages/AutoSubmitPreview'));
 const DocumentUploads = lazy(() => import("@/components/documentuploads"));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
 const Standalone = lazy(() => import("./pages/standalone"));
@@ -310,6 +311,7 @@ const App = () => (
                         <Route path='/progress-preview' element={<ProgressReview />} />
                         <Route path='/financial-reconciliation' element={<FinancialReconciliation />} />
                         <Route path='/margin-standard-deliverable' element={<MarginStandardDeliverable />} />
+                        <Route path='/auto-submit-preview' element={<AutoSubmitPreview />} />
                         <Route path='/appeals-review' element={<AppealsReview />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/connect-amazon" element={<Navigate to="/audit" replace />} />

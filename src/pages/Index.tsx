@@ -66,7 +66,7 @@ const faqs = [
   {
     question: "Can Margin submit something without me?",
     answer:
-      "No. Nothing is submitted to Amazon without your explicit approval for that recovery.",
+      "Yes, if you enable Auto Submit for qualifying recoveries. Margin submits only findings that pass the configured evidence, policy, and confidence controls. Exceptions, weak evidence, and consequential decisions remain held for your review.",
   },
   {
     question: "What happens if Margin does not find anything to handle?",
@@ -1602,6 +1602,38 @@ function MarginStandardDeliverableSection() {
   );
 }
 
+function AutoSubmitSection() {
+  return (
+    <section className="relative overflow-hidden bg-white py-12 sm:py-16 lg:py-20" aria-labelledby="auto-submit-title">
+      <div className={containerClass}>
+        <div className="grid items-center gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:gap-20">
+          <motion.div {...revealProps} className="max-w-[660px]">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#71818A]">23 / AUTO SUBMIT</p>
+            <h2 id="auto-submit-title" className="mt-5 font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
+              <span className="heading-tone-dark">Once the basis is proven,</span>{" "}
+              <span className="heading-tone-muted">stop carrying the submission.</span>
+            </h2>
+            <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">
+              Auto Submit lets Margin move qualifying recoveries from verified finding to Amazon submission without asking you to lift another finger. The work continues while you run the business.
+            </p>
+            <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">
+              This is not blind automation. Margin submits only when the event reconstruction, evidence basis, policy window, and recovery threshold are satisfied. Weak evidence, exceptions, and unresolved variance stay held for review.
+            </p>
+            <p className="mt-6 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>
+              You authorize the rule once. Margin carries the routine action—and keeps the financial record accountable through outcome.
+            </p>
+          </motion.div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full">
+            <div className="mx-auto h-[330px] w-full max-w-[900px] overflow-hidden rounded-[10px] border border-[#C9D7DB] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[430px] lg:h-[min(54vh,560px)]">
+              <iframe title="Auto Submit control" src="/auto-submit-preview" className="h-full w-full border-0 bg-[#E7E9EB]" loading="lazy" />
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FooterNestedRecoveryVisual() {
   const navigate = useNavigate();
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof nestedRecoveryBrowsers>('progress');
@@ -2260,11 +2292,13 @@ export default function Index() {
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
         <MarginStandardDeliverableSection />
 
+        <AutoSubmitSection />
+
         {/* Section 14 — Trust / FAQ */}
         <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
-              <p className="trust-faq-eyebrow mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#182026]">24 / TRUST / FAQ</p>
+              <p className="trust-faq-eyebrow mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#182026]">25 / TRUST / FAQ</p>
               <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
                 <span className="heading-tone-dark">Your questions</span> <span className="heading-tone-muted">answered.</span>
               </h2>
@@ -2312,7 +2346,7 @@ export default function Index() {
 
                 {/* Left label */}
                 <motion.div {...revealProps} className="w-full shrink-0 lg:w-[360px]">
-                  <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">25 / DELEGATION &amp; CONTROL</p>
+                  <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">26 / DELEGATION &amp; CONTROL</p>
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
                     <span className="heading-tone-dark">Secure the financial outcome.</span> <span className="heading-tone-muted">Keep the decision rights.</span>
                   </h2>
