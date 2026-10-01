@@ -1087,3 +1087,14 @@ html, body, #root {
   color: #FFFFFF !important;
   -webkit-text-fill-color: #FFFFFF !important;
 }
+
+
+/* Auto Submit is intentionally a light control surface; override positional theming. */
+.landing-google-sans > main > section.auto-submit-section {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+.landing-google-sans > main > section.auto-submit-section h2,
+.landing-google-sans > main > section.auto-submit-section p {
+  -webkit-text-fill-color: currentColor;
+}
