@@ -227,8 +227,7 @@ function AccountingEvidenceSection() {
             <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
               <span className="heading-tone-dark">Know what happened</span> <span className="heading-tone-muted">without chasing the story yourself.</span>
             </h2>
-            <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Your business already produces the records. Orders, settlements, fees, inventory movements, returns, and supporting documents all exist somewhere—but they rarely arrive as one coherent financial explanation.</p>
-            <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Margin connects the relevant evidence around each event and turns scattered records into a clear position: what happened, what is supported, what remains unresolved, and what deserves action.</p>
+            <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Your Amazon records already contain the answer. Margin connects the relevant activity and shows what is settled, unresolved, or worth acting on.</p>
             <p className="mt-4 max-w-[620px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">You stay responsible for the business. Margin carries the reconstruction.</p>
             <div className="mt-8 border-t border-[#C9D1D6] pt-5">
               <div className="flex max-w-full flex-wrap gap-2 font-mono text-[10px] font-semibold tracking-tight">
@@ -463,7 +462,7 @@ function KineticHeroSection({
           <div id="margin-hero-title" className="mt-6 max-w-[1040px] font-lora text-[42px] leading-[0.96] tracking-[-0.045em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] md:text-[82px] lg:text-[96px]" style={{ fontWeight: 400 }}>
             <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Financial recovery and reconciliation infrastructure for Amazon businesses.</motion.span>
           </div>
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Performance reflects the business&apos;s operating results. Reconciliation verifies whether the underlying accounts agree. Margin reconciles the account, separates settled positions from unresolved variances, and identifies what still warrants attention.</motion.p>
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Margin reconciles the Amazon records behind your financial position, isolates unresolved exposure, and shows what is worth acting on.</motion.p>
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-start gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-6">
             <Button onClick={onAuditCta} aria-label="Reconcile the account" className="landing-pressable group relative h-[54px] w-fit max-w-[270px] justify-start overflow-hidden rounded-[8px] bg-black px-5 text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(0,0,0,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#182026] sm:h-[56px] sm:w-auto sm:max-w-none sm:justify-center sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />Reconcile the account <ArrowRight className="ml-2 h-5 w-5" /></Button>
           </motion.div>
@@ -532,8 +531,8 @@ function RealityCheckSection() {
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
             <span className="heading-tone-dark">Your business can be doing well—</span> <span className="heading-tone-muted">and still have money you can&apos;t explain.</span>
           </h2>
-          <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Performance reflects the business&apos;s operating results. Reconciliation verifies whether the underlying accounts agree.</p>
-          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">As the business grows, the financial story spreads across orders, returns, fees, inventory, settlements, and payouts. Nothing looks obviously wrong—but no single view tells you what happened, what remains unresolved, or what deserves attention.</p>
+          <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Growth spreads the financial position across orders, returns, inventory, settlements, and payouts.</p>
+          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">Margin brings the records together so unresolved exposure and the next justified action are clear.</p>
           <p className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">Margin establishes the financial reality before you decide what to do next.</p>
         </motion.div>
         </div>
@@ -1099,10 +1098,7 @@ function ControlSection() {
               <span className="heading-tone-dark">The recovery moves</span> <span className="heading-tone-muted">while you keep the financial position.</span>
             </h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> As evidence changes, submissions move, Amazon responds, and payouts arrive, every recovery creates another status to remember and another decision to carry.
-            </p>
-            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin keeps each recovery in a controlled operating position: ready for approval, filed, waiting on Amazon, blocked by evidence, under payout review, or reconciled. You see what changed and the next accountable action without rebuilding the queue.
+              Each recovery stays in a controlled operating position—from evidence review to approval, response, payout, or closure. You see what changed and the next accountable action.
             </p>
             <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">The operation advances. Your attention stays on the decisions that matter: what to approve, what to unblock, and what to close.</p>
           </motion.div>
@@ -1187,9 +1183,9 @@ function MarginStandardSection() {
               <span className="heading-tone-dark">Know what the records can actually support.</span>
             </h2>
             <p className="mt-6 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              A discrepancy is only useful when its financial basis is clear. Margin connects the event, the expected position, the observed outcome, and the supporting evidence before treating the difference as meaningful.
+              Margin connects the event, expected position, observed outcome, and supporting evidence before treating a difference as meaningful.
             </p>
-            <p className="mt-4 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Margin separates what is established from what is estimated, missing, disputed, or already accounted for. If the evidence supports recovery, Margin prepares a defensible basis for action. If the evidence is incomplete, the uncertainty stays visible. If the records reconcile, Margin gives you a clear answer: nothing further needs to be recovered.</p>
+            <p className="mt-4 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The result is a clear separation between supported exposure, uncertainty, and positions that are already accounted for.</p>
             <p className="mt-6 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
               The standard is not &quot;find something.&quot; The standard is &quot;know what is true.&quot;
             </p>
@@ -1568,8 +1564,7 @@ function NestedRecoveryBrowsers() {
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">12 / RECOVERY HISTORY</p>
             <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">The recovery record</span> <span className="heading-tone-muted">should explain itself.</span></h2>
             <div className="mt-6 max-w-[560px] space-y-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Reconstruct the history of a recovery from scattered records, messages, documents, and case notes just to understand what was done, what was supported, and what is still open.</p>
-              <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> From the first finding to the next accountable action, every decision stays attached to the financial event it belongs to. Margin keeps the finding, evidence, requests, responses, and next actions connected in one recovery record.</p>
+              <p>From the first finding to the next accountable action, the evidence, requests, responses, and decisions stay attached to one recovery record.</p>
             </div>
             <p className="mt-5 max-w-[560px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>A financial event should leave a record, not a mystery.</p>
             <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Nested recovery pages">
