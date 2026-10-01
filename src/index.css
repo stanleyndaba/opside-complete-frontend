@@ -1098,3 +1098,22 @@ html, body, #root {
 .landing-google-sans > main > section.auto-submit-section p {
   -webkit-text-fill-color: currentColor;
 }
+
+
+/* Auto Submit copy stays dark even when older positional surface rules match its section index. */
+.landing-google-sans > main > section.auto-submit-section .font-mono,
+.landing-google-sans > main > section.auto-submit-section h2,
+.landing-google-sans > main > section.auto-submit-section h2 .heading-tone-dark,
+.landing-google-sans > main > section.auto-submit-section h2 .heading-tone-muted,
+.landing-google-sans > main > section.auto-submit-section p {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans > main > section.auto-submit-section h2 .heading-tone-muted {
+  color: #56646D !important;
+  -webkit-text-fill-color: #56646D !important;
+}
+.landing-google-sans > main > section.auto-submit-section .font-lora {
+  color: #274F62 !important;
+  -webkit-text-fill-color: #274F62 !important;
+}

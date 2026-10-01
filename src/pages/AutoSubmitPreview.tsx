@@ -77,7 +77,7 @@ function CaseTimelineRow({ item }: { item: AutoSubmitCase }) {
       <span className={`absolute left-[-5px] top-4 flex h-4 w-4 items-center justify-center rounded-full ring-4 ring-[#F4F6F7] ${tone.dot}`} aria-label={`${item.statusLabel} recorded`}>
         <Check className="h-2.5 w-2.5 text-white" strokeWidth={3.5} />
       </span>
-      <div className="rounded-[7px] border border-[#D7DDE1] bg-white/78 px-3 py-2.5 shadow-[0_1px_2px_rgba(32,42,49,0.03)] sm:px-3.5 sm:py-3">
+      <div className="rounded-[7px] bg-white/52 px-3 py-2.5 shadow-[0_10px_24px_rgba(56,74,82,0.06),inset_0_1px_0_rgba(255,255,255,0.86)] backdrop-blur-lg sm:px-3.5 sm:py-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -92,11 +92,11 @@ function CaseTimelineRow({ item }: { item: AutoSubmitCase }) {
             <p className="mt-0.5 text-[8px] text-[#97A1A8] sm:text-[9px]">{item.date}</p>
           </div>
         </div>
-        <div className="mt-2 space-y-1 border-t border-[#E2E6E8] pt-2 text-[9px] leading-4 sm:text-[10px] sm:leading-5">
+        <div className="mt-2 space-y-1 pt-2 text-[9px] leading-4 sm:text-[10px] sm:leading-5">
           <p><span className="font-semibold text-[#56646D]">Financial basis:</span> <span className="text-[#71808A]">{item.basis}</span></p>
           <p><span className="font-semibold text-[#56646D]">Control state:</span> <span className="text-[#71808A]">{item.control}</span></p>
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-[#E2E6E8] pt-2">
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 pt-2">
           {item.docs.map((file) => (
             <span key={file} className="flex min-w-0 items-center gap-1 text-[8px] text-[#6B7881] sm:text-[9px]">
               <EvidenceIcon file={file} />
@@ -115,14 +115,14 @@ export default function AutoSubmitPreview() {
   return (
     <main className="min-h-screen overflow-x-auto bg-[#F4F6F7] font-google-sans text-[#202A31]">
       <div className="mx-auto min-w-[520px] max-w-[820px] px-2 py-2 sm:min-w-0 sm:px-4 sm:py-4">
-        <section className="rounded-[8px] border border-[#D2D7DB] bg-white/78 p-2.5 shadow-[0_1px_2px_rgba(49,62,72,0.04)] backdrop-blur-xl sm:p-4" aria-label="Auto Submit control and case queue for Northstar Commerce LLC">
-          <header className="flex items-center gap-2 border-b border-[#C8CED3] pb-2.5 sm:gap-2.5 sm:pb-3">
+        <section className="rounded-[8px] bg-white/42 p-2.5 shadow-[0_18px_42px_rgba(56,74,82,0.08),inset_0_1px_0_rgba(255,255,255,0.92)] backdrop-blur-xl sm:p-4" aria-label="Auto Submit control and case queue for Northstar Commerce LLC">
+          <header className="flex items-center gap-2 pb-2.5 sm:gap-2.5 sm:pb-3">
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white sm:h-6 sm:w-6"><Check className="h-2.5 w-2.5" strokeWidth={3} /></span>
             <h1 className="truncate text-[10px] font-medium leading-tight tracking-tight text-[#1D272E] sm:text-[12px]">Reconciliation control · Northstar Commerce LLC · Amazon US</h1>
           </header>
 
           <div className="grid items-start gap-4 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-5 sm:py-5">
-            <aside className="border-b border-[#D9DEE1] pb-4 sm:border-b-0 sm:border-r sm:pb-0 sm:pr-4">
+            <aside className="pb-4 sm:pb-0 sm:pr-4">
               <p className="text-[9px] font-semibold uppercase tracking-[0.02em] text-[#7B8790] sm:text-[10px]">Submission control</p>
               <button type="button" role="switch" aria-checked={enabled} onClick={() => setEnabled((current) => !current)} className={`mt-3 flex items-center gap-2 rounded-full px-1.5 py-1.5 pr-2.5 transition-colors ${enabled ? "bg-[#1689E5]" : "bg-[#9AA8B2]"}`}>
                 <span className={`flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-[0_1px_3px_rgba(28,47,59,0.2)] transition-transform ${enabled ? "translate-x-0" : "translate-x-[18px]"}`}><Check className={`h-3 w-3 ${enabled ? "text-[#1689E5]" : "text-[#9AA8B2]"}`} strokeWidth={3} /></span>
@@ -138,7 +138,7 @@ export default function AutoSubmitPreview() {
             </div>
           </div>
 
-          <footer className="border-t border-[#C8CED3] pt-2.5 text-[9px] leading-4 text-[#7B8790] sm:text-[10px] sm:leading-5"><span className="font-semibold text-[#596770]">Control state:</span>{" "}{enabled ? "pre-authorized submission · evidence threshold enforced · exceptions retained for review" : "manual submission path · seller approval required before filing"}</footer>
+          <footer className="pt-2.5 text-[9px] leading-4 text-[#7B8790] sm:text-[10px] sm:leading-5"><span className="font-semibold text-[#596770]">Control state:</span>{" "}{enabled ? "pre-authorized submission · evidence threshold enforced · exceptions retained for review" : "manual submission path · seller approval required before filing"}</footer>
         </section>
       </div>
     </main>
