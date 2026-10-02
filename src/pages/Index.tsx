@@ -89,9 +89,9 @@ const faqs = [
       "Margin compares the current supported recovery amount with the relevant Amazon approval and settlement records. Partial payments, reversals, and unresolved balances remain visible rather than being treated as complete.",
   },
   {
-    question: "What exactly does Margin handle?",
+    question: "Can Margin handle the work while we monitor it?",
     answer:
-      "Margin investigates supported opportunities, assembles evidence, prepares approved recovery work, follows responses, and keeps outcomes visible through payout verification.",
+      "Yes. Margin investigates supported opportunities, assembles evidence, prepares approved recovery work, follows responses, and keeps outcomes visible through payout verification. Your team monitors the position and approves consequential actions; Margin carries the operating work between those decisions.",
   },
   {
     question: "What happens when Amazon rejects something?",
@@ -466,9 +466,9 @@ function KineticHeroSection({
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-start gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-6">
             <Button onClick={onAuditCta} aria-label="Reconcile the account" className="landing-pressable group relative h-[54px] w-fit max-w-[270px] justify-start overflow-hidden rounded-[8px] bg-black px-5 text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(0,0,0,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#182026] sm:h-[56px] sm:w-auto sm:max-w-none sm:justify-center sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />Reconcile the account <ArrowRight className="ml-2 h-5 w-5" /></Button>
           </motion.div>
-          <motion.p initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.92 }} className="mt-3 max-w-[620px] text-[12px] leading-5 text-[#52616A] sm:text-[13px] sm:leading-6">Start with a free, read-only Audit. Review the result before deciding whether Margin should handle anything further.</motion.p>
+          <motion.p initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.92 }} className="mt-3 max-w-[700px] text-[12px] leading-5 text-[#52616A] sm:text-[13px] sm:leading-6">Start with a free, read-only Audit. Then monitor the position while Margin handles approved recovery work, follow-through, and payout verification.</motion.p>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1 }} className="mt-4 flex w-full max-w-[780px] flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[11px] font-medium text-[#66737F] sm:mt-6 sm:justify-start sm:gap-x-5 sm:text-left sm:text-[12px]">
-            <span>No-cost audits</span><span className="text-[#A7B1B8]">·</span><span>Read-only access</span><span className="text-[#A7B1B8]">·</span><span>You approve every submission</span>
+            <span>No-cost audits</span><span className="text-[#A7B1B8]">·</span><span>Read-only start</span><span className="text-[#A7B1B8]">·</span><span>You approve consequential actions</span><span className="text-[#A7B1B8]">·</span><span>Outcomes stay visible</span>
           </motion.div>
           {isFull ? <div className="mt-5 max-w-[430px] rounded-[8px] bg-[#F5F7F8] p-4 text-sm leading-6 text-[#52616A] shadow-[inset_0_0_0_1px_rgba(24,32,38,0.10)] backdrop-blur-xl"><div>We are onboarding a small batch of sellers right now.</div><div>Next batch opens in {nextBatchHours ?? 24} hours.</div></div> : null}
         </div>
