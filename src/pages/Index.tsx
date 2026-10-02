@@ -2288,7 +2288,7 @@ export default function Index() {
 
         {/* Delegation — Can I stop owning this? */}
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
-        <EnterpriseOnboardingSection onAuditCta={handleClaimAccessClick} />
+        <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
         <EnterpriseReviewsSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
         <MarginStandardDeliverableSection />

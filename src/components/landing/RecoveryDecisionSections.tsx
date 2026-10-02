@@ -134,7 +134,7 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
       </motion.div>
 
       <motion.div {...revealProps} className="mt-8 md:mt-10">
-        <Button onClick={() => onAuditCta("enterprise_onboarding_timeline")} className="landing-pressable h-11 rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Get started with Margin</Button>
+        <Button onClick={() => onAuditCta("enterprise_onboarding_timeline")} className="landing-pressable h-11 rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Discuss an Enterprise Pilot</Button>
       </motion.div>
     </div>
   </section>
