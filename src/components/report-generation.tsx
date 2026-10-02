@@ -8,14 +8,14 @@ import { ArrowRight, Check, CheckCircle2, Download, X } from 'lucide-react';
 type Phase = 'extracting' | 'compiling' | 'output';
 
 const METADATA = [
-  { label: 'Shipment: FBA15JJ4K7L1' },
-  { label: 'Units: 60 shipped · 46 received' },
-  { label: 'Weight: 45.2 lb' },
-  { label: 'Carrier: UPS Freight' },
-  { label: 'Tracking: 1Z84...2216' },
-  { label: 'Status: Signed & accepted' },
-  { label: 'Signature: J. Smith' },
-  { label: 'Delivered: 10 Mar · 14:22 UTC' },
+  { label: 'Account: NTH-US-01 · FY2026' },
+  { label: 'Population: 9,284 inbound shipments' },
+  { label: 'Source coverage: Amazon SP-API · ERP · 3PL' },
+  { label: 'Scale: 2.8M inventory movement records' },
+  { label: 'Network: 6 fulfillment centers · 7,412 SKUs' },
+  { label: 'Materiality: $186,420 retained for review' },
+  { label: 'Case: REC-2026-004817 · 3 shipments' },
+  { label: 'Position: $14,832 supported exposure' },
 ];
 
 const EVIDENCE_MATCH_SEQUENCE = [
@@ -172,11 +172,11 @@ export default function ReportGeneration() {
     report.setFontSize(20);
     report.text('Financial Recovery Case File', 20, 28);
     report.setFontSize(11);
-    report.text('Northstar Home US · Inbound receiving variance', 20, 42);
-    report.text('Carrier Weight: 45.2lb', 20, 60);
-    report.text('Signature: J. Smith', 20, 70);
-    report.text('Timestamp: 14:22:01', 20, 80);
-    report.text('Finding: Receiving variance reconciled and bound to the case.', 20, 100);
+    report.text('Northstar Commerce LLC · Amazon US · FY2026 control population', 20, 42);
+    report.text('Review population: 9,284 inbound shipments · 6 fulfillment centers', 20, 60);
+    report.text('Source coverage: Amazon SP-API · Seller Central · ERP · 3PL', 20, 70);
+    report.text('Control record: REC-2026-004817 · 3 shipments · 72 units', 20, 80);
+    report.text('Finding: $14,832 supported exposure · no duplicate controlled case path identified.', 20, 100);
     report.save('dispute-investigation-report.pdf');
   };
 
@@ -201,74 +201,74 @@ export default function ReportGeneration() {
                 <div className="relative h-[360px] overflow-hidden border border-[#DCE8EE] bg-white p-4 sm:h-[390px] sm:p-7">
                   <div className="flex items-start justify-between border-b border-[#DCE8EE] pb-4">
                     <div>
-                      <h2 className="text-base font-semibold tracking-tight text-[#182026]">Inbound shipment receiving variance</h2>
-                      <p className="mt-1 text-[11px] text-[#8A99A4]">Northstar Home US · Shipment, receiving, inventory, and settlement records</p>
+                      <h2 className="text-base font-semibold tracking-tight text-[#182026]">Recovery case assembly</h2>
+                      <p className="mt-1 text-[11px] text-[#8A99A4]">Northstar Commerce LLC · Amazon US · 12-month control population</p>
                     </div>
                   </div>
 
                   <div ref={evidenceScrollRef} className="h-full overflow-y-auto pr-2 [scrollbar-width:thin]">
                   <div className="mt-2 space-y-1.5 text-[10.5px] leading-[1.15rem] text-[#4D5B66] sm:mt-4 sm:space-y-2.5 sm:text-[13px] sm:leading-6">
                     <p>
-                      Amazon receiving records show fewer units than the{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('inbound-record')} tone="amber">inbound shipment record</MetadataHighlight>{' '}
-                      shows were shipped.{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">60 shipped, 46 received</MetadataHighlight>{' '}
+                      The account population is being tested across shipment, receiving, inventory, settlement, procurement, and carrier records. From 9,284 inbound shipments,{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('inbound-record')} tone="amber">three related shipments</MetadataHighlight>{' '}
+                      form the retained cohort.{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">1,240 expected, 1,168 received</MetadataHighlight>{' '}
                       with a{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('gap')} tone="amber">14-unit receiving variance at ONT8</MetadataHighlight>.
+                      <MetadataHighlight active={isEvidenceMatchActive('gap')} tone="amber">72-unit receiving variance across ONT8, LGB8, and PHX7</MetadataHighlight>.
                     </p>
                     <p>
-                      The variance is being reconciled against the{' '}
+                      The material cohort is being reconstructed against the{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('evidence-trail')} tone="amber">evidence chain</MetadataHighlight>.{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('case')} tone="amber">Reconciled finding</MetadataHighlight>{' '}
-                      confirms the <MetadataHighlight active={isEvidenceMatchActive('claim-path')} tone="emerald">recovery path</MetadataHighlight>.
+                      <MetadataHighlight active={isEvidenceMatchActive('case')} tone="amber">Reconstructed event</MetadataHighlight>{' '}
+                      confirms the <MetadataHighlight active={isEvidenceMatchActive('claim-path')} tone="emerald">controlled case path</MetadataHighlight>.
                     </p>
                     <p>
-                      Recovery eligibility is ready for review when{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('filing-gates')} tone="emerald">case controls pass</MetadataHighlight>.{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Next action: Open recovery case.</MetadataHighlight>
+                      Case eligibility is ready for review when{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('filing-gates')} tone="emerald">source, materiality, and clearing controls pass</MetadataHighlight>.{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Next action: Seller approval required.</MetadataHighlight>
                     </p>
                     <p>
-                      Margin is reconciling <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">shipment</MetadataHighlight>,{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('received')} tone="amber">receipt</MetadataHighlight>, and{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('reimbursement-records')} tone="emerald">settlement and reimbursement records</MetadataHighlight>{' '}
-                      to determine whether the variance is supported and not already credited.
+                      Margin is normalizing <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">shipment</MetadataHighlight>,{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('received')} tone="amber">receiving outcomes</MetadataHighlight>, and{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('reimbursement-records')} tone="emerald">settlement, reimbursement, and ledger records</MetadataHighlight>{' '}
+                      to determine whether the retained cohort is supported, attributable, and not already credited.
                     </p>
                     <p>
-                      <MetadataHighlight active={isEvidenceMatchActive('policy')} tone="emerald">FBA inventory reimbursement control review</MetadataHighlight>{' '}
-                      reconciles the <MetadataHighlight active={isEvidenceMatchActive('affected-product')} tone="emerald">affected product</MetadataHighlight>,{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('unit-movement')} tone="amber">unit movement</MetadataHighlight>, and{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('reimbursement-outcome')} tone="emerald">settlement outcome</MetadataHighlight>{' '}
-                      against Order <MetadataHighlight active={isEvidenceMatchActive('order')} tone="amber">113-8043372-9097841</MetadataHighlight>, SKU{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('sku')} tone="amber">NS-TRAVEL-MUG-BLK</MetadataHighlight>, and a{' '}
-                      <MetadataHighlight active={isEvidenceMatchActive('shortage')} tone="amber">14-unit receiving variance</MetadataHighlight>.
+                      <MetadataHighlight active={isEvidenceMatchActive('policy')} tone="emerald">Enterprise recovery control review</MetadataHighlight>{' '}
+                      reconciles the <MetadataHighlight active={isEvidenceMatchActive('affected-product')} tone="emerald">material cohort</MetadataHighlight>,{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('unit-movement')} tone="amber">unit movement across the network</MetadataHighlight>, and{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('reimbursement-outcome')} tone="emerald">financial clearing outcome</MetadataHighlight>{' '}
+                      against Case cohort <MetadataHighlight active={isEvidenceMatchActive('order')} tone="amber">REC-2026-004817</MetadataHighlight>, SKU{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('sku')} tone="amber">NS-AIR-PURIFIER-3PK</MetadataHighlight>, and a{' '}
+                      <MetadataHighlight active={isEvidenceMatchActive('shortage')} tone="amber">72-unit receiving variance</MetadataHighlight>.
                     </p>
                   </div>
 
                   <div className="mt-3 border-t border-[#DCE8EE] pt-2 sm:mt-4 sm:pt-3">
                     <div className="space-y-1.5 font-google-sans text-[10.5px] leading-[1.15rem] text-[#25313A]">
                       <p>
-                        <span className="font-medium uppercase tracking-tight text-[#66737F]">Shipment</span>{' '}
-                        Shipment <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">FBA15JJ4K7L1</MetadataHighlight> ·{' '}
-                        <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">60 shipped</MetadataHighlight>.
+                        <span className="font-medium uppercase tracking-tight text-[#66737F]">Review population</span>{' '}
+                        Review scope <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">9,284 inbound shipments</MetadataHighlight> ·{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">12-month population</MetadataHighlight>.
                       </p>
                       <p>
-                        <span className="font-medium uppercase tracking-tight text-[#66737F]">Receipt</span>{' '}
-                        Amazon received <MetadataHighlight active={isEvidenceMatchActive('received')} tone="amber">46 units</MetadataHighlight> at{' '}
-                        <MetadataHighlight active={isEvidenceMatchActive('ont8')} tone="amber">ONT8</MetadataHighlight>.
+                        <span className="font-medium uppercase tracking-tight text-[#66737F]">Material cohort</span>{' '}
+                        Population retained: <MetadataHighlight active={isEvidenceMatchActive('received')} tone="amber">1,240 expected · 1,168 received · 72 units unresolved</MetadataHighlight> across{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('ont8')} tone="amber">ONT8 · LGB8 · PHX7</MetadataHighlight>.
                       </p>
                       <p>
-                        <span className="font-medium uppercase tracking-tight text-[#66737F]">Backend</span>{' '}
-                        Record <MetadataHighlight active={isEvidenceMatchActive('record')} tone="amber">rec-2026-04-20-ont8</MetadataHighlight> · Source{' '}
-                        <MetadataHighlight active={isEvidenceMatchActive('sp-api')} tone="amber">SP API</MetadataHighlight> · Sync{' '}
-                        <MetadataHighlight active={isEvidenceMatchActive('sync')} tone="amber">northstar-sync-20260420</MetadataHighlight>
+                        <span className="font-medium uppercase tracking-tight text-[#66737F]">Source systems</span>{' '}
+                        Control record <MetadataHighlight active={isEvidenceMatchActive('record')} tone="amber">REC-2026-004817</MetadataHighlight> · Source{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('sp-api')} tone="amber">Amazon SP-API · ERP · 3PL</MetadataHighlight> · Sync{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('sync')} tone="amber">NTH-US-01-FY2026</MetadataHighlight>
                       </p>
                     </div>
                     <div className="mt-1.5 border-t border-[#E8EFF3] pt-1.5 font-google-sans text-[10.5px] leading-[1.15rem] text-[#25313A]">
                       <p>
                         <span className="font-medium uppercase tracking-tight text-[#66737F]">Case readiness</span>{' '}
-                        <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Recovery case candidate</MetadataHighlight> · Deadline{' '}
-                        <MetadataHighlight active={isEvidenceMatchActive('deadline')} tone="emerald">Apr 2, 2026</MetadataHighlight> · Case link{' '}
-                        <MetadataHighlight active={isEvidenceMatchActive('case')} tone="emerald">NS-FBA-CASE-2001</MetadataHighlight>
+                        <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Evidence-sufficient case</MetadataHighlight> · Materiality{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('deadline')} tone="emerald">$14,832 supported exposure</MetadataHighlight> · Approval state{' '}
+                        <MetadataHighlight active={isEvidenceMatchActive('case')} tone="emerald">Seller approval required</MetadataHighlight>
                       </p>
                     </div>
                   </div>
@@ -277,7 +277,7 @@ export default function ReportGeneration() {
 
                 <aside className="flex min-h-[230px] flex-col bg-transparent px-1 py-1 md:min-h-0 md:py-0">
                   <div className="flex items-center justify-between">
-                    <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence attributes identified</p>
+                    <p className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Control attributes resolved</p>
                     <span className="font-google-sans text-[10px] font-medium text-[#8A99A4]">{extractedCount}/{METADATA.length}</span>
                   </div>
                   <div className="mt-auto flex flex-col-reverse gap-2 pt-4">
@@ -356,7 +356,7 @@ export default function ReportGeneration() {
                         <Check className="h-2.5 w-2.5" strokeWidth={3.2} />
                       </motion.span>
                     </motion.h2>
-                    <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.3 }} className="mt-1 text-sm font-normal text-[#8A8F98]">Evidence chain reconciled and case controls passed.</motion.p>
+                    <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.3 }} className="mt-1 text-sm font-normal text-[#8A8F98]">Evidence chain reconciled and source, materiality, and clearing controls passed.</motion.p>
                   </div>
 
                   <motion.article initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: 'easeOut', delay: 0.48 }} className="mt-6 flex flex-col items-center gap-5 sm:mt-0 sm:flex-row sm:items-center">
@@ -398,7 +398,7 @@ export default function ReportGeneration() {
 
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.82 }} className="mt-2.5 flex flex-wrap justify-center gap-1.5 sm:justify-start">
                         {[
-                          'Reconciliation summary', 'Finding classification', 'Shipment timeline',
+                          'Reconciliation summary', 'Finding classification', 'Review scope timeline',
                           'Evidence requirements', 'Commercial invoice', 'Bill of lading', 'POD',
                           'ASIN/FNSKU mapping', 'Quantity variance', 'Cost basis',
                           'Case rationale', 'Evidence index', 'Filing deadline', 'Seller approval status'

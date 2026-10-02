@@ -853,10 +853,10 @@ function MarginLifecycleSection() {
         </motion.div>
 
           <motion.p {...revealProps} className="mt-6 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Reconstruct the financial event yourself—moving between settlement lines, shipment records, inventory adjustments, and supporting documents to decide whether the variance is real, attributable, and recoverable.
+            <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Reconstruct a year of Amazon activity yourself—moving between thousands of shipment records, settlement populations, inventory movements, ERP extracts, and carrier evidence to decide which positions are real, attributable, and recoverable.
           </motion.p>
           <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin performs that reconciliation, separates supported exposure from unresolved items, and prepares the next controlled action. You receive a defined case position—not another file to investigate.
+            <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin normalizes the operating population, applies materiality and duplicate-recovery controls, reconstructs the event, and prepares the next controlled action. You receive a defined case position—not another investigation to manage.
           </motion.p>
         </div>
         </div>
