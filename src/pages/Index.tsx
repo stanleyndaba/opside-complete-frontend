@@ -1582,7 +1582,7 @@ function NestedRecoveryBrowsers() {
 
 function MarginStandardDeliverableSection() {
   return (
-    <section className="relative overflow-hidden bg-[#F3F7F7] py-12 sm:py-16 lg:min-h-screen lg:py-20" aria-labelledby="margin-standard-deliverable-title">
+    <section className="relative overflow-hidden !bg-[#F3F7F7] py-12 sm:py-16 lg:min-h-screen lg:py-20" style={{ backgroundColor: "#F3F7F7" }} aria-labelledby="margin-standard-deliverable-title">
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto max-w-[820px] text-center">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#71818A]">22 / THE MARGIN STANDARD</p>
@@ -1594,7 +1594,7 @@ function MarginStandardDeliverableSection() {
         </motion.div>
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 w-full max-w-[1040px] sm:mt-10 lg:mt-12">
           <div className="h-[456px] overflow-hidden rounded-[10px] border border-[#C9D7DB] bg-white shadow-[0_24px_70px_rgba(37,73,91,0.16)] sm:h-[800px] lg:h-[min(72vh,820px)]">
-            <iframe title="Representative Margin Audit deliverable" src="/margin-standard-deliverable" className="h-full w-full border-0 bg-[#F3F7F7]" loading="lazy" />
+            <iframe title="Representative Margin Audit deliverable" src="/margin-standard-deliverable" className="h-full w-full border-0 !bg-[#F3F7F7]" style={{ backgroundColor: "#F3F7F7" }} loading="lazy" />
           </div>
         </motion.div>
       </div>
