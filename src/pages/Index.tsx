@@ -36,7 +36,7 @@ import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
-import { RecoveryOfferSection, RecoveryOfferSectionDuplicate, RecoveryRoutingSection } from "@/components/landing/RecoveryDecisionSections";
+import { EnterpriseOnboardingSection, RecoveryOfferSection, RecoveryOfferSectionDuplicate, RecoveryRoutingSection } from "@/components/landing/RecoveryDecisionSections";
 import { AuditImageStackVisual } from "@/components/landing/AuditImageStackVisual";
 import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
 import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
@@ -2288,6 +2288,7 @@ export default function Index() {
 
         {/* Delegation — Can I stop owning this? */}
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
+        <EnterpriseOnboardingSection onAuditCta={handleClaimAccessClick} />
         <EnterpriseReviewsSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
         <MarginStandardDeliverableSection />

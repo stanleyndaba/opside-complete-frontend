@@ -85,6 +85,61 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
   </section>
 );
 
+const enterpriseOnboardingStages = [
+  {
+    period: "Day 1",
+    title: "Establish the mandate",
+    body: "Confirm scope, access, operating owners, and the records required to begin. Your team receives a bounded starting plan rather than another open-ended implementation request.",
+  },
+  {
+    period: "Days 1–5",
+    title: "Establish the financial position",
+    body: "Margin examines the available records, separates reconciled activity from unresolved exposure, and identifies the evidence and decisions that require attention.",
+  },
+  {
+    period: "By Day 25",
+    title: "Put recovery under control",
+    body: "The agreed operating state is in place: supported actions are moving, exceptions have owners, outstanding items have defined next steps, and leadership can monitor the position without carrying the work.",
+  },
+];
+
+export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
+  <section className="enterprise-onboarding-section relative overflow-hidden bg-[#F6F8F9] py-12 sm:py-14 md:py-20" aria-labelledby="enterprise-onboarding-title">
+    <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
+      <motion.div {...revealProps} className="max-w-[850px]">
+        <div className="mb-5 flex items-center gap-3">
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">22 / ENTERPRISE ONBOARDING</span>
+        </div>
+        <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Your Amazon financials. Under control in 25 days.</h2>
+        <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8">Know where things stand within days, then establish a defined path to financial control within 25 days. Margin works with your team to establish the facts, resolve what can be resolved, and put the right recovery processes in place—without turning implementation into another project for the business.</p>
+      </motion.div>
+
+      <div className="mt-10 overflow-x-auto pb-4 [scrollbar-width:thin] md:mt-14">
+        <div className="relative grid min-w-[930px] grid-cols-3 gap-5 md:gap-8">
+          <div className="pointer-events-none absolute left-[8%] right-[8%] top-[18px] hidden h-px bg-[#B8C5CC] md:block" aria-hidden="true" />
+          {enterpriseOnboardingStages.map((stage, index) => (
+            <motion.article key={stage.period} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.1 }} className="relative pt-12">
+              <div className="absolute left-0 top-0 flex h-9 w-9 items-center justify-center rounded-full border border-[#7A8994] bg-[#F6F8F9] font-mono text-[11px] font-semibold text-[#182026]">0{index + 1}</div>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#5E6D76]">{stage.period}</p>
+              <h3 className="mt-3 max-w-[300px] font-lora text-[27px] leading-[1.05] tracking-[-0.035em] text-[#182026] sm:text-[32px]" style={{ fontWeight: 400 }}>{stage.title}</h3>
+              <p className="mt-4 max-w-[350px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">{stage.body}</p>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+
+      <motion.div {...revealProps} className="mt-5 max-w-[900px] border-l-2 border-[#AABAC3] pl-5 md:mt-8">
+        <p className="text-[14px] font-semibold leading-6 text-[#182026] md:text-[15px]">The objective is not to imply that every recovery is complete by Day 25.</p>
+        <p className="mt-1 text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">By that point, the agreed operating state is established: reconciled items, supported recovery actions, unresolved exceptions, accountable owners, and defined next steps. Amazon response times and payment timing remain visible dependencies—not hidden assumptions.</p>
+      </motion.div>
+
+      <motion.div {...revealProps} className="mt-8 md:mt-10">
+        <Button onClick={() => onAuditCta("enterprise_onboarding_timeline")} className="landing-pressable h-11 rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Get started with Margin</Button>
+      </motion.div>
+    </div>
+  </section>
+);
+
 export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => {
     const [activePath, setActivePath] = useState<number | null>(null);
   
