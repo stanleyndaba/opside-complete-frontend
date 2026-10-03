@@ -536,7 +536,15 @@ function RealityCheckSection() {
           <p className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">Margin establishes the financial reality before you decide what to do next.</p>
         </motion.div>
         </div>
-        </div>
+        <motion.div {...revealProps} className="relative min-w-0 overflow-hidden">
+          <iframe
+            title="Amazon financial discrepancy control — Issues found"
+            src="/issues-found"
+            className="block h-[520px] w-full rounded-[8px] border-0 bg-[#FAFAF7] sm:h-[620px]"
+            loading="lazy"
+          />
+        </motion.div>
+      </div>
       </div>
     </section>
   );
@@ -558,12 +566,7 @@ function ReconstructionGapSection() {
             </div>
           </motion.div>
           <motion.div {...revealProps} className="relative order-2 min-w-0 overflow-hidden lg:order-2">
-            <iframe
-              title="Issues Found enterprise discrepancy register"
-              src="/issues-found"
-              className="block h-[520px] w-full rounded-[8px] border-0 bg-[#FAFAF7] sm:h-[620px]"
-              loading="lazy"
-            />
+            <DiscrepancyModalVisual compactMobile />
           </motion.div>
         </div>
       </div>
