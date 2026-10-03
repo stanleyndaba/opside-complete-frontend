@@ -420,6 +420,8 @@ const App = () => (
                         <Route path="/audit-intake" element={<SellerAuditHandoff />} />
                         <Route path="/audit-start" element={<AmazonAuditIntro />} />
                         <Route path="/amazon-audit" element={<AmazonAuditIntro />} />
+                        <Route path="/issues-found" element={<Discrepancies />} />
+                        <Route path="/discrepancies" element={<Discrepancies />} />
                         {/* TENANT-SCOPED ROUTES - Require :tenantSlug */}
                         <Route path="/app" element={<Navigate to="/onboarding-approval" replace />} />
                         <Route path="/app/redirect" element={<EmailActionRedirect />} />
