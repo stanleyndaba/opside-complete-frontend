@@ -210,14 +210,14 @@ function AccountingEvidenceSection() {
                   {[0, 1].map((rowIndex) => (
                     <motion.div
                       key={rowIndex}
-                      className="flex w-max gap-3 sm:gap-6"
+                      className={`flex w-max gap-3 sm:gap-6 ${rowIndex === 1 ? "mt-8 sm:mt-0" : ""}`}
                       animate={reduceMotion ? { x: rowIndex === 0 ? -72 : -170 } : { x: rowIndex === 0 ? [-72, -250] : [-360, -170] }}
                       transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 27, repeat: Infinity, ease: "linear" }}
                     >
                       {[...accountingRows[rowIndex], ...accountingRows[rowIndex]].map((source, index) => (
-                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[108px] w-[108px] shrink-0 flex-col items-center justify-center gap-1.5 px-2 text-center sm:h-[150px] sm:w-[150px] sm:gap-2 sm:px-3">
-                          {source.src ? <span className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-white/90 ring-1 ring-[#DCE4E7] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14"><img src={source.src} alt={`${source.name} logo`} className="h-8 w-8 object-contain mix-blend-multiply sm:h-11 sm:w-11" /></span> : <span className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-white/90 text-[#52616A] ring-1 ring-[#DCE4E7] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14">{source.icon === "edi" ? <FileInput className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} aria-label="Electronic data interchange" /> : source.icon === "carrier" ? <Truck className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} aria-label="Carrier events" /> : <Database className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} />}</span>}
-                          <span className="max-w-[96px] text-[8px] font-semibold leading-3 tracking-tight text-[#52616A] sm:max-w-[112px] sm:text-[9px]">{source.context}</span>
+                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[108px] w-[116px] shrink-0 flex-col items-center justify-center gap-1.5 px-1 text-center sm:h-[150px] sm:w-[150px] sm:gap-2 sm:px-3">
+                          {source.src ? <img src={source.src} alt={`${source.name} logo`} className="h-14 w-24 object-contain mix-blend-multiply sm:h-16 sm:w-28" /> : <span className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-white/90 text-[#52616A] ring-1 ring-[#DCE4E7] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14">{source.icon === "edi" ? <FileInput className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} aria-label="Electronic data interchange" /> : source.icon === "carrier" ? <Truck className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} aria-label="Carrier events" /> : <Database className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} />}</span>}
+                          <span className="max-w-[104px] text-[8px] font-semibold leading-3 tracking-tight text-[#52616A] sm:max-w-[112px] sm:text-[9px]">{source.context}</span>
                         </div>
                       ))}
                     </motion.div>
