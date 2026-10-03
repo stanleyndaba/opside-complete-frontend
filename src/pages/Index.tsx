@@ -199,7 +199,7 @@ function AccountingEvidenceSection() {
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
-              <div className="relative min-h-[330px] overflow-hidden py-5 sm:min-h-[430px] sm:py-10">
+              <div className="relative min-h-[380px] overflow-hidden py-5 sm:min-h-[430px] sm:py-10">
                 <div
                   className="relative space-y-2.5 sm:space-y-7"
                   style={{
@@ -210,7 +210,7 @@ function AccountingEvidenceSection() {
                   {[0, 1].map((rowIndex) => (
                     <motion.div
                       key={rowIndex}
-                      className={`flex w-max gap-3 sm:gap-6 ${rowIndex === 1 ? "mt-24 sm:mt-0" : ""}`}
+                      className={`flex w-max gap-3 sm:gap-6 ${rowIndex === 1 ? "mt-[8.5rem] sm:mt-0" : ""}`}
                       animate={reduceMotion ? { x: rowIndex === 0 ? -72 : -170 } : { x: rowIndex === 0 ? [-72, -250] : [-360, -170] }}
                       transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 27, repeat: Infinity, ease: "linear" }}
                     >
@@ -224,7 +224,7 @@ function AccountingEvidenceSection() {
                   ))}
                 </div>
                 <div className="absolute inset-x-10 top-1/2 z-10 -translate-y-1/2 rounded-[12px] border border-[#B9C5CA] bg-[#D9DEE0]/76 px-3 py-2.5 text-center shadow-[0_14px_30px_rgba(35,54,65,0.12)] backdrop-blur-xl sm:inset-x-12 sm:px-5 sm:py-3.5">
-                  <p className="font-merriweather text-[18px] font-normal leading-none tracking-[-0.03em] text-[#111827] sm:text-[20px]" style={{ fontFamily: "Georgia, Merriweather, serif", color: "#111827" }}>Margin</p>
+                  <p className="!font-merriweather text-[18px] !font-semibold leading-none tracking-[-0.03em] !text-[#111827] sm:text-[20px]" style={{ fontFamily: "Georgia, Merriweather, serif", color: "#111827", fontWeight: 600 }}>Margin</p>
                   <p className="mt-1 text-[9px] font-semibold tracking-tight text-[#52616A] sm:text-[11px]">Canonical event reconciliation</p>
                   <div className="mt-1.5 flex flex-wrap justify-center gap-x-1.5 gap-y-0.5 font-mono text-[7px] font-semibold tracking-tight text-[#52616A] sm:mt-2 sm:gap-x-2 sm:text-[9px]"><span>Ingest</span><span className="text-[#8D9AA0]">→</span><span>Normalize</span><span className="text-[#8D9AA0]">→</span><span>Tie out</span><span className="text-[#8D9AA0]">→</span><span>Classify</span></div>
                   <p className="mt-1.5 text-[8px] leading-3 text-[#66737F] sm:mt-2 sm:text-[9px]">Source lineage preserved · exceptions surfaced · no system of record replaced</p>
