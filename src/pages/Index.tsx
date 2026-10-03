@@ -196,9 +196,9 @@ function AccountingEvidenceSection() {
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
-              <div className="relative min-h-[390px] overflow-hidden py-8 sm:min-h-[430px] sm:py-10">
+              <div className="relative min-h-[330px] overflow-hidden py-5 sm:min-h-[430px] sm:py-10">
                 <div
-                  className="relative space-y-5 sm:space-y-7"
+                  className="relative space-y-2.5 sm:space-y-7"
                   style={{
                     maskImage: "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
                     WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
@@ -207,24 +207,24 @@ function AccountingEvidenceSection() {
                   {[0, 1].map((rowIndex) => (
                     <motion.div
                       key={rowIndex}
-                      className="flex w-max gap-4 sm:gap-6"
+                      className="flex w-max gap-3 sm:gap-6"
                       animate={reduceMotion ? { x: rowIndex === 0 ? -72 : -170 } : { x: rowIndex === 0 ? [-72, -250] : [-360, -170] }}
                       transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 27, repeat: Infinity, ease: "linear" }}
                     >
                       {[...accountingRows[rowIndex], ...accountingRows[rowIndex]].map((source, index) => (
-                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[132px] w-[132px] shrink-0 flex-col items-center justify-center gap-2 px-3 text-center sm:h-[150px] sm:w-[150px]">
-                          {source.src ? <img src={source.src} alt={source.name} className="h-12 w-12 object-contain sm:h-14 sm:w-14" /> : <span className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-white px-1.5 text-[9px] font-semibold leading-3 tracking-tight text-[#52616A] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14 sm:text-[10px]">{source.name}</span>}
-                          <span className="max-w-[112px] text-[9px] font-semibold leading-3 tracking-tight text-[#52616A]">{source.context}</span>
+                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[108px] w-[108px] shrink-0 flex-col items-center justify-center gap-1.5 px-2 text-center sm:h-[150px] sm:w-[150px] sm:gap-2 sm:px-3">
+                          {source.src ? <span className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-white/90 ring-1 ring-[#DCE4E7] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14"><img src={source.src} alt={source.name} className="h-8 w-8 object-contain sm:h-11 sm:w-11" /></span> : <span className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-white/90 px-1 text-[9px] font-semibold leading-3 tracking-tight text-[#52616A] ring-1 ring-[#DCE4E7] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14 sm:text-[10px]">{source.name.split(" ").map((part) => part[0]).join("").slice(0, 4)}</span>}
+                          <span className="max-w-[96px] text-[8px] font-semibold leading-3 tracking-tight text-[#52616A] sm:max-w-[112px] sm:text-[9px]">{source.context}</span>
                         </div>
                       ))}
                     </motion.div>
                   ))}
                 </div>
-                <div className="absolute inset-x-6 top-1/2 z-10 -translate-y-1/2 rounded-[12px] border border-[#C8D8DF] bg-white/90 px-4 py-3 text-center shadow-[0_16px_34px_rgba(35,54,65,0.14)] backdrop-blur-xl sm:inset-x-12 sm:px-5 sm:py-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.04em] text-[#7A8994]">Margin control layer</p>
-                  <p className="mt-1 text-[14px] font-semibold tracking-[-0.02em] text-[#182026] sm:text-[16px]">Canonical event reconciliation</p>
-                  <div className="mt-2 flex flex-wrap justify-center gap-x-2 gap-y-1 font-mono text-[8px] font-semibold tracking-tight text-[#52616A] sm:text-[9px]"><span>Ingest</span><span className="text-[#B5C2CA]">→</span><span>Normalize</span><span className="text-[#B5C2CA]">→</span><span>Tie out</span><span className="text-[#B5C2CA]">→</span><span>Classify</span></div>
-                  <p className="mt-2 text-[9px] leading-3.5 text-[#66737F]">Source lineage preserved · exceptions surfaced · no system of record replaced</p>
+                <div className="absolute inset-x-10 top-1/2 z-10 -translate-y-1/2 rounded-[12px] border border-[#B9C5CA] bg-[#D9DEE0]/76 px-3 py-2.5 text-center shadow-[0_14px_30px_rgba(35,54,65,0.12)] backdrop-blur-xl sm:inset-x-12 sm:px-5 sm:py-3.5">
+                  <p className="font-merriweather text-[18px] font-semibold leading-none tracking-[-0.03em] text-[#303A40] sm:text-[20px]">Margin</p>
+                  <p className="mt-1 text-[9px] font-semibold tracking-tight text-[#52616A] sm:text-[11px]">Canonical event reconciliation</p>
+                  <div className="mt-1.5 flex flex-wrap justify-center gap-x-1.5 gap-y-0.5 font-mono text-[7px] font-semibold tracking-tight text-[#52616A] sm:mt-2 sm:gap-x-2 sm:text-[9px]"><span>Ingest</span><span className="text-[#8D9AA0]">→</span><span>Normalize</span><span className="text-[#8D9AA0]">→</span><span>Tie out</span><span className="text-[#8D9AA0]">→</span><span>Classify</span></div>
+                  <p className="mt-1.5 text-[8px] leading-3 text-[#66737F] sm:mt-2 sm:text-[9px]">Source lineage preserved · exceptions surfaced · no system of record replaced</p>
                 </div>
               </div>
           </motion.div>
