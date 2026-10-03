@@ -554,7 +554,7 @@ function ReconstructionGapSection() {
   return (
     <section aria-labelledby="reconstruction-gap-title" className="reconstruction-gap-surface relative overflow-hidden bg-[#F6F8F9] py-10 md:py-14">
       <div className={containerClass}>
-        <div className="grid items-center gap-10 lg:grid-cols-1 lg:gap-14">
+        <div className="grid items-center gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-14">
           <motion.div {...revealProps} className="order-1 max-w-[920px] border-l border-[#D8E3E8] pl-5 sm:pl-7 md:pl-10 lg:order-1">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">02 / THE RECONSTRUCTION GAP</p>
             <h2 id="reconstruction-gap-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}>
@@ -565,6 +565,9 @@ function ReconstructionGapSection() {
               <p className="font-semibold text-[var(--margin-text-primary)]">Margin connects the records around the event, establishes the financial reality, and makes the next defensible action clear—without asking the operator to become the investigator.</p>
             </div>
           </motion.div>
+          <div className="relative order-2 min-w-0 lg:order-2">
+            <DiscrepancyModalVisual compactMobile />
+          </div>
         </div>
       </div>
     </section>
