@@ -536,14 +536,6 @@ function RealityCheckSection() {
           <p className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">Margin establishes the financial reality before you decide what to do next.</p>
         </motion.div>
         </div>
-        <motion.div {...revealProps} className="relative min-w-0 overflow-hidden">
-          <iframe
-            title="Issues Found enterprise discrepancy register"
-            src="/issues-found"
-            className="block h-[520px] w-full rounded-[8px] border-0 bg-[#FAFAF7] sm:h-[620px]"
-            loading="lazy"
-          />
-        </motion.div>
         </div>
       </div>
     </section>
@@ -554,7 +546,7 @@ function ReconstructionGapSection() {
   return (
     <section aria-labelledby="reconstruction-gap-title" className="reconstruction-gap-surface relative overflow-hidden bg-[#F6F8F9] py-10 md:py-14">
       <div className={containerClass}>
-        <div className="grid items-center gap-10 lg:grid-cols-1 lg:gap-14">
+        <div className="grid items-center gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-14">
           <motion.div {...revealProps} className="order-1 max-w-[920px] border-l border-[#D8E3E8] pl-5 sm:pl-7 md:pl-10 lg:order-1">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">02 / THE RECONSTRUCTION GAP</p>
             <h2 id="reconstruction-gap-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}>
@@ -564,6 +556,14 @@ function ReconstructionGapSection() {
               <p>The answer may exist across a settlement, fee report, inventory movement, return, or supporting document. But finding several pieces of information is not the same as establishing what happened.</p>
               <p className="font-semibold text-[var(--margin-text-primary)]">Margin connects the records around the event, establishes the financial reality, and makes the next defensible action clear—without asking the operator to become the investigator.</p>
             </div>
+          </motion.div>
+          <motion.div {...revealProps} className="relative order-2 min-w-0 overflow-hidden lg:order-2">
+            <iframe
+              title="Issues Found enterprise discrepancy register"
+              src="/issues-found"
+              className="block h-[520px] w-full rounded-[8px] border-0 bg-[#FAFAF7] sm:h-[620px]"
+              loading="lazy"
+            />
           </motion.div>
         </div>
       </div>
