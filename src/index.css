@@ -899,6 +899,12 @@ html, body, #root {
   background-color: #FFFFFF !important;
 }
 
+.landing-google-sans > main > section.context-audit-surface .context-margin-wordmark {
+  color: #111827 !important;
+  font-family: 'Merriweather', Georgia, serif !important;
+  font-weight: 600 !important;
+}
+
 .landing-google-sans > main > section.context-audit-surface .context-source-badge {
   display: inline-flex;
   align-items: center;
