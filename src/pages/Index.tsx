@@ -22,11 +22,14 @@ import {
   ArrowRight,
   Check,
   Landmark,
+  Database,
+  FileInput,
   MessagesSquare,
   Monitor,
   PlayCircle,
   ReceiptText,
   SearchCheck,
+  Truck,
   UserCheck,
   Square,
 } from "lucide-react";
@@ -170,16 +173,16 @@ function TypewriterPrompt({ text }: { text: string }) {
 }
 
 const accountingSources = [
-  { id: "amazon", name: "Amazon SP-API", context: "orders + settlements", src: "/amazon-logo-transparent-circle.png" },
-  { id: "sap", name: "SAP S/4HANA", context: "inventory ledger", src: null },
-  { id: "netsuite", name: "NetSuite", context: "GL + clearing", src: null },
-  { id: "edi", name: "3PL EDI", context: "receiving events", src: null },
-  { id: "carrier", name: "Carrier events", context: "movement evidence", src: null },
-  { id: "settlements", name: "Settlement files", context: "payout activity", src: "/gd.png" },
-  { id: "quickbooks", name: "QuickBooks Enterprise", context: "cost basis", src: "/quickbooks.png" },
-  { id: "sftp", name: "SFTP / S3 exports", context: "controlled files", src: "/Dropbox_Icon.svg.png" },
-  { id: "gmail", name: "Finance inbox", context: "source correspondence", src: "/gmailicon.png" },
-  { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png" },
+  { id: "amazon", name: "Amazon SP-API", context: "orders + settlements", src: "/amazon-logo-transparent-circle.png", icon: null },
+  { id: "sap", name: "SAP S/4HANA", context: "inventory ledger", src: "/integration-icons/sap-s4hana.png", icon: null },
+  { id: "netsuite", name: "Oracle NetSuite", context: "GL + clearing", src: "/integration-icons/netsuite.png", icon: null },
+  { id: "edi", name: "3PL EDI", context: "receiving events", src: null, icon: "edi" },
+  { id: "carrier", name: "Carrier events", context: "movement evidence", src: null, icon: "carrier" },
+  { id: "settlements", name: "Settlement files", context: "payout activity", src: "/gd.png", icon: null },
+  { id: "quickbooks", name: "QuickBooks Enterprise", context: "cost basis", src: "/quickbooks.png", icon: null },
+  { id: "sftp", name: "Amazon S3 / SFTP", context: "controlled files", src: "/integration-icons/amazons3.png", icon: null },
+  { id: "gmail", name: "Finance inbox", context: "source correspondence", src: "/gmailicon.png", icon: null },
+  { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png", icon: null },
 ];
 
 const getAccountingRow = (order: string[]) => order.map((id) => accountingSources.find((source) => source.id === id)!).filter(Boolean);
@@ -213,7 +216,7 @@ function AccountingEvidenceSection() {
                     >
                       {[...accountingRows[rowIndex], ...accountingRows[rowIndex]].map((source, index) => (
                         <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[108px] w-[108px] shrink-0 flex-col items-center justify-center gap-1.5 px-2 text-center sm:h-[150px] sm:w-[150px] sm:gap-2 sm:px-3">
-                          {source.src ? <span className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-white/90 ring-1 ring-[#DCE4E7] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14"><img src={source.src} alt={source.name} className="h-8 w-8 object-contain sm:h-11 sm:w-11" /></span> : <span className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-white/90 px-1 text-[9px] font-semibold leading-3 tracking-tight text-[#52616A] ring-1 ring-[#DCE4E7] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14 sm:text-[10px]">{source.name.split(" ").map((part) => part[0]).join("").slice(0, 4)}</span>}
+                          {source.src ? <span className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-white/90 ring-1 ring-[#DCE4E7] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14"><img src={source.src} alt={`${source.name} logo`} className="h-8 w-8 object-contain mix-blend-multiply sm:h-11 sm:w-11" /></span> : <span className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-white/90 text-[#52616A] ring-1 ring-[#DCE4E7] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14">{source.icon === "edi" ? <FileInput className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} aria-label="Electronic data interchange" /> : source.icon === "carrier" ? <Truck className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} aria-label="Carrier events" /> : <Database className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} />}</span>}
                           <span className="max-w-[96px] text-[8px] font-semibold leading-3 tracking-tight text-[#52616A] sm:max-w-[112px] sm:text-[9px]">{source.context}</span>
                         </div>
                       ))}
