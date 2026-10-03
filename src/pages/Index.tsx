@@ -1098,9 +1098,9 @@ function ControlSection() {
               <span className="heading-tone-dark">The recovery moves</span> <span className="heading-tone-muted">while you keep the financial position.</span>
             </h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              Each recovery stays in a controlled operating position—from evidence review to approval, response, payout, or closure. You see what changed and the next accountable action.
+              Each recovery remains a governed financial position—from source intake and evidence sufficiency through approval, submission, Amazon response, settlement clearing, and final reconciliation. You see what changed, what remains exposed, and the next accountable action.
             </p>
-            <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">The operation advances. Your attention stays on the decisions that matter: what to approve, what to unblock, and what to close.</p>
+            <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">Your team sees the exceptions that require judgment. Margin carries the event record, evidence, deadlines, response state, and financial outcome while the operation keeps moving.</p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative overflow-hidden">
