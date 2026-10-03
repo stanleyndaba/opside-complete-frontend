@@ -29,6 +29,7 @@ const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
 const Recoveries = lazy(() => import("./pages/Recoveries"));
 const ApprovedReimbursements = lazy(() => import("./pages/ApprovedReimbursements"));
 const FilingPipeline = lazy(() => import("./pages/FilingPipeline"));
+const Discrepancies = lazy(() => import("./pages/Discrepancies"));
 const DisputeCases = lazy(() => import("./pages/DisputeCases"));
 const Appeals = lazy(() => import("./pages/Appeals"));
 const AppealsReview = lazy(() => import("./pages/AppealsReview"));
@@ -431,6 +432,7 @@ const App = () => (
                         <Route path="/app/:tenantSlug/auth/success" element={appRoute(<FoundingActivationGate><OAuthCallback /></FoundingActivationGate>)} />
                         <Route path="/app/:tenantSlug/integrations-hub" element={appRoute(<FoundingActivationGate><IntegrationsHub /></FoundingActivationGate>)} />
                         <Route path="/app/:tenantSlug/recoveries" element={appRoute(<Recoveries />)} />
+                        <Route path="/app/:tenantSlug/discrepancies" element={appRoute(<Discrepancies />)} />
                         <Route path="/app/:tenantSlug/filing-pipeline" element={appRoute(<FilingPipeline />)} />
                         <Route path="/app/:tenantSlug/approved-reimbursements" element={appRoute(<ApprovedReimbursements />)} />
                         <Route path="/app/:tenantSlug/dispute-cases" element={appRoute(<DisputeCases />)} />

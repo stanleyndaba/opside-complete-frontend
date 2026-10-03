@@ -42,6 +42,9 @@ const prefetchRoute = (path: string) => {
       case '/recoveries':
         import('@/pages/Recoveries');
         break;
+      case '/discrepancies':
+        import('@/pages/Discrepancies');
+        break;
       case '/filing-pipeline':
         import('@/pages/FilingPipeline');
         break;
@@ -246,6 +249,7 @@ export function Sidebar({
     {
       label: 'Operations',
       items: [
+        { title: 'Issues Found', icon: Search, href: tenantRoute(currentTenantSlug, '/discrepancies') },
         { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
         { title: 'Disputes', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
         { title: 'Submissions', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
