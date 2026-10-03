@@ -71,50 +71,52 @@ export default function Discrepancies() {
   const estimatedValue = findings.reduce((sum, finding) => sum + finding.value, 0);
   const readyValue = findings.filter((finding) => finding.status === 'Ready').reduce((sum, finding) => sum + finding.value, 0);
 
+  const markerTone: Record<Finding["tone"], string> = {
+    muted: 'bg-[#9AA7B0]',
+    blue: 'bg-[#0B74DE]',
+    green: 'bg-[#4F8067]',
+    amber: 'bg-[#E6A700]',
+    red: 'bg-[#A23A3A]',
+  };
+
   return (
-    <main className="min-h-screen overflow-x-auto bg-[#FAFAF7] font-google-sans text-[#182026]">
-      <div className="mx-auto min-w-[760px] max-w-[1240px] px-4 py-5 sm:px-8 sm:py-8">
-        <section className="relative space-y-4">
-          <div className="border-b border-[#DCE8EE] pb-5">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-4xl">
-                <p className="text-[11px] font-google-sans font-medium text-[#66737F]">Enterprise discrepancy register</p>
-                <h1 className="mt-2 font-lora text-[26px] font-normal leading-tight tracking-tight text-[#182026]">Issues found</h1>
-                <p className="mt-3 text-[12px] font-google-sans leading-5 text-[#4D5B66]">ACME Operations US FBA · Amazon US · Demo workspace. Margin has examined the available operating records and is holding each finding at its current financial and evidence position.</p>
-                <p className="mt-2 max-w-3xl text-[11px] font-google-sans leading-5 text-[#66737F]">This is not an unranked alert feed. Each discrepancy carries an event identity, source population, estimated exposure, evidence state, policy window, and next justified action.</p>
+    <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] font-google-sans text-[#182026]">
+      <div className="mx-auto min-w-[760px] max-w-[1280px] px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
+        <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+          <header className="mb-4 pb-3">
+            <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Amazon financial discrepancy control</p>
+            <h1 className="mt-0.5 font-google-sans text-[20px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[23px]">Issues found</h1>
+            <p className="mt-1 max-w-4xl text-[11px] leading-5 tracking-tight text-[#66737F]">Margin reconstructs each discrepancy against the underlying Amazon event, quantifies the unresolved exposure, and holds the next action to the evidence that can support it.</p>
+          </header>
+          <div className="space-y-1">
+            <div className="text-[12px] font-medium tracking-tight text-[#182026]">ACME Operations US FBA · Amazon US · discrepancy register</div>
+            <div className="text-[11px] font-medium text-[#0B74DE]">The register is not an alert feed. Every finding carries its event identity, source population, financial position, evidence state, and control decision.</div>
+            <div className="text-[10px] font-medium text-[#4B5563]">{visibleFindings.length} findings requiring a controlled decision · {money.format(estimatedValue)} detected exposure · {money.format(readyValue)} evidence-ready</div>
+          </div>
+          <div className="mt-4 flex max-w-[260px] items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3 h-9"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search findings" className="w-full bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {(['all', 'ready', 'attention'] as const).map((filter) => <button key={filter} type="button" onClick={() => setActiveFilter(filter)} className={cn('rounded-[5px] border px-3 py-1.5 text-[10px] font-medium tracking-tight transition-colors', activeFilter === filter ? 'border-[#0B74DE] bg-[#EFF6FF] text-[#1769AA]' : 'border-[#E9E9EC] bg-white text-[#66737F] hover:bg-[#FAFAFB]')}>{filter === 'all' ? 'All findings' : filter === 'ready' ? 'Evidence-ready' : 'Needs attention'}</button>)}
+            <button type="button" onClick={() => setShowProcessed((current) => !current)} className="rounded-[5px] border border-[#E9E9EC] bg-white px-3 py-1.5 text-[10px] font-medium tracking-tight text-[#66737F]">{showProcessed ? 'Hide processed' : 'Show processed'}</button>
+            <button type="button" className="inline-flex items-center rounded-[5px] border border-[#E9E9EC] bg-white px-3 py-1.5 text-[10px] font-medium tracking-tight text-[#66737F] hover:bg-[#FAFAFB]"><Download className="mr-2 h-3 w-3" />Export findings</button>
+          </div>
+          <div className="mt-5">
+            {visibleFindings.map((finding, index) => <article key={finding.reference} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
+              {index < visibleFindings.length - 1 ? <span className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
+              <span className={cn('relative z-10 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full', markerTone[finding.tone])} aria-label={`${finding.state} finding`}><span className="h-1.5 w-1.5 rounded-full bg-white" /></span>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1"><p className="font-semibold tracking-tight text-[#182026]">{finding.reference} · {finding.title}</p><span className={cn('inline-flex rounded-full px-2 py-0.5 text-[8px] font-bold tracking-tight', stateTone[finding.tone])}>{finding.state}</span></div>
+                <p className="mt-1 text-[10px] tracking-tight text-[#9CA3AF]">{finding.source} · {finding.scope} · Record {finding.record}</p>
+                <p className="mt-2 text-[11px] font-semibold tracking-tight text-[#36404A]">{finding.anomaly.replaceAll('_', ' ')}: {finding.summary}</p>
+                <p className="mt-1 text-[10px] font-medium tracking-tight text-[#66737F]">Financial position: <span className="font-semibold text-[#36404A]">{money.format(finding.value)} estimated exposure</span> · {finding.days} days remaining</p>
+                <p className="mt-2 text-[11px] font-bold leading-4 tracking-tight text-[#111827]">{finding.movement} · {finding.readiness}</p>
+                <p className="mt-1 text-[11px] leading-4 text-[#66737F]">Source basis: <span className="font-semibold text-[#36404A]">{finding.source}</span> — the event remains attached to its operating scope and supporting record.</p>
+                <p className="mt-1 text-[11px] leading-4 text-[#66737F]">Control decision: {finding.status === 'Ready' ? 'Evidence supports the next justified recovery action.' : finding.status === 'In review' ? 'Margin is holding the position for further reconciliation.' : 'Further reconciliation is required before action.'}</p>
+                <div className="mt-2 flex flex-wrap items-center gap-3"><span className="text-[11px] font-semibold tracking-tight text-[#36404A]">Next controlled step: {finding.movement === 'Blocked' ? 'Resolve evidence blocker' : finding.movement === 'Filed' ? 'Verify response and payout' : finding.status === 'Ready' ? 'Prepare case' : 'Review evidence chain'}</span><button type="button" className="inline-flex items-center gap-1 rounded-[5px] px-1 py-0.5 text-[11px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#EFF6FF]">Open finding<ArrowRight className="h-3 w-3" /></button></div>
               </div>
-              <div className="flex shrink-0 items-center gap-2 rounded-[6px] border border-[#DCE8EE] bg-white px-3 py-2 text-[10px] font-google-sans text-[#4D5B66] shadow-[0_2px_8px_rgba(24,32,38,0.03)]"><span className="h-1.5 w-1.5 rounded-full bg-[#66A9E8]" />ACME Operations US FBA · Amazon US</div>
-            </div>
-            <div className="mt-5 flex flex-wrap gap-x-8 gap-y-3 border-t border-[#DCE8EE] pt-4">
-              <div className="min-w-[140px]"><p className="text-[10px] font-google-sans text-[#8A99A5]">Open findings</p><p className="mt-1 text-[14px] font-google-sans font-medium leading-none tracking-tight text-[#182026]">{visibleFindings.length}</p></div>
-              <div className="min-w-[140px]"><p className="text-[10px] font-google-sans text-[#8A99A5]">Detected value</p><p className="mt-1 text-[14px] font-google-sans font-medium leading-none tracking-tight text-[#182026]">{money.format(estimatedValue)}</p></div>
-              <div className="min-w-[140px]"><p className="text-[10px] font-google-sans text-[#8A99A5]">Evidence-ready</p><p className="mt-1 text-[14px] font-google-sans font-medium leading-none tracking-tight text-[#26704E]">{money.format(readyValue)}</p></div>
-              <div className="min-w-[140px]"><p className="text-[10px] font-google-sans text-[#8A99A5]">Source coverage</p><p className="mt-1 text-[14px] font-google-sans font-medium leading-none tracking-tight text-[#182026]">7 source families</p></div>
-            </div>
+            </article>)}
+            {visibleFindings.length === 0 ? <div className="px-6 py-20 text-center text-[12px] tracking-tight text-[#7B8A97]">No findings match this search.</div> : null}
           </div>
-
-          <div className="border-b border-[#E9E9EC] py-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div className="text-[11px] font-google-sans tracking-tight text-[#6B7280]">Review what Margin found, whether a discrepancy is ready, blocked by evidence, or still requires financial interpretation.</div>
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex h-8 items-center gap-2 rounded-[6px] border border-[#D8E3E8] bg-white px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search findings" className="w-[150px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div>
-              {(['all', 'ready', 'attention'] as const).map((filter) => <button key={filter} type="button" onClick={() => setActiveFilter(filter)} className={cn('h-8 border px-3 text-[10px] font-google-sans font-medium uppercase tracking-tight transition-colors', activeFilter === filter ? 'border-[#0B74DE] bg-[#EFF6FF] text-[#1769AA]' : 'border-[#E9E9EC] bg-transparent text-[#50525B] hover:bg-[#FAFAFB]')}>{filter === 'all' ? 'All findings' : filter === 'ready' ? 'Evidence-ready' : 'Needs attention'}</button>)}
-              <button type="button" onClick={() => setShowProcessed((current) => !current)} className="inline-flex items-center gap-2 text-[10px] font-google-sans font-medium uppercase tracking-tight text-[#66737F]"><span className={cn('relative h-4 w-8 rounded-full transition-colors', showProcessed ? 'bg-[#B8C4CE]' : 'bg-[#E9E9EC]')}><span className={cn('absolute top-0.5 h-3 w-3 rounded-full bg-white transition-transform', showProcessed ? 'translate-x-4' : 'translate-x-0.5')} /></span> Show processed</button>
-              <button type="button" className="inline-flex h-8 items-center border border-[#E9E9EC] bg-transparent px-3 text-[10px] font-google-sans font-medium uppercase tracking-tight text-[#50525B] hover:bg-[#FAFAFB]"><Download className="mr-2 h-3 w-3" />Export findings</button>
-            </div>
-          </div>
-
-          <div className="border-y border-[#E9E9EC] bg-transparent">
-            <div className="hidden border-b border-[#F0F0F2] px-5 py-3 xl:grid xl:grid-cols-[minmax(0,1.4fr)_130px_minmax(0,1fr)_auto] xl:gap-5">{['Issue', 'Value', 'Position', 'Action'].map((label) => <div key={label} className="text-[9px] font-google-sans font-medium uppercase tracking-tight text-[#858792]">{label}</div>)}</div>
-            <div className="divide-y divide-[#F0F0F2]">
-              {visibleFindings.map((finding) => <article key={finding.reference} className="grid gap-4 px-5 py-4 transition-colors hover:bg-[#FBFCFD] xl:grid-cols-[minmax(0,1.4fr)_130px_minmax(0,1fr)_auto] xl:items-start xl:gap-5">
-                <div className="min-w-0"><div className="flex flex-wrap items-center gap-x-2 gap-y-1"><span className={cn('inline-flex rounded-full px-2 py-0.5 text-[8px] font-bold tracking-tight', stateTone[finding.tone])}>{finding.anomaly.replaceAll('_', ' ')}</span><p className="font-semibold tracking-tight text-[#182026]">{finding.title}</p><span className="text-[10px] font-semibold tracking-tight text-[#8FA0AD]">{finding.reference}</span></div><p className="mt-1 text-[10px] tracking-tight text-[#9CA3AF]">{finding.source} · {finding.scope} · Record {finding.record}</p><p className="mt-2 text-[11px] font-semibold leading-4 tracking-tight text-[#36404A]">{finding.summary}</p><div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-medium tracking-tight text-[#66737F]"><span>Position: <strong className="font-semibold text-[#36404A]">{finding.movement}</strong></span><span>Readiness: <strong className="font-semibold text-[#36404A]">{finding.readiness}</strong></span></div></div>
-                <div><p className="text-[10px] font-google-sans text-[#8A99A5]">Estimated exposure</p><p className="mt-1 text-[15px] font-medium tracking-tight text-[#182026]">{money.format(finding.value)}</p><p className="mt-1 text-[10px] font-medium tracking-tight text-[#66737F]">{finding.days} days remaining</p></div>
-                <div className="grid gap-1.5 text-[10px] leading-4 tracking-tight text-[#66737F]"><p><span className="font-semibold text-[#8A99A5]">Financial state:</span> {finding.state}</p><p><span className="font-semibold text-[#8A99A5]">Source:</span> {finding.source}</p><p><span className="font-semibold text-[#8A99A5]">Control:</span> {finding.status === 'Ready' ? 'Evidence supports next action' : finding.status === 'In review' ? 'Margin is holding the position in review' : 'Further reconciliation required'}</p></div>
-                <div className="flex flex-wrap items-center gap-3 xl:justify-end"><button type="button" className="inline-flex items-center gap-1 border border-[#E9E9EC] px-3 py-1.5 text-[10px] font-google-sans font-medium uppercase tracking-tight text-[#50525B] hover:bg-[#FAFAFB]">Review finding<ArrowRight className="h-3 w-3" /></button></div>
-              </article>)}
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-[10px] font-google-sans tracking-tight text-[#858792]"><span>Showing {visibleFindings.length} of {findings.length} demo findings · ACME Operations US FBA</span><span>Read-only mock register · Nothing submits from this page.</span></div>
+          <p className="pt-2 text-[10px] font-medium tracking-tight text-[#7B8A97]">Read-only representative register for ACME Operations US FBA. Nothing submits from this page.</p>
         </section>
       </div>
     </main>
