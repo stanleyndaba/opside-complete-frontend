@@ -170,22 +170,22 @@ function TypewriterPrompt({ text }: { text: string }) {
 }
 
 const accountingSources = [
-  { id: "amazon", name: "Amazon", context: "orders + settlement", src: "/amazon-logo-transparent-circle.png", route: "M 12 14 H 28 V 94 H 50" },
-  { id: "gmail", name: "Gmail", context: "invoices + threads", src: "/gmailicon.png", route: "M 50 14 V 94" },
-  { id: "drive", name: "Google Drive", context: "documents + records", src: "/gd.png", route: "M 88 14 H 72 V 94 H 50" },
-  { id: "quickbooks", name: "QuickBooks", context: "cost basis", src: "/quickbooks.png", route: "M 12 50 H 30 V 94 H 50" },
-  { id: "slack", name: "Slack", context: "internal context", src: "/slack-icon-2019.png", route: "M 50 50 V 94 H 50" },
-  { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png", route: "M 88 50 H 70 V 94 H 50" },
-  { id: "dropbox", name: "Dropbox", context: "supporting files", src: "/Dropbox_Icon.svg.png", route: "M 12 86 H 30 V 94 H 50" },
-  { id: "outlook", name: "Outlook", context: "supplier correspondence", src: "/outlookicon.webp", route: "M 50 86 V 94" },
-  { id: "onedrive", name: "OneDrive", context: "working documents", src: "/onedriive.png", route: "M 88 86 H 70 V 94 H 50" },
-  { id: "adobe_sign", name: "Adobe Sign", context: "signed documents", src: "/dobe.png", route: "M 12 14 H 28 V 94 H 50" },
+  { id: "amazon", name: "Amazon SP-API", context: "orders + settlements", src: "/amazon-logo-transparent-circle.png" },
+  { id: "sap", name: "SAP S/4HANA", context: "inventory ledger", src: null },
+  { id: "netsuite", name: "NetSuite", context: "GL + clearing", src: null },
+  { id: "edi", name: "3PL EDI", context: "receiving events", src: null },
+  { id: "carrier", name: "Carrier events", context: "movement evidence", src: null },
+  { id: "settlements", name: "Settlement files", context: "payout activity", src: "/gd.png" },
+  { id: "quickbooks", name: "QuickBooks Enterprise", context: "cost basis", src: "/quickbooks.png" },
+  { id: "sftp", name: "SFTP / S3 exports", context: "controlled files", src: "/Dropbox_Icon.svg.png" },
+  { id: "gmail", name: "Finance inbox", context: "source correspondence", src: "/gmailicon.png" },
+  { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png" },
 ];
 
 const getAccountingRow = (order: string[]) => order.map((id) => accountingSources.find((source) => source.id === id)!).filter(Boolean);
 const accountingRows = [
-  getAccountingRow(["amazon", "slack", "outlook", "adobe_sign", "quickbooks"]),
-  getAccountingRow(["gmail", "dropbox", "drive", "onedrive", "xero"]),
+  getAccountingRow(["amazon", "sap", "netsuite", "edi", "carrier"]),
+  getAccountingRow(["settlements", "quickbooks", "sftp", "gmail", "xero"]),
 ];
 
 function AccountingEvidenceSection() {
@@ -212,12 +212,19 @@ function AccountingEvidenceSection() {
                       transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 27, repeat: Infinity, ease: "linear" }}
                     >
                       {[...accountingRows[rowIndex], ...accountingRows[rowIndex]].map((source, index) => (
-                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[132px] w-[132px] shrink-0 items-center justify-center sm:h-[150px] sm:w-[150px]">
-                          <img src={source.src} alt={source.name} className="h-16 w-16 object-contain sm:h-[76px] sm:w-[76px]" />
+                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[132px] w-[132px] shrink-0 flex-col items-center justify-center gap-2 px-3 text-center sm:h-[150px] sm:w-[150px]">
+                          {source.src ? <img src={source.src} alt={source.name} className="h-12 w-12 object-contain sm:h-14 sm:w-14" /> : <span className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-white px-1.5 text-[9px] font-semibold leading-3 tracking-tight text-[#52616A] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14 sm:text-[10px]">{source.name}</span>}
+                          <span className="max-w-[112px] text-[9px] font-semibold leading-3 tracking-tight text-[#52616A]">{source.context}</span>
                         </div>
                       ))}
                     </motion.div>
                   ))}
+                </div>
+                <div className="absolute inset-x-6 top-1/2 z-10 -translate-y-1/2 rounded-[12px] border border-[#C8D8DF] bg-white/90 px-4 py-3 text-center shadow-[0_16px_34px_rgba(35,54,65,0.14)] backdrop-blur-xl sm:inset-x-12 sm:px-5 sm:py-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.04em] text-[#7A8994]">Margin control layer</p>
+                  <p className="mt-1 text-[14px] font-semibold tracking-[-0.02em] text-[#182026] sm:text-[16px]">Canonical event reconciliation</p>
+                  <div className="mt-2 flex flex-wrap justify-center gap-x-2 gap-y-1 font-mono text-[8px] font-semibold tracking-tight text-[#52616A] sm:text-[9px]"><span>Ingest</span><span className="text-[#B5C2CA]">→</span><span>Normalize</span><span className="text-[#B5C2CA]">→</span><span>Tie out</span><span className="text-[#B5C2CA]">→</span><span>Classify</span></div>
+                  <p className="mt-2 text-[9px] leading-3.5 text-[#66737F]">Source lineage preserved · exceptions surfaced · no system of record replaced</p>
                 </div>
               </div>
           </motion.div>
@@ -225,20 +232,20 @@ function AccountingEvidenceSection() {
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:order-2 lg:pt-2">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">03 / THE CONTEXT</p>
             <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Know what happened</span> <span className="heading-tone-muted">without chasing the story yourself.</span>
+              <span className="heading-tone-dark">The records stay in their systems.</span> <span className="heading-tone-muted">The financial truth becomes connected.</span>
             </h2>
-            <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Your Amazon records already contain the answer. Margin connects the relevant activity and shows what is settled, unresolved, or worth acting on.</p>
-            <p className="mt-4 max-w-[620px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">You stay responsible for the business. Margin carries the reconstruction.</p>
+            <p className="mt-6 max-w-[650px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">A shipment, inventory movement, settlement adjustment, or reimbursement may exist across Amazon, your ERP, warehouse systems, carrier records, and finance files—each with its own identifiers, timing, and degree of completeness.</p>
+            <p className="mt-4 max-w-[650px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin connects those records around the underlying financial event, preserves source lineage, and shows where the accounts tie out, where they diverge, and what requires action.</p>
             <div className="mt-8 border-t border-[#C9D1D6] pt-5">
               <div className="flex max-w-full flex-wrap gap-2 font-mono text-[10px] font-semibold tracking-tight">
-                <span className="context-source-badge context-source-badge--green">Amazon</span>
-                <span className="context-source-badge context-source-badge--red">Accounting</span>
-                <span className="context-source-badge context-source-badge--yellow">Settlements</span>
-                <span className="context-source-badge context-source-badge--orange">Files</span>
-                <span className="context-source-badge context-source-badge--blue">Email</span>
+                <span className="context-source-badge context-source-badge--green">Source lineage</span>
+                <span className="context-source-badge context-source-badge--red">Canonical events</span>
+                <span className="context-source-badge context-source-badge--yellow">Tie-outs</span>
+                <span className="context-source-badge context-source-badge--orange">Exceptions</span>
+                <span className="context-source-badge context-source-badge--blue">Decision output</span>
               </div>
               <div className="mt-4 flex flex-nowrap items-center gap-x-2 whitespace-nowrap font-mono text-[8px] font-semibold tracking-tight text-[#66737F] sm:gap-x-3 sm:text-[9px]">
-                <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
+                <span>API + file ingestion.</span><span className="text-[#B5C2CA]">·</span><span>Read-only by default.</span><span className="text-[#B5C2CA]">·</span><span>Your systems remain your systems.</span>
               </div>
             </div>
           </motion.div>
