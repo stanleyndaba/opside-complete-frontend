@@ -118,6 +118,27 @@ const faqs = [
   },
 ];
 
+const supportedMarketplaces = [
+  { country: "United States", code: "US", flag: "🇺🇸", region: "Americas" },
+  { country: "Canada", code: "CA", flag: "🇨🇦", region: "Americas" },
+  { country: "Mexico", code: "MX", flag: "🇲🇽", region: "Americas" },
+  { country: "Brazil", code: "BR", flag: "🇧🇷", region: "Americas" },
+  { country: "United Kingdom", code: "UK", flag: "🇬🇧", region: "Europe" },
+  { country: "Germany", code: "DE", flag: "🇩🇪", region: "Europe" },
+  { country: "France", code: "FR", flag: "🇫🇷", region: "Europe" },
+  { country: "Italy", code: "IT", flag: "🇮🇹", region: "Europe" },
+  { country: "Spain", code: "ES", flag: "🇪🇸", region: "Europe" },
+  { country: "Netherlands", code: "NL", flag: "🇳🇱", region: "Europe" },
+  { country: "Belgium", code: "BE", flag: "🇧🇪", region: "Europe" },
+  { country: "Poland", code: "PL", flag: "🇵🇱", region: "Europe" },
+  { country: "Sweden", code: "SE", flag: "🇸🇪", region: "Europe" },
+  { country: "Australia", code: "AU", flag: "🇦🇺", region: "Asia-Pacific" },
+  { country: "Japan", code: "JP", flag: "🇯🇵", region: "Asia-Pacific" },
+  { country: "India", code: "IN", flag: "🇮🇳", region: "Asia-Pacific" },
+  { country: "United Arab Emirates", code: "AE", flag: "🇦🇪", region: "Middle East" },
+  { country: "Saudi Arabia", code: "SA", flag: "🇸🇦", region: "Middle East" },
+];
+
 const containerClass = "mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12";
 const sectionLabelClass =
   "font-mono text-[11px] font-semibold tracking-tight text-[var(--margin-text-muted)]";
@@ -2454,6 +2475,26 @@ export default function Index() {
             </div>
           </section>
         </main>
+        {/* Marketplace coverage — compact trust signal before final delegation */}
+        <section className="relative bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-20" aria-labelledby="marketplace-scope-title">
+          <div className={containerClass}>
+            <div className="grid gap-8 border-y border-[var(--margin-border)] py-8 md:grid-cols-[0.72fr_1.28fr] md:gap-12 md:py-10">
+              <motion.div {...revealProps} className="max-w-[520px]">
+                <p className={sectionLabelClass}>Marketplace Scope</p>
+                <h2 id="marketplace-scope-title" className="mt-3 max-w-[520px] font-lora text-[30px] font-normal leading-[1.06] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[44px]">Supported FBA marketplaces</h2>
+                <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin supports recovery workflows across major Amazon marketplaces in North America, Europe, Asia-Pacific, and selected Middle East regions.</p>
+              </motion.div>
+              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="grid border-t border-[var(--margin-border)] sm:grid-cols-2 sm:border-t-0 lg:grid-cols-3">
+                {supportedMarketplaces.map((marketplace, index) => (
+                  <div key={marketplace.code} className={cn("flex items-center gap-3 py-3.5 sm:px-4", index > 0 ? "border-t border-[var(--margin-border)] sm:border-t-0" : "", index % 2 === 1 ? "sm:border-l sm:border-[var(--margin-border)]" : "", index >= 2 ? "sm:border-t sm:border-[var(--margin-border)]" : "", index % 3 !== 0 ? "lg:border-l lg:border-[var(--margin-border)]" : "lg:border-l-0", index >= 3 ? "lg:border-t lg:border-[var(--margin-border)]" : "lg:border-t-0")}>
+                    <span className="text-[23px] leading-none" aria-hidden="true">{marketplace.flag}</span>
+                    <span className="min-w-0"><span className="block truncate text-[13px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">{marketplace.country}</span><span className="mt-0.5 block text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">{marketplace.region} · {marketplace.code}</span></span>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </section>
         <FooterNestedRecoveryVisual />
 
       <DemoVideoModal
