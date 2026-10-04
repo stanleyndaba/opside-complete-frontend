@@ -70,6 +70,10 @@ export default function Discrepancies() {
   }), [activeFilter, query, showProcessed]);
   const estimatedValue = findings.reduce((sum, finding) => sum + finding.value, 0);
   const readyValue = findings.filter((finding) => finding.status === 'Ready').reduce((sum, finding) => sum + finding.value, 0);
+  const unresolvedValue = estimatedValue - readyValue;
+  const readyCount = findings.filter((finding) => finding.status === 'Ready').length;
+  const reviewCount = findings.filter((finding) => finding.status === 'In review').length;
+  const openCount = findings.filter((finding) => finding.status === 'Open').length;
 
   const markerTone: Record<Finding["tone"], string> = {
     muted: 'bg-[#9AA7B0]',
@@ -83,19 +87,33 @@ export default function Discrepancies() {
     <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] font-google-sans text-[#182026]">
       <div className="mx-auto min-w-[760px] max-w-[1280px] px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
         <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
-          <header className="mb-4 pb-3">
-            <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Amazon financial discrepancy control</p>
-            <h1 className="mt-0.5 font-google-sans text-[20px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[23px]">Issues found</h1>
-            <p className="mt-1 max-w-4xl text-[11px] leading-5 tracking-tight text-[#66737F]">Margin reconstructs each discrepancy against the underlying Amazon event, quantifies the unresolved exposure, and holds the next action to the evidence that can support it.</p>
+          <header className="mb-4 border-b border-[#E5ECEF] pb-4">
+            <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Amazon financial control · Recovery position</p>
+            <h1 className="mt-0.5 font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026] sm:text-[23px]">Recovery control position</h1>
+            <p className="mt-1 max-w-4xl text-[11px] leading-5 tracking-tight text-[#66737F]">Margin reconciles each position to the underlying Amazon event, distinguishes supported exposure from unresolved exceptions, and governs the next action through the evidence record.</p>
           </header>
           <div className="space-y-1">
             <div className="text-[12px] font-medium tracking-tight text-[#182026]">Northstar Commerce LLC · US FBA · Amazon US · multi-entity discrepancy register</div>
-            <div className="text-[11px] font-medium text-[#0B74DE]">The register is not an alert feed. Every finding carries its event identity, source population, financial position, evidence state, and control decision across the seller's operating stack.</div>
-            <div className="text-[10px] font-medium text-[#4B5563]">{visibleFindings.length} findings requiring a controlled decision · {money.format(estimatedValue)} detected exposure · {money.format(readyValue)} evidence-ready · 7 connected source families</div>
+            <div className="text-[11px] font-medium text-[#0B74DE]">Issues found are recorded as controlled financial positions—not alerts. Each position carries its event identity, source population, financial basis, evidence state, and accountable next step.</div>
+            <div className="text-[10px] font-medium text-[#4B5563]">FY2026 Q1 · 2 legal entities · 3 marketplaces · 7 connected source families · read-only control view</div>
           </div>
-          <div className="mt-4 flex max-w-[260px] items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3 h-9"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search findings" className="w-full bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div>
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {[
+              ['Detected exposure', money.format(estimatedValue), 'Full position under review'],
+              ['Supported exposure', money.format(readyValue), `${readyCount} evidence-ready positions`],
+              ['Unresolved exposure', money.format(unresolvedValue), `${reviewCount} positions in reconciliation`],
+              ['Open exceptions', String(openCount), 'Require controlled resolution'],
+            ].map(([label, value, detail]) => (
+              <div key={label} className="rounded-[7px] border border-[#E2E9EC] bg-[#FBFCFD] px-3 py-2.5">
+                <p className="text-[9px] font-medium tracking-tight text-[#66737F]">{label}</p>
+                <p className="mt-1 text-[16px] font-semibold leading-none tracking-tight text-[#182026]">{value}</p>
+                <p className="mt-1 text-[9px] leading-3.5 tracking-tight text-[#8A99A3]">{detail}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 flex max-w-[260px] items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3 h-9"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search control register" className="w-full bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div>
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            {(['all', 'ready', 'attention'] as const).map((filter) => <button key={filter} type="button" onClick={() => setActiveFilter(filter)} className={cn('rounded-[5px] border px-3 py-1.5 text-[10px] font-medium tracking-tight transition-colors', activeFilter === filter ? 'border-[#0B74DE] bg-[#EFF6FF] text-[#1769AA]' : 'border-[#E9E9EC] bg-white text-[#66737F] hover:bg-[#FAFAFB]')}>{filter === 'all' ? 'All findings' : filter === 'ready' ? 'Evidence-ready' : 'Needs attention'}</button>)}
+            {(['all', 'ready', 'attention'] as const).map((filter) => <button key={filter} type="button" onClick={() => setActiveFilter(filter)} className={cn('rounded-[5px] border px-3 py-1.5 text-[10px] font-medium tracking-tight transition-colors', activeFilter === filter ? 'border-[#0B74DE] bg-[#EFF6FF] text-[#1769AA]' : 'border-[#E9E9EC] bg-white text-[#66737F] hover:bg-[#FAFAFB]')}>{filter === 'all' ? 'All positions' : filter === 'ready' ? 'Evidence-ready' : 'Needs control'}</button>)}
             <button type="button" onClick={() => setShowProcessed((current) => !current)} className="rounded-[5px] border border-[#E9E9EC] bg-white px-3 py-1.5 text-[10px] font-medium tracking-tight text-[#66737F]">{showProcessed ? 'Hide processed' : 'Show processed'}</button>
             <button type="button" className="inline-flex items-center rounded-[5px] border border-[#E9E9EC] bg-white px-3 py-1.5 text-[10px] font-medium tracking-tight text-[#66737F] hover:bg-[#FAFAFB]"><Download className="mr-2 h-3 w-3" />Export findings</button>
           </div>
