@@ -1,8 +1,16 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
+import indexCss from './index.css?inline'
 import App from './App'
 import { GlobalErrorBoundary } from '@/components/error/GlobalErrorBoundary'
+
+const appStyleId = 'margin-app-styles';
+if (!document.getElementById(appStyleId)) {
+  const style = document.createElement('style');
+  style.id = appStyleId;
+  style.textContent = indexCss;
+  document.head.appendChild(style);
+}
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const root = createRoot(document.getElementById('root')!);
