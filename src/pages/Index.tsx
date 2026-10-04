@@ -598,11 +598,12 @@ function ReconstructionGapSection() {
           <motion.div {...revealProps} className="order-1 max-w-[920px] border-l border-[#D8E3E8] pl-5 sm:pl-7 md:pl-10 lg:order-1">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">02 / THE RECONSTRUCTION GAP</p>
             <h2 id="reconstruction-gap-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">One unresolved number</span> <span className="heading-tone-muted">shouldn&apos;t require an investigation.</span>
+              <span className="heading-tone-dark">Financial exposure</span> <span className="heading-tone-muted">does not stay inside one system.</span>
             </h2>
             <div className="mt-6 max-w-[780px] space-y-5 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
-              <p>The answer may exist across a settlement, fee report, inventory movement, return, or supporting document. But finding several pieces of information is not the same as establishing what happened.</p>
-              <p className="font-semibold text-[var(--margin-text-primary)]">Margin connects the records around the event, establishes the financial reality, and makes the next defensible action clear—without asking the operator to become the investigator.</p>
+              <p>At scale, a charge, reimbursement, reversal, or adjustment can span marketplaces, entities, fulfillment networks, settlement periods, and finance records.</p>
+              <p className="font-semibold text-[var(--margin-text-primary)]">Margin brings that context together into one accountable financial position—what happened, what was expected, what Amazon recognized, what remains unresolved, and who owns the next action.</p>
+              <p>Your finance and operations teams spend less time reconciling fragmented records, leadership gets a clearer view of material exposure, and unresolved issues move toward closure without becoming another cross-functional investigation.</p>
             </div>
           </motion.div>
           <motion.div {...revealProps} className="relative order-2 min-w-0 overflow-hidden lg:order-2">
