@@ -59,8 +59,10 @@
           .then(() => {
             console.log('Margin App: Legacy service worker cleared');
             try {
-              if (sessionStorage.getItem('margin:service-worker-cleanup-reloaded') !== 'true') {
-                sessionStorage.setItem('margin:service-worker-cleanup-reloaded', 'true');
+              // Version this key so a deployment can recover users who already
+              // completed an earlier cleanup while holding an old app shell.
+              if (sessionStorage.getItem('margin:service-worker-cleanup-reloaded-v3') !== 'true') {
+                sessionStorage.setItem('margin:service-worker-cleanup-reloaded-v3', 'true');
                 window.location.reload();
               }
             } catch (error) {
