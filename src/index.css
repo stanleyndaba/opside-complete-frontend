@@ -911,32 +911,39 @@ html, body, #root {
   border: 0 !important;
   border-radius: 999px;
   padding: 0.5rem 0.7rem;
-  color: #FFFFFF !important;
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
   line-height: 1;
 }
 
 .landing-google-sans > main > section.context-audit-surface .context-source-badge--green {
-  background-color: #16A34A !important;
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
 }
 
 .landing-google-sans > main > section.context-audit-surface .context-source-badge--red {
-  background-color: #DC2626 !important;
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
 }
 
 .landing-google-sans > main > section.context-audit-surface .context-source-badge--yellow {
-  background-color: #EAB308 !important;
-  color: #182026 !important;
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
 }
 
 .landing-google-sans > main > section.context-audit-surface .context-source-badge--orange {
-  background-color: #F97316 !important;
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
 }
 
 .landing-google-sans > main > section.context-audit-surface .context-source-badge--blue {
-  background-color: #2563EB !important;
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
 }
+
 .landing-google-sans > main > section.context-audit-surface .context-source-badge--deep-blue {
-  background-color: #1D4ED8 !important;
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
 }
 
 /* One Record is a pure-white editorial surface, protected from positional landing overrides. */
