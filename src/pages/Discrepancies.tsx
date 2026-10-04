@@ -93,20 +93,20 @@ export default function Discrepancies() {
             <p className="mt-1 max-w-4xl text-[11px] leading-5 tracking-tight text-[#66737F]">Margin reconciles each position to the underlying Amazon event, distinguishes supported exposure from unresolved exceptions, and governs the next action through the evidence record.</p>
           </header>
           <div className="space-y-1">
-            <div className="text-[12px] font-medium tracking-tight text-[#182026]">Northstar Commerce LLC · US FBA · Amazon US · multi-entity discrepancy register</div>
+            <div className="text-[12px] font-medium tracking-tight text-[#182026]">Northstar Commerce Group · US · CA · UK · DE · multi-entity discrepancy register</div>
             <div className="text-[11px] font-medium text-[#0B74DE]">Issues found are recorded as controlled financial positions—not alerts. Each position carries its event identity, source population, financial basis, evidence state, and accountable next step.</div>
-            <div className="text-[10px] font-medium text-[#4B5563]">FY2026 Q1 · 2 legal entities · 3 marketplaces · 7 connected source families · read-only control view</div>
+            <div className="text-[10px] font-medium text-[#4B5563]">FY2026 Q1 · 4 legal entities · 5 marketplaces · 11 connected source families · read-only control view</div>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-y border-[#E2E9EC] py-3 sm:grid-cols-4 sm:divide-x sm:divide-[#E2E9EC]">
             {[
               ['Detected exposure', money.format(estimatedValue), 'Full position under review'],
               ['Supported exposure', money.format(readyValue), `${readyCount} evidence-ready positions`],
               ['Unresolved exposure', money.format(unresolvedValue), `${reviewCount} positions in reconciliation`],
               ['Open exceptions', String(openCount), 'Require controlled resolution'],
             ].map(([label, value, detail]) => (
-              <div key={label} className="rounded-[7px] border border-[#E2E9EC] bg-[#FBFCFD] px-3 py-2.5">
+              <div key={label} className="min-w-0 px-0 sm:px-4 first:sm:pl-0 last:sm:pr-0">
                 <p className="text-[9px] font-medium tracking-tight text-[#66737F]">{label}</p>
-                <p className="mt-1 text-[16px] font-semibold leading-none tracking-tight text-[#182026]">{value}</p>
+                <p className="mt-1 text-[14px] font-semibold leading-tight tracking-tight text-[#182026]">{value}</p>
                 <p className="mt-1 text-[9px] leading-3.5 tracking-tight text-[#8A99A3]">{detail}</p>
               </div>
             ))}
