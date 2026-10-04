@@ -61,8 +61,8 @@
             try {
               // Version this key so a deployment can recover users who already
               // completed an earlier cleanup while holding an old app shell.
-              if (sessionStorage.getItem('margin:service-worker-cleanup-reloaded-v3') !== 'true') {
-                sessionStorage.setItem('margin:service-worker-cleanup-reloaded-v3', 'true');
+              if (sessionStorage.getItem('margin:service-worker-cleanup-reloaded-v4') !== 'true') {
+                sessionStorage.setItem('margin:service-worker-cleanup-reloaded-v4', 'true');
                 window.location.reload();
               }
             } catch (error) {
@@ -72,6 +72,23 @@
           .catch(err => console.log('Margin App: Service worker cleanup skipped', err));
       });
     }
+  </script>
+  <!-- Recover once from an app shell that points at an expired hashed CSS asset. -->
+  <script>
+    window.addEventListener('load', () => {
+      const appStylesheets = Array.from(document.querySelectorAll('link[rel="stylesheet"][href*="/assets/"]'));
+      const hasFailedAppStylesheet = appStylesheets.some((stylesheet) => !stylesheet.sheet);
+      if (!hasFailedAppStylesheet) return;
+
+      try {
+        const recoveryKey = 'margin:asset-recovery-reloaded-v1';
+        if (sessionStorage.getItem(recoveryKey) === 'true') return;
+        sessionStorage.setItem(recoveryKey, 'true');
+        window.location.reload();
+      } catch (error) {
+        console.log('Margin App: Asset recovery skipped', error);
+      }
+    });
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
