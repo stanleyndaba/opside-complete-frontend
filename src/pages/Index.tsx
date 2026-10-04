@@ -569,11 +569,11 @@ function RealityCheckSection() {
         <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center">
           <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">01 / THE PROBLEM</p>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-            <span className="heading-tone-dark">Your business can be doing well—</span> <span className="heading-tone-muted">and still have money you can&apos;t explain.</span>
+            <span className="heading-tone-dark">Scale increases the distance</span> <span className="heading-tone-muted">between activity and financial certainty.</span>
           </h2>
-          <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Growth spreads the financial position across orders, returns, inventory, settlements, and payouts.</p>
-          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">Margin brings the records together so unresolved exposure and the next justified action are clear.</p>
-          <p className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">Margin establishes the financial reality before you decide what to do next.</p>
+          <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">As Amazon operations expand across entities, marketplaces, fulfilment centres, orders, returns, inventory, settlements, and payouts, the financial position becomes distributed across systems and time.</p>
+          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">Margin reconciles those positions into a controlled view of supported exposure, accounted-for value, unresolved exceptions, and the next action supported by the record.</p>
+          <p className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">Finance gets a defensible position before recovery work is delegated, escalated, or treated as recoverable.</p>
         </motion.div>
         </div>
         <motion.div {...revealProps} className="relative min-w-0 overflow-hidden">
