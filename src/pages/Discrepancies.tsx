@@ -89,7 +89,7 @@ export default function Discrepancies() {
         <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
           <header className="mb-4 border-b border-[#E5ECEF] pb-4">
             <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Amazon financial control · Recovery position</p>
-            <h1 className="mt-0.5 font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026] sm:text-[23px]">Recovery control position</h1>
+            <h1 className="mt-0.5 font-google-sans text-[20px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[23px]">Recovery control position</h1>
             <p className="mt-1 max-w-4xl text-[11px] leading-5 tracking-tight text-[#66737F]">Margin reconciles each position to the underlying Amazon event, distinguishes supported exposure from unresolved exceptions, and governs the next action through the evidence record.</p>
           </header>
           <div className="space-y-1">
