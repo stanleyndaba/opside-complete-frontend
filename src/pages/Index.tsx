@@ -191,8 +191,30 @@ const accountingRows = [
   getAccountingRow(["settlements", "quickbooks", "sftp", "gmail", "xero"]),
 ];
 
+const controlRelayStates = [
+  { label: "Source lineage", statement: "Every conclusion remains tied to its originating record.", badgeClass: "context-source-badge--green" },
+  { label: "Canonical events", statement: "Different system records are connected to one underlying event.", badgeClass: "context-source-badge--blue" },
+  { label: "Tie-outs", statement: "Shipment, inventory, settlement, and ledger positions are compared.", badgeClass: "context-source-badge--yellow" },
+  { label: "Exceptions", statement: "Missing, contradictory, or incomplete evidence stays visible.", badgeClass: "context-source-badge--orange" },
+  { label: "Decision output", statement: "The account resolves to a supported next action.", badgeClass: "context-source-badge--deep-blue" },
+] as const;
+
 function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
+  const [activeRelayState, setActiveRelayState] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setActiveRelayState(0);
+      return;
+    }
+    const timeout = window.setTimeout(() => {
+      setActiveRelayState((current) => (current + 1) % controlRelayStates.length);
+    }, activeRelayState === controlRelayStates.length - 1 ? 3000 : 2100);
+    return () => window.clearTimeout(timeout);
+  }, [activeRelayState, reduceMotion]);
+
+  const relayState = controlRelayStates[activeRelayState];
 
   return (
     <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F6F8F9] py-10 md:py-16" aria-labelledby="accounting-section-title">
@@ -240,12 +262,20 @@ function AccountingEvidenceSection() {
             <p className="mt-6 max-w-[650px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">A shipment, inventory movement, settlement adjustment, or reimbursement may exist across Amazon, your ERP, warehouse systems, carrier records, and finance files—each with its own identifiers, timing, and degree of completeness.</p>
             <p className="mt-4 max-w-[650px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin connects those records around the underlying financial event, preserves source lineage, and shows where the accounts tie out, where they diverge, and what requires action.</p>
             <div className="mt-8 border-t border-[#C9D1D6] pt-5">
-              <div className="flex max-w-full flex-wrap gap-2 font-mono text-[10px] font-semibold tracking-tight">
-                <span className="context-source-badge context-source-badge--green">Source lineage</span>
-                <span className="context-source-badge context-source-badge--red">Canonical events</span>
-                <span className="context-source-badge context-source-badge--yellow">Tie-outs</span>
-                <span className="context-source-badge context-source-badge--orange">Exceptions</span>
-                <span className="context-source-badge context-source-badge--blue">Decision output</span>
+              <div className="h-[76px] max-w-full font-mono text-[10px] font-semibold tracking-tight" aria-live="polite">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={relayState.label}
+                    initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={reduceMotion ? undefined : { opacity: 0, y: -5 }}
+                    transition={{ duration: reduceMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
+                    className="flex h-full flex-col items-start justify-start gap-3"
+                  >
+                    <span className={`context-source-badge ${relayState.badgeClass}`}>{relayState.label}</span>
+                    <span className="block font-google-sans text-[12px] font-medium leading-5 tracking-[-0.01em] text-[#66737F] sm:text-[13px]">{relayState.statement}</span>
+                  </motion.div>
+                </AnimatePresence>
               </div>
               <div className="mt-4 flex flex-nowrap items-center gap-x-2 whitespace-nowrap font-mono text-[8px] font-semibold tracking-tight text-[#66737F] sm:gap-x-3 sm:text-[9px]">
                 <span>API + file ingestion.</span><span className="text-[#B5C2CA]">·</span><span>Read-only by default.</span><span className="text-[#B5C2CA]">·</span><span>Your systems remain your systems.</span>

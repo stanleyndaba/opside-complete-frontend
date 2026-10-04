@@ -924,7 +924,8 @@ html, body, #root {
 }
 
 .landing-google-sans > main > section.context-audit-surface .context-source-badge--yellow {
-  background-color: #CA8A04 !important;
+  background-color: #EAB308 !important;
+  color: #182026 !important;
 }
 
 .landing-google-sans > main > section.context-audit-surface .context-source-badge--orange {
@@ -933,6 +934,9 @@ html, body, #root {
 
 .landing-google-sans > main > section.context-audit-surface .context-source-badge--blue {
   background-color: #2563EB !important;
+}
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--deep-blue {
+  background-color: #1D4ED8 !important;
 }
 
 /* One Record is a pure-white editorial surface, protected from positional landing overrides. */
