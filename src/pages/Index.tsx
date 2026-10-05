@@ -1520,7 +1520,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[860px]">
           <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">09 / RECOVERY SYSTEM</p>
-          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">One financial event.</span> <span className="heading-tone-muted">One controlled recovery.</span></h2>
+          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Every recovery event.</span> <span className="heading-tone-muted">One controlled operating record.</span></h2>
           <p className="mt-5 max-w-[840px] font-sans text-[18px] font-semibold leading-[1.45] tracking-[-0.025em] text-[#294B61] sm:text-[21px] md:text-[24px]">At operating scale, a recovery can cross Finance, FinOps, Operations, Amazon correspondence, and multiple settlement periods. Margin keeps the financial event, evidence basis, submission, response, reversal watch, and settlement outcome connected in one controlled record.</p>
         </motion.div>
 
