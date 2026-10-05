@@ -915,15 +915,18 @@ function MarginLifecycleSection() {
             className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
-            <span className="heading-tone-dark">Let it be</span> <span className="heading-tone-muted">handled.</span>
+            <span className="heading-tone-dark">The work moves.</span> <span className="heading-tone-muted">The position stays clear.</span>
           </h2>
         </motion.div>
 
           <motion.p {...revealProps} className="mt-6 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            <span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Reconstruct the financial event yourself—moving between settlement lines, shipment records, inventory adjustments, and supporting documents to decide whether the variance is real, attributable, and recoverable.
+            At enterprise transaction volume, a recovery can cross marketplace settlements, fulfillment events, 3PL receipts, inventory movements, returns, and ledger activity across periods.
           </motion.p>
           <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            <span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin performs that reconciliation, separates supported exposure from unresolved items, and prepares the next controlled action. You receive a defined case position—not another file to investigate.
+            Margin reconciles those populations into a canonical event, separates supported exposure from items already accounted for or unresolved, and prepares the next controlled action.
+          </motion.p>
+          <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">
+            Finance receives a defined case position. Margin carries the evidence and follow-through.
           </motion.p>
         </div>
         </div>
