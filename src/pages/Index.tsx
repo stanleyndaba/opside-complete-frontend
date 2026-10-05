@@ -1283,12 +1283,12 @@ function MarginStandardSection() {
 
 function OneRecordAnalysisVisual() {
     const checks = [
-      ['Receiving variance established', '17 units were expected; 14 were received. The three-unit variance remains unresolved.'],
-      ['Shipment and product identity reconciled', 'FBA shipment FBA18QZ7M4K2, SKU NS-AIR-PURIFIER-3PK, ASIN B0D4L8P1CX, and supplier delivery resolve to one event.'],
-      ['Delivery and receiving records agree', 'Carrier delivery and warehouse intake support the same delivery window.'],
-      ['Inventory adjustment does not clear the variance', 'The subsequent adjustment does not explain or restore the three missing units.'],
-      ['No matching settlement credit identified', 'No reimbursement credit is recorded for the supported shortage in the reviewed period.'],
-      ['Supported recovery basis established', 'The three-unit variance is separated from anything that still requires evidence.'],
+      ['Receiving variance established', '17 units were expected; 14 were received. The three-unit variance remains unresolved after the receiving window closed.'],
+      ['Canonical event identity reconciled', 'FBA shipment FBA18QZ7M4K2, SKU NS-AIR-PURIFIER-3PK, ASIN B0D4L8P1CX, and supplier delivery resolve to one event.'],
+      ['Delivery and receiving records agree', 'Carrier delivery, warehouse intake, and Amazon receiving records support the same delivery window.'],
+      ['Inventory ledger does not clear the variance', 'The subsequent inventory adjustment does not explain or restore the three missing units.'],
+      ['Settlement review finds no offsetting credit', 'No reimbursement credit or compensating settlement line is recorded for the shortage in the reviewed period.'],
+      ['Supported exposure separated from uncertainty', 'The three-unit variance is isolated from items that remain unsubstantiated or require further evidence.'],
     ];
 
     return (
@@ -1301,16 +1301,16 @@ function OneRecordAnalysisVisual() {
           <div className="rounded-[10px] border border-white/85 bg-white/58 p-3 shadow-[0_16px_34px_rgba(56,95,112,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl sm:p-4">
             <div className="flex items-center justify-between gap-3 border-b border-[#C9DDE5]/80 pb-2">
               <div>
-                <p className="mt-0.5 font-lora text-[14px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[15px]">Inbound receiving variance</p>
+                <p className="mt-0.5 font-lora text-[14px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[15px]">Inbound receiving variance · Amazon US</p>
               </div>
               <span className="rounded-full bg-[#E3F0F5] px-2 py-1 text-[10px] font-medium tracking-tight text-[#0B74DE]">Financial position established</span>
             </div>
             <div className="mt-2.5 space-y-1.5 text-[11px] leading-5 text-[#4D5B66]">
-              <p><strong className="font-semibold text-[#182026]">Northstar Home</strong> · FBA inbound receiving variance · Shipment <strong className="font-semibold text-[#182026]">FBA18QZ7M4K2</strong> · SKU <strong className="font-semibold text-[#182026]">NS-AIR-PURIFIER-3PK</strong> · ASIN <strong className="font-semibold text-[#182026]">B0D4L8P1CX</strong></p><p>Amazon&apos;s receiving record shows <strong className="font-semibold text-[#182026]">14 units received</strong> against a shipment plan for 17 units. The supported exposure is <strong className="font-semibold text-[#182026]">$194.25</strong>, based on a verified unit cost of <strong className="font-semibold text-[#182026]">$64.75</strong>.</p>
-              <p><span className="rounded-[3px] bg-[#F5E7A9]/85 px-1 text-[#4D4A32]">The three-unit difference remains unresolved</span>; it is not a simple posting delay or a duplicate line.</p>
-              <p><span className="rounded-[3px] bg-[#CDEBE2]/90 px-1 text-[#315D56]">Carrier delivery and warehouse intake records agree on the delivery window</span>, proving the shipment arrived while leaving the shortage inside Amazon&apos;s receiving trail.</p>
-              <p><span className="rounded-[3px] bg-[#EACEDB]/85 px-1 text-[#6A4054]">The subsequent inventory adjustment does not reconcile the three units</span>, and the payout records reviewed do not show that Amazon has already reimbursed them.</p>
-              <p>Margin therefore separates the supported shortage from anything that still requires evidence.</p>
+              <p><strong className="font-semibold text-[#182026]">Northstar Commerce LLC</strong> · FBA inbound receiving variance · Shipment <strong className="font-semibold text-[#182026]">FBA18QZ7M4K2</strong> · SKU <strong className="font-semibold text-[#182026]">NS-AIR-PURIFIER-3PK</strong> · ASIN <strong className="font-semibold text-[#182026]">B0D4L8P1CX</strong></p><p>Amazon&apos;s receiving record shows <strong className="font-semibold text-[#182026]">14 units received</strong> against a shipment plan for 17 units. The supported exposure is <strong className="font-semibold text-[#182026]">$194.25</strong>, based on a verified unit cost of <strong className="font-semibold text-[#182026]">$64.75</strong>.</p>
+              <p><span className="rounded-[3px] bg-[#F5E7A9]/85 px-1 text-[#4D4A32]">The three-unit difference remains unresolved after the receiving window closed</span>; it is not a timing difference, duplicate line, or immaterial posting variance.</p>
+              <p><span className="rounded-[3px] bg-[#CDEBE2]/90 px-1 text-[#315D56]">Carrier delivery and warehouse intake records agree on the delivery window</span>, establishing that the shipment arrived while leaving the shortage inside Amazon&apos;s receiving trail.</p>
+              <p><span className="rounded-[3px] bg-[#EACEDB]/85 px-1 text-[#6A4054]">The subsequent inventory adjustment does not reconcile the three units</span>, and the settlement records reviewed do not show that Amazon has already credited them.</p>
+              <p>Margin therefore states the supported exposure separately from unresolved variance and preserves the basis for the next controlled action.</p>
             </div>
           </div>
           <div className="space-y-1.5 p-1 sm:p-2">
@@ -1339,9 +1339,9 @@ function OneRecordAnalysisVisual() {
           <motion.div {...revealProps} className="flex flex-col justify-center">
             <p className="one-record-eyebrow font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">04 / ONE RECORD</p>
             <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Know the financial position</span> <span className="heading-tone-muted">of the event.</span></h2>
-            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">A connected record does more than gather documents. It shows how the shipment, product, receiving activity, inventory movement, settlement history, and expected value relate to one another.</p>
-            <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Margin separates what the records establish from what remains uncertain — so you know what is supported, what is unresolved, and what deserves action.</p>
-            <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8">The case is already understood before it reaches your desk.</p>
+            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">One Amazon event rarely lives in one system. Margin joins shipment intent, product identity, carrier proof, warehouse receipt, inventory movement, settlement activity, and expected recovery value into one auditable financial record.</p>
+            <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">That record distinguishes an attributable variance from a timing difference, duplicate posting, or already-accounted credit — separating supported exposure from unresolved uncertainty and making materiality visible.</p>
+            <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8">The case reaches your team with its financial position established, not as another investigation to perform.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative">
             <OneRecordAnalysisVisual />
