@@ -1182,11 +1182,11 @@ function ControlSection() {
 function MarginStandardSection() {
   const reduceMotion = useReducedMotion();
   const standardSteps = [
-    "What happened?",
-    "What should have happened?",
-    "What does the evidence support?",
-    "What should happen next?",
-    "What was actually recovered?",
+    "Already accounted for",
+    "Evidence insufficient",
+    "Supported for recovery",
+    "Attribution not established",
+    "Controlled action ready",
   ];
   const [activeStandardStep, setActiveStandardStep] = useState(0);
   const [standardPhase, setStandardPhase] = useState<"typing" | "pause" | "deleting" | "empty">("typing");
@@ -1247,15 +1247,16 @@ function MarginStandardSection() {
           <motion.div {...revealProps} className="order-1 max-w-[720px] lg:order-2">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">06 / THE MARGIN STANDARD</p>
             <h2 id="margin-standard-title" className="font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Know what the records can actually support.</span>
+              <span className="heading-tone-dark">Uncertainty does not become a claim.</span>
             </h2>
             <p className="mt-6 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              Margin connects the event, expected position, observed outcome, and supporting evidence before treating a difference as meaningful.
+              At scale, false positives are expensive. A missing record, timing difference, duplicate posting, or unverified attribution can create a recovery that should never move.
             </p>
-            <p className="mt-4 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The result is a clear separation between supported exposure, uncertainty, and positions that are already accounted for.</p>
+            <p className="mt-4 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Margin tests the event against the expected position, observed outcome, source lineage, materiality, and recovery rules before it recommends action.</p>
             <p className="mt-6 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
-              The standard is not &quot;find something.&quot; The standard is &quot;know what is true.&quot;
+              Your team gets a controlled answer: recover, hold, account for, or close.
             </p>
+            <p className="mt-4 max-w-[660px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>Margin does not manufacture exposure to make the dashboard look productive.</p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 border-t border-[var(--margin-border)] lg:order-1">
