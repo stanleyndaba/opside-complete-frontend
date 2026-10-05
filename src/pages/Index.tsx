@@ -1633,11 +1633,12 @@ function NestedRecoveryBrowsers() {
         <div className="grid items-start gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 lg:order-2">
             <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">12 / RECOVERY HISTORY</p>
-            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">The recovery record</span> <span className="heading-tone-muted">should explain itself.</span></h2>
+            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Every recovery position</span> <span className="heading-tone-muted">should close with a financial record.</span></h2>
             <div className="mt-6 max-w-[560px] space-y-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              <p>From the first finding to the next accountable action, the evidence, requests, responses, and decisions stay attached to one recovery record.</p>
+              <p>From source intake through approval, submission, Amazon response, settlement matching, and final close, Margin keeps the event, evidence, decisions, and accountable actions connected in one governed record.</p>
+              <p>Finance does not have to reconstruct what happened from inboxes, case IDs, spreadsheets, or individual memory. Each position shows what was supported, what was approved, what was paid, what remains unresolved, and who owns the next controlled action.</p>
             </div>
-            <p className="mt-5 max-w-[560px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>A financial event should leave a record, not a mystery.</p>
+            <p className="mt-5 max-w-[560px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>Recovery work becomes a reconciled financial position—not an unclosed case.</p>
             <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Nested recovery pages">
               {(Object.keys(browsers) as Array<keyof typeof browsers>).map((key) => (
                 <button key={key} type="button" role="tab" aria-selected={activeBrowser === key} onClick={() => setActiveBrowser(key)} className={`rounded-full px-3 py-1.5 text-[11px] font-medium tracking-tight transition-colors ${activeBrowser === key ? 'bg-[#DCEBF2] text-[#284B5B]' : 'bg-white/70 text-[#6A7D86] hover:bg-white'}`}>{browsers[key].label}</button>
