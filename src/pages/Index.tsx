@@ -1359,9 +1359,9 @@ function OneRecordAnalysisVisual() {
 function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) => void }) {
   const recoveryThreadCards = [
     {
-      title: "See the variance. Know its financial position.",
+      title: "See the population. Know its financial position.",
       sectionLabel: "10 / RECOVERY VISIBILITY",
-      copy: "Margin isolates the event, ties it to the underlying records, and shows whether the exposure is supported, unresolved, or already accounted for.",
+      copy: "Margin keeps the recovery population visible, ties each event to its source records, and distinguishes supported exposure from accounted-for and unresolved items.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(255,255,255,0.98),transparent_36%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_54%,#F9FAF8_100%)]" />
@@ -1377,11 +1377,11 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           >
             <div className="space-y-2.5">
               {[
-                "Inbound receiving variance",
-                "Referral fee overcharge",
-                "Return credit shortfall",
-                "Removal count variance",
-                "Warehouse damage adjustment",
+                "Inbound receiving · supported exposure",
+                "Referral fee · expected rate variance",
+                "Return credit · settlement shortfall",
+                "Removal count · unresolved variance",
+                "Warehouse damage · evidence pending",
               ].map((label, index) => (
                 <div key={label} className={`flex items-center gap-3 rounded-[10px] border border-white/70 px-3 py-2.5 shadow-[0_12px_28px_rgba(56,74,82,0.08),inset_0_1px_0_rgba(255,255,255,0.88)] backdrop-blur-lg sm:px-4 sm:py-3 ${index === 0 ? "bg-white/62" : index === 1 ? "bg-white/54" : index === 2 ? "bg-white/48" : "bg-white/42"}`}>
                   <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border ${index === 0 || index === 2 ? "border-[#8DB8D0] bg-[#E8F3F8] text-[#0B74DE]" : "border-[#C8D0CD] bg-white/60"}`} aria-hidden="true">{(index === 0 || index === 2) && <Check className="h-3 w-3" strokeWidth={2.5} />}</span>
@@ -1396,7 +1396,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
     {
       title: "The recovery record stays connected.",
       sectionLabel: "11 / RECOVERY CONTINUITY",
-      copy: "Shipment identity, unit counts, evidence status, response history, and settlement outcome remain attached to the same financial event.",
+      copy: "Shipment identity, unit counts, evidence status, response history, and settlement outcome remain attached to the same controlled financial event.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.98),transparent_38%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_54%,#F9FAF8_100%)]" />
@@ -1415,23 +1415,23 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
                 <div className="flex items-start justify-between gap-2 border-b border-[#D9E2E2]/80 pb-1.5">
                   <div>
                     <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Context</p>
-                    <p className="mt-0.5 text-[10px] font-semibold leading-3.5 tracking-[-0.02em] text-[#26333A] sm:text-[11px]">Northstar Home US · FBA recovery</p>
+                    <p className="mt-0.5 text-[10px] font-semibold leading-3.5 tracking-[-0.02em] text-[#26333A] sm:text-[11px]">Northstar Commerce LLC · Amazon US</p>
                   </div>
                 </div>
                 <div className="space-y-2 pt-2">
                   <div>
                     <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Status</p>
-                    <p className="mt-0.5 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Evidence review</p>
+                    <p className="mt-0.5 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Response under review</p>
                   </div>
                   <div>
                     <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Next milestone</p>
-                    <p className="mt-0.5 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Submit reconciled case packet</p>
+                    <p className="mt-0.5 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Submit reconciled recovery packet</p>
                   </div>
                 </div>
                 <div className="mt-2 grid grid-cols-2 gap-1.5 border-t border-[#D9E2E2]/80 pt-2">
                   <div className="rounded-[6px] bg-white/45 px-1.5 py-1">
                     <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Reversal watch</p>
-                    <p className="mt-0.5 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Watch</p>
+                    <p className="mt-0.5 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Monitored</p>
                   </div>
                   <div className="rounded-[6px] bg-white/45 px-1.5 py-1">
                     <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Appeal route</p>
@@ -1443,17 +1443,17 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
                 <p className="mb-1 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Next actions</p>
                 <div className="flex items-center gap-2 rounded-[8px] border border-white/80 bg-white/64 px-2 py-2 shadow-[0_10px_22px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.94)] backdrop-blur-lg sm:px-2.5">
                   <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/70" aria-hidden="true" />
-                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#344149] sm:text-[10px]">Verify BOL and POD</span>
+                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#344149] sm:text-[10px]">Validate receiving evidence</span>
                   <img src="/gd.png" alt="Google Drive" className="h-4 w-4 shrink-0 object-contain" />
                 </div>
                 <div className="flex items-center gap-2 rounded-[8px] border border-white/70 bg-white/54 px-2 py-2 shadow-[0_9px_20px_rgba(56,74,82,0.08)] backdrop-blur-lg sm:px-2.5">
                   <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/64" aria-hidden="true" />
-                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#46535A] sm:text-[10px]">Review case response</span>
+                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#46535A] sm:text-[10px]">Reconcile Amazon response</span>
                   <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 shrink-0 object-contain" />
                 </div>
                 <div className="flex items-center gap-2 rounded-[8px] border border-white/65 bg-white/46 px-2 py-2 shadow-[0_8px_18px_rgba(56,74,82,0.06)] backdrop-blur-md sm:px-2.5">
                   <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/58" aria-hidden="true" />
-                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#566167] sm:text-[10px]">Prepare reconciled packet</span>
+                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#566167] sm:text-[10px]">Prepare controlled submission</span>
                   <img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto shrink-0 object-contain" />
                 </div>
               </div>
@@ -1463,9 +1463,9 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       ),
     },
     {
-      title: "No handoff to manage.",
+      title: "The next action stays accountable.",
       sectionLabel: "12 / CONTROLLED FOLLOW-THROUGH",
-      copy: "Margin keeps the case moving across Amazon, email, and source records. You see the current position, the unresolved control, and the next accountable action.",
+      copy: "Margin carries the response, evidence validation, owner decision, and next action across the systems your teams already use—without losing the financial context.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.96),transparent_36%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_52%,#F9FAF8_100%)]" />
@@ -1491,22 +1491,22 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           >
             <div className="relative flex items-center gap-3 rounded-[10px] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_14px_32px_rgba(56,74,82,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl sm:px-4 sm:py-2.5">
               <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/70" aria-hidden="true" />
-              <span className="min-w-0 flex-1"><span className="block truncate font-sans text-[12px] font-medium leading-tight tracking-[-0.02em] text-[#26333A] sm:text-[14px]">Review Amazon response</span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">Response draft ready</span></span>
+              <span className="min-w-0 flex-1"><span className="block truncate font-sans text-[12px] font-medium leading-tight tracking-[-0.02em] text-[#26333A] sm:text-[14px]">Reconcile Amazon response</span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">Response basis recorded</span></span>
               <img src="/gmailicon.png" alt="Gmail" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
             </div>
             <div className="mt-2.5 flex items-center gap-3 rounded-[10px] border border-white/70 bg-white/48 px-3 py-1.5 shadow-[0_12px_28px_rgba(56,74,82,0.08),inset_0_1px_0_rgba(255,255,255,0.88)] backdrop-blur-lg sm:px-4 sm:py-2">
               <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/62" aria-hidden="true" />
-              <span className="min-w-0 flex-1"><span className="flex items-center gap-2 truncate font-sans text-[11px] font-medium leading-tight tracking-[-0.02em] text-[#3A474D] sm:text-[13px]">Verifying BOL and POD <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#87949A]/35 border-t-[#66757C]" aria-label="Fetching in progress" /></span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">4/7 evidence items matched</span></span>
+              <span className="min-w-0 flex-1"><span className="flex items-center gap-2 truncate font-sans text-[11px] font-medium leading-tight tracking-[-0.02em] text-[#3A474D] sm:text-[13px]">Validate receiving evidence <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#87949A]/35 border-t-[#66757C]" aria-label="Fetching in progress" /></span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">BOL, POD, and 3PL receipt matched</span></span>
               <img src="/gd.png" alt="Google Drive" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
             </div>
             <div className="mt-2.5 flex items-center gap-3 rounded-[10px] border border-white/70 bg-white/42 px-3 py-1.5 shadow-[0_10px_24px_rgba(56,74,82,0.06),inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-md sm:px-4 sm:py-2">
               <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/56" aria-hidden="true" />
-              <span className="min-w-0 flex-1"><span className="flex items-center gap-2 truncate font-sans text-[11px] font-medium leading-tight tracking-[-0.02em] text-[#4A555B] sm:text-[13px]">Confirming ASIN/FNSKU <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#87949A]/35 border-t-[#66757C]" aria-label="Validation in progress" /></span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">Validating product-to-event match...</span></span>
+              <span className="min-w-0 flex-1"><span className="flex items-center gap-2 truncate font-sans text-[11px] font-medium leading-tight tracking-[-0.02em] text-[#4A555B] sm:text-[13px]">Validate product-to-event lineage <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#87949A]/35 border-t-[#66757C]" aria-label="Validation in progress" /></span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">ASIN/FNSKU and inventory identity tied out</span></span>
               <img src="/outlookicon.webp" alt="Outlook" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
             </div>
             <div className="mt-2.5 flex items-center gap-3 rounded-[10px] border border-white/70 bg-white/38 px-3 py-1.5 shadow-[0_8px_20px_rgba(56,74,82,0.05),inset_0_1px_0_rgba(255,255,255,0.78)] backdrop-blur-md sm:px-4 sm:py-2">
               <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/52" aria-hidden="true" />
-              <span className="min-w-0 flex-1"><span className="block truncate font-sans text-[11px] font-medium leading-tight tracking-[-0.02em] text-[#566167] sm:text-[13px]">Recording next recovery action</span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">Ready for seller review...</span></span>
+              <span className="min-w-0 flex-1"><span className="block truncate font-sans text-[11px] font-medium leading-tight tracking-[-0.02em] text-[#566167] sm:text-[13px]">Route controlled action</span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">Finance owner and decision state recorded</span></span>
               <img src="/slack-icon-2019.png" alt="Slack" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
             </div>
           </motion.div>
@@ -1520,8 +1520,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[860px]">
           <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">09 / RECOVERY SYSTEM</p>
-          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">One financial event.</span> <span className="heading-tone-muted">One accountable recovery.</span></h2>
-          <p className="mt-5 max-w-[840px] font-sans text-[18px] font-semibold leading-[1.45] tracking-[-0.025em] text-[#294B61] sm:text-[21px] md:text-[24px]">A financial recovery should not become another operating queue for your team. Margin keeps the finding, evidence chain, submission, response, reversal watch, and settlement outcome attached to the same event—so the work moves forward without you carrying its history.</p>
+          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">One financial event.</span> <span className="heading-tone-muted">One controlled recovery.</span></h2>
+          <p className="mt-5 max-w-[840px] font-sans text-[18px] font-semibold leading-[1.45] tracking-[-0.025em] text-[#294B61] sm:text-[21px] md:text-[24px]">At operating scale, a recovery can cross Finance, FinOps, Operations, Amazon correspondence, and multiple settlement periods. Margin keeps the financial event, evidence basis, submission, response, reversal watch, and settlement outcome connected in one controlled record.</p>
         </motion.div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-3 md:gap-6 lg:mt-12 lg:gap-8">
