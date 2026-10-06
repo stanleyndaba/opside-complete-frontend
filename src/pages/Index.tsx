@@ -2276,6 +2276,40 @@ function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boo
   );
 }
 
+function FounderNoteSection() {
+  return (
+    <section
+      className="relative overflow-hidden bg-[#EAF1F5] py-14 sm:py-16 md:py-20"
+      aria-labelledby="founder-note-title"
+    >
+      <div className={containerClass}>
+        <motion.div
+          {...revealProps}
+          className="relative overflow-hidden rounded-[4px] border border-[#D5E1E8] bg-[#F3F7F9] px-6 py-8 shadow-[0_18px_50px_rgba(65,92,108,0.08)] sm:px-10 sm:py-10 md:px-16 md:py-14"
+        >
+          <div className="absolute inset-y-0 left-0 w-1 bg-[#0B74DE]" aria-hidden="true" />
+          <div className="pointer-events-none absolute -right-20 -top-28 h-72 w-72 rounded-full bg-[#BFD9E8]/35 blur-3xl" aria-hidden="true" />
+          <div className="relative grid gap-8 md:grid-cols-[minmax(180px,0.38fr)_minmax(0,1fr)] md:gap-14">
+            <div>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#557386]">A note from the founder</p>
+              <h2 id="founder-note-title" className="mt-4 max-w-[220px] font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.045em] text-[#182026] sm:text-[36px]">
+                At scale, complexity compounds.
+              </h2>
+            </div>
+            <div className="max-w-[720px] text-[15px] leading-7 text-[#435762] sm:text-[16px] sm:leading-8">
+              <p>Transactions multiply, systems diverge, and small deltas become material exposure.</p>
+              <p className="mt-5">A business can have millions of records and still not know with confidence whether its financial reality is complete. And every unresolved variance carries a second cost: the hours required to trace it, explain it, evidence it, and close it.</p>
+              <p className="mt-5">Margin is built for the gap between the two — establishing what happened, quantifying what remains unresolved, determining what the evidence supports, and driving each material exception toward resolution without consuming the same hours from your team.</p>
+              <p className="mt-5 font-lora text-[21px] leading-7 tracking-[-0.025em] text-[#182026] sm:text-[24px] sm:leading-8">Because at scale, “probably accounted for” is not a control.</p>
+              <p className="mt-7 border-t border-[#D5E1E8] pt-4 text-[12px] font-semibold tracking-tight text-[#557386]">— Founder &amp; CEO, Margin</p>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 function ConsumerRecoverySection({ onCta }: { onCta: () => void }) {
   return (
     <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="consumer-recovery-title">
@@ -2409,6 +2443,7 @@ export default function Index() {
             </div>
           </div>
         </section>
+        <FounderNoteSection />
         <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
         <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
 
