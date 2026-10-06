@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowRight, Check, Files, ListChecks } from "lucide-react";
+import { ArrowRight, Check, Files, Layers3, ListChecks } from "lucide-react";
 
 type ProgressEvent = {
   type: string;
@@ -47,6 +47,9 @@ export default function ProgressReview() {
         </button>
         <button type="button" title="Evidence files" aria-label="Evidence files" onClick={() => setToast("Evidence files selected")} className="flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
           <Files className="h-4 w-4" strokeWidth={1.8} />
+        </button>
+        <button type="button" title="Control layers" aria-label="Control layers" onClick={() => setToast("Control layers selected")} className="mt-12 flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
+          <Layers3 className="h-4 w-4" strokeWidth={1.8} />
         </button>
       </aside>
       <section className="min-w-0 flex-1 rounded-[5px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
