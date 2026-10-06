@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ArrowRight, Check, Files, Layers3, ListChecks, Search } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 
 type ProgressEvent = {
   type: string;
@@ -30,6 +31,7 @@ const events: ProgressEvent[] = [
 export default function ProgressReview() {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const reduceMotion = useReducedMotion();
   const getDocumentIcon = (event: ProgressEvent, doc: string) => {
     if (event.status === "partial reimbursement identified") return { src: "/gmailicon.png", alt: "Amazon response" };
     if (doc.toLowerCase().endsWith(".csv")) return { src: "/evidence-csv-mark.png", alt: "CSV" };
@@ -55,10 +57,8 @@ export default function ProgressReview() {
       </aside>
       <div className="min-w-0 flex-1">
         <nav aria-label="Progress preview search" className="mb-3 rounded-[10px] border border-[#DCE3E7] bg-white p-1.5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
-          <label className="flex h-9 items-center gap-2 rounded-[10px] border border-[#E2E7EA] bg-[#FBFCFC] px-3 focus-within:border-[#B8C8D1] focus-within:ring-2 focus-within:ring-[#0B74DE]/10">
+          <label className="flex h-9 items-center gap-2 rounded-[10px] bg-[#FBFCFC] px-3 focus-within:ring-2 focus-within:ring-[#0B74DE]/10">
             <img src="/logoimagetwo.png" alt="Margin" className="h-3.5 w-auto shrink-0 object-contain" />
-            <span className="brand-wordmark shrink-0 font-merriweather text-[12px] tracking-tight text-[#182026]">Margin</span>
-            <span className="mx-1 h-4 w-px bg-[#DCE3E7]" aria-hidden="true" />
             <Search className="h-3.5 w-3.5 shrink-0 text-[#8A99A3]" strokeWidth={1.8} aria-hidden="true" />
             <input aria-label="Margin Search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Margin Search" className="min-w-0 flex-1 bg-transparent text-[12px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A99A3]" />
           </label>
@@ -67,11 +67,11 @@ export default function ProgressReview() {
         <div className="mb-4 pb-3"><p className="text-[11px] font-medium tracking-tight text-[#66737F]">Governed financial control record</p><h1 className="mt-0.5 font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Progress review</h1><p className="mt-1 text-[11px] leading-5 text-[#66737F]">The governed record of one Amazon financial event within a multi-source recovery control population—from source intake and causal reconstruction through controlled action, settlement verification, and closure.</p></div>
         <div className="space-y-1"><div className="text-[12px] font-medium tracking-tight text-[#182026]">EVT-FBA-2026-0001847 · Northstar Commerce LLC · Legal entity NTH-US-01 · Amazon US · FBA</div><div className="text-[11px] font-medium text-[#0B74DE]">The position is tracked from scope acceptance through evidence sufficiency, approval authority, controlled execution, response classification, settlement verification, and residual close state.</div><div className="text-[10px] font-medium text-[#4B5563]">Review period: 01 Jan–31 Mar 2026 · Source run: NTH-US-Q1-2026-0904 · Materiality: operational exception · Close state: partial outcome with residual under watch · Currency: USD</div></div>
         <div className="mt-5">
-          {events.map((event, index) => <article key={`${event.date}-${event.status}`} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
-            {index < events.length - 1 ? <span className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
-            <span className="relative z-10 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded event"><Check className="h-3 w-3 text-white" strokeWidth={3} /></span>
+          {events.map((event, index) => <motion.article key={`${event.date}-${event.status}`} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 1.05, duration: 0.34, ease: [0.22, 1, 0.36, 1] }} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
+            {index < events.length - 1 ? <motion.span initial={reduceMotion ? false : { scaleY: 0 }} animate={{ scaleY: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 1.05 + 0.66, duration: 0.34, ease: [0.22, 1, 0.36, 1] }} style={{ transformOrigin: "top" }} className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
+            <motion.span initial={reduceMotion ? false : { scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 1.05 + 0.42, duration: 0.2, ease: [0.22, 1, 0.36, 1] }} className="relative z-10 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded event"><Check className="h-3 w-3 text-white" strokeWidth={3} /></motion.span>
             <div className="min-w-0"><p className="font-medium tracking-tight text-[#182026]">{event.type} · {event.status}</p><p className="mt-1 leading-5 text-[#4D5B66]">{event.message}</p><time className="mt-2 block text-[10px] font-medium tabular-nums tracking-tight text-[#66737F]">{event.date}</time>{event.amount ? <p className="mt-1 font-medium tabular-nums text-[#0B74DE]">Supported amount: {event.amount}</p> : null}<div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[#4B5563]"><span className="text-[11px] font-medium tracking-tight text-[#66737F]">Docs</span>{event.docs.map((doc) => <button type="button" key={doc} onClick={() => openDoc(doc)} className="inline-flex items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] transition-colors hover:text-[#0B74DE]">{(() => { const icon = getDocumentIcon(event, doc); return <><img src={icon.src} alt={icon.alt} className="h-4 w-4 object-contain" />{doc}</>; })()}<ArrowRight className="h-3 w-3" /></button>)}</div></div>
-          </article>)}
+          </motion.article>)}
         </div>
         </section>
       </div>
