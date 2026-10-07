@@ -637,11 +637,21 @@ function ReconstructionGapSection() {
 }
 
 function FinancialWorkProofSection() {
-  const proofPoints = [
+  const proofPoints: Array<{ value: string; title: string; description?: string; details?: string[] }> = [
     {
       value: "28+",
       title: "hours saved per month",
       description: "Estimated monthly time returned from finding records, tracing transactions, and assembling supporting evidence.",
+    },
+    {
+      value: "SP-API",
+      title: "Selling Partner Connector",
+      details: [
+        "Evidence and case workflows",
+        "Payout reconciliation",
+        "Seller approval before submission",
+        "Tenant isolation",
+      ],
     },
     {
       value: "26",
@@ -669,9 +679,15 @@ function FinancialWorkProofSection() {
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[#2B3034]">
             {proofPoints.map((point) => (
               <div key={point.title} className="grid gap-3 border-b border-[#2B3034] py-5 sm:grid-cols-[110px_minmax(0,0.9fr)_minmax(0,1.1fr)] sm:items-baseline sm:gap-5 sm:py-6">
-                <span className="font-lora text-[38px] leading-none tracking-[-0.045em] text-white sm:text-[44px]" style={{ fontWeight: 500 }}>{point.value}</span>
+                <span className={`${point.value === "SP-API" ? "text-[24px] sm:text-[28px]" : "text-[38px] sm:text-[44px]"} font-lora leading-none tracking-[-0.045em] text-white`} style={{ fontWeight: 500 }}>{point.value}</span>
                 <h3 className="text-[16px] font-semibold leading-5 tracking-tight text-white sm:text-[17px]">{point.title}</h3>
-                <p className="text-[13px] leading-5 text-[#8F9BA3] sm:text-[14px] sm:leading-6">{point.description}</p>
+                {point.details ? (
+                  <ul className="grid gap-1 text-[13px] leading-5 text-[#8F9BA3] sm:text-[14px] sm:leading-6">
+                    {point.details.map((detail) => <li key={detail}>{detail}</li>)}
+                  </ul>
+                ) : (
+                  <p className="text-[13px] leading-5 text-[#8F9BA3] sm:text-[14px] sm:leading-6">{point.description}</p>
+                )}
               </div>
             ))}
           </motion.div>
