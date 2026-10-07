@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth, useClerk, useSignIn, useSignUp, useUser } from '@clerk/react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowRight, Eye, EyeOff, ArrowLeft, Mail } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { GoogleMark } from '@/components/GoogleMark';
@@ -1428,16 +1428,6 @@ const Login = () => {
             </div>
 
             <section>
-              <div className="mb-5 flex justify-center sm:mb-6 sm:justify-start">
-                <Link 
-                  to={isAuditIntent ? "/audit" : "/"} 
-                  className="group flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#0B74DE]"
-                >
-                  <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
-                  Back to Margin
-                </Link>
-              </div>
-
               <div className="mb-6 lg:hidden">
                 <h1 className="text-center text-[28px] font-bold leading-[1.12] tracking-[-0.035em] text-[#182026] sm:text-left sm:text-[30px] font-lora">
                   {heading}
