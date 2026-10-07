@@ -20,11 +20,11 @@ const cases: AutoSubmitCase[] = [
   {
     reference: "REC-014",
     status: "ready",
-    statusLabel: "Ready to submit",
+    statusLabel: "Eligible under mandate",
     title: "Inbound receiving variance",
     event: "Shipment FBA17-ONT8-260114 · SKU NCS-48OZ-BLK · ONT8",
     basis: "60 units dispatched; 46 units received. Supported exposure calculated at $1,184.60 using the verified unit-cost basis.",
-    control: "Evidence packet complete · policy window open · Auto Submit eligible",
+    control: "Evidence complete · entitlement established · policy window open · threshold passed",
     amount: "$1,184.60",
     date: "Today · 08:42",
     docs: ["ShipmentPlan-FBA17-ONT8-260114.pdf", "ReceivingReport-ONT8.csv", "Invoice-NCS-2026-114.pdf"],
@@ -32,11 +32,11 @@ const cases: AutoSubmitCase[] = [
   {
     reference: "REC-013",
     status: "submitted",
-    statusLabel: "Submitted",
+    statusLabel: "Submitted under mandate",
     title: "FBA fee overcharge correction",
     event: "Settlement 205-771 · fee event 8F-441 · Amazon US",
     basis: "Charged fee basis exceeded the applicable fee schedule for the fulfilled unit class. Reimbursement request filed for $388.50.",
-    control: "Case packet accepted by Amazon · receipt linked · response monitoring active",
+    control: "Receipt recorded · Amazon response pending · financial position remains open",
     amount: "$388.50",
     date: "30 Sep · 14:18",
     docs: ["CasePacket-NTH-FBA-2601-0047.pdf", "FeeBasis-8F-441.pdf", "SubmissionReceipt.pdf"],
@@ -44,11 +44,11 @@ const cases: AutoSubmitCase[] = [
   {
     reference: "REC-012",
     status: "approved",
-    statusLabel: "Approved",
+    statusLabel: "Approved · settlement pending",
     title: "Inventory adjustment reimbursement",
     event: "Adjustment 19822888381 · SKU NCS-48OZ-BLK · Amazon US",
     basis: "Amazon approved the supported inventory adjustment and credited $742.00 against the established recovery record.",
-    control: "Approval recorded · settlement credit identified · payout reconciliation pending",
+    control: "Amazon decision recorded · credit identified · payout reconciliation outstanding",
     amount: "$742.00",
     date: "29 Sep · 11:06",
     docs: ["AmazonResponse-19822888381.pdf", "ApprovalRecord-REC-012.pdf", "Settlement-205-771.csv"],
@@ -118,27 +118,27 @@ export default function AutoSubmitPreview() {
         <section className="rounded-[8px] bg-white/42 p-2.5 shadow-[0_18px_42px_rgba(56,74,82,0.08),inset_0_1px_0_rgba(255,255,255,0.92)] backdrop-blur-xl sm:p-4" aria-label="Auto Submit control and case queue for Northstar Commerce LLC">
           <header className="flex items-center gap-2 pb-2.5 sm:gap-2.5 sm:pb-3">
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white sm:h-6 sm:w-6"><Check className="h-2.5 w-2.5" strokeWidth={3} /></span>
-            <h1 className="truncate text-[10px] font-medium leading-tight tracking-tight text-[#1D272E] sm:text-[12px]">Reconciliation control · Northstar Commerce LLC · Amazon US</h1>
+            <h1 className="truncate text-[10px] font-medium leading-tight tracking-tight text-[#1D272E] sm:text-[12px]">Governed submission control · Northstar Commerce LLC · Amazon US</h1>
           </header>
 
           <div className="grid items-start gap-4 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-5 sm:py-5">
             <aside className="pb-4 sm:pb-0 sm:pr-4">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.02em] text-[#7B8790] sm:text-[10px]">Submission control</p>
+              <p className="text-[9px] font-semibold uppercase tracking-[0.02em] text-[#7B8790] sm:text-[10px]">Execution mandate</p>
               <button type="button" role="switch" aria-checked={enabled} onClick={() => setEnabled((current) => !current)} className={`mt-3 flex items-center gap-2 rounded-full px-1.5 py-1.5 pr-2.5 transition-colors ${enabled ? "bg-[#1689E5]" : "bg-[#9AA8B2]"}`}>
                 <span className={`flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-[0_1px_3px_rgba(28,47,59,0.2)] transition-transform ${enabled ? "translate-x-0" : "translate-x-[18px]"}`}><Check className={`h-3 w-3 ${enabled ? "text-[#1689E5]" : "text-[#9AA8B2]"}`} strokeWidth={3} /></span>
                 <span className="min-w-[52px] text-left text-[10px] font-semibold text-white">{enabled ? "Auto Submit" : "Paused"}</span>
               </button>
-              <p className="mt-3 max-w-[135px] text-[9px] leading-4 text-[#56646D] sm:text-[10px] sm:leading-5">{enabled ? "Qualified cases file automatically after evidence and confidence controls pass." : "Cases remain in review until you approve submission."}</p>
-              <p className="mt-3 text-[9px] leading-4 text-[#8A959C]">Exceptions stay held.</p>
+              <p className="mt-3 max-w-[135px] text-[9px] leading-4 text-[#56646D] sm:text-[10px] sm:leading-5">{enabled ? "Margin executes positions that pass the configured financial, evidence, policy, and threshold controls." : "No automatic submissions proceed while the mandate is paused."}</p>
+              <p className="mt-3 text-[9px] leading-4 text-[#8A959C]">Exceptions remain held for review.</p>
             </aside>
 
             <div className="min-w-0">
-              <div className="mb-3 flex items-center justify-between gap-3"><div><p className="text-[12px] font-semibold tracking-tight text-[#26343D] sm:text-[13px]">Auto Submit queue</p><p className="mt-0.5 text-[9px] text-[#7B8790] sm:text-[10px]">Three controlled recovery states</p></div><span className="rounded-full bg-[#F1F4F5] px-2 py-1 text-[8px] font-semibold text-[#6B7881]">1 tab</span></div>
+              <div className="mb-3 flex items-center justify-between gap-3"><div><p className="text-[12px] font-semibold tracking-tight text-[#26343D] sm:text-[13px]">Delegated execution register</p><p className="mt-0.5 text-[9px] text-[#7B8790] sm:text-[10px]">Positions moving through governed submission states</p></div><span className="rounded-full bg-[#F1F4F5] px-2 py-1 text-[8px] font-semibold text-[#6B7881]">3 positions</span></div>
               <div className="relative space-y-2.5 border-l border-[#C8D0D5] py-0.5">{cases.map((item) => <CaseTimelineRow key={item.reference} item={item} />)}</div>
             </div>
           </div>
 
-          <footer className="pt-2.5 text-[9px] leading-4 text-[#7B8790] sm:text-[10px] sm:leading-5"><span className="font-semibold text-[#596770]">Control state:</span>{" "}{enabled ? "pre-authorized submission · evidence threshold enforced · exceptions retained for review" : "manual submission path · seller approval required before filing"}</footer>
+          <footer className="pt-2.5 text-[9px] leading-4 text-[#7B8790] sm:text-[10px] sm:leading-5"><span className="font-semibold text-[#596770]">Control state:</span>{" "}{enabled ? "mandate active · eligibility enforced · receipts recorded · exceptions held" : "mandate paused · automatic submission stopped · positions retained for review"}</footer>
         </section>
       </div>
     </main>

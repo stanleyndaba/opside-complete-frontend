@@ -1683,17 +1683,20 @@ function AutoSubmitSection() {
           <motion.div {...revealProps} className="max-w-[660px]">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#586872]">23 / AUTO SUBMIT</p>
             <h2 id="auto-submit-title" className="mt-5 font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Once the basis is proven,</span>{" "}
-              <span className="heading-tone-muted">stop carrying the submission.</span>
+              <span className="heading-tone-dark">Put routine recovery execution</span>{" "}
+              <span className="heading-tone-muted">outside the finance queue.</span>
             </h2>
             <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#3F4C55] md:text-[17px] md:leading-8">
-              Auto Submit lets Margin move qualifying recoveries from verified finding to Amazon submission without asking you to lift another finger. The work continues while you run the business.
+              Once the financial basis is proven, Margin moves qualifying positions through submission without creating another task for your team.
             </p>
             <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#3F4C55] md:text-[17px] md:leading-8">
-              This is not blind automation. Margin submits only when the event reconstruction, evidence basis, policy window, and recovery threshold are satisfied. Weak evidence, exceptions, and unresolved variance stay held for review.
+              The mandate is defined once. Margin applies it continuously across the recovery population: verifying the reconstructed event, enforcing the evidence threshold, checking the policy window, preparing the submission, recording the receipt, and carrying the position through Amazon&apos;s response.
             </p>
             <p className="mt-6 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#274F62] sm:text-[24px]" style={{ fontWeight: 400 }}>
-              You authorize the rule once. Margin carries the routine action—and keeps the financial record accountable through outcome.
+              Only qualified positions move. Exceptions, weak evidence, contradictory records, unresolved balances, and decisions requiring judgment remain visible and held.
+            </p>
+            <p className="mt-4 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#274F62] sm:text-[24px]" style={{ fontWeight: 400 }}>
+              Finance sets the rule once. Margin carries the execution until the position is reconciled.
             </p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full">
