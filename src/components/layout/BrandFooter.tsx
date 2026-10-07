@@ -14,15 +14,14 @@ type FooterLink = {
 };
 
 const productLinks: FooterLink[] = [
-  { label: 'Free Recovery Audit', href: '/audit' },
+  { label: 'Recovery Audit', href: '/audit' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Security', href: '/security' }
 ];
 
 const resourceLinks: FooterLink[] = [
   { label: 'Docs', href: '/docs' },
-  { label: 'Help Center', href: '/contact' },
-  { label: 'Contact Support', href: '/contact' }
+  { label: 'Help Center', href: '/contact' }
 ];
 
 const companyLinks: FooterLink[] = [
@@ -35,6 +34,13 @@ const legalLinks: FooterLink[] = [
   { label: 'Privacy Policy', href: '/privacy' },
   { label: 'Terms of Service', href: '/terms' },
   { label: 'Refund Policy', href: '/refund-policy' }
+];
+
+const contactLinks = [
+  { label: 'General inquiries', email: 'hello@margin-finance.com' },
+  { label: 'Existing-customer support', email: 'support@margin-finance.com' },
+  { label: 'Enterprise assessments', email: 'enterprise@margin-finance.com' },
+  { label: 'Partnerships', email: 'partnerships@margin-finance.com' }
 ];
 
 const socialLinks = [
@@ -170,26 +176,53 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
             </p>
           </div>
 
-          <div className="grid gap-10 border-t border-gray-700 pt-12 md:grid-cols-4 md:gap-8">
-            <div className="max-w-[360px]">
+          <div className="grid gap-12 border-t border-gray-700 pt-12 lg:grid-cols-[1.1fr_1fr_1.25fr] lg:gap-16">
+            <div className="max-w-[380px]">
               <Link to="/" className="inline-flex items-center gap-3 transition-opacity hover:opacity-85">
                 <img src="/logoimagetwo.png" alt="Margin" width="32" height="32" className="h-8 w-auto object-contain brightness-0 invert" />
                 <span className="brand-wordmark font-merriweather text-2xl tracking-tight" style={{ color: '#FFFFFF' }}>Margin</span>
               </Link>
-              <p className="mt-5 text-sm leading-6 tracking-tight" style={{ color: '#94A3B8' }}>
-                Amazon FBA revenue recovery and reconciliation for established brands, agencies and operations teams.
+              <p className="mt-6 max-w-[330px] text-[15px] leading-7 tracking-tight" style={{ color: '#CBD5E1' }}>
+                Financial recovery and reconciliation infrastructure for Amazon businesses.
               </p>
-              <p className="mt-4 text-sm leading-6 tracking-tight" style={{ color: '#64748B' }}>
-                Verify what Amazon owes, connect the evidence, control the response and reconcile the payout.
+              <p className="mt-4 max-w-[330px] text-sm leading-6 tracking-tight" style={{ color: '#64748B' }}>
+                A clear record of what happened, what is supported, and whether the money came back.
               </p>
             </div>
 
-            <FooterColumn title="Products" links={productLinks} />
-            <FooterColumn title="Resources" links={resourceLinks} />
-            <div>
-              <FooterColumn title="Company" links={companyLinks} />
-              <div className="mt-8">
-                <FooterColumn title="Legal" links={legalLinks} />
+            <div className="grid grid-cols-2 gap-8">
+              <div>
+                <FooterColumn title="Company" links={companyLinks} />
+                <div className="mt-8">
+                  <FooterColumn title="Legal" links={legalLinks} />
+                </div>
+              </div>
+              <div>
+                <FooterColumn title="Resources" links={resourceLinks} />
+                <div className="mt-8">
+                  <FooterColumn title="Product" links={productLinks} />
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-700 pt-8 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+              <p className="text-lg font-medium tracking-tight text-white">Talk to Margin</p>
+              <p className="mt-2 max-w-[310px] text-sm leading-6 tracking-tight" style={{ color: '#94A3B8' }}>
+                There are people behind the product. Choose the route that matches what you need.
+              </p>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                {contactLinks.map(({ label, email }) => (
+                  <a
+                    key={email}
+                    href={`mailto:${email}`}
+                    className="group block w-fit focus-visible:outline-none"
+                  >
+                    <span className="block text-[11px] font-medium uppercase tracking-[0.04em] text-[#64748B]">{label}</span>
+                    <span className="mt-1 block w-fit text-sm text-[#CBD5E1] transition-colors group-hover:text-white group-focus-visible:text-white">
+                      {email}
+                    </span>
+                  </a>
+                ))}
               </div>
             </div>
           </div>
@@ -197,15 +230,6 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gray-700 pt-8 md:flex-row">
             <div className="flex flex-col gap-2 text-sm tracking-tight md:flex-row md:items-center md:gap-5" style={{ color: '#64748B' }}>
               <span>© {new Date().getFullYear()} Margin. All rights reserved.</span>
-              <a 
-                href="mailto:support@margin-finance.com" 
-                className="w-fit transition-colors duration-200 focus-visible:outline-none"
-                style={{ color: '#94A3B8' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
-              >
-                support@margin-finance.com
-              </a>
               {selectedLanguageLabel && (
                 <span className="inline-flex items-center gap-1.5">
                   <Globe className="h-3.5 w-3.5" />
