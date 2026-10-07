@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { ArrowRight, Download, Search } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 type FindingState = 'Detected' | 'Flagged' | 'Identified' | 'Logged';
@@ -59,10 +60,48 @@ const stateTone: Record<Finding['tone'], string> = {
   red: 'bg-[#FFF1F2] text-[#A23A3A]',
 };
 
+function ControlTypewriter({ text, speed = 4, delay = 0, onComplete }: { text: string; speed?: number; delay?: number; onComplete?: () => void }) {
+  const reduceMotion = useReducedMotion();
+  const [visibleText, setVisibleText] = useState(reduceMotion ? text : '');
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
+  React.useEffect(() => {
+    if (reduceMotion) {
+      setVisibleText(text);
+      onCompleteRef.current?.();
+      return;
+    }
+    setVisibleText('');
+    let index = 0;
+    let interval: number | undefined;
+    const start = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        index += 1;
+        setVisibleText(text.slice(0, index));
+        if (index >= text.length) {
+          if (interval) window.clearInterval(interval);
+          onCompleteRef.current?.();
+        }
+      }, speed);
+    }, delay);
+    return () => {
+      window.clearTimeout(start);
+      if (interval) window.clearInterval(interval);
+    };
+  }, [delay, reduceMotion, speed, text]);
+
+  return <>{visibleText}{!reduceMotion && visibleText.length < text.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</>;
+}
+
 export default function Discrepancies() {
   const [query, setQuery] = useState('');
   const [showProcessed, setShowProcessed] = useState(false);
   const [activeFilter, setActiveFilter] = useState<'all' | 'ready' | 'attention'>('all');
+  const [introStage, setIntroStage] = useState(0);
+  const [timelineCount, setTimelineCount] = useState(1);
+  const [timelinePaused, setTimelinePaused] = useState(false);
+  const reduceMotion = useReducedMotion();
   const visibleFindings = useMemo(() => findings.filter((finding) => {
     const matchesQuery = !query.trim() || Object.values(finding).join(' ').toLowerCase().includes(query.toLowerCase());
     const matchesFilter = activeFilter === 'all' || (activeFilter === 'ready' ? finding.status === 'Ready' : finding.tone === 'red' || finding.status === 'Open');
@@ -73,6 +112,19 @@ export default function Discrepancies() {
   const unresolvedValue = estimatedValue - readyValue;
   const readyCount = findings.filter((finding) => finding.status === 'Ready').length;
   const reviewCount = findings.filter((finding) => finding.status === 'In review').length;
+
+  React.useEffect(() => {
+    setTimelineCount(1);
+    setIntroStage(0);
+  }, [activeFilter, query, showProcessed]);
+
+  React.useEffect(() => {
+    if (reduceMotion || timelinePaused || introStage < 3 || visibleFindings.length === 0) return;
+    const timer = window.setInterval(() => {
+      setTimelineCount((current) => current >= visibleFindings.length ? 1 : current + 1);
+    }, 1500);
+    return () => window.clearInterval(timer);
+  }, [introStage, reduceMotion, timelinePaused, visibleFindings.length]);
 
   const markerTone: Record<Finding["tone"], string> = {
     muted: 'bg-[#9AA7B0]',
@@ -93,13 +145,12 @@ export default function Discrepancies() {
           </header>
           <div className="space-y-1">
             <div className="text-[12px] font-medium tracking-tight text-[#182026]">Northstar Commerce Group · US · CA · UK · DE · multi-entity discrepancy register</div>
-            <div className="text-[11px] font-medium text-[#0B74DE]">Issues found are recorded as controlled financial positions—not alerts. Each position carries its event identity, source population, financial basis, evidence state, and accountable next step.</div>
-            <div className="text-[10px] font-medium text-[#4B5563]">FY2026 Q1 · 4 legal entities · 5 marketplaces · 11 connected source families · read-only control view</div>
+            <div className="text-[11px] font-medium leading-5 text-[#0B74DE]"><ControlTypewriter text="Issues found are recorded as controlled financial positions—not alerts. Each position carries its event identity, source population, financial basis, evidence state, and accountable next step." onComplete={() => setIntroStage(1)} /></div>
+            {introStage >= 1 ? <div className="text-[10px] font-medium text-[#4B5563]"><ControlTypewriter text="FY2026 Q1 · 4 legal entities · 5 marketplaces · 11 connected source families · read-only control view" onComplete={() => setIntroStage(2)} /></div> : null}
           </div>
-          <div className="mt-4 border-y border-[#E2E9EC] py-4 sm:py-5">
-            <p className="max-w-5xl text-[12px] leading-6 tracking-tight text-[#66737F] sm:text-[13px] sm:leading-7">
-              The current review population represents <span className="font-semibold text-[#182026]">{money.format(estimatedValue)} in detected exposure</span>. Of that position, <span className="font-semibold text-[#1769AA]">{money.format(readyValue)}</span> is currently supported by evidence across <span className="font-semibold text-[#1769AA]">{readyCount} evidence-ready positions</span>, while <span className="font-semibold text-[#8A641B]">{money.format(unresolvedValue)}</span> remains unresolved across <span className="font-semibold text-[#8A641B]">{reviewCount} positions still in reconciliation</span>.
-            </p>
+          <div className="mt-4 border-y border-[#E2E9EC] py-4 sm:py-5 text-[12px] leading-6 tracking-tight text-[#66737F] sm:text-[13px] sm:leading-7">
+            {introStage >= 2 ? <ControlTypewriter text={`The current review population represents ${money.format(estimatedValue)} in detected exposure. Of that position, ${money.format(readyValue)} is currently supported by evidence across ${readyCount} evidence-ready positions, while ${money.format(unresolvedValue)} remains unresolved across ${reviewCount} positions still in reconciliation.`} onComplete={() => setIntroStage(3)} /> : null}
+          </div>
           </div>
           <div className="mt-4 flex max-w-[260px] items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3 h-9"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search control register" className="w-full bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div>
           <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -108,8 +159,9 @@ export default function Discrepancies() {
             <button type="button" className="inline-flex items-center rounded-[5px] border border-[#E9E9EC] bg-white px-3 py-1.5 text-[10px] font-medium tracking-tight text-[#66737F] hover:bg-[#FAFAFB]"><Download className="mr-2 h-3 w-3" />Export findings</button>
           </div>
           <div className="mt-5">
-            {visibleFindings.map((finding, index) => <article key={finding.reference} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
-              {index < visibleFindings.length - 1 ? <span className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
+            <div onMouseEnter={() => setTimelinePaused(true)} onMouseLeave={() => setTimelinePaused(false)}>
+            {(reduceMotion ? visibleFindings : visibleFindings.slice(0, timelineCount)).map((finding, index, shownFindings) => <motion.article key={finding.reference} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.34, ease: [0.22, 1, 0.36, 1] }} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
+              {index < shownFindings.length - 1 ? <motion.span initial={reduceMotion ? false : { scaleY: 0 }} animate={{ scaleY: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22, duration: 0.28 }} style={{ transformOrigin: 'top' }} className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
               <span className={cn('relative z-10 ml-[9px] mt-2 h-1 w-1 rounded-full', markerTone[finding.tone])} aria-label={`${finding.state} finding`} />
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1"><p className="font-semibold tracking-tight text-[#182026]">{finding.reference} · {finding.title}</p><span className={cn('inline-flex rounded-full px-2 py-0.5 text-[8px] font-bold tracking-tight', stateTone[finding.tone])}>{finding.state}</span></div>
@@ -121,7 +173,8 @@ export default function Discrepancies() {
                 <p className="mt-1 text-[11px] leading-4 text-[#66737F]">Control decision: {finding.status === 'Ready' ? 'Evidence supports the next justified recovery action.' : finding.status === 'In review' ? 'Margin is holding the position for further reconciliation.' : 'Further reconciliation is required before action.'}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-3"><span className="text-[11px] font-semibold tracking-tight text-[#36404A]">Next controlled step: {finding.movement === 'Blocked' ? 'Resolve evidence blocker' : finding.movement === 'Filed' ? 'Verify response and payout' : finding.status === 'Ready' ? 'Prepare case' : 'Review evidence chain'}</span><button type="button" className="inline-flex items-center gap-1 rounded-[5px] px-1 py-0.5 text-[11px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#EFF6FF]">Open finding<ArrowRight className="h-3 w-3" /></button></div>
               </div>
-            </article>)}
+            </motion.article>)}
+            </div>
             {visibleFindings.length === 0 ? <div className="px-6 py-20 text-center text-[12px] tracking-tight text-[#7B8A97]">No findings match this search.</div> : null}
           </div>
           <p className="pt-2 text-[10px] font-medium tracking-tight text-[#7B8A97]">Read-only representative register for Northstar Commerce LLC · US FBA. Nothing submits from this page.</p>
