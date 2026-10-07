@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth, useClerk, useSignIn, useSignUp, useUser } from '@clerk/react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowRight, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, ArrowLeft, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { GoogleMark } from '@/components/GoogleMark';
@@ -352,6 +352,7 @@ const Login = () => {
   const [sessionChecked, setSessionChecked] = useState(false);
   const [activeSessionEmail, setActiveSessionEmail] = useState<string | null>(null);
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
+  const [emailEntryVisible, setEmailEntryVisible] = useState(false);
   const [emailStepComplete, setEmailStepComplete] = useState(false);
   const [clerkVerificationStep, setClerkVerificationStep] = useState<ClerkVerificationStep | null>(null);
   const [clerkVerificationCode, setClerkVerificationCode] = useState('');
@@ -1452,6 +1453,8 @@ const Login = () => {
 
               <div className="mt-4 sm:mt-0">
                 <form onSubmit={handleLogin} className="space-y-4">
+                  {emailEntryVisible || mode === 'recovery' || showPasswordStep ? (
+                    <>
                   <div className="space-y-1">
                     <Label htmlFor="email" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
                       Email address
@@ -1489,7 +1492,7 @@ const Login = () => {
                           resetLocalAuthError();
                         }}
                         placeholder={mode === 'recovery' ? 'Enter new password' : mode === 'signup' ? 'Create a password' : 'Enter your password'}
-                        className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                        className="h-12 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                       />
                       <button
                         type="button"
@@ -1545,7 +1548,7 @@ const Login = () => {
                             resetLocalAuthError();
                           }}
                           placeholder="Confirm your new password"
-                          className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                          className="h-12 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                         />
                         <button
                           type="button"
@@ -1559,6 +1562,37 @@ const Login = () => {
                     </div>
                   ) : null}
 
+                    </>
+                  ) : (
+                    <div className="space-y-3">
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          setMode('login');
+                          setEmailEntryVisible(true);
+                          setError('');
+                        }}
+                        disabled={loading || !clerkAuthLoaded}
+                        className="h-14 w-full rounded-full border border-[#AEBBC4] bg-white px-5 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE]"
+                      >
+                        <Mail aria-hidden="true" className="mr-3 h-5 w-5 text-[#52616C]" />
+                        Sign in with Email
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          setMode('signup');
+                          setEmailEntryVisible(true);
+                          setError('');
+                        }}
+                        disabled={loading || !clerkAuthLoaded}
+                        className="h-14 w-full rounded-full border border-[#AEBBC4] bg-white px-5 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE]"
+                      >
+                        <Mail aria-hidden="true" className="mr-3 h-5 w-5 text-[#52616C]" />
+                        Sign up with Email
+                      </Button>
+                    </div>
+                  )}
                   {error === '__SERVICE_PREPARING__' ? (
                     <div className="border border-[#D8E3EA] bg-[#FAFAF7] p-6 text-center sm:p-8">
                       <h3 className="text-[22px] font-bold tracking-[-0.025em] text-[#182026]">
@@ -1654,7 +1688,7 @@ const Login = () => {
                         disabled={loading || !clerkAuthLoaded}
                         className="h-14 w-full rounded-full border-[#0B74DE] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] hover:bg-[#075EBA] lg:h-11 lg:rounded-md lg:border-[#C8D6DF] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-[0_1px_2px_rgba(37,49,58,0.04)] lg:hover:bg-[#F3F6F8]"
                       >
-                        <GoogleMark className="mr-2 h-5 w-5 rounded-full bg-white p-0.5 lg:h-4 lg:w-4 lg:bg-transparent lg:p-0" />
+                        <GoogleMark className="mr-2 h-6 w-6 rounded-full bg-white p-0.5 lg:h-4 lg:w-4 lg:bg-transparent lg:p-0" />
                         Continue with Google
                       </Button>
                       <p className="text-center text-[12px] leading-5 text-[#7B8790]">
