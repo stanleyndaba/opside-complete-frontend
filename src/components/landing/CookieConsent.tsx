@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
     COOKIE_CONSENT_STORAGE_KEY,
+    COOKIE_SETTINGS_OPEN_EVENT,
     DEFAULT_COOKIE_PREFERENCES,
     readCookiePreferences,
     saveCookiePreferences,
@@ -27,6 +28,18 @@ export function CookieConsent() {
 
         const timeoutId = window.setTimeout(() => setIsVisible(true), 1000);
         return () => window.clearTimeout(timeoutId);
+    }, []);
+
+    useEffect(() => {
+        const reopen = () => {
+            const stored = readCookiePreferences();
+            if (stored) setPreferences(stored);
+            setView('banner');
+            setIsVisible(true);
+        };
+
+        window.addEventListener(COOKIE_SETTINGS_OPEN_EVENT, reopen);
+        return () => window.removeEventListener(COOKIE_SETTINGS_OPEN_EVENT, reopen);
     }, []);
 
     useEffect(() => {

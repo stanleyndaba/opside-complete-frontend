@@ -5,6 +5,7 @@ export type CookiePreferences = {
 
 export const COOKIE_CONSENT_STORAGE_KEY = 'Margin.cookieConsent';
 export const COOKIE_CONSENT_CHANGED_EVENT = 'margin:cookie-consent-changed';
+export const COOKIE_SETTINGS_OPEN_EVENT = 'margin:cookie-settings-open';
 
 export const DEFAULT_COOKIE_PREFERENCES: CookiePreferences = {
   analytics: false,

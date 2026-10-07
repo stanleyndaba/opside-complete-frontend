@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Globe } from 'lucide-react';
+import { COOKIE_SETTINGS_OPEN_EVENT } from '@/lib/cookieConsent';
 
 type Props = {
   selectedLanguageLabel?: string;
@@ -11,6 +12,7 @@ type FooterLink = {
   label: string;
   href?: string;
   external?: boolean;
+  onClick?: () => void;
 };
 
 const productLinks: FooterLink[] = [
@@ -38,7 +40,8 @@ const resourceLinks: FooterLink[] = [
 const companyLinks: FooterLink[] = [
   { label: 'About', href: '/about-margin' },
   { label: 'Contact', href: '/contact' },
-  { label: 'Enterprise', href: '/sales' }
+  { label: 'Enterprise', href: '/sales' },
+  { label: 'Cookie settings', onClick: () => window.dispatchEvent(new Event(COOKIE_SETTINGS_OPEN_EVENT)) }
 ];
 
 const legalLinks: FooterLink[] = [
@@ -69,6 +72,16 @@ const socialLinks = [
 const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
   const className =
     'group inline-flex w-fit items-center text-sm font-normal leading-6 tracking-tight transition-colors duration-200 focus-visible:outline-none';
+
+  if (item.onClick) {
+    return (
+      <button type="button" onClick={item.onClick} className={className} style={{ color: '#94A3B8' }}>
+        <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]">
+          {item.label}
+        </span>
+      </button>
+    );
+  }
 
   if (item.external) {
     return (
