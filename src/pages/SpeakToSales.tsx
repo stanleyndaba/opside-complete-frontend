@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Files, Layers3, ListChecks, Search, SlidersHorizontal } from 'lucide-react';
+import { Check, Files, Layers3, ListChecks, Search, SlidersHorizontal } from 'lucide-react';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
@@ -91,34 +91,26 @@ export default function SpeakToSales() {
       </header>
 
       <main className="font-google-sans mx-auto max-w-[1180px] px-4 py-5 sm:px-6 sm:py-5 lg:px-6">
-        <nav aria-label="Enterprise assessment sections" className="mb-3 flex gap-2 overflow-x-auto pb-1 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {assessmentRail.map(({ label, href, icon: Icon }, index) => (
-            <a key={label} href={href} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[6px] border px-2.5 py-2 text-[10px] font-medium tracking-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 ${index === 0 ? 'border-[#C9D6DE] bg-[#EEF1F2] text-[#26333A]' : 'border-[#DCE3E7] bg-white text-[#66737F]'}`}>
-              <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />
-              {label}
-            </a>
-          ))}
-        </nav>
         <div className="flex items-start gap-3 lg:gap-4">
-          <aside aria-label="Enterprise assessment controls" className="sticky top-[76px] hidden w-[52px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1.5 lg:flex">
+          <aside aria-label="Enterprise assessment controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
             {assessmentRail.map(({ label, href, icon: Icon }, index) => (
-              <a key={label} href={href} title={label} aria-label={label} className={`flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 ${index === 0 ? 'bg-[#D9E0E3] text-[#26333A]' : ''}`}>
-                <Icon className="h-4 w-4" strokeWidth={1.8} />
+              <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? 'bg-[#D9E0E3] text-[#26333A]' : ''}`}>
+                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} />
               </a>
             ))}
           </aside>
           <div className="min-w-0 flex-1">
         <div className="flex flex-col gap-4">
           <article id="enterprise-assessment-record" className="enterprise-assessment-record relative order-1 min-w-0 rounded-none border border-[#DCE8EE] bg-white px-0 py-5 shadow-none sm:rounded-[10px] sm:px-6 sm:py-5 sm:shadow-[0_1px_2px_rgba(24,32,38,0.03)]" aria-labelledby="talk-to-sales-title">
-            <div aria-label="Enterprise assessment timeline" className="pointer-events-none absolute bottom-8 left-3 top-8 hidden w-6 flex-col items-center justify-between lg:flex">
+            <div aria-label="Enterprise assessment timeline" className="pointer-events-none absolute bottom-8 left-3 top-8 flex w-6 flex-col items-center justify-between">
               <span aria-hidden="true" className="absolute bottom-2 top-2 w-px bg-[#C9D6DE]" />
-              {assessmentTimeline.map((stage, index) => (
-                <span key={stage} className={`relative z-10 flex h-5 w-5 items-center justify-center rounded-full border bg-white ${index < 4 ? 'border-[#4F8067]' : 'border-[#AABAC3]'}`} title={stage}>
-                  <span className={`h-2 w-2 rounded-full ${index < 4 ? 'bg-[#4F8067]' : 'bg-[#AABAC3]'}`} />
+              {assessmentTimeline.map((stage) => (
+                <span key={stage} className="relative z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067] shadow-[0_0_0_3px_white]" title={stage}>
+                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
                 </span>
               ))}
             </div>
-            <div className="enterprise-assessment-copy lg:pl-8" style={{ zoom: 0.75 }}>
+            <div className="enterprise-assessment-copy pl-8" style={{ zoom: 0.75 }}>
             <header className="pb-5">
               <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Enterprise financial-control assessment</mark></p>
               <h1 id="talk-to-sales-title" className="mt-1.5 max-w-2xl font-google-sans text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[24px]">Recovery operating-boundary review</h1>
