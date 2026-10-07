@@ -2260,18 +2260,124 @@ function EnterpriseReviewsSection() {
 }
 
 
+function TypewriterText({ text, speed = 7, delay = 0 }: { text: string; speed?: number; delay?: number }) {
+  const reduceMotion = useReducedMotion();
+  const [visibleText, setVisibleText] = useState(reduceMotion ? text : '');
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setVisibleText(text);
+      return;
+    }
+    setVisibleText('');
+    let index = 0;
+    let interval: number | undefined;
+    const start = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        index += 1;
+        setVisibleText(text.slice(0, index));
+        if (index >= text.length && interval) window.clearInterval(interval);
+      }, speed);
+    }, delay);
+    return () => {
+      window.clearTimeout(start);
+      if (interval) window.clearInterval(interval);
+    };
+  }, [delay, reduceMotion, speed, text]);
+
+  return <span>{visibleText}{!reduceMotion && visibleText.length < text.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</span>;
+}
+
+const reconstructionProofSteps = [
+  ['Settlement and fee records', 'Relevant settlement periods, fee events, reimbursements, reversals, offsets, and Amazon-recognized amounts within the defined scope.'],
+  ['Fulfillment and inventory events', 'Shipment, receiving, inventory, return, removal, and fulfillment records tied to the affected financial events.'],
+  ['Entity and marketplace context', 'Account, legal entity, marketplace, currency, reporting period, SKU, order, and shipment identifiers required to establish entitlement.'],
+  ['Financial reconciliation records', 'Expected entitlement, Amazon response, payout activity, ledger treatment, and remaining variance required to establish the final position.'],
+] as const;
+
+const reconstructionFindingSteps = [
+  ['Material exposure under review', '$184,220 indicated exposure · $96,480 currently supported'],
+  ['Found on', 'Jan 21, 2026, 04:37 PM'],
+  ['Amazon source / activity', 'Amazon settlement and financial records · Scope connected'],
+  ['What Margin found', 'Margin isolated a material exposure across settlement, fulfillment, and finance records. · $184,220 indicated · $96,480 supported'],
+  ['Financial position', 'Margin reconciled the marketplace activity, operating records, settlement position, and financial context to establish the supported exposure and remaining variance.'],
+  ['Why unresolved', 'The evidence position is established; the remaining action is subject to the defined finance approval gate.'],
+  ['Evidence used', 'US · CA · UK · DE · 3 entities · 8 reporting periods · Settlement and finance records connected'],
+] as const;
+
+function ReconstructionStep({ label, text, index, active, tone = 'default' }: { label: string; text: string; index: number; active: boolean; tone?: 'default' | 'accent' }) {
+  const reduceMotion = useReducedMotion();
+  const delay = index * 850;
+  return (
+    <motion.div
+      initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+      animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+      transition={reduceMotion ? { duration: 0 } : { delay: delay / 1000, duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      className="relative flex gap-3 py-2.5"
+    >
+      <div className="relative flex w-3 shrink-0 justify-center">
+        <motion.span
+          initial={reduceMotion ? false : { scale: 0, opacity: 0 }}
+          animate={active ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+          transition={reduceMotion ? { duration: 0 } : { delay: (delay + 250) / 1000, duration: 0.18 }}
+          className={cn('relative z-10 mt-1.5 h-[5px] w-[5px] rounded-full ring-2 ring-white', tone === 'accent' ? 'bg-[#0B74DE]' : 'bg-[#6A8795]')}
+          aria-hidden="true"
+        />
+        {index > 0 ? <motion.span initial={reduceMotion ? false : { scaleY: 0 }} animate={active ? { scaleY: 1 } : { scaleY: 0 }} transition={reduceMotion ? { duration: 0 } : { delay: (delay - 120) / 1000, duration: 0.32 }} style={{ transformOrigin: 'top' }} className="absolute bottom-1/2 left-1/2 w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /> : null}
+        {index < 20 ? <motion.span initial={reduceMotion ? false : { scaleY: 0 }} animate={active ? { scaleY: 1 } : { scaleY: 0 }} transition={reduceMotion ? { duration: 0 } : { delay: (delay + 620) / 1000, duration: 0.3 }} style={{ transformOrigin: 'top' }} className="absolute left-1/2 top-3 h-[calc(100%+6px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /> : null}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p>
+        <p className={cn('mt-1 text-[11px] leading-5', tone === 'accent' ? 'font-semibold text-[#0B74DE]' : 'text-[#4D5B66]')}><TypewriterText text={text} delay={delay + 430} /></p>
+      </div>
+    </motion.div>
+  );
+}
+
 function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boolean }) {
   const [mode, setMode] = useState<'finding' | 'proof'>('proof');
   const isProof = mode === 'proof';
+  const reduceMotion = useReducedMotion();
+  const headingText = isProof ? 'Artifacts Margin will collect.' : 'Cross-marketplace recovery exposure';
+  const headingSubtext = isProof
+    ? 'Margin will test the connected operating record across the defined marketplace and entity scope before requesting any additional evidence.'
+    : 'A material recovery exposure has been isolated across settlement, fulfillment, and finance records. · $184,220 indicated exposure · $96,480 currently supported';
+
   return (
-    <div className={`recognition-artifacts-visual relative ${compactMobile ? "max-h-[80vh] overflow-y-auto overscroll-contain touch-pan-y sm:max-h-none sm:overflow-visible" : "overflow-hidden"}`}>
-      <div className="mx-auto max-h-none w-full max-w-[900px] overflow-visible rounded-[10px] sm:max-h-[620px] sm:overflow-hidden border border-[#DCE8EE] bg-white text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.16)]">
-        <div className="flex items-start justify-between gap-4 border-b border-[#E9E9EC] px-4 pb-2.5 pt-3"><div><p className="text-[10px] text-[#8A99A5]">{isProof ? 'Proof required' : 'Finding detail'}</p><h3 className="mt-1 text-[20px] font-normal leading-tight tracking-tight">{isProof ? 'Artifacts Margin will collect.' : 'Cross-marketplace recovery exposure'}</h3><p className="mt-1 max-w-[610px] text-[10px] leading-4 tracking-tight text-[#6B7280]">{isProof ? 'Margin will test the connected operating record across the defined marketplace and entity scope before requesting any additional evidence.' : 'A material recovery exposure has been isolated across settlement, fulfillment, and finance records. · $184,220 indicated exposure · $96,480 currently supported'}</p></div><button type="button" aria-label="Close preview" className="text-[18px] leading-none text-[#9CA3AF]">×</button></div>
-        <div className="flex border-b border-[#E9E9EC] bg-[#FAFAFB] px-4 py-2"><button type="button" onClick={() => setMode('finding')} className={`mr-4 border-b-2 pb-1 text-[11px] font-medium tracking-tight ${!isProof ? 'border-[#0B74DE] text-[#0B74DE]' : 'border-transparent text-[#66737F]'}`}>View finding</button><button type="button" onClick={() => setMode('proof')} className={`border-b-2 pb-1 text-[11px] font-medium tracking-tight ${isProof ? 'border-[#0B74DE] text-[#0B74DE]' : 'border-transparent text-[#66737F]'}`}>Proof needed</button></div><div className="border-b border-[#E9E9EC] bg-white px-4 py-2"><p className="text-[10px] leading-4 tracking-tight text-[#66737F]">Review basis: <strong className="font-semibold text-[#182026]">Cross-marketplace entitlement and settlement reconciliation</strong> · Scope: <strong className="font-semibold text-[#182026]">US · CA · UK · DE · 3 entities · 8 reporting periods</strong></p></div>
-        {isProof ? <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]"><div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r"><div className="mb-3"><p className="mb-2 max-w-[560px] text-[10px] leading-4 tracking-tight text-[#98A5AE]">Settlement and entitlement review · 4 marketplaces · 3 entities · 8 reporting periods · REC-2026-0147 · Cross-marketplace recovery exposure</p><div className="flex gap-2"><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] text-[#182026]">Cross-marketplace exposure</span><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] font-medium text-[#182026]">Evidence under review</span></div></div><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Required documentation</p><div className="mt-2 border-y border-[#E9E9EC] py-1">{[['Settlement and fee records','Relevant settlement periods, fee events, reimbursements, reversals, offsets, and Amazon-recognized amounts within the defined scope.'],['Fulfillment and inventory events','Shipment, receiving, inventory, return, removal, and fulfillment records tied to the affected financial events.'],['Entity and marketplace context','Account, legal entity, marketplace, currency, reporting period, SKU, order, and shipment identifiers required to establish entitlement.'],['Financial reconciliation records','Expected entitlement, Amazon response, payout activity, ledger treatment, and remaining variance required to establish the final position.']].map(([label,copy], index, items) => <div key={label} className="relative flex gap-3 py-3 first:pt-2 last:pb-2"><div className="relative flex w-3 shrink-0 justify-center"><span className="relative z-10 mt-1.5 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" />{index < items.length - 1 && <span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" />}</div><div className="min-w-0"><p className="text-[11px] font-medium tracking-tight text-[#4D5B66]">{label}</p><p className="mt-1 text-[10px] leading-4 text-[#66737F]">{copy}</p></div></div>)}</div><div className="mt-3 border-t border-[#E9E9EC] pt-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin already found</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">Margin connected the exposure across US, CA, UK, and DE marketplace activity, three operating entities, settlement periods, fulfillment records, and finance data. The record trail preserves the event lineage required to separate supported exposure from unresolved variance before action is approved.</p></div><div className="mt-4 border-t border-[#E9E9EC] pt-3"><div className="space-y-3">{[['If proof is missing','Margin will continue testing connected repositories across the defined operating scope before requesting intervention. If a required source remains unavailable, the gap is recorded as a control limitation and assigned for resolution.'],['Why this proof matters','Margin tests the event against marketplace, entity, fulfillment, settlement, and financial records before treating the exposure as supported.']].map(([label,copy], index, items) => <div key={label} className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-1.5 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" />{index < items.length - 1 && <span className="absolute left-1/2 top-3 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" />}</div><div className="min-w-0"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">{copy}</p>{index === 0 && <p className="mt-1 text-[10px] leading-4 text-[#98A5AE]">The evidence search continues under the same controlled record.</p>}</div></div>)}</div></div></div><div className="px-4 py-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]">The evidence record preserves source lineage, operating scope, policy basis, and financial responsibility across the recovery position.</p></div></div> : <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]"><div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r"><div className="relative space-y-4 py-1"><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Material exposure under review</p><p className="mt-1 text-[11px] font-semibold leading-5 tracking-tight text-[#0B74DE]">$184,220</p></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Found on</p><p className="mt-1 text-[11px] font-semibold leading-5 text-[#182026]">Jan 21, 2026, 04:37 PM</p></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Amazon source / activity</p><p className="mt-1 text-[11px] font-semibold leading-5 text-[#182026]">Amazon settlement and financial records</p><span className="mt-2 inline-flex rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-0.5 text-[10px] font-semibold text-[#182026]">Scope connected</span></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin found</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">Margin isolated a material exposure across settlement, fulfillment, and finance records. · <strong className="font-semibold text-[#182026]">$184,220 indicated · $96,480 supported</strong></p><span className="mt-2 inline-flex rounded-[10px] border-0 bg-[#F6E3B8] px-2 py-0.5 text-[10px] font-semibold text-[#182026]">Material exception</span></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Financial position</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">Margin reconciled the marketplace activity, operating records, settlement position, and financial context to establish the supported exposure and remaining variance.</p><span className="mt-2 inline-flex rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-0.5 text-[10px] font-semibold text-[#182026]">Position established</span></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /><span className="absolute left-1/2 top-4 h-[calc(100%+1px)] w-px -translate-x-1/2 bg-[#C9D6DE]" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Why unresolved</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">The evidence position is established; the remaining action is subject to the defined finance approval gate.</p></div></div><div className="relative flex gap-3"><div className="relative flex w-2.5 shrink-0 justify-center"><span className="relative z-10 mt-2 h-[4px] w-[4px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" /></div><div className="min-w-0 flex-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence used</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">US · CA · UK · DE · 3 entities · 8 reporting periods · Settlement and finance records connected</p></div></div></div></div><div className="px-4 py-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]">The connected operating record establishes a supported exposure position and identifies the remaining variance for controlled review.</p></div></div>}
-
+    <div className={`recognition-artifacts-visual relative ${compactMobile ? 'max-h-[80vh] overflow-y-auto overscroll-contain touch-pan-y sm:max-h-none sm:overflow-visible' : 'overflow-hidden'}`}>
+      <div className="mx-auto w-full max-w-[900px] overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.16)]">
+        <div className="flex items-start justify-between gap-4 border-b border-[#E9E9EC] px-4 pb-2.5 pt-3">
+          <div>
+            <p className="text-[10px] text-[#8A99A5]">{isProof ? 'Proof required' : 'Finding detail'}</p>
+            <h3 className="mt-1 text-[20px] font-normal leading-tight tracking-tight">{headingText}</h3>
+            <p className="mt-1 max-w-[610px] text-[10px] leading-4 tracking-tight text-[#6B7280]"><TypewriterText key={headingSubtext} text={headingSubtext} speed={5} /></p>
+          </div>
+          <button type="button" aria-label="Close preview" className="text-[18px] leading-none text-[#9CA3AF]">×</button>
+        </div>
+        <div className="flex border-b border-[#E9E9EC] bg-[#FAFAFB] px-4 py-2">
+          <button type="button" onClick={() => setMode('finding')} className={`mr-4 border-b-2 pb-1 text-[11px] font-medium tracking-tight ${!isProof ? 'border-[#0B74DE] text-[#0B74DE]' : 'border-transparent text-[#66737F]'}`}>View finding</button>
+          <button type="button" onClick={() => setMode('proof')} className={`border-b-2 pb-1 text-[11px] font-medium tracking-tight ${isProof ? 'border-[#0B74DE] text-[#0B74DE]' : 'border-transparent text-[#66737F]'}`}>Proof needed</button>
+        </div>
+        <div className="border-b border-[#E9E9EC] bg-white px-4 py-2"><p className="text-[10px] leading-4 tracking-tight text-[#66737F]">Review basis: <strong className="font-semibold text-[#182026]">Cross-marketplace entitlement and settlement reconciliation</strong> · Scope: <strong className="font-semibold text-[#182026]">US · CA · UK · DE · 3 entities · 8 reporting periods</strong></p></div>
+        {isProof ? (
+          <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r">
+              <div className="mb-3"><p className="mb-2 max-w-[560px] text-[10px] leading-4 tracking-tight text-[#98A5AE]">Settlement and entitlement review · 4 marketplaces · 3 entities · 8 reporting periods · REC-2026-0147 · Cross-marketplace recovery exposure</p><div className="flex gap-2"><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] text-[#182026]">Cross-marketplace exposure</span><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] font-medium text-[#182026]">Evidence under review</span></div></div>
+              <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Required documentation</p>
+              <div className="mt-2 border-y border-[#E9E9EC] py-1">{reconstructionProofSteps.map(([label, text], index) => <ReconstructionStep key={label} label={label} text={text} index={index} active={reduceMotion || true} />)}</div>
+              <div className="mt-3 border-t border-[#E9E9EC] pt-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin already found</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="Margin connected the exposure across US, CA, UK, and DE marketplace activity, three operating entities, settlement periods, fulfillment records, and finance data." /></p></div>
+            </div>
+            <div className="px-4 py-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="The evidence record preserves source lineage, operating scope, policy basis, and financial responsibility across the recovery position." /></p></div>
+          </div>
+        ) : (
+          <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r">
+              <div className="relative py-1">{reconstructionFindingSteps.map(([label, text], index) => <ReconstructionStep key={label} label={label} text={text} index={index} active={reduceMotion || true} tone={index === 0 ? 'accent' : 'default'} />)}</div>
+            </div>
+            <div className="px-4 py-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="The connected operating record establishes a supported exposure position and identifies the remaining variance for controlled review." /></p></div>
+          </div>
+        )}
       </div>
-
     </div>
   );
 }
