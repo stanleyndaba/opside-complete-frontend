@@ -1417,9 +1417,9 @@ const Login = () => {
       </div>
       <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Left Side: Form */}
-        <div className="flex flex-1 items-center justify-center bg-white/55 px-6 py-8 backdrop-blur-[2px] sm:px-8 lg:py-12">
-          <div className="w-full max-w-[380px]">
-            <div className="mb-8 flex flex-col items-start sm:mb-10">
+        <div className="flex flex-1 items-center justify-center bg-white/55 px-5 py-7 backdrop-blur-[2px] sm:px-8 lg:py-12">
+          <div className="w-full max-w-[420px] lg:max-w-[380px]">
+            <div className="mb-7 flex flex-col items-center sm:mb-10 sm:items-start">
               <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
                 <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
                 <span className="brand-wordmark font-merriweather text-[22px] font-semibold tracking-tight text-[#182026]">Margin</span>
@@ -1427,23 +1427,23 @@ const Login = () => {
             </div>
 
             <section>
-              <div className="mb-5 flex justify-start sm:mb-6">
+              <div className="mb-5 flex justify-center sm:mb-6 sm:justify-start">
                 <Link 
                   to={isAuditIntent ? "/audit" : "/"} 
-                  className="group flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026]"
+                  className="group flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#0B74DE]"
                 >
                   <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
                   Back to Margin
                 </Link>
               </div>
 
-              <div className="lg:hidden mb-6">
-                <h1 className="text-left text-[26px] font-bold leading-[1.15] tracking-[-0.035em] text-[#182026] sm:text-[30px] font-lora">
+              <div className="mb-6 lg:hidden">
+                <h1 className="text-center text-[28px] font-bold leading-[1.12] tracking-[-0.035em] text-[#182026] sm:text-left sm:text-[30px] font-lora">
                   {heading}
                 </h1>
                 {mode === 'signup' && (
-                  <div className="mt-3">
-                    <p className="text-[15px] leading-relaxed text-[#4D5B66]">
+                  <div className="mt-4">
+                    <p className="text-center text-[15px] leading-relaxed text-[#4D5B66] sm:text-left">
                       Create your free Margin account, run a read-only Recovery Audit, and see what your Amazon records support. Margin will show you what it finds and help you understand what—if anything—makes sense to do next.
                     </p>
                   </div>
@@ -1606,7 +1606,7 @@ const Login = () => {
                       <Button
                         type="submit"
                         disabled={loading || !clerkAuthLoaded}
-                        className="h-11 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
+                        className="h-12 w-full rounded-full bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50 lg:h-11 lg:rounded-md lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)]"
                       >
                         {loading ? (
                           mode === 'signup'
@@ -1634,7 +1634,7 @@ const Login = () => {
                       type="button"
                       onClick={handleEmailContinue}
                       disabled={loading || !clerkAuthLoaded}
-                      className="h-11 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
+                      className="h-12 w-full rounded-full border border-[#AEBBC4] bg-white px-8 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE] disabled:opacity-50 lg:h-11 lg:rounded-md lg:border-transparent lg:bg-[#0B74DE] lg:text-white lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)] lg:hover:border-transparent lg:hover:bg-[#075EBA]"
                     >
                       Continue
                     </Button>
@@ -1652,9 +1652,9 @@ const Login = () => {
                         variant="outline"
                         onClick={() => void startSocialOAuth('google')}
                         disabled={loading || !clerkAuthLoaded}
-                        className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
+                        className="h-14 w-full rounded-full border-[#0B74DE] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] hover:bg-[#075EBA] lg:h-11 lg:rounded-md lg:border-[#C8D6DF] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-[0_1px_2px_rgba(37,49,58,0.04)] lg:hover:bg-[#F3F6F8]"
                       >
-                        <GoogleMark className="mr-2 h-4 w-4" />
+                        <GoogleMark className="mr-2 h-5 w-5 rounded-full bg-white p-0.5 lg:h-4 lg:w-4 lg:bg-transparent lg:p-0" />
                         Continue with Google
                       </Button>
                       <p className="text-center text-[12px] leading-5 text-[#7B8790]">
@@ -1672,11 +1672,11 @@ const Login = () => {
                   {(mode === 'login' || mode === 'signup') ? (
                     <p className="pt-3 text-center text-[12px] leading-5 text-[#7B8790]">
                       {mode === 'signup' ? 'By creating an account, you agree to Margin’s ' : 'By continuing, you agree to Margin’s '}
-                      <Link to="/terms" className="text-[#4D5B66] underline decoration-[#B8C5CD] underline-offset-2 transition-colors hover:text-[#182026]">
+                      <Link to="/terms" className="font-semibold text-[#0B74DE] underline decoration-[#8CB9E8] underline-offset-2 transition-colors hover:text-[#075EBA]">
                         Terms
                       </Link>{' '}
                       and{' '}
-                      <Link to="/privacy" className="text-[#4D5B66] underline decoration-[#B8C5CD] underline-offset-2 transition-colors hover:text-[#182026]">
+                      <Link to="/privacy" className="font-semibold text-[#0B74DE] underline decoration-[#8CB9E8] underline-offset-2 transition-colors hover:text-[#075EBA]">
                         Privacy Policy
                       </Link>.
                     </p>
@@ -1698,7 +1698,7 @@ const Login = () => {
                           setClerkVerificationCode('');
                           setClerkVerificationMessage('');
                         }}
-                        className="whitespace-nowrap text-center transition-colors hover:text-[#182026]"
+                        className="whitespace-nowrap text-center text-[#0B74DE] transition-colors hover:text-[#075EBA]"
                       >
                         Have an account? Log in
                       </button>
@@ -1708,7 +1708,7 @@ const Login = () => {
                           type="button"
                           onClick={handleForgotPassword}
                           disabled={loading}
-                          className="whitespace-nowrap text-left transition-colors hover:text-[#182026] disabled:opacity-50"
+                          className="whitespace-nowrap text-left text-[#0B74DE] transition-colors hover:text-[#075EBA] disabled:opacity-50"
                         >
                           Forgot password?
                         </button>
@@ -1724,7 +1724,7 @@ const Login = () => {
                             setClerkVerificationCode('');
                             setClerkVerificationMessage('');
                           }}
-                          className="whitespace-nowrap text-left transition-colors hover:text-[#182026]"
+                          className="whitespace-nowrap text-left text-[#0B74DE] transition-colors hover:text-[#075EBA]"
                         >
                           New to Margin? Create account
                         </button>
