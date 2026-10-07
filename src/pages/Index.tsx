@@ -2149,14 +2149,14 @@ function RecoveryOutcomeExplorer() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
           <motion.div {...revealProps} className="order-1 lg:order-2 lg:sticky lg:top-28">
-            <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">Appeals</p>
-            <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">A rejection is</span> <span className="heading-tone-muted">a new piece of evidence.</span></h2>
+            <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">APPEALS</p>
+            <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">A rejection changes</span> <span className="heading-tone-muted">the control state—not the financial history.</span></h2>
             <div className="mt-6 max-w-[760px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
-              <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> When Amazon says no, the work shouldn&apos;t automatically stop. Margin examines the response, identifies what was challenged, determines what changed, and rebuilds the case when the evidence supports another action.</p>
-              <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> The rejection becomes part of the investigation.</p>
+              <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> An Amazon rejection can leave Finance with a disputed amount, an incomplete evidence trail, and no reliable way to determine whether the position should be strengthened, escalated, or closed.</p>
+              <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin classifies the rejection against the governed event, original submission scope, evidence population, policy basis, materiality, and response window. It separates supportable residual exposure from unsupported amounts and advances only the next action the records justify.</p>
             </div>
-            <p className="mt-5 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">You don&apos;t have to start again.</p>
-            <p className="mt-4 max-w-[760px] font-lora text-[19px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>The case gets stronger. The recovery keeps moving.</p>
+            <p className="mt-5 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">The case does not restart. The position is reassessed.</p>
+            <p className="mt-4 max-w-[760px] font-lora text-[19px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>Every rejection produces a controlled decision: strengthen, resubmit, escalate, monitor, or close.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden lg:order-1">
             <FinalDelegationPreview compactMobile expandedMobile src="/appeals-review" title="Appeals Review page preview" />
