@@ -1635,44 +1635,48 @@ const Login = () => {
                     </Button>
                   ) : null}
 
-                  {showPasswordStep ? (
-                    <div className="pt-1">
-                      <Button
-                        type="submit"
-                        disabled={loading || !clerkAuthLoaded}
-                        className="h-12 w-full rounded-full bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50 lg:h-11 lg:rounded-md lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)]"
-                      >
-                        {loading ? (
-                          mode === 'signup'
-                            ? 'Creating your secure account…'
-                            : mode === 'login'
-                              ? 'Signing you in securely…'
-                              : loadingStage === 'processing'
-                                ? 'Processing...'
-                                : loadingStage === 'securing'
-                                  ? 'Securing connection...'
-                                  : 'Opening secure signup...'
-                        ) : mode === 'signup' ? (
-                          clerkVerificationStep ? 'Verify email' : 'Create my free account'
-                        ) : mode === 'recovery' ? (
-                          'Update Password'
-                        ) : clerkVerificationStep ? (
-                          'Verify Code'
-                        ) : (
-                          'Sign in to Margin'
-                        )}
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button
-                      type="button"
-                      onClick={handleEmailContinue}
-                      disabled={loading || !clerkAuthLoaded}
-                      className="h-12 w-full rounded-full border border-[#AEBBC4] bg-white px-8 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE] disabled:opacity-50 lg:h-11 lg:rounded-md lg:border-transparent lg:bg-[#0B74DE] lg:text-white lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)] lg:hover:border-transparent lg:hover:bg-[#075EBA]"
-                    >
-                      Continue
-                    </Button>
-                  )}
+                  {emailEntryVisible || mode === 'recovery' || showPasswordStep ? (
+                    <>
+                      {showPasswordStep ? (
+                        <div className="pt-1">
+                          <Button
+                            type="submit"
+                            disabled={loading || !clerkAuthLoaded}
+                            className="h-12 w-full rounded-full bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50 lg:h-11 lg:rounded-md lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)]"
+                          >
+                            {loading ? (
+                              mode === 'signup'
+                                ? 'Creating your secure account…'
+                                : mode === 'login'
+                                  ? 'Signing you in securely…'
+                                  : loadingStage === 'processing'
+                                    ? 'Processing...'
+                                    : loadingStage === 'securing'
+                                      ? 'Securing connection...'
+                                      : 'Opening secure signup...'
+                            ) : mode === 'signup' ? (
+                              clerkVerificationStep ? 'Verify email' : 'Create my free account'
+                            ) : mode === 'recovery' ? (
+                              'Update Password'
+                            ) : clerkVerificationStep ? (
+                              'Verify Code'
+                            ) : (
+                              'Sign in to Margin'
+                            )}
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          type="button"
+                          onClick={handleEmailContinue}
+                          disabled={loading || !clerkAuthLoaded}
+                          className="h-12 w-full rounded-full border border-[#AEBBC4] bg-white px-8 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE] disabled:opacity-50 lg:h-11 lg:rounded-md lg:border-transparent lg:bg-[#0B74DE] lg:text-white lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)] lg:hover:border-transparent lg:hover:bg-[#075EBA]"
+                        >
+                          Continue
+                        </Button>
+                      )}
+                    </>
+                  ) : null}
 
                   {(mode === 'login' || mode === 'signup') && !showPasswordStep ? (
                     <div className="mb-5 space-y-3">
@@ -1688,7 +1692,7 @@ const Login = () => {
                         disabled={loading || !clerkAuthLoaded}
                         className="h-14 w-full rounded-full border-[#0B74DE] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] hover:bg-[#075EBA] lg:h-11 lg:rounded-md lg:border-[#C8D6DF] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-[0_1px_2px_rgba(37,49,58,0.04)] lg:hover:bg-[#F3F6F8]"
                       >
-                        <GoogleMark className="mr-2 h-6 w-6 rounded-full bg-white p-0.5 lg:h-4 lg:w-4 lg:bg-transparent lg:p-0" />
+                        <GoogleMark className="mr-2 h-7 w-7 shrink-0 rounded-full bg-white p-0.5 lg:h-4 lg:w-4 lg:bg-transparent lg:p-0" />
                         Continue with Google
                       </Button>
                       <p className="text-center text-[12px] leading-5 text-[#7B8790]">
