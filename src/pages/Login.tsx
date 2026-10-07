@@ -1443,7 +1443,7 @@ const Login = () => {
                   {heading}
                 </h1>
                 {mode === 'signup' && (
-                  <div className="mt-4">
+                  <div className="mt-4 hidden lg:block">
                     <p className="text-center text-[15px] leading-relaxed text-[#4D5B66] sm:text-left">
                       Create your free Margin account, run a read-only Recovery Audit, and see what your Amazon records support. Margin will show you what it finds and help you understand what—if anything—makes sense to do next.
                     </p>
@@ -1587,7 +1587,7 @@ const Login = () => {
                         <Mail aria-hidden="true" className="mr-3 h-5 w-5 text-[#52616C]" />
                         Sign in with Email
                       </Button>
-                      <div className="flex items-center gap-3 py-2 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
+                      <div className={`items-center gap-3 py-2 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7] ${mode === 'signup' ? 'hidden lg:flex' : 'flex'}`}>
                         <span className="h-px flex-1 bg-[#D8E3EA]" />
                         <span>or</span>
                         <span className="h-px flex-1 bg-[#D8E3EA]" />
@@ -1681,7 +1681,7 @@ const Login = () => {
 
                   {(mode === 'login' || mode === 'signup') && !showPasswordStep && emailEntryVisible ? (
                     <div className="mb-5 space-y-3">
-                      <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
+                      <div className={`items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7] ${mode === 'signup' ? 'hidden lg:flex' : 'flex'}`}>
                         <span className="h-px flex-1 bg-[#D8E3EA]" />
                         <span>or</span>
                         <span className="h-px flex-1 bg-[#D8E3EA]" />
