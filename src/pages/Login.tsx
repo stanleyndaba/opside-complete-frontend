@@ -1567,6 +1567,16 @@ const Login = () => {
                     <div className="space-y-3">
                       <Button
                         type="button"
+                        variant="outline"
+                        onClick={() => void startSocialOAuth('google')}
+                        disabled={loading || !clerkAuthLoaded}
+                        className="h-14 w-full rounded-full border-[#0B74DE] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] hover:bg-[#075EBA] lg:h-11 lg:rounded-md lg:border-[#C8D6DF] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-[0_1px_2px_rgba(37,49,58,0.04)] lg:hover:bg-[#F3F6F8]"
+                      >
+                        <GoogleMark className="mr-2 h-7 w-7 shrink-0 rounded-full bg-white p-0.5 lg:h-4 lg:w-4 lg:bg-transparent lg:p-0" />
+                        Continue with Google
+                      </Button>
+                      <Button
+                        type="button"
                         onClick={() => {
                           setEmailEntryVisible(true);
                           setError('');
@@ -1575,8 +1585,13 @@ const Login = () => {
                         className="h-14 w-full rounded-full border border-[#AEBBC4] bg-white px-5 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE]"
                       >
                         <Mail aria-hidden="true" className="mr-3 h-5 w-5 text-[#52616C]" />
-                        Sign in/up with Email
+                        Sign in with Email
                       </Button>
+                      <div className="flex items-center gap-3 py-2 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
+                        <span className="h-px flex-1 bg-[#D8E3EA]" />
+                        <span>or</span>
+                        <span className="h-px flex-1 bg-[#D8E3EA]" />
+                      </div>
                     </div>
                   )}
                   {error === '__SERVICE_PREPARING__' ? (
@@ -1664,7 +1679,7 @@ const Login = () => {
                     </>
                   ) : null}
 
-                  {(mode === 'login' || mode === 'signup') && !showPasswordStep ? (
+                  {(mode === 'login' || mode === 'signup') && !showPasswordStep && emailEntryVisible ? (
                     <div className="mb-5 space-y-3">
                       <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
                         <span className="h-px flex-1 bg-[#D8E3EA]" />
