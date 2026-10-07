@@ -9,14 +9,25 @@ type Props = {
 
 type FooterLink = {
   label: string;
-  href: string;
+  href?: string;
   external?: boolean;
 };
 
 const productLinks: FooterLink[] = [
-  { label: 'Recovery Audit', href: '/audit' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Security', href: '/security' }
+];
+
+const productDescriptors: FooterLink[] = [
+  { label: 'Recovery operations' },
+  { label: 'Evidence traceability' },
+  { label: 'Financial reconciliation' }
+];
+
+const teamDescriptors: FooterLink[] = [
+  { label: 'Operations teams' },
+  { label: 'Finance teams' },
+  { label: 'Founders & leadership' }
 ];
 
 const resourceLinks: FooterLink[] = [
@@ -76,6 +87,14 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
           {item.label}
         </span>
       </a>
+    );
+  }
+
+  if (!item.href) {
+    return (
+      <span className={className} style={{ color: '#94A3B8' }}>
+        {item.label}
+      </span>
     );
   }
 
@@ -185,8 +204,8 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               <p className="mt-6 max-w-[330px] text-[15px] leading-7 tracking-tight" style={{ color: '#CBD5E1' }}>
                 Financial recovery and reconciliation infrastructure for Amazon businesses.
               </p>
-              <p className="mt-4 max-w-[330px] text-sm leading-6 tracking-tight" style={{ color: '#64748B' }}>
-                A clear record of what happened, what is supported, and whether the money came back.
+              <p className="mt-4 max-w-[340px] text-sm leading-6 tracking-tight" style={{ color: '#64748B' }}>
+                Margin takes the recovery work off your team’s plate—from investigation and evidence through follow-through and financial close.
               </p>
             </div>
 
@@ -203,6 +222,14 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                   <FooterColumn title="Product" links={productLinks} />
                 </div>
               </div>
+              <div className="col-span-2 lg:col-span-1">
+                <div className="mt-8 lg:mt-0">
+                  <FooterColumn title="For Teams" links={teamDescriptors} />
+                </div>
+                <div className="mt-8">
+                  <FooterColumn title="How Margin works" links={productDescriptors} />
+                </div>
+              </div>
             </div>
 
             <div className="border-t border-gray-700 pt-8 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
@@ -217,7 +244,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                     href={`mailto:${email}`}
                     className="group block w-fit focus-visible:outline-none"
                   >
-                    <span className="block text-[11px] font-medium uppercase tracking-[0.04em] text-[#64748B]">{label}</span>
+                    <span className="block text-[11px] font-medium tracking-tight text-[#64748B]">{label}</span>
                     <span className="mt-1 block w-fit text-sm text-[#CBD5E1] transition-colors group-hover:text-white group-focus-visible:text-white">
                       {email}
                     </span>
