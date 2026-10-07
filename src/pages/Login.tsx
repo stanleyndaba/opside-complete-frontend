@@ -1568,7 +1568,6 @@ const Login = () => {
                       <Button
                         type="button"
                         onClick={() => {
-                          setMode('login');
                           setEmailEntryVisible(true);
                           setError('');
                         }}
@@ -1576,20 +1575,7 @@ const Login = () => {
                         className="h-14 w-full rounded-full border border-[#AEBBC4] bg-white px-5 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE]"
                       >
                         <Mail aria-hidden="true" className="mr-3 h-5 w-5 text-[#52616C]" />
-                        Sign in with Email
-                      </Button>
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          setMode('signup');
-                          setEmailEntryVisible(true);
-                          setError('');
-                        }}
-                        disabled={loading || !clerkAuthLoaded}
-                        className="h-14 w-full rounded-full border border-[#AEBBC4] bg-white px-5 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE]"
-                      >
-                        <Mail aria-hidden="true" className="mr-3 h-5 w-5 text-[#52616C]" />
-                        Sign up with Email
+                        Sign in/up with Email
                       </Button>
                     </div>
                   )}
