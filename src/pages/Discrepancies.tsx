@@ -73,7 +73,6 @@ export default function Discrepancies() {
   const unresolvedValue = estimatedValue - readyValue;
   const readyCount = findings.filter((finding) => finding.status === 'Ready').length;
   const reviewCount = findings.filter((finding) => finding.status === 'In review').length;
-  const openCount = findings.filter((finding) => finding.status === 'Open').length;
 
   const markerTone: Record<Finding["tone"], string> = {
     muted: 'bg-[#9AA7B0]',
@@ -97,19 +96,10 @@ export default function Discrepancies() {
             <div className="text-[11px] font-medium text-[#0B74DE]">Issues found are recorded as controlled financial positions—not alerts. Each position carries its event identity, source population, financial basis, evidence state, and accountable next step.</div>
             <div className="text-[10px] font-medium text-[#4B5563]">FY2026 Q1 · 4 legal entities · 5 marketplaces · 11 connected source families · read-only control view</div>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-y border-[#E2E9EC] py-3 sm:grid-cols-4 sm:divide-x sm:divide-[#E2E9EC]">
-            {[
-              ['Detected exposure', money.format(estimatedValue), 'Full position under review'],
-              ['Supported exposure', money.format(readyValue), `${readyCount} evidence-ready positions`],
-              ['Unresolved exposure', money.format(unresolvedValue), `${reviewCount} positions in reconciliation`],
-              ['Open exceptions', String(openCount), 'Require controlled resolution'],
-            ].map(([label, value, detail]) => (
-              <div key={label} className="min-w-0 px-0 sm:px-4 first:sm:pl-0 last:sm:pr-0">
-                <p className="text-[9px] font-medium tracking-tight text-[#66737F]">{label}</p>
-                <p className="mt-1 text-[14px] font-semibold leading-tight tracking-tight text-[#182026]">{value}</p>
-                <p className="mt-1 text-[9px] leading-3.5 tracking-tight text-[#8A99A3]">{detail}</p>
-              </div>
-            ))}
+          <div className="mt-4 border-y border-[#E2E9EC] py-4 sm:py-5">
+            <p className="max-w-5xl text-[12px] leading-6 tracking-tight text-[#66737F] sm:text-[13px] sm:leading-7">
+              The current review population represents <span className="font-semibold text-[#182026]">{money.format(estimatedValue)} in detected exposure</span>. Of that position, <span className="font-semibold text-[#1769AA]">{money.format(readyValue)}</span> is currently supported by evidence across <span className="font-semibold text-[#1769AA]">{readyCount} evidence-ready positions</span>, while <span className="font-semibold text-[#8A641B]">{money.format(unresolvedValue)}</span> remains unresolved across <span className="font-semibold text-[#8A641B]">{reviewCount} positions still in reconciliation</span>.
+            </p>
           </div>
           <div className="mt-4 flex max-w-[260px] items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3 h-9"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search control register" className="w-full bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div>
           <div className="mt-3 flex flex-wrap items-center gap-2">
