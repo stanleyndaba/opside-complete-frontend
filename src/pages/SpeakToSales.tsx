@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { Check, Files, Layers3, ListChecks, Search, SlidersHorizontal } from 'lucide-react';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
@@ -77,9 +76,6 @@ export default function SpeakToSales() {
             <p className="text-[11px] font-medium tracking-tight text-[#595E68]">Northstar Home US · Enterprise Financial Review</p>
             <p className="mt-0.5 text-[10px] tracking-tight text-[#858792]">31 August 2026 — 13:41 UTC</p>
           </div>
-          <Link to="/" title="Margin home" className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
-            <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
-          </Link>
         </div>
         <nav aria-label="Enterprise assessment search" className="mx-auto max-w-[1280px] px-4 pb-2 sm:px-6 lg:px-6">
           <div className="flex h-8 items-center gap-2 rounded-[7px] border border-[#DCE3E7] bg-[#FBFCFC] px-3 text-[11px] text-[#858792] shadow-[0_1px_2px_rgba(25,27,32,0.03)]">
@@ -101,8 +97,8 @@ export default function SpeakToSales() {
           </aside>
           <div className="min-w-0 flex-1">
         <div className="flex flex-col gap-4">
-          <article id="enterprise-assessment-record" className="enterprise-assessment-record relative order-1 min-w-0 rounded-none border border-[#DCE8EE] bg-white px-0 py-5 shadow-none sm:rounded-[10px] sm:px-6 sm:py-5 sm:shadow-[0_1px_2px_rgba(24,32,38,0.03)]" aria-labelledby="talk-to-sales-title">
-            <div aria-label="Enterprise assessment timeline" className="pointer-events-none absolute bottom-8 left-3 top-8 flex w-6 flex-col items-center justify-between">
+          <article id="enterprise-assessment-record" className="enterprise-assessment-record relative order-1 min-w-0 rounded-none bg-white px-0 py-5 shadow-none sm:px-6 sm:py-5" aria-labelledby="talk-to-sales-title">
+            <div aria-label="Enterprise assessment timeline" className="pointer-events-none absolute bottom-8 left-2 top-8 flex w-6 flex-col items-center justify-between">
               <span aria-hidden="true" className="absolute bottom-2 top-2 w-px bg-[#C9D6DE]" />
               {assessmentTimeline.map((stage) => (
                 <span key={stage} className="relative z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067] shadow-[0_0_0_3px_white]" title={stage}>
@@ -110,7 +106,7 @@ export default function SpeakToSales() {
                 </span>
               ))}
             </div>
-            <div className="enterprise-assessment-copy pl-8" style={{ zoom: 0.75 }}>
+            <div className="enterprise-assessment-copy pl-12" style={{ zoom: 0.75 }}>
             <header className="pb-5">
               <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Enterprise financial-control assessment</mark></p>
               <h1 id="talk-to-sales-title" className="mt-1.5 max-w-2xl font-google-sans text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[24px]">Recovery operating-boundary review</h1>
