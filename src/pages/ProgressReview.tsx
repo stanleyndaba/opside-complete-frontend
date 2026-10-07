@@ -31,7 +31,14 @@ const events: ProgressEvent[] = [
 export default function ProgressReview() {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [animationCycle, setAnimationCycle] = useState(0);
   const reduceMotion = useReducedMotion();
+
+  React.useEffect(() => {
+    if (reduceMotion) return;
+    const cycle = window.setInterval(() => setAnimationCycle((current) => current + 1), 16000);
+    return () => window.clearInterval(cycle);
+  }, [reduceMotion]);
   const getDocumentIcon = (event: ProgressEvent, doc: string) => {
     if (event.status === "partial reimbursement identified") return { src: "/gmailicon.png", alt: "Amazon response" };
     if (doc.toLowerCase().endsWith(".csv")) return { src: "/evidence-csv-mark.png", alt: "CSV" };
@@ -66,7 +73,7 @@ export default function ProgressReview() {
         <section className="rounded-[5px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
         <div className="mb-4 pb-3"><p className="text-[11px] font-medium tracking-tight text-[#66737F]">Governed financial control record</p><h1 className="mt-0.5 font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Progress review</h1><p className="mt-1 text-[11px] leading-5 text-[#66737F]">The governed record of one Amazon financial event within a multi-source recovery control population—from source intake and causal reconstruction through controlled action, settlement verification, and closure.</p></div>
         <div className="space-y-1"><div className="text-[12px] font-medium tracking-tight text-[#182026]">EVT-FBA-2026-0001847 · Northstar Commerce LLC · Legal entity NTH-US-01 · Amazon US · FBA</div><div className="text-[11px] font-medium text-[#0B74DE]">The position is tracked from scope acceptance through evidence sufficiency, approval authority, controlled execution, response classification, settlement verification, and residual close state.</div><div className="text-[10px] font-medium text-[#4B5563]">Review period: 01 Jan–31 Mar 2026 · Source run: NTH-US-Q1-2026-0904 · Materiality: operational exception · Close state: partial outcome with residual under watch · Currency: USD</div></div>
-        <div className="mt-5">
+        <div key={animationCycle} className="mt-5">
           {events.map((event, index) => <motion.article key={`${event.date}-${event.status}`} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 1.05, duration: 0.34, ease: [0.22, 1, 0.36, 1] }} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
             {index < events.length - 1 ? <motion.span initial={reduceMotion ? false : { scaleY: 0 }} animate={{ scaleY: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 1.05 + 0.66, duration: 0.34, ease: [0.22, 1, 0.36, 1] }} style={{ transformOrigin: "top" }} className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
             <motion.span initial={reduceMotion ? false : { scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 1.05 + 0.42, duration: 0.2, ease: [0.22, 1, 0.36, 1] }} className="relative z-10 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded event"><Check className="h-3 w-3 text-white" strokeWidth={3} /></motion.span>

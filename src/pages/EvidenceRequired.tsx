@@ -129,7 +129,13 @@ const evidenceLog = [
 export default function EvidenceRequired() {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [animationCycle, setAnimationCycle] = useState(0);
   const reduceMotion = useReducedMotion();
+  React.useEffect(() => {
+    if (reduceMotion) return;
+    const cycle = window.setInterval(() => setAnimationCycle((current) => current + 1), 16000);
+    return () => window.clearInterval(cycle);
+  }, [reduceMotion]);
   const showDocument = (item: EvidenceItem) => {
     setToast(`${item.file} opened for review`);
     window.setTimeout(() => setToast(null), 2600);
@@ -162,6 +168,7 @@ export default function EvidenceRequired() {
           <h1 className="mt-1 font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Evidence control for EVT-FBA-2026-0001847</h1>
           <p className="mt-2 text-[12px] leading-5 tracking-tight text-[#66737F]">Northstar Commerce LLC · Legal entity NTH-US-01 · Amazon US · FBA · Review period: 01 Jan–31 Mar 2026 · Source run: NTH-US-Q1-2026-0904 · Materiality: operational exception · USD. Each record establishes a different part of the governed position; no document is treated as proof in isolation.</p>
         </header>
+        <div key={animationCycle}>
         <section className="px-5 pb-5 pt-4 sm:px-6">
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Governed evidence population</h2><span className="text-[11px] font-medium text-[#9AA7B0]">12 required · 10 available · 2 outstanding</span><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
           <div className="relative">
@@ -190,6 +197,7 @@ export default function EvidenceRequired() {
             </motion.div>)}
           </div>
         </section>
+        </div>
       </section>
       </div>
     </div>
