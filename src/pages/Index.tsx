@@ -1740,7 +1740,7 @@ function FooterNestedRecoveryVisual() {
   return (
     <section className="relative overflow-hidden bg-white py-10 sm:py-14 md:py-16" aria-label="Connected operational view visual">
       <div className={containerClass}>
-        <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Your records. Your decisions.</span> <span className="heading-tone-muted">Your financial certainty.</span></h2>
+        <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Take responsibility for one financial process.</span> <span className="heading-tone-muted">Then the next.</span></h2>
         <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} />
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
           <p className="mb-3 font-google-sans text-[15px] font-semibold tracking-tight text-[#182026]">Start with the financial position</p>
