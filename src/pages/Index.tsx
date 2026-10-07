@@ -2336,8 +2336,15 @@ function ReconstructionStep({ label, text, index, active, tone = 'default' }: { 
 
 function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boolean }) {
   const [mode, setMode] = useState<'finding' | 'proof'>('proof');
+  const [animationCycle, setAnimationCycle] = useState(0);
   const isProof = mode === 'proof';
   const reduceMotion = useReducedMotion();
+  useEffect(() => {
+    if (reduceMotion) return;
+    const cycleDuration = isProof ? 9000 : 11000;
+    const cycle = window.setInterval(() => setAnimationCycle((current) => current + 1), cycleDuration);
+    return () => window.clearInterval(cycle);
+  }, [isProof, reduceMotion]);
   const headingText = isProof ? 'Artifacts Margin will collect.' : 'Cross-marketplace recovery exposure';
   const headingSubtext = isProof
     ? 'Margin will test the connected operating record across the defined marketplace and entity scope before requesting any additional evidence.'
@@ -2359,6 +2366,7 @@ function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boo
           <button type="button" onClick={() => setMode('proof')} className={`border-b-2 pb-1 text-[11px] font-medium tracking-tight ${isProof ? 'border-[#0B74DE] text-[#0B74DE]' : 'border-transparent text-[#66737F]'}`}>Proof needed</button>
         </div>
         <div className="border-b border-[#E9E9EC] bg-white px-4 py-2"><p className="text-[10px] leading-4 tracking-tight text-[#66737F]">Review basis: <strong className="font-semibold text-[#182026]">Cross-marketplace entitlement and settlement reconciliation</strong> · Scope: <strong className="font-semibold text-[#182026]">US · CA · UK · DE · 3 entities · 8 reporting periods</strong></p></div>
+        <div key={`${mode}-${animationCycle}`}>
         {isProof ? (
           <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
             <div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r">
@@ -2377,6 +2385,7 @@ function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boo
             <div className="px-4 py-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="The connected operating record establishes a supported exposure position and identifies the remaining variance for controlled review." /></p></div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
