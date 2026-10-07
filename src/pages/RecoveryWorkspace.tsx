@@ -3,21 +3,21 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
 const operationSteps = [
-  'Approved',
-  'Existing supported incidents enter preparation',
-  'Evidence prepared',
-  'Submission presented for your review',
-  'You approve submission',
-  'Amazon response received',
-  'Payout checked',
-  'Recovered / Partially Recovered / Unresolved',
-  'Margin continues examining new account data'
+  'Decision-grade audit position established',
+  'Supported population isolated from unresolved signal',
+  'Evidence and settlement gaps assigned',
+  'Recommended operating boundary defined',
+  'Enterprise Control Pilot presented for approval',
+  'Margin carries investigation and execution',
+  'Settlement, attribution, and ledger state verified',
+  'Reconciled / Residual / Reversed / Held',
+  'Margin continues examining the account population'
 ];
 
 export default function RecoveryWorkspace() {
   usePageMeta({
     title: 'Recovery Workspace | Margin',
-    description: 'Review your Audit result and start your Recovery Workspace subscription.',
+    description: 'Review the Audit position and determine the appropriate enterprise recovery operating structure.',
     url: `${SITE_META.url}/recovery-workspace`,
     image: SITE_META.image,
   });
@@ -40,58 +40,58 @@ export default function RecoveryWorkspace() {
         <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
           <article className="order-1 min-w-0 rounded-none bg-white px-0 py-5 shadow-none sm:rounded-[16px] sm:px-6 sm:py-5 sm:shadow-[0_1px_2px_rgba(25,27,32,0.05)] lg:order-1" aria-labelledby="recovery-workspace-title">
             <header className="pb-5">
-              <h1 id="recovery-workspace-title" className="max-w-2xl font-google-sans text-[14px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[17px]">Audit establishes the account position</h1>
-              <p className="mt-2 inline-block max-w-2xl text-[13px] leading-5 text-[#595E68] sm:text-[14px]">Audit coverage established across <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">3,214 orders, 41 inbound shipments, 22 returns, 17 fee records, and 86 inventory movements</mark> in 7 minutes.</p>
-              <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">The same recovery condition appears across <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">4 independent incidents</mark> in separate periods.</p>
-              <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">This is not one bounded event. The records indicate a <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">recurring recovery pattern</mark>.</p>
+              <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]">Illustrative audit population · decision-grade account position</p>
+              <h1 id="recovery-workspace-title" className="max-w-2xl font-google-sans text-[14px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[17px]">The Audit establishes the account&apos;s financial position</h1>
+              <p className="mt-2 inline-block max-w-2xl text-[13px] leading-5 text-[#595E68] sm:text-[14px]">Coverage established across <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">124,860 orders, 1,842 shipments, 7,630 returns, 31,940 fee records, and 28,600 inventory movements</mark> across 8 settlement periods.</p>
+              <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">The operating population spans <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">4 marketplaces and 3 legal entities</mark>, with 1,126 affected records across 318 SKUs.</p>
+              <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">This is not one bounded event. The records establish a <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">portfolio-level control position</mark>.</p>
             </header>
 
             <section className="py-4" aria-labelledby="what-we-found">
               <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Financial pattern</mark></p>
-              <h2 id="what-we-found" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Event-level finding</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">Inbound-shipment receiving variances</mark> appeared in <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">4 independent incidents</mark>:</p>
+              <h2 id="what-we-found" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Portfolio-level finding</h2>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">Inbound receiving variances</mark> recur across multiple settlement periods and marketplaces. The population requires event-level entitlement, evidence testing, settlement reconciliation, and entity attribution before recovery treatment is determined.</p>
               <ul className="mt-2 list-inside list-disc space-y-1.5 text-[14px] text-[#595E68]">
                 <li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">10 March 2026</mark> — 17 affected units across two related shipments; the receiving and inventory records diverge after the same supplier delivery</li>
                 <li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">24 March 2026</mark> — 9 affected units across one shipment; the settlement record does not reconcile to the receiving quantity</li>
                 <li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">9 April and 22 April 2026</mark> — 11 affected units across two shipments; settlement attribution remains unresolved</li>
               </ul>
-              <p className="mt-2 text-[14px] leading-6 text-[#595E68]">These are separate financial events, not duplicated records from one delivery, shipment, or settlement cycle.</p>
+              <p className="mt-2 text-[14px] leading-6 text-[#595E68]">The Audit separates independent financial events from duplicate records, recurring control failures, and already-accounted-for activity.</p>
             </section>
 
             <section className="py-4" aria-labelledby="what-this-means">
-              <h2 id="what-this-means" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What this means</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">A single recovery operation can address one supported event that has already happened.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">It does not establish whether the same control failure is continuing to create exposure in the account.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">Recover Once closes a defined incident. Workspace keeps the account under recurring examination so the next exposure does not wait for you to discover it.</mark></p>
+              <h2 id="what-this-means" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What this means for the operation</h2>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">A single recovery workflow can address one supported event. It does not establish whether the same control failure is recurring across the account.</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Margin distinguishes an isolated event from a repeated exposure pattern, then connects the pattern to the relevant marketplace, entity, settlement period, and evidence population.</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">The Audit determines whether the business needs a defined recovery, recurring examination, or an enterprise control boundary.</mark></p>
             </section>
 
             <section className="py-4" aria-labelledby="what-we-can-support">
-              <h2 id="what-we-can-support" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Evidence position</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Three incidents have evidence sufficient to enter preparation: shipment manifests, carrier receiving records, and inventory adjustments align for 31 of 44 affected units. One incident remains review-only until settlement and payout records establish the financial outcome.</p>
-              <p className="mt-3 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">What remains unverified:</mark></p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">For 13 affected units, the available records do not yet establish whether Amazon has already reimbursed the units or what amount, if any, remains outstanding. Margin will not count those units as recovered or recoverable until that question is answered.</p>
-              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">An unverified condition remains unresolved — it is not counted as recovered, recoverable, or cleared.</p>
+              <h2 id="what-we-can-support" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Evidence and control position</h2>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Margin has separated the reviewed population into supported, partially supported, settlement-pending, and unresolved positions. Supported records can move to controlled preparation; positions without sufficient evidence remain visible but are not counted as recoverable.</p>
+              <p className="mt-3 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">Current control population:</mark></p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">$184,200 indicated exposure · $88,200 evidence-ready · $96,000 requiring evidence or settlement review · 14 source gaps requiring additional documentation.</p>
+              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Unverified conditions remain unresolved — they are not counted as recovered, recoverable, or cleared.</p>
             </section>
 
             <section className="py-4" aria-labelledby="why-recovery-workspace">
-              <h2 id="why-recovery-workspace" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Why ongoing examination matters</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The account's existing <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">3 qualifying incidents are included</mark> in Workspace.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">You do not pay another recovery fee to have Margin work on those incidents.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Workspace is for sellers who want the account examined continuously enough that the next financial exposure does not depend on someone remembering to look for it.</p>
+              <h2 id="why-recovery-workspace" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Why the operating route matters</h2>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The Audit has established a population that requires more than a single bounded recovery and more than an ungoverned recurring queue.</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The recommended next step is an <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">Enterprise Control Pilot</mark> to establish ownership, evidence operations, approval points, and financial close requirements.</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">If the population is narrower than the enterprise boundary requires, Margin routes it to Recover Once or Recovery Workspace instead.</p>
             </section>
 
             <section className="py-4" aria-labelledby="what-covers">
-              <h2 id="what-covers" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What $109/month covers</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Workspace includes:</p>
+              <h2 id="what-covers" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What the control review establishes</h2>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The enterprise assessment establishes:</p>
               <ul className="mt-2 list-inside list-disc space-y-1.5 text-[14px] text-[#595E68]">
-                <li>Recurring account-level examination of connected Amazon data available to Margin</li>
-                <li>Identification and separation of new qualifying financial events</li>
-                <li>Evidence organization and preparation for qualifying, evidence-supported exposure</li>
-                <li>Recovery documentation and response preparation</li>
-                <li>Follow-through on submitted recovery matters</li>
-                <li>Deadline and status tracking</li>
-                <li>Payout and settlement checking where the required data is available</li>
-                <li>A recorded history of findings, submissions, Amazon decisions, reversals, settlements, and outcomes</li>
+                <li>Operating boundary across marketplaces, legal entities, catalogs, and settlement periods</li>
+                <li>Separation of supported exposure from unresolved signal</li>
+                <li>Evidence, settlement, attribution, and ledger control requirements</li>
+                <li>Ownership and approval points for consequential actions</li>
+                <li>Recovery documentation and response operating model</li>
+                <li>Deadline, reversal, and residual-position treatment</li>
+                <li>Recorded history of findings, decisions, settlements, and outcomes</li>
               </ul>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Each month, you can see:</p>
               <ul className="mt-2 list-inside list-disc space-y-1.5 text-[14px] text-[#595E68]">
@@ -119,19 +119,17 @@ export default function RecoveryWorkspace() {
 
             <section className="py-4" aria-labelledby="existing-incidents">
               <h2 id="existing-incidents" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Existing exposure: what happens first</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Your <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">4 incidents already identified by this Audit are included</mark>.</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">supported audit population identified here</mark> is available for operating-scope review.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Assuming the available evidence is sufficient, they typically enter evidence preparation within <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">1–2 business days after approval</mark>.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">New incidents follow their own preparation status and timing as new account data becomes available.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Amazon's response time is outside Margin's control.</p>
             </section>
 
             <section className="py-4" aria-labelledby="why-price">
-              <h2 id="why-price" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Why the fixed monthly control fee?</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">You are not paying a fixed monthly fee because Margin promises a recovery every month.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The fixed monthly fee keeps the <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">recurring examination, evidence work, follow-through, payout checking, and recovery history</mark> from returning to your own workload whenever the next issue appears.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">Recover Once means you bring each defined problem to Margin. Workspace means Margin keeps examining the account for the next one.</mark></p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">You pay a fixed monthly fee.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">You keep 100% of whatever Amazon reimburses.</mark></p>
+              <h2 id="why-price" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Why scope precedes commercial structure</h2>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">An enterprise control boundary cannot be priced responsibly before the operating population, evidence requirements, ownership model, and approval points are established.</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The Enterprise Control Pilot establishes the <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">control loop, evidence operations, follow-through, payout checking, and financial-close treatment</mark> required by the account.</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">The Audit determines the right operating structure before Margin recommends the commercial structure.</mark></p>
             </section>
 
             <section className="py-4" aria-labelledby="what-if-no">
@@ -173,7 +171,7 @@ export default function RecoveryWorkspace() {
                   <p className="mt-1 text-[14px] leading-6 text-[#595E68]">For a recurring problem you want Margin to keep examining and managing over time.</p>
                 </div>
               </div>
-              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">If you would rather only resolve the <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">4 incidents already identified</mark>, Recover Once remains available for that defined scope.</p>
+              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">If the supported population is narrower than the enterprise boundary requires, Recover Once or Recovery Workspace remains available for the defined scope.</p>
             </section>
 
             <section className="pt-5" aria-labelledby="what-you-control">
@@ -196,25 +194,25 @@ export default function RecoveryWorkspace() {
               </div>
 
               <div className="mt-4">
-                <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">What this costs</mark></p>
+                <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Recommended operating route</mark></p>
                 <div className="mt-1.5 flex items-baseline justify-between gap-4">
-                  <p className="text-[24px] font-semibold tracking-[-0.05em] text-[#191B20]">$109<span className="text-[15px] font-normal text-[#595E68]">/month</span></p>
+                  <p className="text-[20px] font-semibold tracking-[-0.04em] text-[#191B20]">Enterprise Control Pilot</p>
                 </div>
-                <p className="mt-2 text-[13px] font-normal leading-5 text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">0% recovery commission.</mark></p>
-                <p className="text-[13px] font-normal leading-5 text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">You keep 100% of Amazon reimbursements.</mark></p>
-                <p className="mt-1 text-[13px] leading-5 text-[#595E68]">No percentage of recovered money is charged.</p>
+                <p className="mt-2 text-[13px] font-normal leading-5 text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">$2,500–$25,000 scope-dependent.</mark></p>
+                <p className="text-[13px] font-normal leading-5 text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">Commercial structure follows the operating review.</mark></p>
+                <p className="mt-1 text-[13px] leading-5 text-[#595E68]">No payment or submission activity begins before scope and approval are agreed.</p>
               </div>
               
-              <div className="mt-3 pt-3"><p className="text-[12px] font-normal text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">Before you continue</mark></p><p className="mt-1.5 text-[12px] italic leading-5 text-[#595E68]">I approve Margin to begin Recovery Workspace at $109/month. I understand that the 4 incidents identified in this Audit are included, that Workspace provides ongoing examination and recovery work for qualifying, evidence-supported issues, and that Amazon makes the final decision on any submitted recovery matter. I understand that nothing is submitted without my approval.</p></div>
+              <div className="mt-3 pt-3"><p className="text-[12px] font-normal text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">Before you continue</mark></p><p className="mt-1.5 text-[12px] italic leading-5 text-[#595E68]">I understand that this Audit establishes an operating position, not a guaranteed recovery. I am requesting an Enterprise Control Pilot discussion to establish scope, responsibility, commercial structure, and approval points. Nothing is submitted without my approval.</p></div>
               
-              <button type="button" className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[8px] bg-[#3F51A8] px-4 text-[13px] font-medium text-white transition-colors hover:bg-[#31418D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">Start Recovery Workspace — $109/month</button>
+              <button type="button" className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[8px] bg-[#3F51A8] px-4 text-[13px] font-medium text-white transition-colors hover:bg-[#31418D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">Discuss an Enterprise Pilot</button>
               
               <div className="mt-2.5 text-center">
-                <p className="text-[11px] font-medium text-[#595E68]">0% commission · Keep 100% of Amazon reimbursements · Cancel anytime</p>
+                <p className="text-[11px] font-medium text-[#595E68]">Scope first · Seller approval required · Smaller routes remain available</p>
               </div>
 
               <div className="mt-3 rounded-[8px] bg-[#F9F9F6] p-4 text-[12px] leading-5 text-[#595E68]">
-                <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Not ready?</mark> Tell us what's unclear: the pattern found, what Workspace covers, what "ongoing" means, the price, or how it differs from Recover Once.
+                <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Not ready?</mark> Tell us what is unclear: the audit population, evidence position, operating boundary, control-pilot scope, or how a smaller route would differ.
               </div>
             </div>
           </aside>

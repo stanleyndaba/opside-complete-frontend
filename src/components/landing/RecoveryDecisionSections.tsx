@@ -46,12 +46,13 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
           <div className="mb-5 flex items-center gap-3">
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">21 / THE AUDIT</span>
           </div>
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Know whether the account is clear — or carrying unresolved exposure.</h2>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Know the account&apos;s financial position before you decide what to hand over.</h2>
           <div className="audit-routing-body mt-6 max-w-[760px] space-y-4 text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">
             <p><span className="font-semibold text-[#182026]">Before:</span> The Audit begins with one financial question: Does the money reconcile at event level?</p>
-            <p><span className="font-semibold text-[#182026]">Now:</span> Margin examines shipments, returns, fees, reimbursements, settlements, and inventory movements as one financial record. It separates accounted-for activity from unsupported variance, unresolved exposure, and evidence-ready recovery.</p>
+            <p><span className="font-semibold text-[#182026]">Now:</span> Margin examines shipments, returns, fees, reimbursements, settlements, inventory movements, and related account records as one control population. It establishes what is accounted for, what is supported, what remains unresolved, what requires evidence, and what should not be treated as recoverable.</p>
           </div>
-          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>You leave knowing whether to act, what to hand off, and what you no longer need to carry as an open financial question.</p>
+          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit does not turn every variance into a claim. It establishes the operating position first.</p>
+          <p className="mt-4 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">You leave with a controlled view of the account—what requires action, what can be handed over, and what is already accounted for.</p>
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-2">
