@@ -2260,7 +2260,7 @@ function EnterpriseReviewsSection() {
 }
 
 
-function TypewriterText({ text, speed = 7, delay = 0, onComplete }: { text: string; speed?: number; delay?: number; onComplete?: () => void }) {
+function TypewriterText({ text, speed = 4, delay = 0, onComplete }: { text: string; speed?: number; delay?: number; onComplete?: () => void }) {
   const reduceMotion = useReducedMotion();
   const [visibleText, setVisibleText] = useState(reduceMotion ? text : '');
   useEffect(() => {
@@ -2332,7 +2332,7 @@ function ReconstructionStep({ label, text, index, status, tone = 'default', onCo
       <div className="min-w-0 flex-1">
         <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p>
         <p className={cn('mt-1 text-[11px] leading-5', tone === 'accent' ? 'font-semibold text-[#0B74DE]' : 'text-[#4D5B66]')}>
-          {isActive ? <TypewriterText text={text} speed={7} delay={180} onComplete={onComplete} /> : text}
+          {isActive ? <TypewriterText text={text} speed={4} delay={120} onComplete={onComplete} /> : text}
         </p>
       </div>
     </motion.div>
@@ -2364,7 +2364,7 @@ function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boo
           <div>
             <p className="text-[10px] text-[#8A99A5]">{isProof ? 'Proof required' : 'Finding detail'}</p>
             <h3 className="mt-1 text-[20px] font-normal leading-tight tracking-tight">{headingText}</h3>
-            <p className="mt-1 max-w-[610px] text-[10px] leading-4 tracking-tight text-[#6B7280]"><TypewriterText key={headingSubtext} text={headingSubtext} speed={5} /></p>
+            <p className="mt-1 max-w-[610px] text-[10px] leading-4 tracking-tight text-[#6B7280]"><TypewriterText key={headingSubtext} text={headingSubtext} speed={4} /></p>
           </div>
           <button type="button" aria-label="Close preview" className="text-[18px] leading-none text-[#9CA3AF]">×</button>
         </div>
