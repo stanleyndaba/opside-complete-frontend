@@ -43,9 +43,6 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
-          <div className="mb-5 flex items-center gap-3">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">21 / THE AUDIT</span>
-          </div>
           <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Know the account&apos;s financial position before you decide what to hand over.</h2>
           <div className="audit-routing-body mt-6 max-w-[760px] space-y-4 text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">
             <p><span className="font-semibold text-[#182026]">Before:</span> The Audit begins with one financial question: Does the money reconcile at event level?</p>
@@ -72,9 +69,6 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
           <FinalDelegationPreview compactMobile tallMobile src="/speak-to-sales" title="Enterprise Recovery Assessment page preview" />
         </motion.div>
         <motion.div {...revealProps} className="enterprise-routing-copy order-1 max-w-[780px] lg:order-2">
-          <div className="mb-5 flex items-center gap-3">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">20 / ENTERPRISE</span>
-          </div>
           <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Your finance team should not have to reconstruct the business from every recovery.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">At scale, recovery is no longer a sequence of isolated cases. It is a control problem across marketplaces, legal entities, catalogs, fulfilment networks, settlement periods, and operating teams. When those records are not connected, Finance cannot reliably determine what has been recovered, what remains exposed, who owns the position, or whether the outcome reached the books.</p>
           <p className="mt-4 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin establishes one accountable financial record across the recovery lifecycle. It connects the event, evidence, submission, Amazon response, settlement, reversal status, entity attribution, and close state. Your team monitors the position and approves consequential actions; Margin carries the investigation, execution, follow-through, and financial closeout.</p>
@@ -109,9 +103,6 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
   <section className="enterprise-onboarding-section relative overflow-hidden bg-[#F6F8F9] py-12 sm:py-14 md:py-20" aria-labelledby="enterprise-onboarding-title">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <motion.div {...revealProps} className="max-w-[850px]">
-        <div className="mb-5 flex items-center gap-3">
-          <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">22 / ENTERPRISE ONBOARDING</span>
-        </div>
         <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Your Amazon financials. Under control in 25 days.</h2>
         <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8">Know where things stand within days, then establish a defined path to financial control within 25 days. Margin works with your team to establish the facts, resolve what can be resolved, and put the right recovery processes in place—without turning implementation into another project for the business.</p>
       </motion.div>

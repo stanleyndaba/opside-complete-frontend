@@ -1186,3 +1186,24 @@ html, body, #root {
   background: #FFFFFF !important;
   background-color: #FFFFFF !important;
 }
+
+/* Final surface guard: Enterprise and Margin Standard are light editorial sections, regardless of positional theming. */
+.landing-google-sans.landing-google-sans > main > section.enterprise-routing-section,
+.landing-google-sans.landing-google-sans > main > section.margin-standard-deliverable-section {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+.landing-google-sans.landing-google-sans > main > section.enterprise-routing-section h2,
+.landing-google-sans.landing-google-sans > main > section.enterprise-routing-section p,
+.landing-google-sans.landing-google-sans > main > section.enterprise-routing-section .enterprise-routing-meta,
+.landing-google-sans.landing-google-sans > main > section.margin-standard-deliverable-section h2,
+.landing-google-sans.landing-google-sans > main > section.margin-standard-deliverable-section p {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans.landing-google-sans > main > section.enterprise-routing-section h2 .heading-tone-muted,
+.landing-google-sans.landing-google-sans > main > section.margin-standard-deliverable-section h2 .heading-tone-muted {
+  color: #56646D !important;
+  -webkit-text-fill-color: #56646D !important;
+}
