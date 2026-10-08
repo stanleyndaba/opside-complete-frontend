@@ -159,7 +159,8 @@ function EnterpriseResponseBuild({ scope, complexity }: { scope: typeof enterpri
             const visible = reduceMotion || index <= activeItem;
             const active = reduceMotion || index === activeItem;
             const typedContent = reduceMotion ? item.text : active ? <FastAssessmentTypewriter text={item.text} onComplete={advance} /> : index < activeItem ? item.text : null;
-            const content = item.highlight ? <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightClasses[item.highlight]}`}>{typedContent}</mark> : typedContent;
+            const highlightComplete = reduceMotion || index < activeItem;
+            const content = item.highlight ? <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightComplete ? highlightClasses[item.highlight] : 'bg-transparent'}`}>{typedContent}</mark> : typedContent;
             return (
               <motion.div id={item.text === 'Why this requires an enterprise control boundary' ? 'why-escalated' : item.text === 'Material finding' ? 'what-we-found-sales' : undefined} key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className={item.kind === 'list' ? 'flex items-baseline gap-2 text-[14px] text-[#595E68]' : item.kind === 'heading' ? (item.tone === 'heading' ? 'mt-1.5 font-google-sans text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20]' : 'mt-3 font-google-sans text-[15px] leading-tight tracking-[-0.02em]') : item.kind === 'final' ? 'mt-3 text-[14px] leading-6 text-[#595E68]' : 'text-[14px] leading-6 text-[#595E68]'}>
                 {item.kind === 'list' ? <span className="text-[#8A99A3]">•</span> : null}{content}
