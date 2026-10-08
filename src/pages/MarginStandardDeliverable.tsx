@@ -132,7 +132,7 @@ export default function MarginStandardDeliverable() {
   const rows = view === "finding" ? findingRows : closeoutRows;
 
   return (
-    <main className="min-h-screen overflow-x-auto !bg-[#E7E9EB] font-google-sans text-[#202A31]" style={{ backgroundColor: "#E7E9EB" }}>
+    <main className="min-h-screen overflow-x-auto !bg-white font-google-sans text-[#202A31]" style={{ backgroundColor: "#FFFFFF" }}>
       <div className="mx-auto min-w-[600px] max-w-[820px] px-3 py-3 sm:px-4 sm:py-4"><section className="rounded-[8px] border border-white/80 bg-white/72 p-3 shadow-[0_1px_2px_rgba(49,62,72,0.04)] backdrop-blur-xl sm:p-4" aria-label="Amazon Financial Review actuarial control board">
         <header className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 flex-col items-start gap-2">

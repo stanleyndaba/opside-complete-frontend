@@ -1175,3 +1175,14 @@ html, body, #root {
   background: #050505 !important;
   background-color: #050505 !important;
 }
+
+/* Margin Standard deliverable must remain a pure-white inspection surface after positional surface rules. */
+.landing-google-sans.landing-google-sans > main > section.margin-standard-deliverable-section {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+.landing-google-sans.landing-google-sans > main > section.margin-standard-deliverable-section iframe {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+}
