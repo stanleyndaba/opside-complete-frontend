@@ -105,7 +105,6 @@ function EnterpriseResponseBuild({ scope, complexity }: { scope: typeof enterpri
   const reduceMotion = useReducedMotion();
   const [activeItem, setActiveItem] = useState(0);
   const items: AssessmentBuildItem[] = [
-    { kind: 'heading', text: 'Recovery operating-boundary review', tone: 'heading' },
     { kind: 'paragraph', text: `${formatNumber(scope.orders)} orders · ${formatNumber(scope.shipments)} shipments · ${formatNumber(scope.returns)} returns · ${formatNumber(scope.feeRecords)} fee records · ${formatNumber(scope.inventoryMovements)} inventory movements`, highlight: 'yellow' },
     { kind: 'paragraph', text: `Across ${scope.marketplaces} marketplaces from ${scope.dateRange}.`, highlight: 'blue' },
     { kind: 'paragraph', text: 'The review identified a cross-marketplace exposure population requiring an operating boundary, not a one-off claim workflow.' },
@@ -118,6 +117,19 @@ function EnterpriseResponseBuild({ scope, complexity }: { scope: typeof enterpri
     { kind: 'list', text: complexity.activityPeriods, highlight: 'purple' },
     { kind: 'list', text: complexity.signal, highlight: 'yellow' },
     { kind: 'final', text: 'The complexity is determined by the number of records, systems, entities, decisions, and financial states that must remain connected — not simply by the size of your business.', highlight: 'blue' },
+    { kind: 'heading', text: 'Material finding', tone: 'subheading' },
+    { kind: 'paragraph', text: 'The assessment identified a cross-marketplace exposure population requiring event-level entitlement, evidence sufficiency testing, settlement reconciliation, entity attribution, and reversal monitoring before financial closure.', highlight: 'yellow' },
+    { kind: 'heading', text: 'Operating scope', tone: 'subheading' },
+    { kind: 'paragraph', text: 'US, CA, UK, and DE marketplace recovery activity from January through August 2026. · 3 legal entities · 8 settlement periods', highlight: 'blue' },
+    { kind: 'heading', text: 'Evidence currently available', tone: 'subheading' },
+    { kind: 'paragraph', text: 'Settlement records, reimbursement events, shipment records, fee records, and inventory movement records are available for the affected transactions.', highlight: 'green' },
+    { kind: 'heading', text: 'Known control gaps', tone: 'subheading' },
+    { kind: 'paragraph', text: '14 affected transactions require additional supporting documentation before recoverable entitlement can be established.', highlight: 'purple' },
+    { kind: 'heading', text: 'Close requirement', tone: 'subheading' },
+    { kind: 'paragraph', text: 'No position is treated as recovered until approved, settled, attributed, and reconciled.', highlight: 'yellow' },
+    { kind: 'heading', text: 'Indicated recovery exposure', tone: 'subheading' },
+    { kind: 'paragraph', text: '$184,200', highlight: 'blue' },
+    { kind: 'final', text: 'Based on the records reviewed. This is an indicated exposure, not a promise that Amazon will reimburse this amount.', highlight: 'blue' },
   ];
   const highlightClasses: Record<string, string> = {
     yellow: 'bg-[#FFF1A8]',
@@ -139,6 +151,7 @@ function EnterpriseResponseBuild({ scope, complexity }: { scope: typeof enterpri
     <div className="enterprise-response-build">
       <header className="pb-5">
         <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] bg-[#F1F2F2] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">Enterprise financial-control assessment</mark></p>
+        <h1 id="talk-to-sales-title" className="mt-1.5 max-w-2xl font-google-sans text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[24px]">Recovery operating-boundary review</h1>
       </header>
       <section className="py-4" aria-labelledby="why-escalated">
         <div className="space-y-1.5">
@@ -148,7 +161,7 @@ function EnterpriseResponseBuild({ scope, complexity }: { scope: typeof enterpri
             const typedContent = reduceMotion ? item.text : active ? <FastAssessmentTypewriter text={item.text} onComplete={advance} /> : index < activeItem ? item.text : null;
             const content = item.highlight ? <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightClasses[item.highlight]}`}>{typedContent}</mark> : typedContent;
             return (
-              <motion.div id={item.tone === 'heading' && item.kind === 'heading' ? (index === 0 ? 'talk-to-sales-title' : 'why-escalated') : undefined} key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className={item.kind === 'list' ? 'flex items-baseline gap-2 text-[14px] text-[#595E68]' : item.kind === 'heading' ? (item.tone === 'heading' ? 'mt-1.5 font-google-sans text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20]' : 'mt-3 font-google-sans text-[15px] leading-tight tracking-[-0.02em]') : item.kind === 'final' ? 'mt-3 text-[14px] leading-6 text-[#595E68]' : 'text-[14px] leading-6 text-[#595E68]'}>
+              <motion.div id={item.text === 'Why this requires an enterprise control boundary' ? 'why-escalated' : item.text === 'Material finding' ? 'what-we-found-sales' : undefined} key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className={item.kind === 'list' ? 'flex items-baseline gap-2 text-[14px] text-[#595E68]' : item.kind === 'heading' ? (item.tone === 'heading' ? 'mt-1.5 font-google-sans text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20]' : 'mt-3 font-google-sans text-[15px] leading-tight tracking-[-0.02em]') : item.kind === 'final' ? 'mt-3 text-[14px] leading-6 text-[#595E68]' : 'text-[14px] leading-6 text-[#595E68]'}>
                 {item.kind === 'list' ? <span className="text-[#8A99A3]">•</span> : null}{content}
               </motion.div>
               );
@@ -187,7 +200,7 @@ export default function SpeakToSales() {
         </nav>
       </header>
 
-      <main className="font-google-sans mx-auto min-w-[760px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6">
+      <main className="font-google-sans mx-auto min-w-[900px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6">
         <div className="flex items-start gap-3 lg:gap-4">
           <aside aria-label="Enterprise assessment controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
             {assessmentRail.map(({ label, href, icon: Icon }, index) => (
@@ -209,18 +222,6 @@ export default function SpeakToSales() {
             </div>
             <div className="enterprise-assessment-copy pl-12" style={{ zoom: 0.75 }}>
             <EnterpriseResponseBuild scope={scope} complexity={complexity} />
-
-            <section className="py-4" aria-labelledby="what-we-found-sales">
-              <h2 id="what-we-found-sales" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Material finding</h2>
-              <p className="mt-1.5 text-[14px] font-normal leading-6 text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">The assessment identified a cross-marketplace exposure population requiring event-level entitlement, evidence sufficiency testing, settlement reconciliation, entity attribution, and reversal monitoring before financial closure.</mark></p>
-              <dl className="mt-3 divide-y divide-[#E8E7E1] border-y border-[#E8E7E1] text-[14px] leading-6">
-                <div className="grid gap-1 py-2 sm:grid-cols-[190px_1fr]"><dt className="text-[#777A82]">Operating scope</dt><dd className="text-[#595E68]">{enterpriseAuditFixture.findingScope} · {scope.legalEntities} legal entities · {scope.settlementPeriods} settlement periods</dd></div>
-                <div className="grid gap-1 py-2 sm:grid-cols-[190px_1fr]"><dt className="text-[#777A82]">Evidence currently available</dt><dd className="text-[#595E68]">{enterpriseAuditFixture.evidence}</dd></div>
-                <div className="grid gap-1 py-2 sm:grid-cols-[190px_1fr]"><dt className="text-[#777A82]">Known control gaps</dt><dd className="text-[#595E68]">{enterpriseAuditFixture.gaps}</dd></div>
-                <div className="grid gap-1 py-2 sm:grid-cols-[190px_1fr]" ><dt className="text-[#777A82]">Close requirement</dt><dd className="text-[#595E68]">No position is treated as recovered until approved, settled, attributed, and reconciled.</dd></div>
-              </dl>
-              <div className="mt-3 border-y border-[#E8E7E1] text-[13px] leading-5"><div className="grid gap-1 py-2.5 sm:grid-cols-[190px_1fr] sm:items-baseline"><dt className="font-semibold uppercase tracking-tight text-[10px] text-[#777A82]">Indicated recovery exposure</dt><dd className="font-google-sans text-[18px] leading-tight tracking-[-0.03em] text-[#191B20]">${formatNumber(enterpriseAuditFixture.exposure)}</dd></div><p className="border-t border-[#E8E7E1] py-2 text-[12px] leading-5 text-[#595E68]">Based on the records reviewed. This is an indicated exposure, not a promise that Amazon will reimburse this amount.</p></div>
-            </section>
 
             <section className="py-4" aria-labelledby="why-not-standard"><h2 id="why-not-standard" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Why this is not a standard workflow</h2><p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Recover Once is designed for a defined recovery with a clear beginning, end, and closeout.</p><p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Recovery Workspace is designed for recurring recovery work inside a defined operating scope.</p><p className="mt-1.5 text-[14px] font-normal leading-6 text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">This exposure requires a broader control boundary than either standard workflow provides.</mark></p><p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The right scope must be established from the evidence, operating shape, and financial responsibility the work requires: <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">the correct scope cannot be responsibly determined from the standard offer alone.</mark></p></section>
 
