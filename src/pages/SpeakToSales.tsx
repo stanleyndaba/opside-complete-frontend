@@ -1,4 +1,6 @@
+import { useEffect, useRef, useState } from 'react';
 import { Check, Files, Layers3, ListChecks, Search, SlidersHorizontal } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
@@ -58,6 +60,105 @@ const assessmentTimeline = [
   'Boundary decision prepared',
 ] as const;
 
+type AssessmentBuildItem = {
+  kind: 'heading' | 'paragraph' | 'list' | 'final';
+  text: string;
+  highlight?: string;
+  tone?: string;
+};
+
+function FastAssessmentTypewriter({ text, onComplete }: { text: string; onComplete?: () => void }) {
+  const reduceMotion = useReducedMotion();
+  const [visibleText, setVisibleText] = useState(reduceMotion ? text : '');
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setVisibleText(text);
+      onCompleteRef.current?.();
+      return;
+    }
+    setVisibleText('');
+    let index = 0;
+    let interval: number | undefined;
+    const start = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        index += 1;
+        setVisibleText(text.slice(0, index));
+        if (index >= text.length) {
+          if (interval) window.clearInterval(interval);
+          onCompleteRef.current?.();
+        }
+      }, 3);
+    }, 70);
+    return () => {
+      window.clearTimeout(start);
+      if (interval) window.clearInterval(interval);
+    };
+  }, [reduceMotion, text]);
+
+  return <>{visibleText}{!reduceMotion && visibleText.length < text.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</>;
+}
+
+function EnterpriseResponseBuild({ scope, complexity }: { scope: typeof enterpriseAuditFixture.scope; complexity: typeof enterpriseAuditFixture.complexity }) {
+  const reduceMotion = useReducedMotion();
+  const [activeItem, setActiveItem] = useState(0);
+  const items: AssessmentBuildItem[] = [
+    { kind: 'heading', text: 'Recovery operating-boundary review', tone: 'heading' },
+    { kind: 'paragraph', text: `${formatNumber(scope.orders)} orders · ${formatNumber(scope.shipments)} shipments · ${formatNumber(scope.returns)} returns · ${formatNumber(scope.feeRecords)} fee records · ${formatNumber(scope.inventoryMovements)} inventory movements`, highlight: 'yellow' },
+    { kind: 'paragraph', text: `Across ${scope.marketplaces} marketplaces from ${scope.dateRange}.`, highlight: 'blue' },
+    { kind: 'paragraph', text: 'The review identified a cross-marketplace exposure population requiring an operating boundary, not a one-off claim workflow.' },
+    { kind: 'paragraph', text: `Operating scope: ${scope.marketplaces} marketplaces · ${scope.legalEntities} legal entities · ${scope.settlementPeriods} settlement periods · ${complexity.recoveryCategories} recovery categories`, highlight: 'blue' },
+    { kind: 'heading', text: 'Why this requires an enterprise control boundary', tone: 'subheading' },
+    { kind: 'list', text: `${complexity.recoveryCategories} recovery categories`, highlight: 'purple' },
+    { kind: 'list', text: `${scope.marketplaces} marketplaces`, highlight: 'yellow' },
+    { kind: 'list', text: `${formatNumber(complexity.affectedRecords)} affected records`, highlight: 'blue' },
+    { kind: 'list', text: `${formatNumber(complexity.affectedSkus)} affected SKUs`, highlight: 'green' },
+    { kind: 'list', text: complexity.activityPeriods, highlight: 'purple' },
+    { kind: 'list', text: complexity.signal, highlight: 'yellow' },
+    { kind: 'final', text: 'The complexity is determined by the number of records, systems, entities, decisions, and financial states that must remain connected — not simply by the size of your business.', highlight: 'blue' },
+  ];
+  const highlightClasses: Record<string, string> = {
+    yellow: 'bg-[#FFF1A8]',
+    blue: 'bg-[#DDEBFF]',
+    green: 'bg-[#DDF4E5]',
+    purple: 'bg-[#E9DEFF]',
+  };
+
+  useEffect(() => {
+    setActiveItem(0);
+  }, [scope.orders]);
+
+  const advance = () => {
+    if (reduceMotion) return;
+    window.setTimeout(() => setActiveItem((current) => current + 1 >= items.length ? 0 : current + 1), 140);
+  };
+
+  return (
+    <div className="enterprise-response-build">
+      <header className="pb-5">
+        <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] bg-[#F1F2F2] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">Enterprise financial-control assessment</mark></p>
+      </header>
+      <section className="py-4" aria-labelledby="why-escalated">
+        <div className="space-y-1.5">
+          {items.map((item, index) => {
+            const visible = reduceMotion || index <= activeItem;
+            const active = reduceMotion || index === activeItem;
+            const typedContent = reduceMotion ? item.text : active ? <FastAssessmentTypewriter text={item.text} onComplete={advance} /> : index < activeItem ? item.text : null;
+            const content = item.highlight ? <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightClasses[item.highlight]}`}>{typedContent}</mark> : typedContent;
+            return (
+              <motion.div id={item.tone === 'heading' && item.kind === 'heading' ? (index === 0 ? 'talk-to-sales-title' : 'why-escalated') : undefined} key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className={item.kind === 'list' ? 'flex items-baseline gap-2 text-[14px] text-[#595E68]' : item.kind === 'heading' ? (item.tone === 'heading' ? 'mt-1.5 font-google-sans text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20]' : 'mt-3 font-google-sans text-[15px] leading-tight tracking-[-0.02em]') : item.kind === 'final' ? 'mt-3 text-[14px] leading-6 text-[#595E68]' : 'text-[14px] leading-6 text-[#595E68]'}>
+                {item.kind === 'list' ? <span className="text-[#8A99A3]">•</span> : null}{content}
+              </motion.div>
+              );
+          })}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export default function SpeakToSales() {
   usePageMeta({
     title: 'Request Enterprise Recovery Assessment | Margin',
@@ -69,7 +170,7 @@ export default function SpeakToSales() {
   const { scope, complexity } = enterpriseAuditFixture;
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-white font-sans text-[#191B20]">
+    <div className="min-h-screen overflow-x-auto bg-white font-sans text-[#191B20]">
       <header className="sticky top-0 z-50 border-b border-[#DCE3E7] bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-start gap-4 px-4 sm:px-6 lg:px-6">
           <div className="min-w-0 px-1.5 py-1.5">
@@ -86,7 +187,7 @@ export default function SpeakToSales() {
         </nav>
       </header>
 
-      <main className="font-google-sans mx-auto max-w-[1180px] px-4 py-5 sm:px-6 sm:py-5 lg:px-6">
+      <main className="font-google-sans mx-auto min-w-[760px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6">
         <div className="flex items-start gap-3 lg:gap-4">
           <aside aria-label="Enterprise assessment controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
             {assessmentRail.map(({ label, href, icon: Icon }, index) => (
@@ -107,20 +208,7 @@ export default function SpeakToSales() {
               ))}
             </div>
             <div className="enterprise-assessment-copy pl-12" style={{ zoom: 0.75 }}>
-            <header className="pb-5">
-              <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Enterprise financial-control assessment</mark></p>
-              <h1 id="talk-to-sales-title" className="mt-1.5 max-w-2xl font-google-sans text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[24px]">Recovery operating-boundary review</h1>
-              <p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#595E68]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">{formatNumber(scope.orders)} orders · {formatNumber(scope.shipments)} shipments · {formatNumber(scope.returns)} returns · {formatNumber(scope.feeRecords)} fee records · {formatNumber(scope.inventoryMovements)} inventory movements</mark></p>
-              <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">Across <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">{scope.marketplaces} marketplaces</mark> from <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">{scope.dateRange}</mark>.</p>
-              <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">The review identified a cross-marketplace exposure population requiring an operating boundary, not a one-off claim workflow.</p>
-              <p className="mt-1.5 max-w-2xl text-[13px] leading-5 text-[#595E68]">Operating scope: <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">{scope.marketplaces} marketplaces · {scope.legalEntities} legal entities · {scope.settlementPeriods} settlement periods · {complexity.recoveryCategories} recovery categories</mark></p>
-            </header>
-
-            <section className="py-4" aria-labelledby="why-escalated">
-              <h2 id="why-escalated" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Why this requires an enterprise control boundary</h2>
-              <ul className="mt-3 list-inside list-disc space-y-1.5 text-[14px] text-[#595E68]"><li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">{complexity.recoveryCategories} recovery categories</mark></li><li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">{scope.marketplaces} marketplaces</mark></li><li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">{formatNumber(complexity.affectedRecords)} affected records</mark></li><li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">{formatNumber(complexity.affectedSkus)} affected SKUs</mark></li><li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">{complexity.activityPeriods}</mark></li><li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">{complexity.signal}</mark></li></ul>
-              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">The complexity is determined by the number of records, systems, entities, decisions, and financial states that must remain connected — <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">not simply by the size of your business.</mark></p>
-            </section>
+            <EnterpriseResponseBuild scope={scope} complexity={complexity} />
 
             <section className="py-4" aria-labelledby="what-we-found-sales">
               <h2 id="what-we-found-sales" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Material finding</h2>
