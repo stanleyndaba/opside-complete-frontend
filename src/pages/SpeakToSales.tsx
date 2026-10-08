@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Check, Files, Layers3, ListChecks, Search, SlidersHorizontal } from 'lucide-react';
+import { Files, Layers3, ListChecks, Search, SlidersHorizontal } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
@@ -215,9 +215,7 @@ export default function SpeakToSales() {
             <div aria-label="Enterprise assessment timeline" className="pointer-events-none absolute bottom-8 left-2 top-8 flex w-6 flex-col items-center justify-between">
               <span aria-hidden="true" className="absolute bottom-2 top-2 w-px bg-[#C9D6DE]" />
               {assessmentTimeline.map((stage) => (
-                <span key={stage} className="relative z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067] shadow-[0_0_0_3px_white]" title={stage}>
-                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
-                </span>
+                <span key={stage} className="relative z-10 h-[7px] w-[7px] rounded-full bg-[#0B74DE] shadow-[0_0_0_3px_white]" title={stage} />
               ))}
             </div>
             <div className="enterprise-assessment-copy pl-12" style={{ zoom: 0.75 }}>
