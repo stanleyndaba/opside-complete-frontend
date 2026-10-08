@@ -1151,3 +1151,22 @@ html, body, #root {
   color: #274F62 !important;
   -webkit-text-fill-color: #274F62 !important;
 }
+
+/* Final landing canvas: pure white outside intentionally dark editorial surfaces. */
+.landing-google-sans {
+  background: #FFFFFF !important;
+}
+
+.landing-google-sans > main > section {
+  background-color: #FFFFFF !important;
+}
+
+.landing-google-sans > main > section:nth-child(18),
+.landing-google-sans > main > section:nth-child(20),
+.landing-google-sans > main > section:nth-child(22) {
+  background-color: #263438 !important;
+}
+
+.landing-google-sans > main > section.financial-work-proof-surface {
+  background-color: #050505 !important;
+}
