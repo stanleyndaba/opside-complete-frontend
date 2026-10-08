@@ -470,24 +470,31 @@ const heroSwarmParticles = Array.from({ length: 2460 }, (_, index) => {
 });
 
 function HeroSwarmBackground({ reduceMotion }: { reduceMotion: boolean | null }) {
-  const particles = useMemo(() => heroSwarmParticles, []);
+  const particles = useMemo(() => heroSwarmParticles.slice(0, 12), []);
   return (
-    <div className="pointer-events-none absolute inset-0 hidden overflow-hidden" aria-hidden="true">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_52%,rgba(11,116,222,0.09),transparent_34%),radial-gradient(circle_at_50%_78%,rgba(119,151,167,0.08),transparent_36%)]" />
-      <svg className="absolute left-[-8%] top-[8%] h-[84%] w-[116%] opacity-[0.9] sm:left-[-4%] sm:top-[6%] sm:h-[88%] sm:w-[108%]" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(255,255,255,0.38),transparent_28%),radial-gradient(circle_at_78%_72%,rgba(125,76,42,0.10),transparent_34%)]" />
+      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <motion.path
+          d="M -8 72 C 16 36, 30 94, 52 56 S 78 26, 108 44"
+          fill="none"
+          stroke="rgba(125,76,42,0.34)"
+          strokeWidth="0.7"
+          strokeLinecap="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={reduceMotion ? { pathLength: 1, opacity: 0.55 } : { pathLength: [0, 1, 1], opacity: [0, 0.58, 0] }}
+          transition={reduceMotion ? { duration: 0.8 } : { duration: 8, repeat: Infinity, ease: "easeInOut", times: [0, 0.45, 1] }}
+        />
         {particles.map((particle) => (
           <motion.circle
             key={particle.id}
             cx={particle.startX}
             cy={particle.startY}
-            r={particle.radius}
-            fill={particle.tone}
-            animate={reduceMotion ? { cx: particle.startX, cy: particle.startY, opacity: 0.58 } : {
-              cx: [particle.startX, particle.flowX, particle.flowX + particle.flowWidth, particle.flowX + particle.flowWidth * 1.35, particle.startX],
-              cy: [particle.startY, particle.flowY + particle.wave, particle.flowY - particle.wave, particle.flowY + particle.flowHeight, particle.startY],
-              opacity: [0.22, 0.58, 0.82, 0.62, 0.22],
-            }}
-            transition={reduceMotion ? { duration: 0 } : { duration: 30 + (particle.id % 7), delay: particle.delay, repeat: Infinity, ease: "easeInOut", times: [0, 0.28, 0.52, 0.76, 1] }}
+            r={particle.radius * 0.72}
+            fill="rgba(125,76,42,0.32)"
+            animate={reduceMotion ? { opacity: 0.32, scale: 1 } : { opacity: [0.12, 0.42, 0.12], scale: [0.8, 1.25, 0.8] }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 3.8 + (particle.id % 4) * 0.7, delay: particle.delay, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transformOrigin: `${particle.startX}px ${particle.startY}px` }}
           />
         ))}
       </svg>
@@ -514,21 +521,22 @@ function KineticHeroSection({
     <motion.section
       style={{ scale: reduceMotion ? 1 : heroScale, opacity: reduceMotion ? 1 : heroOpacity }}
       data-navbar-theme="light"
-      className="relative isolate flex min-h-svh overflow-hidden bg-white px-4 pb-16 pt-28 text-[#182026] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
+      className="relative isolate flex min-h-svh overflow-hidden bg-[#E8DCCB] px-4 pb-16 pt-28 text-[#2B211B] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
       aria-labelledby="margin-hero-title"
     >
       <HeroSwarmBackground reduceMotion={reduceMotion} />
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[1040px]">
           <div id="margin-hero-title" className="mt-6 max-w-[1040px] font-google-sans text-[42px] leading-[0.96] tracking-[-0.045em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] md:text-[82px] lg:text-[96px]" style={{ fontWeight: 400 }}>
-            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Financial recovery and reconciliation infrastructure for Amazon businesses.</motion.span>
+            <motion.span className="block text-[#2B211B]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Is everything actually okay with your Amazon business?</motion.span>
           </div>
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Margin reconciles the Amazon records behind your financial position, isolates unresolved exposure, and shows what is worth acting on.</motion.p>
-          <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-start gap-3 font-google-sans sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-6">
-            <Button onClick={onAuditCta} aria-label="Reconcile the account" className="landing-pressable group relative h-[54px] w-fit max-w-[270px] justify-start overflow-hidden rounded-[8px] bg-black px-5 font-google-sans text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(0,0,0,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#182026] sm:h-[56px] sm:w-auto sm:max-w-none sm:justify-center sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />Reconcile the account <ArrowRight className="ml-2 h-5 w-5" /></Button>
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#59483D] sm:mt-8 sm:text-[18px] sm:leading-8">Margin finds what needs attention, handles the recovery, and keeps going until you know what happened to the money.</motion.p>
+          <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-start gap-3 font-google-sans sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
+            <Button onClick={onAuditCta} aria-label="Get it handled" className="landing-pressable group relative h-[54px] w-fit max-w-[270px] justify-start overflow-hidden rounded-[8px] bg-[#2B211B] px-5 font-google-sans text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(71,43,25,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#4A3326] sm:h-[56px] sm:w-auto sm:max-w-none sm:justify-center sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />Get It Handled <ArrowRight className="ml-2 h-5 w-5" /></Button>
+            <Link to="/contact" className="inline-flex h-[54px] w-fit items-center rounded-[8px] border border-[#8D6B55] px-5 text-[15px] font-semibold text-[#4A3326] transition-colors hover:bg-white/25 sm:h-[56px] sm:px-7 sm:text-[16px]">Talk to Us</Link>
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1 }} className="mt-4 flex w-full max-w-[780px] flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center font-google-sans text-[11px] font-medium text-[#66737F] sm:mt-6 sm:justify-start sm:gap-x-5 sm:text-left sm:text-[12px]">
-            <span>No-cost audits</span><span className="text-[#A7B1B8]">·</span><span>Read-only start</span>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1 }} className="mt-4 flex w-full max-w-[780px] flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center font-google-sans text-[11px] font-medium text-[#6B574B] sm:mt-6 sm:justify-start sm:gap-x-5 sm:text-left sm:text-[12px]">
+            <span>Free to run</span><span className="text-[#A98D78]">·</span><span>Read-only access</span><span className="text-[#A98D78]">·</span><span>You approve every submission</span>
           </motion.div>
           {isFull ? <div className="mt-5 max-w-[430px] rounded-[8px] bg-[#F5F7F8] p-4 text-sm leading-6 text-[#52616A] shadow-[inset_0_0_0_1px_rgba(24,32,38,0.10)] backdrop-blur-xl"><div>We are onboarding a small batch of sellers right now.</div><div>Next batch opens in {nextBatchHours ?? 24} hours.</div></div> : null}
         </div>
