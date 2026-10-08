@@ -60,7 +60,7 @@ const stateTone: Record<Finding['tone'], string> = {
   red: 'bg-[#FFF1F2] text-[#A23A3A]',
 };
 
-function ControlTypewriter({ text, speed = 4, delay = 0, onComplete }: { text: string; speed?: number; delay?: number; onComplete?: () => void }) {
+function ControlTypewriter({ text, speed = 3, delay = 0, onComplete }: { text: string; speed?: number; delay?: number; onComplete?: () => void }) {
   const reduceMotion = useReducedMotion();
   const [visibleText, setVisibleText] = useState(reduceMotion ? text : '');
   const onCompleteRef = useRef(onComplete);

@@ -2279,9 +2279,11 @@ function EnterpriseReviewsSection() {
 }
 
 
-function TypewriterText({ text, speed = 4, delay = 0, onComplete }: { text: string; speed?: number; delay?: number; onComplete?: () => void }) {
+function TypewriterText({ text, speed = 3, delay = 0, onComplete }: { text: string; speed?: number; delay?: number; onComplete?: () => void }) {
   const reduceMotion = useReducedMotion();
   const [visibleText, setVisibleText] = useState(reduceMotion ? text : '');
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
   useEffect(() => {
     if (reduceMotion) {
       setVisibleText(text);
@@ -2296,7 +2298,7 @@ function TypewriterText({ text, speed = 4, delay = 0, onComplete }: { text: stri
         setVisibleText(text.slice(0, index));
         if (index >= text.length) {
           if (interval) window.clearInterval(interval);
-          onComplete?.();
+          onCompleteRef.current?.();
         }
       }, speed);
     }, delay);
@@ -2304,7 +2306,7 @@ function TypewriterText({ text, speed = 4, delay = 0, onComplete }: { text: stri
       window.clearTimeout(start);
       if (interval) window.clearInterval(interval);
     };
-  }, [delay, reduceMotion, speed, text, onComplete]);
+  }, [delay, reduceMotion, speed, text]);
   return <span>{visibleText}{!reduceMotion && visibleText.length < text.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</span>;
 }
 
@@ -2351,7 +2353,7 @@ function ReconstructionStep({ label, text, index, status, tone = 'default', onCo
       <div className="min-w-0 flex-1">
         <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p>
         <p className={cn('mt-1 text-[11px] leading-5', tone === 'accent' ? 'font-semibold text-[#0B74DE]' : 'text-[#4D5B66]')}>
-          {isActive ? <TypewriterText text={text} speed={4} delay={120} onComplete={onComplete} /> : text}
+          {isActive ? <TypewriterText text={text} speed={3} delay={70} onComplete={onComplete} /> : text}
         </p>
       </div>
     </motion.div>
@@ -2383,7 +2385,7 @@ function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boo
           <div>
             <p className="text-[10px] text-[#8A99A5]">{isProof ? 'Proof required' : 'Finding detail'}</p>
             <h3 className="mt-1 text-[20px] font-normal leading-tight tracking-tight">{headingText}</h3>
-            <p className="mt-1 max-w-[610px] text-[10px] leading-4 tracking-tight text-[#6B7280]"><TypewriterText key={headingSubtext} text={headingSubtext} speed={4} /></p>
+            <p className="mt-1 max-w-[610px] text-[10px] leading-4 tracking-tight text-[#6B7280]"><TypewriterText key={headingSubtext} text={headingSubtext} speed={3} /></p>
           </div>
           <button type="button" aria-label="Close preview" className="text-[18px] leading-none text-[#9CA3AF]">×</button>
         </div>
