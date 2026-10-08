@@ -1,3 +1,1156 @@
+@import url('https://fonts.googleapis.com/css2?family=Bitter:wght@100..900&family=Playfair+Display:wght@400;700&display=swap');
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Inter-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Inter-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Inter-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Inter-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Lora-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Lora-Bold.ttf') format('truetype');
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   GLOBAL TYPOGRAPHY — Surgical Foundation
+   ============================================================ */
+
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: 'Lora', Georgia, "Times New Roman", serif;
+  --font-google-sans: 'Google Sans', 'Product Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  
+  /* Margin Design Tokens */
+  --margin-canvas: #FAFAF7;
+  --margin-surface: #FFFFFF;
+  --margin-surface-alt: #F4F6F8;
+  --margin-border: #D8E3EA;
+  --margin-border-strong: #94A3B8;
+  --margin-border-subtle: #E2E8F0;
+  --margin-text-primary: #182026;
+  --margin-text-secondary: #475569;
+  --margin-text-muted: #94A3B8;
+  --margin-blue: #0B74DE;
+  --margin-blue-hover: #095fb8;
+  --margin-primary: #182026;
+  --margin-primary-hover: #2d3748;
+  --margin-success: #10B981;
+
+  /* Tailwind/Shadcn HSL Variables (Required for UI Components) */
+  --background: 0 0% 98%; /* #FAFAF7 approx */
+  --foreground: 206 20% 12%; /* #182026 */
+  --card: 0 0% 100%;
+  --card-foreground: 206 20% 12%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 206 20% 12%;
+  --primary: 210 90% 46%; /* #0B74DE */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 20% 96%;
+  --secondary-foreground: 206 20% 12%;
+  --muted: 210 20% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 210 20% 96%;
+  --accent-foreground: 206 20% 12%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 204 24% 89%; /* #D8E3EA */
+  --input: 204 24% 89%;
+  --ring: 210 90% 46%;
+  --radius: 0.5rem;
+}
+
+html, body, #root {
+  font-family: var(--font-sans);
+  background-color: #FAFAF7;
+  color: #182026;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 
+   SURGICAL RESET: Prevent any generic element from inheriting Inter 
+   if a brand font is explicitly requested on a parent.
+*/
+.font-lora, .font-lora * { font-family: var(--font-serif) !important; }
+.font-merriweather, .font-merriweather * { font-family: 'Merriweather', serif !important; }
+.font-playfair, .font-playfair * { font-family: 'Playfair Display', serif !important; }
+.landing-google-sans,
+.landing-google-sans * {
+  font-family: "Google Sans", var(--font-sans) !important;
+}
+.landing-google-sans .font-lora,
+.landing-google-sans .font-lora * {
+  font-family: var(--font-serif) !important;
+}
+.landing-navbar-google-sans,
+.landing-navbar-google-sans * {
+  font-family: "Google Sans", var(--font-sans) !important;
+}
+.landing-navbar-google-sans .brand-wordmark,
+.landing-navbar-google-sans .brand-wordmark * {
+  font-family: 'Merriweather', Georgia, serif !important;
+}
+.landing-google-sans h1,
+.landing-google-sans h2,
+.landing-google-sans h3,
+.landing-google-sans h4,
+.landing-google-sans h5,
+.landing-google-sans h6 {
+  font-family: "Google Sans", var(--font-sans) !important;
+}
+.font-google-sans, .font-google-sans * { font-family: var(--font-google-sans) !important; }
+
+.preview-google-sans,
+.preview-google-sans * {
+  font-family: var(--font-google-sans) !important;
+}
+
+.about-page h1,
+.about-page h2,
+.about-page h3,
+.about-page h4,
+.about-page blockquote,
+.about-page .about-small {
+  font-family: var(--font-google-sans) !important;
+}
+
+.about-page main > section:not(:first-of-type) {
+  border-color: var(--margin-border) !important;
+  padding-block: clamp(3.5rem, 7vw, 6.5rem);
+}
+
+.about-page [class*="text-[10px]"],
+.about-page [class*="text-[11px]"],
+.about-page [class*="text-[12px]"],
+.about-page [class*="text-[13px]"],
+.about-page [class*="text-[14px]"] {
+  font-family: var(--font-google-sans) !important;
+}
+
+.about-page table th,
+.about-page table td {
+  border-color: var(--margin-border) !important;
+}
+
+.about-page table th {
+  font-family: var(--font-google-sans) !important;
+}
+
+.contact-page h1,
+.contact-page h2,
+.contact-page h3,
+.contact-page h4,
+.contact-page .font-lora,
+.contact-page .font-mono,
+.contact-page [class*="text-[10px]"],
+.contact-page [class*="text-[11px]"],
+.contact-page [class*="text-[12px]"] {
+  font-family: var(--font-google-sans) !important;
+}
+
+.contact-page .contact-route-panel {
+  border-radius: 8px;
+  border-color: var(--margin-border) !important;
+  box-shadow: 0 18px 50px rgba(72, 103, 122, 0.08);
+}
+
+/* ============================================================
+   PWA DESKTOP POLISH — "Website → App" native feel
+   ============================================================ */
+
+@media all and (display-mode: standalone) {
+  .pwa-drag-region {
+    -webkit-app-region: drag;
+    app-region: drag;
+    user-select: none;
+  }
+
+  .pwa-drag-region button,
+  .pwa-drag-region a,
+  .pwa-drag-region input,
+  .pwa-drag-region [role="button"] {
+    -webkit-app-region: no-drag;
+    app-region: no-drag;
+  }
+  
+  html, body {
+    overscroll-behavior: none;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Premium Scrollbars */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(136, 136, 136, 0.2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(136, 136, 136, 0.5); }
+
+/* ============================================================
+   ANIMATIONS & UTILITIES
+   ============================================================ */
+
+@keyframes system-log-marquee-left { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+@keyframes system-log-marquee-right { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
+
+.system-log-track {
+  animation: system-log-marquee-left var(--duration, 42s) linear infinite;
+  will-change: transform;
+}
+
+.system-log-row[data-direction='right'] .system-log-track { animation-name: system-log-marquee-right; }
+
+.landing-pressable {
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.landing-pressable:hover { transform: scale(1.02); }
+.landing-pressable:active { transform: scale(0.97); }
+
+/* ============================================================
+   BRAND SPECIFICITY — Highest Priority
+   ============================================================ */
+
+.brand-wordmark {
+  font-family: 'Merriweather', Georgia, serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em;
+}
+
+/* Footer wordmarks live inside the landing Google Sans scope; keep the brand serif authoritative there. */
+.landing-google-sans .brand-wordmark,
+.landing-google-sans .brand-wordmark * {
+  font-family: 'Merriweather', Georgia, serif !important;
+}
+
+#margin-hero-title, #margin-hero-title * {
+  font-family: var(--font-google-sans) !important;
+  font-weight: 430 !important;
+}
+
+/* Final Fallback for Lora */
+.font-lora {
+  font-family: var(--font-serif) !important;
+  font-weight: 400;
+}
+
+/* Subtle Hero Swoosh */
+.agentic-scan-subtle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(255, 255, 255, 0.01) 48%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.01) 52%,
+    transparent 58%,
+    transparent 100%
+  );
+  transform: translate3d(-115%, 0, 0);
+  animation: agentic-scan 12s linear infinite;
+}
+
+@keyframes agentic-scan {
+  0% { transform: translate3d(-115%, 0, 0); }
+  100% { transform: translate3d(115%, 0, 0); }
+}
+
+.agentic-scan::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(255, 255, 255, 0.05) 48%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.05) 52%,
+    transparent 58%,
+    transparent 100%
+  );
+  transform: translate3d(-115%, 0, 0);
+  animation: agentic-scan 8s linear infinite;
+}
+
+/* Independent lifecycle marquees: each unit starts visible, crosses the lane,
+   then fades out at the opposite edge before looping again. */
+@keyframes margin-lifecycle-unit-left {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.18;
+  }
+  10% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+  }
+  87% {
+    opacity: 0.78;
+  }
+  100% {
+    transform: translate3d(136vw, 0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes margin-lifecycle-unit-right {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.18;
+  }
+  10% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+  }
+  87% {
+    opacity: 0.78;
+  }
+  100% {
+    transform: translate3d(-136vw, 0, 0);
+    opacity: 0;
+  }
+}
+
+.lifecycle-unit {
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+}
+
+.lifecycle-unit--left {
+  left: -18vw;
+  animation-name: margin-lifecycle-unit-left;
+}
+
+.lifecycle-unit--right {
+  right: -18vw;
+  animation-name: margin-lifecycle-unit-right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lifecycle-unit,
+  .lifecycle-unit--left,
+  .lifecycle-unit--right {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Desktop has more visual distance to cover, so keep its units at the calmer
+   large-screen pace without changing the mobile timing. */
+@media (min-width: 1024px) {
+  .relative.z-10 > div:nth-child(3n + 1) .lifecycle-unit {
+    animation-duration: 13.68s !important;
+  }
+
+  .relative.z-10 > div:nth-child(3n + 2) .lifecycle-unit {
+    animation-duration: 14.544s !important;
+  }
+
+  .relative.z-10 > div:nth-child(3n) .lifecycle-unit {
+    animation-duration: 15.408s !important;
+  }
+}
+
+/* Full Recovery Loop — quiet orchestration signals moving through the system. */
+@keyframes recovery-loop-signal-travel {
+  0% {
+    transform: translate3d(-120%, 0, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.72;
+  }
+  72% {
+    opacity: 0.72;
+  }
+  100% {
+    transform: translate3d(620%, 0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes recovery-loop-signal-vertical-travel {
+  0% {
+    transform: translate3d(0, -120%, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.72;
+  }
+  72% {
+    opacity: 0.72;
+  }
+  100% {
+    transform: translate3d(0, 620%, 0);
+    opacity: 0;
+  }
+}
+
+.recovery-loop-signal {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 18%;
+  background: linear-gradient(90deg, transparent, rgba(11, 116, 222, 0.85), transparent);
+  animation: recovery-loop-signal-travel 11s linear infinite;
+  will-change: transform, opacity;
+}
+
+.recovery-loop-signal--reverse {
+  animation-direction: reverse;
+  animation-delay: -3.5s;
+}
+
+.recovery-loop-signal-vertical {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(11, 116, 222, 0.85), transparent);
+  animation: recovery-loop-signal-vertical-travel 12s linear infinite;
+  will-change: transform, opacity;
+}
+
+.recovery-loop-signal-vertical--static {
+  animation: none;
+  opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recovery-loop-signal,
+  .recovery-loop-signal--reverse,
+  .recovery-loop-signal-vertical {
+    animation: none !important;
+    opacity: 0.35 !important;
+    transform: none !important;
+  }
+}
+
+/* Full Recovery Loop v2 — a living, text-led workflow orchestra. */
+.recovery-orchestra-canvas {
+  min-height: 470px;
+  background: #ffffff;
+}
+
+.recovery-orchestra-lines path {
+  fill: none;
+  stroke: #cbd5dc;
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+
+.recovery-orchestra-lines path.is-broken {
+  stroke-dasharray: 6 9;
+  stroke-linecap: round;
+}
+
+.recovery-orchestra-lines path.is-branch {
+  stroke: #b9c8d2;
+  stroke-dasharray: 2 8;
+  stroke-linecap: round;
+}
+
+.recovery-orchestra-signal {
+  position: absolute;
+  z-index: 30;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 999px;
+  background: var(--margin-blue);
+  box-shadow: 0 0 0 5px rgba(11, 116, 222, 0.1), 0 0 20px rgba(11, 116, 222, 0.42);
+  pointer-events: none;
+  will-change: left, top, opacity;
+}
+
+.recovery-event-unit {
+  position: absolute;
+  z-index: 20;
+  display: inline-flex;
+  min-width: 104px;
+  max-width: 148px;
+  transform: translate(-50%, -50%);
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 5px;
+  background: #f0f2f3;
+  padding: 7px 10px;
+  text-align: center;
+  transition: background-color 350ms ease, box-shadow 350ms ease, transform 350ms ease;
+}
+
+.recovery-event-unit--branch {
+  min-width: 96px;
+  max-width: 130px;
+  background: #f5f6f6;
+}
+
+.recovery-event-number {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  padding-top: 1px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  color: var(--margin-text-muted);
+}
+
+.recovery-event-label {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--margin-text-primary);
+}
+
+.recovery-event-check {
+  display: inline-flex;
+  width: 0;
+  height: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--margin-success);
+  opacity: 0;
+  transform: scale(0.65);
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  transition: width 350ms ease, height 350ms ease, opacity 350ms ease, transform 350ms ease;
+}
+
+.recovery-event-unit[data-active="true"] {
+  background: #e6eef5;
+  box-shadow: 0 8px 24px rgba(37, 49, 58, 0.08);
+  transform: translate(-50%, -50%) translateY(-2px);
+}
+
+.recovery-event-unit[data-active="true"] .recovery-event-check {
+  width: 14px;
+  height: 14px;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.recovery-mobile-orchestra {
+  padding-top: 4px;
+}
+
+.recovery-mobile-signal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  z-index: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(11, 116, 222, 0.78), transparent);
+  animation: recovery-mobile-orchestra-pulse 12s linear infinite;
+  pointer-events: none;
+}
+
+.recovery-mobile-signal--static {
+  animation: none;
+  opacity: 0.36;
+}
+
+@keyframes recovery-mobile-orchestra-pulse {
+  0% {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.78;
+  }
+  78% {
+    clip-path: inset(0 0 0 0);
+    opacity: 0.78;
+  }
+  100% {
+    clip-path: inset(100% 0 0 0);
+    opacity: 0;
+  }
+}
+
+.recovery-mobile-event {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 10px;
+}
+
+.recovery-mobile-event:last-child {
+  padding-bottom: 0;
+}
+
+.recovery-mobile-event-unit {
+  display: inline-flex;
+  max-width: min(100%, 340px);
+  align-items: center;
+  gap: 7px;
+  border-radius: 5px;
+  background: #f0f2f3;
+  padding: 7px 9px;
+  transition: background-color 350ms ease, box-shadow 350ms ease, transform 350ms ease;
+}
+
+.recovery-mobile-event[data-active="true"] .recovery-mobile-event-unit {
+  background: #e6eef5;
+  box-shadow: 0 7px 20px rgba(37, 49, 58, 0.07);
+  transform: translateX(3px);
+}
+
+.recovery-mobile-event[data-active="true"] .recovery-event-check {
+  width: 14px;
+  height: 14px;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.recovery-mobile-event--branch {
+  margin-left: 18px;
+}
+
+@media (min-width: 1024px) {
+  .recovery-event-unit[data-active="true"] {
+    box-shadow: 0 10px 30px rgba(37, 49, 58, 0.1), 0 0 0 1px rgba(11, 116, 222, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recovery-orchestra-signal {
+    box-shadow: none;
+  }
+
+  .recovery-event-unit,
+  .recovery-event-unit[data-active="true"],
+  .recovery-mobile-event-unit,
+  .recovery-mobile-event[data-active="true"] .recovery-mobile-event-unit {
+    transform: none;
+    transition: none;
+  }
+
+  .recovery-mobile-signal {
+    animation: none;
+    opacity: 0.36;
+  }
+}
+/* Reconciled Matter landing-page surface system */
+.landing-google-sans {
+  background: #F1EFE8 !important;
+}
+
+/* Receipt paper: explanation and established record */
+.landing-google-sans > main > section:nth-child(7),
+.landing-google-sans > main > section:nth-child(10),
+.landing-google-sans > main > section:nth-child(19),
+.landing-google-sans > main > section:nth-child(21) {
+  background-color: #F1EFE8 !important;
+}
+
+/* Ledger grey: investigation, evidence, and operational work */
+.landing-google-sans > main > section:nth-child(6),
+.landing-google-sans > main > section:nth-child(8),
+.landing-google-sans > main > section:nth-child(11),
+.landing-google-sans > main > section:nth-child(12),
+.landing-google-sans > main > section:nth-child(13),
+.landing-google-sans > main > section:nth-child(14),
+.landing-google-sans > main > section:nth-child(17) {
+  background-color: #D7D9D5 !important;
+  border-color: #BFC5C1 !important;
+}
+
+/* Oxidized paper: friction and unresolved records */
+.landing-google-sans > main > section:nth-child(5),
+.landing-google-sans > main > section:nth-child(15),
+.landing-google-sans > main > section:nth-child(16) {
+  background-color: #C7B8A8 !important;
+}
+
+/* Resolved graphite: decision and closure */
+.landing-google-sans > main > section:nth-child(18),
+.landing-google-sans > main > section:nth-child(20),
+.landing-google-sans > main > section:nth-child(22) {
+  background-color: #263438 !important;
+  color: #F1EFE8;
+}
+
+/* Keep copy readable on resolved surfaces without recolouring hero internals. */
+.landing-google-sans > main > section:nth-child(22) h2,
+.landing-google-sans > main > section:nth-child(22) p,
+.landing-google-sans > main > section:nth-child(22) label {
+  color: #F1EFE8;
+}
+
+/* Margin Standard is an inspectable light deliverable, not a resolved graphite surface. */
+.landing-google-sans > main > section.margin-standard-deliverable-section {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.margin-standard-deliverable-section h2,
+.landing-google-sans > main > section.margin-standard-deliverable-section p,
+.landing-google-sans > main > section.margin-standard-deliverable-section label {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+
+.landing-google-sans > main > section.margin-standard-deliverable-section iframe {
+  background-color: #FFFFFF !important;
+}
+
+/* Evidence plates: filed rather than floating. */
+.landing-google-sans > main > section:nth-child(6) article,
+.landing-google-sans > main > section:nth-child(11) article,
+.landing-google-sans > main > section:nth-child(13) article {
+  box-shadow: none !important;
+  border-radius: 2px !important;
+}
+
+/* Landing sections should meet cleanly without grey divider rules. */
+.landing-google-sans > main > section {
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+}
+
+/* The Reconstruction Gap is a soft editorial surface, protected from positional overrides. */
+.landing-google-sans > main > section.problem-surface {
+  background-color: #F3F5F5 !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.reconstruction-gap-surface {
+  background-color: #F6F8F9 !important;
+  color: #182026 !important;
+}
+
+/* Financial Work Proof is a black editorial surface with a white-to-grey hierarchy. */
+.landing-google-sans > main > section.financial-work-proof-surface {
+  background-color: #050505 !important;
+  color: #FFFFFF !important;
+}
+
+.landing-google-sans > main > section.financial-work-proof-surface h2 .heading-tone-dark,
+.landing-google-sans > main > section.financial-work-proof-surface h3,
+.landing-google-sans > main > section.financial-work-proof-surface span.font-lora {
+  color: #FFFFFF !important;
+}
+
+.landing-google-sans > main > section.financial-work-proof-surface h2 .heading-tone-muted {
+  color: #D6DDE1 !important;
+}
+
+.landing-google-sans > main > section.financial-work-proof-surface p {
+  color: #8F9BA3 !important;
+}
+
+/* Routing is intentionally a pure-white surface, regardless of section position. */
+.landing-google-sans > main > section.recovery-routing-section {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.recovery-routing-section .routing-copy h2,
+.landing-google-sans > main > section.recovery-routing-section .routing-copy p,
+.landing-google-sans > main > section.recovery-routing-section .routing-note p {
+  color: #182026 !important;
+}
+
+/* Enterprise is intentionally a pure-white section with a restrained finance hierarchy. */
+.landing-google-sans > main > section.enterprise-routing-section {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.enterprise-routing-section .enterprise-routing-copy h2,
+.landing-google-sans > main > section.enterprise-routing-section .enterprise-routing-copy > p {
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.enterprise-routing-section .enterprise-routing-meta,
+.landing-google-sans > main > section.enterprise-routing-section .enterprise-routing-meta p {
+  color: #98A5AE !important;
+}
+
+/* Audit is a soft near-white surface with charcoal and restrained grey copy. */
+.landing-google-sans > main > section.audit-routing-section {
+  background-color: #F6F8F9 !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.audit-routing-section .audit-routing-copy h2,
+.landing-google-sans > main > section.audit-routing-section .audit-routing-body,
+.landing-google-sans > main > section.audit-routing-section .audit-routing-body p {
+  color: #4D5B66 !important;
+}
+
+.landing-google-sans > main > section.audit-routing-section .audit-routing-copy h2,
+.landing-google-sans > main > section.audit-routing-section .audit-routing-body span {
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.audit-routing-section .audit-routing-lead {
+  color: #52616A !important;
+}
+
+/* Amazon Thread and When Things Go Wrong share the protected Audit palette. */
+.landing-google-sans > main > section.audit-palette-surface {
+  background-color: #F6F8F9 !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.audit-palette-surface h2,
+.landing-google-sans > main > section.audit-palette-surface p {
+  color: #4D5B66 !important;
+}
+
+.landing-google-sans > main > section.audit-palette-surface h2,
+.landing-google-sans > main > section.audit-palette-surface p span.font-semibold {
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.audit-palette-surface .font-mono {
+  color: #0B74DE !important;
+}
+
+/* Context shares the Audit section's soft near-white surface and restrained text palette. */
+.landing-google-sans > main > section.context-audit-surface {
+  background-color: #F6F8F9 !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface h2,
+.landing-google-sans > main > section.context-audit-surface p {
+  color: #4D5B66 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface h2,
+.landing-google-sans > main > section.context-audit-surface p span.font-semibold {
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .font-mono {
+  color: #66737F !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-audit-eyebrow {
+  color: #0B74DE !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .bg-white {
+  background-color: #FFFFFF !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-margin-wordmark {
+  color: #111827 !important;
+  font-family: 'Merriweather', Georgia, serif !important;
+  font-weight: 600 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge {
+  display: inline-flex;
+  align-items: center;
+  border: 0 !important;
+  border-radius: 999px;
+  padding: 0.5rem 0.7rem;
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
+  line-height: 1;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--green {
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--red {
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--yellow {
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--orange {
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--blue {
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
+}
+
+.landing-google-sans > main > section.context-audit-surface .context-source-badge--deep-blue {
+  background-color: #EEF1F2 !important;
+  color: #263438 !important;
+}
+
+/* One Record is a pure-white editorial surface, protected from positional landing overrides. */
+.landing-google-sans > main > section.one-record-audit-surface {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.one-record-audit-surface h2,
+.landing-google-sans > main > section.one-record-audit-surface p {
+  color: #4D5B66 !important;
+}
+
+.landing-google-sans > main > section.one-record-audit-surface h2,
+.landing-google-sans > main > section.one-record-audit-surface p span.font-semibold {
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.one-record-audit-surface .one-record-eyebrow {
+  color: #0B74DE !important;
+}
+
+/* Recovery Harness is a pure-white surface, protected from the core section overrides. */
+.landing-google-sans > main > section.recovery-harness-surface {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+
+.landing-google-sans > main > section.recovery-harness-surface .recovery-harness-card--guardrails {
+  background-color: #FFFFFF !important;
+}
+
+/* Section headings and the hero use Google Sans; Lora remains a selective editorial accent. */
+.landing-google-sans .font-lora:not(#margin-hero-title),
+.landing-google-sans .font-lora:not(#margin-hero-title) * {
+  font-family: "Google Sans", var(--font-sans) !important;
+}
+
+.landing-google-sans h1,
+.landing-google-sans h2,
+.landing-google-sans h3,
+.landing-google-sans h4,
+.landing-google-sans h5,
+.landing-google-sans h6 {
+  font-family: "Google Sans", var(--font-sans) !important;
+}
+
+/* Section headings carry a 15% stronger weight; the hero title remains separately controlled. */
+.landing-google-sans > main > section h2 {
+  font-weight: 460 !important;
+}
+
+/* Editorial two-tone hierarchy: explicit phrase colors, never a gradient. */
+.landing-google-sans > main > section h2:not([class*="text-white"]),
+.landing-google-sans > main > section h3:not([class*="text-white"]),
+.landing-google-sans > main > section h4:not([class*="text-white"]) {
+  background-image: none !important;
+  background-clip: border-box !important;
+  -webkit-background-clip: border-box !important;
+  color: #182026 !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+.landing-google-sans .heading-tone-dark {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+
+.landing-google-sans .heading-tone-muted {
+  color: #66737F !important;
+  -webkit-text-fill-color: #66737F !important;
+}
+
+/* Artifact visual field headings use normal sentence case and tight editorial tracking. */
+.landing-google-sans .recognition-artifacts-visual p.uppercase {
+  text-transform: none !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Financial Control animation: keep the rotating operation words in Lora despite the landing-wide font reset. */
+.landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-stage {
+  font-family: "Lora", Georgia, "Times New Roman", serif !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.landing-google-sans .recovery-routing-section .routing-card-heading {
+  color: #F4F6F7 !important;
+  -webkit-text-fill-color: #F4F6F7 !important;
+  font-weight: 500 !important;
+}
+.landing-google-sans > main > section.financial-work-proof-surface h2 .heading-tone-dark {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+.landing-google-sans > main > section.financial-work-proof-surface h2 .heading-tone-muted {
+  color: #66737F !important;
+  -webkit-text-fill-color: #66737F !important;
+}
+@media (max-width: 767px) {
+  .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-word-stack {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+
+  .landing-google-sans > main > section[aria-labelledby="financial-control-operations-title"] .financial-control-stage {
+    text-align: left !important;
+  }
+}
+
+/* Final FAQ palette guard: keep the FAQ hierarchy explicit against landing-wide color rules. */
+.landing-google-sans > main > section.trust-faq-section .trust-faq-eyebrow {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans > main > section.trust-faq-section .faq-trigger {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans > main > section.trust-faq-section .faq-answer,
+.landing-google-sans > main > section.trust-faq-section .faq-answer p {
+  color: #3F4650 !important;
+  -webkit-text-fill-color: #3F4650 !important;
+}
+.landing-google-sans > main > section.trust-faq-section .faq-more-button,
+.landing-google-sans > main > section.trust-faq-section .faq-more-button * {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+/* Final FAQ palette guard: this section is intentionally white, not graphite. */
+.landing-google-sans > main > section.trust-faq-section {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+.landing-google-sans > main > section.trust-faq-section h2,
+.landing-google-sans > main > section.trust-faq-section h2 .heading-tone-dark {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans > main > section.trust-faq-section h2 .heading-tone-muted {
+  color: #66737F !important;
+  -webkit-text-fill-color: #66737F !important;
+}
+.landing-google-sans > main > section.trust-faq-section button {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans > main > section.trust-faq-section [data-radix-accordion-content],
+.landing-google-sans > main > section.trust-faq-section [data-radix-accordion-content] p {
+  color: #66737F !important;
+  -webkit-text-fill-color: #66737F !important;
+}
+
+/* Routing card palette guard: the cards use soft white typography over their own warm surfaces. */
+.landing-google-sans > main > section.recovery-routing-section .routing-card-label,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-copy,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-item,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-item-icon,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-price,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-subprice {
+  color: #F0EEEA !important;
+  -webkit-text-fill-color: #F0EEEA !important;
+}
+.landing-google-sans > main > section.recovery-routing-section .routing-card-heading {
+  color: #F7F5F2 !important;
+  -webkit-text-fill-color: #F7F5F2 !important;
+}
+.landing-google-sans > main > section.recovery-routing-section .routing-card-price {
+  color: #FFFCF8 !important;
+  -webkit-text-fill-color: #FFFCF8 !important;
+}
+.landing-google-sans > main > section.recovery-routing-section .routing-card-button,
+.landing-google-sans > main > section.recovery-routing-section .routing-card-button * {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+
+
+/* Auto Submit is intentionally a light control surface; override positional theming. */
+.landing-google-sans > main > section.auto-submit-section {
+  background-color: #FFFFFF !important;
+  color: #182026 !important;
+}
+.landing-google-sans > main > section.auto-submit-section h2,
+.landing-google-sans > main > section.auto-submit-section p {
+  -webkit-text-fill-color: currentColor;
+}
+
+
+/* Auto Submit copy stays dark even when older positional surface rules match its section index. */
+.landing-google-sans > main > section.auto-submit-section .font-mono,
+.landing-google-sans > main > section.auto-submit-section h2,
+.landing-google-sans > main > section.auto-submit-section h2 .heading-tone-dark,
+.landing-google-sans > main > section.auto-submit-section h2 .heading-tone-muted,
+.landing-google-sans > main > section.auto-submit-section p {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans > main > section.auto-submit-section h2 .heading-tone-muted {
+  color: #56646D !important;
+  -webkit-text-fill-color: #56646D !important;
+}
+.landing-google-sans > main > section.auto-submit-section .font-lora {
+  color: #274F62 !important;
+  -webkit-text-fill-color: #274F62 !important;
+}
 
 /* Highest-priority landing canvas override: defeat older section-specific surface selectors. */
 .landing-google-sans.landing-google-sans,
