@@ -184,20 +184,13 @@ export default function SpeakToSales() {
 
   return (
     <div className="min-h-screen overflow-x-auto bg-white font-sans text-[#191B20]">
-      <header className="sticky top-0 z-50 border-b border-[#DCE3E7] bg-white/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-start gap-4 px-4 sm:px-6 lg:px-6">
           <div className="min-w-0 px-1.5 py-1.5">
             <p className="text-[11px] font-medium tracking-tight text-[#595E68]">Northstar Home US · Enterprise Financial Review</p>
             <p className="mt-0.5 text-[10px] tracking-tight text-[#858792]">31 August 2026 — 13:41 UTC</p>
           </div>
         </div>
-        <nav aria-label="Enterprise assessment search" className="mx-auto max-w-[1280px] px-4 pb-2 sm:px-6 lg:px-6">
-          <div className="flex h-8 items-center gap-2 rounded-[7px] border border-[#DCE3E7] bg-[#FBFCFC] px-3 text-[11px] text-[#858792] shadow-[0_1px_2px_rgba(25,27,32,0.03)]">
-            <Search className="h-3.5 w-3.5 shrink-0 text-[#8A99A3]" strokeWidth={1.8} aria-hidden="true" />
-            <span className="font-medium tracking-tight">Enterprise assessment search</span>
-            <span className="ml-auto hidden text-[10px] text-[#A0A5AC] sm:inline">Scope · evidence · boundary · next step</span>
-          </div>
-        </nav>
       </header>
 
       <main className="font-google-sans mx-auto min-w-[900px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6">
@@ -214,9 +207,9 @@ export default function SpeakToSales() {
           <article id="enterprise-assessment-record" className="enterprise-assessment-record relative order-1 min-w-0 rounded-none bg-white px-0 py-5 shadow-none sm:px-6 sm:py-5" aria-labelledby="talk-to-sales-title">
             <div aria-label="Enterprise assessment timeline" className="pointer-events-none absolute bottom-8 left-2 top-8 flex w-6 flex-col items-center justify-between">
               <span aria-hidden="true" className="absolute bottom-2 top-2 w-px bg-[#C9D6DE]" />
-              {assessmentTimeline.map((stage) => (
+              {assessmentTimeline.map((stage, index) => index === 0 ? (
                 <span key={stage} className="relative z-10 h-[7px] w-[7px] rounded-full bg-[#0B74DE] shadow-[0_0_0_3px_white]" title={stage} />
-              ))}
+              ) : null)}
             </div>
             <div className="enterprise-assessment-copy pl-12" style={{ zoom: 0.75 }}>
             <EnterpriseResponseBuild scope={scope} complexity={complexity} />
