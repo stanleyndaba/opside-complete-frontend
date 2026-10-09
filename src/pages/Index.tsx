@@ -496,15 +496,15 @@ function KineticHeroSection({
         src="/gmaillist.png"
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full scale-[1.04] object-cover object-[center_top] opacity-[0.18] blur-[0.7px] mix-blend-multiply sm:opacity-[0.22]"
+        className="pointer-events-none absolute inset-0 h-full w-full scale-[1.04] object-cover object-[center_top] opacity-[0.30] blur-[0.7px] mix-blend-multiply sm:opacity-[0.34]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.98)_0%,rgba(255,255,255,0.94)_30%,rgba(255,255,255,0.76)_58%,rgba(255,255,255,0.34)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.86)_0%,rgba(255,255,255,0.78)_30%,rgba(255,255,255,0.48)_58%,rgba(255,255,255,0.12)_100%)]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.78)_0%,rgba(255,255,255,0.14)_42%,rgba(255,255,255,0.68)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.48)_0%,rgba(255,255,255,0.06)_42%,rgba(255,255,255,0.38)_100%)]"
       />
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[1040px]">
