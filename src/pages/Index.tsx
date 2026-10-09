@@ -505,6 +505,20 @@ function KineticHeroSection({
           alt=""
           className="h-full w-full scale-[0.98] object-cover object-[60%_top] opacity-[0.92] mix-blend-multiply"
         />
+        <div className="absolute right-[7%] top-[38%] w-[min(360px,82%)] rounded-[12px] border border-white/80 bg-white/90 px-3.5 py-3 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-4 sm:py-3.5">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[7px] bg-white shadow-[0_3px_10px_rgba(24,32,38,0.12)] ring-1 ring-[#DCE4E7]">
+              <img src="/favicon-margin.svg" alt="Margin" className="h-4 w-4" />
+            </span>
+            <ArrowRight className="h-3.5 w-3.5 shrink-0 text-[#89969D]" aria-hidden="true" />
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[7px] bg-white shadow-[0_3px_10px_rgba(24,32,38,0.10)] ring-1 ring-[#DCE4E7]">
+              <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />
+            </span>
+            <span className="min-w-0 text-[10px] font-semibold tracking-tight text-[#263438] sm:text-[11px]">Margin response update</span>
+          </div>
+          <p className="mt-2 text-[10px] font-medium leading-4 tracking-tight text-[#46545B] sm:text-[11px]">Amazon replied to the recovery record.</p>
+          <p className="mt-0.5 truncate text-[9px] leading-4 tracking-tight text-[#87939A] sm:text-[10px]">Amazon Seller Support · response attached for review</p>
+        </div>
       </div>
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[860px]">
