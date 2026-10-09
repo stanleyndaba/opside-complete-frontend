@@ -115,6 +115,7 @@ export default function RecoveryWorkspace() {
         <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-start gap-4 px-4 sm:px-6 lg:px-6">
           <div className="min-w-0 px-1.5 py-1.5">
             <p className="text-[11px] font-medium tracking-tight text-[#595E68]">Northstar Home US · Amazon Financial Audit</p>
+            <p className="mt-0.5 text-[10px] font-medium tracking-tight text-[#777A82]">Audit Workspace</p>
             <p className="mt-0.5 text-[10px] tracking-tight text-[#858792]">31 August 2026 — 13:41 UTC</p>
           </div>
         </div>
