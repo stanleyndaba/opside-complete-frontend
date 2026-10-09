@@ -5,10 +5,10 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
 const recoveryStatuses = [
-  ['Recovery approved', '#10D991'],
-  ['Under review', '#F4C9B5'],
-  ['Residual unresolved', '#FF5517'],
-  ['Reconciled', '#22C7C1'],
+  ['Recovery approved', '#2F5BFF'],
+  ['Under review', '#C8D0D8'],
+  ['Residual unresolved', '#182026'],
+  ['Reconciled', '#6E87D9'],
 ] as const;
 
 function CurvedConnections({ stage }: { stage: number }) {
@@ -27,7 +27,7 @@ function OutcomeVerified({ visible }: { visible: boolean }) {
   return (
     <motion.div initial={{ opacity: 0, y: -22, scale: 0.96 }} animate={visible ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: -22, scale: 0.96 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }} className="absolute left-1/2 top-0 z-20 w-[230px] -translate-x-1/2 rounded-[18px] border border-white/80 bg-white/95 px-5 py-5 text-center shadow-[0_18px_50px_rgba(42,61,118,0.12)] backdrop-blur sm:w-[285px] sm:px-7 sm:py-6">
       <p className="font-google-sans text-[20px] tracking-[-0.03em] text-[#182026] sm:text-[25px]">Outcome Verified</p>
-      <div className="mx-auto mt-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#10D991] text-white shadow-[0_8px_20px_rgba(16,217,145,0.25)] sm:h-16 sm:w-16"><Check className="h-8 w-8 sm:h-9 sm:w-9" strokeWidth={3.2} /></div>
+      <div className="mx-auto mt-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#2F5BFF] text-white shadow-[0_8px_20px_rgba(47,91,255,0.22)] sm:h-16 sm:w-16"><Check className="h-8 w-8 sm:h-9 sm:w-9" strokeWidth={3.2} /></div>
       <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.12em] text-[#6D7B84]">Financial position reconciled</p>
     </motion.div>
   );
@@ -56,7 +56,7 @@ export default function PaymentProofDemo() {
 
           <motion.div initial={{ opacity: 0, x: -22 }} animate={{ opacity: stage >= 1 ? 1 : 0.35, x: stage >= 1 ? 0 : -22 }} transition={{ duration: 0.55 }} className="absolute left-4 top-[190px] z-10 w-[190px] rounded-[18px] bg-white/95 p-5 shadow-[0_18px_45px_rgba(47,62,122,0.11)] sm:left-8 sm:top-[210px] sm:w-[250px] sm:p-7">
             <p className="font-google-sans text-[18px] tracking-[-0.03em] sm:text-[22px]">Evidence Collected</p>
-            <div className="mt-5 flex items-start gap-3"><FileText className="h-12 w-12 shrink-0 text-[#F5B18B] sm:h-16 sm:w-16" strokeWidth={1.35} /><div className="mt-1 space-y-2">{[72, 92, 58].map((width) => <span key={width} className="block h-2 rounded-full bg-[#EEF0F3]" style={{ width: `${width}px` }} />)}</div></div>
+            <div className="mt-5 flex items-start gap-3"><FileText className="h-12 w-12 shrink-0 text-[#2F5BFF] sm:h-16 sm:w-16" strokeWidth={1.35} /><div className="mt-1 space-y-2">{[72, 92, 58].map((width) => <span key={width} className="block h-2 rounded-full bg-[#E8EDF1]" style={{ width: `${width}px` }} />)}</div></div>
             <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.12em] text-[#8A99A5]">Amazon records · case history</p>
           </motion.div>
 
@@ -69,15 +69,12 @@ export default function PaymentProofDemo() {
           <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: stage >= 2 ? 1 : 0, scale: stage >= 2 ? 1 : 0.85 }} transition={{ delay: 0.55, duration: 0.45 }} className="absolute left-[29%] top-[318px] z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#182026] bg-white p-0.5 shadow-[0_8px_18px_rgba(47,62,122,0.16)] sm:left-[29.5%] sm:top-[330px] sm:h-[68px] sm:w-[68px]">
             <img src="/approver-michael-thompson.jpg" alt="Margin operator reviewing evidence" className="h-full w-full rounded-full object-cover" />
           </motion.div>
-          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: stage >= 2 ? 1 : 0, scale: stage >= 2 ? 1 : 0.8 }} transition={{ delay: 0.9, duration: 0.45 }} className="absolute right-[21%] top-[330px] z-20 flex items-center">
-            {['$', '₦', '€'].map((symbol, index) => <span key={symbol} className={`-ml-1 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white text-[15px] font-semibold text-white shadow-[0_5px_12px_rgba(16,185,129,0.2)] sm:h-11 sm:w-11 sm:text-[17px] ${index === 1 ? 'bg-[#22C7C1]' : 'bg-[#10D991]'}`}>{symbol}</span>)}
-          </motion.div>
           <motion.div initial={{ opacity: 0, y: 24, scale: 0.98 }} animate={{ opacity: stage >= 2 ? 1 : 0.35, y: stage >= 2 ? 0 : 24, scale: stage >= 2 ? 1 : 0.98 }} transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }} className="absolute left-1/2 top-[280px] z-10 w-[270px] -translate-x-1/2 rounded-[20px] bg-white px-7 py-8 shadow-[0_24px_60px_rgba(47,62,122,0.15)] sm:top-[300px] sm:w-[370px] sm:px-10 sm:py-10">
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#18B987]">Financial Determination</p>
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#2F5BFF]">Financial Determination</p>
             <p className="mt-3 font-google-sans text-[42px] leading-none tracking-[-0.05em] sm:text-[62px]">$26,000</p>
             <p className="mt-2 text-[11px] font-semibold text-[#52616A] sm:text-[13px]">Approved by Amazon</p>
-            <div className="mt-7 space-y-2"><div className="flex items-center justify-between text-[10px] text-[#71818A]"><span>Reconciled</span><strong className="text-[#18B987]">$6,760</strong></div><div className="h-2 overflow-hidden rounded-full bg-[#EEF0F3]"><motion.span className="block h-full rounded-full bg-[#22C7C1]" initial={{ width: 0 }} animate={{ width: '26%' }} transition={{ delay: 1.5, duration: 0.7 }} /></div><div className="flex items-center justify-between text-[10px] text-[#71818A]"><span>Remaining unresolved</span><strong className="text-[#FF5517]">$19,240</strong></div><div className="h-2 overflow-hidden rounded-full bg-[#EEF0F3]"><motion.span className="block h-full rounded-full bg-[#FF5517]" initial={{ width: 0 }} animate={{ width: '74%' }} transition={{ delay: 1.65, duration: 0.7 }} /></div></div>
-            <div className="mt-8 grid grid-cols-2 gap-5"><div className="text-center"><div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#10D991] text-white sm:h-20 sm:w-20"><ShieldCheck className="h-9 w-9 sm:h-11 sm:w-11" strokeWidth={1.7} /></div><p className="mt-3 text-[11px] font-medium text-[#182026] sm:text-[13px]">Financially verified</p></div><div className="text-center"><div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#FF5517] text-white sm:h-20 sm:w-20"><ArrowDown className="h-9 w-9 sm:h-11 sm:w-11" strokeWidth={1.7} /></div><p className="mt-3 text-[11px] font-medium text-[#182026] sm:text-[13px]">Balance remains</p></div></div>
+            <div className="mt-7 space-y-2"><div className="flex items-center justify-between text-[10px] text-[#71818A]"><span>Reconciled</span><strong className="text-[#2F5BFF]">$6,760</strong></div><div className="h-2 overflow-hidden rounded-full bg-[#E8EDF1]"><motion.span className="block h-full rounded-full bg-[#2F5BFF]" initial={{ width: 0 }} animate={{ width: '26%' }} transition={{ delay: 1.5, duration: 0.7 }} /></div><div className="flex items-center justify-between text-[10px] text-[#71818A]"><span>Remaining unresolved</span><strong className="text-[#182026]">$19,240</strong></div><div className="h-2 overflow-hidden rounded-full bg-[#E8EDF1]"><motion.span className="block h-full rounded-full bg-[#182026]" initial={{ width: 0 }} animate={{ width: '74%' }} transition={{ delay: 1.65, duration: 0.7 }} /></div></div>
+            <div className="mt-8 grid grid-cols-2 gap-5"><div className="text-center"><div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#2F5BFF] text-white sm:h-20 sm:w-20"><ShieldCheck className="h-9 w-9 sm:h-11 sm:w-11" strokeWidth={1.7} /></div><p className="mt-3 text-[11px] font-medium text-[#182026] sm:text-[13px]">Financially verified</p></div><div className="text-center"><div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#182026] text-white sm:h-20 sm:w-20"><ArrowDown className="h-9 w-9 sm:h-11 sm:w-11" strokeWidth={1.7} /></div><p className="mt-3 text-[11px] font-medium text-[#182026] sm:text-[13px]">Balance remains</p></div></div>
           </motion.div>
 
           <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 font-mono text-[9px] uppercase tracking-[0.14em] text-[#8791B2] sm:bottom-7"><ShieldCheck className="h-3.5 w-3.5" />Evidence-linked financial outcome</div>
