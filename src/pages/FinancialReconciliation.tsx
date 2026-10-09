@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
 import { useReducedMotion } from 'framer-motion';
@@ -24,8 +24,9 @@ const reconciliationNarrative = [
   'Control rule: approved value, credited value, settled value, and downstream ledger treatment remain distinct until the financial position is fully reconciled.',
 ] as const;
 
-function ReconciliationNarrativeBuild() {
+function ReconciliationNarrativeBuild({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
+  const completionSent = useRef(false);
   const [currentSegment, setCurrentSegment] = useState(reduceMotion ? reconciliationNarrative.length : 0);
   const [visibleText, setVisibleText] = useState('');
 
@@ -49,6 +50,13 @@ function ReconciliationNarrativeBuild() {
       if (interval) window.clearInterval(interval);
     };
   }, [currentSegment, reduceMotion]);
+
+  useEffect(() => {
+    if (currentSegment >= reconciliationNarrative.length && !completionSent.current) {
+      completionSent.current = true;
+      onComplete();
+    }
+  }, [currentSegment, onComplete]);
 
   const completed = reduceMotion ? reconciliationNarrative.length : currentSegment;
   const renderStatement = (text: string) => {
@@ -77,6 +85,46 @@ const verifiedOutcomes = [
   ['Prior recovery population', 'Westline Consumer Goods', 'RFD-17188-CAR', '19823844211', '$14,800.00', '$14,800.00', '$14,800.00', 'Reversal watch active', 'SETTLE-205-944', 'May 28, 2026'],
 ] as const;
 
+function SettlementOutcomeSequence({ enabled }: { enabled: boolean }) {
+  const reduceMotion = useReducedMotion();
+  const [activeIndex, setActiveIndex] = useState(reduceMotion ? verifiedOutcomes.length - 1 : -1);
+  const [lineReady, setLineReady] = useState(false);
+  useEffect(() => {
+    if (!enabled || reduceMotion) return;
+    setActiveIndex(0);
+    setLineReady(false);
+  }, [enabled, reduceMotion]);
+  useEffect(() => {
+    if (!enabled || reduceMotion || activeIndex < 0 || activeIndex >= verifiedOutcomes.length) return;
+    setLineReady(false);
+    const lineTimer = window.setTimeout(() => setLineReady(true), 280);
+    const nextTimer = window.setTimeout(() => {
+      setActiveIndex((index) => Math.min(index + 1, verifiedOutcomes.length - 1));
+    }, 620);
+    return () => {
+      window.clearTimeout(lineTimer);
+      window.clearTimeout(nextTimer);
+    };
+  }, [activeIndex, enabled, reduceMotion]);
+  if (!enabled) return null;
+  return (
+    <div className="mt-5">
+      {verifiedOutcomes.map(([outcome, seller, registry, amazonCase, supported, approved, settled, state, settlement, recorded], index) => {
+        const visible = reduceMotion || index <= activeIndex;
+        const connectorActive = reduceMotion || index < activeIndex || (index === activeIndex && lineReady);
+        if (!visible) return null;
+        return (
+          <article key={registry} className="relative grid grid-cols-[20px_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[22px_minmax(0,1fr)] sm:gap-4">
+            {index < verifiedOutcomes.length - 1 ? <span className={`absolute bottom-[-1px] left-[9px] top-[38px] w-px origin-top bg-[#C9D6DE] transition-transform duration-300 sm:left-[10px] ${connectorActive ? 'scale-y-100' : 'scale-y-0'}`} aria-hidden="true" /> : null}
+            <span className={`relative z-10 mt-0.5 flex h-4 w-4 items-center justify-center text-[14px] font-semibold leading-none ${state.includes('Residual') || state.includes('awaiting') ? 'text-[#C28B00]' : state.includes('watch') || state.includes('attribution') ? 'text-[#8A641B]' : 'text-[#4B946F]'}`} aria-label="Settlement control state">✓</span>
+            <div className="min-w-0"><div className="flex flex-wrap items-center gap-x-3 gap-y-1"><p className="text-[11px] font-semibold tracking-tight text-[#182026]">{outcome}</p><span className="text-[11px] font-semibold tabular-nums text-[#182026]">{supported}</span><span className="text-[10px] text-[#66737F]">{state}</span><span className="text-[10px] text-[#66737F]">{recorded}</span></div><p className="mt-0.5 text-[10px] text-[#66737F]">{seller} · {registry} · Amazon case {amazonCase}</p><p className="mt-1 text-[10px] leading-4 text-[#4D5B66]">Approved {approved} · Settled {settled} · {state} · Settlement {settlement}</p></div>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function FinancialReconciliation() {
   usePageMeta({
     title: 'Financial Reconciliation | Margin',
@@ -84,6 +132,8 @@ export default function FinancialReconciliation() {
     url: `${SITE_META.url}/financial-reconciliation`,
     image: SITE_META.image,
   });
+
+  const [showVerifiedOutcomes, setShowVerifiedOutcomes] = useState(false);
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-google-sans text-[#182026]">
@@ -93,18 +143,12 @@ export default function FinancialReconciliation() {
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Illustrative control population</p>
               <h2 id="approved-reimbursements-title" className="mt-1 font-google-sans text-[22px] leading-tight tracking-[-0.035em] text-[#182026]">Recovery settlement control</h2>
-              <ReconciliationNarrativeBuild />
+              <ReconciliationNarrativeBuild onComplete={() => setShowVerifiedOutcomes(true)} />
             </div>
           </div>
           <div className="mt-3 flex items-center gap-3 rounded-[8px] border border-[#E2E8E7] bg-white px-3 py-2 text-[11px] text-[#8A99A5]
           "><span className="text-[16px]">⌕</span><span className="flex-1">Query positions by case ID, entity, or settlement reference</span><span className="rounded-[5px] bg-[#F1F3F4] px-2 py-1 font-google-sans text-[10px] text-[#66737F]">⌘ K</span></div>
-          <div className="mt-5">
-            {verifiedOutcomes.map(([outcome, seller, registry, amazonCase, supported, approved, settled, state, settlement, recorded], index) => <article key={registry} className="relative grid grid-cols-[20px_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[22px_minmax(0,1fr)] sm:gap-4">
-              {index < verifiedOutcomes.length - 1 ? <span className="absolute bottom-[-1px] left-[9px] top-[38px] w-px bg-[#C9D6DE] sm:left-[10px]" aria-hidden="true" /> : null}
-              <span className={`relative z-10 mt-0.5 flex h-4 w-4 items-center justify-center rounded-full ${state.includes('Residual') || state.includes('awaiting') ? 'bg-[#E6A700]' : state.includes('watch') || state.includes('attribution') ? 'bg-[#8A641B]' : 'bg-[#4B946F]'}`} aria-label="Settlement control state"><Check className="h-2.5 w-2.5 text-white" strokeWidth={3} /></span>
-              <div className="min-w-0"><div className="flex flex-wrap items-center gap-x-3 gap-y-1"><p className="text-[11px] font-semibold tracking-tight text-[#182026]">{outcome}</p><span className="text-[11px] font-semibold tabular-nums text-[#182026]">{supported}</span><span className="text-[10px] text-[#66737F]">{state}</span><span className="text-[10px] text-[#66737F]">{recorded}</span></div><p className="mt-0.5 text-[10px] text-[#66737F]">{seller} · {registry} · Amazon case {amazonCase}</p><p className="mt-1 text-[10px] leading-4 text-[#4D5B66]">Approved {approved} · Settled {settled} · {state} · Settlement {settlement}</p></div>
-            </article>)}
-          </div>
+          <SettlementOutcomeSequence enabled={showVerifiedOutcomes} />
           <p className="mt-2 text-[11px] text-[#8A99A5]">Showing 7 illustrative positions from the Q1 2026 financial close population</p>
         </section>
 
