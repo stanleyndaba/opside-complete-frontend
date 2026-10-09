@@ -2436,7 +2436,7 @@ function FounderNoteSection() {
               <p className="mt-5">A business can have millions of records and still not know with confidence whether its financial reality is complete. And every unresolved variance carries a second cost: the hours required to trace it, explain it, evidence it, and close it.</p>
               <p className="mt-5">Margin is built for the gap between the two — establishing what happened, quantifying what remains unresolved, determining what the evidence supports, and driving each material exception toward resolution without consuming the same hours from your team.</p>
               <p className="mt-5 font-lora text-[21px] leading-7 tracking-[-0.025em] text-[#182026] sm:text-[24px] sm:leading-8">Because at scale, “probably accounted for” is not a control.</p>
-              <p className="mt-7 border-t border-[#D5E1E8] pt-4 text-[12px] font-semibold tracking-tight text-[#557386]">— Founder &amp; CEO, <span className="font-merriweather !text-[#000000]" style={{ fontFamily: "'Merriweather', Georgia, serif", color: '#000000' }}>Margin</span></p>
+              <p className="mt-7 border-t border-[#D5E1E8] pt-4 text-[12px] font-semibold tracking-tight text-[#557386]">— Founder &amp; CEO, <span className="inline-flex items-center gap-1.5 align-middle text-[#000000]"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight sm:text-lg">Margin</span></span></p>
             </div>
           </div>
         </motion.div>
