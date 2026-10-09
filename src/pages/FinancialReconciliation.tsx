@@ -85,7 +85,7 @@ const verifiedOutcomes = [
   ['Prior recovery population', 'Westline Consumer Goods', 'RFD-17188-CAR', '19823844211', '$14,800.00', '$14,800.00', '$14,800.00', 'Reversal watch active', 'SETTLE-205-944', 'May 28, 2026'],
 ] as const;
 
-function SettlementOutcomeSequence({ enabled }: { enabled: boolean }) {
+function SettlementOutcomeSequence({ enabled, onComplete }: { enabled: boolean; onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(reduceMotion ? verifiedOutcomes.length - 1 : -1);
   const [lineReady, setLineReady] = useState(false);
@@ -99,13 +99,17 @@ function SettlementOutcomeSequence({ enabled }: { enabled: boolean }) {
     setLineReady(false);
     const lineTimer = window.setTimeout(() => setLineReady(true), 280);
     const nextTimer = window.setTimeout(() => {
-      setActiveIndex((index) => Math.min(index + 1, verifiedOutcomes.length - 1));
-    }, 620);
+      if (activeIndex === verifiedOutcomes.length - 1) {
+        onComplete();
+      } else {
+        setActiveIndex((index) => Math.min(index + 1, verifiedOutcomes.length - 1));
+      }
+    }, activeIndex === verifiedOutcomes.length - 1 ? 1500 : 620);
     return () => {
       window.clearTimeout(lineTimer);
       window.clearTimeout(nextTimer);
     };
-  }, [activeIndex, enabled, reduceMotion]);
+  }, [activeIndex, enabled, onComplete, reduceMotion]);
   if (!enabled) return null;
   return (
     <div className="mt-5">
@@ -134,6 +138,11 @@ export default function FinancialReconciliation() {
   });
 
   const [showVerifiedOutcomes, setShowVerifiedOutcomes] = useState(false);
+  const [sequenceCycle, setSequenceCycle] = useState(0);
+  const restartSequence = () => {
+    setShowVerifiedOutcomes(false);
+    setSequenceCycle((cycle) => cycle + 1);
+  };
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-google-sans text-[#182026]">
@@ -143,12 +152,12 @@ export default function FinancialReconciliation() {
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Illustrative control population</p>
               <h2 id="approved-reimbursements-title" className="mt-1 font-google-sans text-[22px] leading-tight tracking-[-0.035em] text-[#182026]">Recovery settlement control</h2>
-              <ReconciliationNarrativeBuild onComplete={() => setShowVerifiedOutcomes(true)} />
+              <ReconciliationNarrativeBuild key={sequenceCycle} onComplete={() => setShowVerifiedOutcomes(true)} />
             </div>
           </div>
           <div className="mt-3 flex items-center gap-3 rounded-[8px] border border-[#E2E8E7] bg-white px-3 py-2 text-[11px] text-[#8A99A5]
           "><span className="text-[16px]">⌕</span><span className="flex-1">Query positions by case ID, entity, or settlement reference</span><span className="rounded-[5px] bg-[#F1F3F4] px-2 py-1 font-google-sans text-[10px] text-[#66737F]">⌘ K</span></div>
-          <SettlementOutcomeSequence enabled={showVerifiedOutcomes} />
+          <SettlementOutcomeSequence enabled={showVerifiedOutcomes} onComplete={restartSequence} />
           <p className="mt-2 text-[11px] text-[#8A99A5]">Showing 7 illustrative positions from the Q1 2026 financial close population</p>
         </section>
 
