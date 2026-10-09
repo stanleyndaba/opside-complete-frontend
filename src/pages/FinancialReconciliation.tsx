@@ -1,5 +1,7 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
+import { useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
@@ -14,6 +16,48 @@ const timeline = [
   ['Residual and reversal checks completed', 'Open balances, reversals, and attribution exceptions are classified.'],
   ['Financial position closed', 'Only the reconciled scope is treated as complete.'],
 ] as const;
+
+const reconciliationStatement = 'Across 684 positions reviewed, Margin approved $2.84M of supported exposure. $2.51M has since settled and been verified, while $184K remains visible as residual exposure under control.';
+
+function ReconciliationStatementBuild() {
+  const reduceMotion = useReducedMotion();
+  const [visibleText, setVisibleText] = useState(reduceMotion ? reconciliationStatement : '');
+  const [complete, setComplete] = useState(Boolean(reduceMotion));
+  const onCompleteRef = useRef<(() => void) | undefined>();
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setVisibleText(reconciliationStatement);
+      setComplete(true);
+      return;
+    }
+    setVisibleText('');
+    setComplete(false);
+    let index = 0;
+    let interval: number | undefined;
+    const start = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        index += 1;
+        setVisibleText(reconciliationStatement.slice(0, index));
+        if (index >= reconciliationStatement.length) {
+          if (interval) window.clearInterval(interval);
+          setComplete(true);
+          onCompleteRef.current?.();
+        }
+      }, 3);
+    }, 90);
+    return () => {
+      window.clearTimeout(start);
+      if (interval) window.clearInterval(interval);
+    };
+  }, [reduceMotion]);
+
+  if (!complete) {
+    return <>{visibleText}<span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /></>;
+  }
+
+  return <>Across 684 positions reviewed, Margin approved <mark className="rounded-[2px] bg-[#DDEBFF] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">$2.84M</mark> of supported exposure. <mark className="rounded-[2px] bg-[#DDF4E5] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">$2.51M has since settled and been verified</mark>, while <mark className="rounded-[2px] bg-[#FFF1A8] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">$184K remains visible as residual exposure under control</mark>.</>;
+}
 
 const verifiedOutcomes = [
   ['Inbound recovery cohort', 'Northstar Home Goods', 'RFD-16942-INB', '19822888381', '$184,600.00', '$172,400.00', '$172,400.00', 'Reconciled · approved scope closed', 'SETTLE-205-771', 'Jun 11, 2026'],
@@ -45,13 +89,11 @@ export default function FinancialReconciliation() {
             </div>
             <Link to="/approved-reimbursements" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE] hover:text-[#075AAB]">View verified impact <ArrowRight className="h-3.5 w-3.5" /></Link>
           </div>
-          <div className="mt-5 grid gap-3 text-[11px] sm:grid-cols-2 lg:grid-cols-4">
-            <div className="border-l-2 border-[#0B74DE] pl-3"><p className="text-[#71818A]">Positions reviewed</p><p className="mt-1 text-[16px] font-semibold text-[#182026]">684</p></div>
-            <div className="border-l-2 border-[#0B74DE] pl-3"><p className="text-[#71818A]">Approved exposure</p><p className="mt-1 text-[16px] font-semibold text-[#182026]">$2.84M</p></div>
-            <div className="border-l-2 border-[#4B946F] pl-3"><p className="text-[#71818A]">Settled and verified</p><p className="mt-1 text-[16px] font-semibold text-[#182026]">$2.51M</p></div>
-            <div className="border-l-2 border-[#E6A700] pl-3"><p className="text-[#71818A]">Residual under control</p><p className="mt-1 text-[16px] font-semibold text-[#182026]">$184K</p></div>
-          </div>
-          <div className="mt-5 max-w-[820px] text-[12px] leading-6 text-[#4D5B66]">
+          <section className="mt-5 border-y border-[#DCE5E5] py-4" aria-label="Reconciliation statement">
+            <p className="text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Close-control statement</p>
+            <p className="mt-2 max-w-[820px] text-[16px] leading-7 tracking-[-0.02em] text-[#4D5B66]"><ReconciliationStatementBuild /></p>
+          </section>
+          <div className="mt-4 max-w-[820px] text-[12px] leading-6 text-[#4D5B66]">
             <p><span className="font-semibold text-[#182026]">Close-control population:</span> 412 positions are closed, 92 require evidence or settlement action, and $96K remains under reversal or attribution watch.</p>
             <p className="mt-2"><span className="font-semibold text-[#182026]">Control rule:</span> approved value, credited value, settled value, and downstream ledger treatment remain distinct until the financial position is fully reconciled.</p>
           </div>
