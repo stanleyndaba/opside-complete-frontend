@@ -828,7 +828,7 @@ function ApprovalNotificationOrderVisual() {
   }, [sequence.length]);
 
   return (
-    <div className="relative mb-6 min-h-[350px] overflow-hidden rounded-[12px] border border-[#DCE3E6] bg-white p-3 shadow-[0_10px_28px_rgba(35,54,65,0.08)] sm:min-h-[360px] sm:p-4" aria-label="Approval notification order">
+    <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[12px] border border-[#DCE3E6] bg-white p-3 shadow-[0_10px_28px_rgba(35,54,65,0.08)] sm:p-4" aria-label="Approval notification order">
       <div className="border-b border-[#EEF1F2] pb-3">
         <div className="min-w-0">
           <p className="text-[12px] font-semibold leading-4 tracking-tight text-[#182026]">Approval follows policy, not inbox traffic</p>
@@ -944,10 +944,6 @@ function RecoveryHarnessSection() {
           <p className="mt-5 max-w-[720px] text-[16px] leading-7 text-[var(--margin-text-secondary)] sm:text-[18px] sm:leading-8">
             At scale, detection is not authorization. Margin classifies each position against evidence sufficiency, reconciliation state, materiality, claim-window risk, and control policy. It advances supported positions, holds exceptions, closes accounted-for items, and routes consequential decisions to delegated authority.
           </p>
-          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#52616A] sm:text-[11px]">
-            <span>ACCOUNTED FOR · Reconciled to the source and settlement position</span>
-            <span>ON HOLD · Evidence, materiality, ownership, or timing remains unresolved</span><span>ACTIONABLE · Recovery basis supports the next step</span>
-          </div>
         </motion.div>
         <div className="mt-10 grid gap-5 md:mt-14 md:grid-cols-3 md:gap-6">
           {recoveryHarnessPoints.map((point, index) => (
