@@ -120,24 +120,24 @@ const faqs = [
 ];
 
 const supportedMarketplaces = [
-  { country: "United States", code: "US", flag: "🇺🇸", region: "Americas" },
-  { country: "Canada", code: "CA", flag: "🇨🇦", region: "Americas" },
-  { country: "Mexico", code: "MX", flag: "🇲🇽", region: "Americas" },
-  { country: "Brazil", code: "BR", flag: "🇧🇷", region: "Americas" },
-  { country: "United Kingdom", code: "UK", flag: "🇬🇧", region: "Europe" },
-  { country: "Germany", code: "DE", flag: "🇩🇪", region: "Europe" },
-  { country: "France", code: "FR", flag: "🇫🇷", region: "Europe" },
-  { country: "Italy", code: "IT", flag: "🇮🇹", region: "Europe" },
-  { country: "Spain", code: "ES", flag: "🇪🇸", region: "Europe" },
-  { country: "Netherlands", code: "NL", flag: "🇳🇱", region: "Europe" },
-  { country: "Belgium", code: "BE", flag: "🇧🇪", region: "Europe" },
-  { country: "Poland", code: "PL", flag: "🇵🇱", region: "Europe" },
-  { country: "Sweden", code: "SE", flag: "🇸🇪", region: "Europe" },
-  { country: "Australia", code: "AU", flag: "🇦🇺", region: "Asia-Pacific" },
-  { country: "Japan", code: "JP", flag: "🇯🇵", region: "Asia-Pacific" },
-  { country: "India", code: "IN", flag: "🇮🇳", region: "Asia-Pacific" },
-  { country: "United Arab Emirates", code: "AE", flag: "🇦🇪", region: "Middle East" },
-  { country: "Saudi Arabia", code: "SA", flag: "🇸🇦", region: "Middle East" },
+  { country: "United States", code: "US", flagAsset: "us", region: "Americas" },
+  { country: "Canada", code: "CA", flagAsset: "ca", region: "Americas" },
+  { country: "Mexico", code: "MX", flagAsset: "mx", region: "Americas" },
+  { country: "Brazil", code: "BR", flagAsset: "br", region: "Americas" },
+  { country: "United Kingdom", code: "UK", flagAsset: "gb", region: "Europe" },
+  { country: "Germany", code: "DE", flagAsset: "de", region: "Europe" },
+  { country: "France", code: "FR", flagAsset: "fr", region: "Europe" },
+  { country: "Italy", code: "IT", flagAsset: "it", region: "Europe" },
+  { country: "Spain", code: "ES", flagAsset: "es", region: "Europe" },
+  { country: "Netherlands", code: "NL", flagAsset: "nl", region: "Europe" },
+  { country: "Belgium", code: "BE", flagAsset: "be", region: "Europe" },
+  { country: "Poland", code: "PL", flagAsset: "pl", region: "Europe" },
+  { country: "Sweden", code: "SE", flagAsset: "se", region: "Europe" },
+  { country: "Australia", code: "AU", flagAsset: "au", region: "Asia-Pacific" },
+  { country: "Japan", code: "JP", flagAsset: "jp", region: "Asia-Pacific" },
+  { country: "India", code: "IN", flagAsset: "in", region: "Asia-Pacific" },
+  { country: "United Arab Emirates", code: "AE", flagAsset: "ae", region: "Middle East" },
+  { country: "Saudi Arabia", code: "SA", flagAsset: "sa", region: "Middle East" },
 ];
 
 const containerClass = "mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12";
@@ -2659,7 +2659,7 @@ export default function Index() {
               <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="grid border-t border-[var(--margin-border)] sm:grid-cols-2 sm:border-t-0 lg:grid-cols-3">
                 {supportedMarketplaces.map((marketplace, index) => (
                   <div key={marketplace.code} className={cn("flex items-center gap-3 py-3.5 sm:px-4", index > 0 ? "border-t border-[var(--margin-border)] sm:border-t-0" : "", index % 2 === 1 ? "sm:border-l sm:border-[var(--margin-border)]" : "", index >= 2 ? "sm:border-t sm:border-[var(--margin-border)]" : "", index % 3 !== 0 ? "lg:border-l lg:border-[var(--margin-border)]" : "lg:border-l-0", index >= 3 ? "lg:border-t lg:border-[var(--margin-border)]" : "lg:border-t-0")}>
-                    <span className="text-[23px] leading-none" aria-hidden="true">{marketplace.flag}</span>
+                    <img src={`/flags/${marketplace.flagAsset}.svg`} alt={`${marketplace.country} flag`} className="h-[23px] w-[34px] shrink-0 rounded-[2px] object-cover" />
                     <span className="min-w-0"><span className="block truncate text-[13px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">{marketplace.country}</span><span className="mt-0.5 block text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">{marketplace.region} · {marketplace.code}</span></span>
                   </div>
                 ))}
