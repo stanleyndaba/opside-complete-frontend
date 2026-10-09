@@ -496,20 +496,19 @@ function KineticHeroSection({
         aria-hidden="true"
         className="pointer-events-none absolute inset-y-0 right-0 w-[70%] overflow-hidden"
         style={{
-          maskImage: "linear-gradient(to right, transparent 0%, transparent 28%, black 58%, black 100%)",
-          WebkitMaskImage: "linear-gradient(to right, transparent 0%, transparent 28%, black 58%, black 100%)",
+          maskImage: "linear-gradient(to right, transparent 0%, transparent 38%, black 68%, black 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, transparent 38%, black 68%, black 100%)",
         }}
       >
         <img
           src="/gmaillist.png"
           alt=""
-          className="h-full w-full scale-[0.98] object-cover object-[60%_top] opacity-[0.86] mix-blend-multiply"
+          className="h-full w-full scale-[0.98] object-cover object-[60%_top] opacity-[0.92] mix-blend-multiply"
         />
       </div>
       <div className="relative z-10 flex w-full items-center">
-        <div className="max-w-[940px]">
-          <div className="inline-flex items-center rounded-[5px] bg-[#EFF1F2] px-3 py-1.5 text-[10px] font-semibold tracking-[0.04em] text-[#66737F]">E2E AI-Native recovery compliance</div>
-          <div id="margin-hero-title" className="mt-5 max-w-[900px] font-google-sans text-[42px] leading-[0.96] tracking-[-0.045em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] md:text-[82px] lg:text-[96px]" style={{ fontWeight: 400 }}>
+        <div className="max-w-[860px]">
+          <div id="margin-hero-title" className="mt-5 max-w-[820px] font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[46px] sm:mt-7 sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>
             <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Financial recovery and reconciliation infrastructure for Amazon businesses.</motion.span>
           </div>
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Margin reconciles the Amazon records behind your financial position, isolates unresolved exposure, and shows what is worth acting on.</motion.p>
