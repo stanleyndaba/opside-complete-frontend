@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import indexCss from './index.css?inline'
 import App from './App'
 import { GlobalErrorBoundary } from '@/components/error/GlobalErrorBoundary'
+import { ClerkProvider } from '@clerk/react'
 
 const appStyleId = 'margin-app-styles';
 if (!document.getElementById(appStyleId)) {
@@ -24,12 +25,7 @@ const app = (
 if (!clerkPublishableKey) {
   root.render(app);
 } else {
-  void import('@clerk/react').then(({ ClerkProvider }) => {
-    root.render(<ClerkProvider publishableKey={clerkPublishableKey}>{app}</ClerkProvider>);
-  }).catch((error) => {
-    console.error('Margin failed to load Clerk', error);
-    root.render(app);
-  });
+  root.render(<ClerkProvider publishableKey={clerkPublishableKey}>{app}</ClerkProvider>);
 }
 
 // Optional integrations are intentionally initialized after the first render path.
