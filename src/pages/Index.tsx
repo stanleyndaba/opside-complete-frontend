@@ -523,7 +523,7 @@ function KineticHeroSection({
             </div>
           </div>
         </div>
-        <div className="absolute right-[3%] top-[39%] w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5">
+        <div className="absolute right-[3%] top-[36%] w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5">
           <div className="flex items-center gap-2.5">
             <img src="/favicon-margin.svg" alt="Margin" className="h-4 w-4 shrink-0" />
             <ArrowRight className="h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
@@ -534,7 +534,7 @@ function KineticHeroSection({
             </div>
           </div>
         </div>
-        <div className="absolute right-[3%] top-[51%] w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5">
+        <div className="absolute right-[3%] top-[45%] w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5">
           <div className="flex items-start gap-2.5">
             <img src="/favicon-margin.svg" alt="Margin" className="mt-0.5 h-4 w-4 shrink-0" />
             <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
