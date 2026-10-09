@@ -484,7 +484,7 @@ function KineticHeroSection({
   const { scrollYProgress } = useScroll();
   useEffect(() => {
     if (reduceMotion) return;
-    const timer = window.setInterval(() => setNotificationCycle((cycle) => cycle + 1), 5200);
+    const timer = window.setInterval(() => setNotificationCycle((cycle) => cycle + 1), 4420);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
   const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.98]);
