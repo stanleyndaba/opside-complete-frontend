@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Files, Layers3, ListChecks, Search, SlidersHorizontal } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
@@ -14,6 +16,91 @@ const operationSteps = [
   'Margin continues examining the account population'
 ];
 
+
+const assessmentRail = [
+  { label: 'Assessment record', href: '#recovery-workspace-title', icon: ListChecks },
+  { label: 'Operating scope', href: '#what-we-found', icon: Layers3 },
+  { label: 'Evidence position', href: '#what-we-can-support', icon: Files },
+  { label: 'Workspace decision', href: '#why-recovery-workspace', icon: SlidersHorizontal },
+  { label: 'Next step', href: '#what-you-control', icon: Search },
+] as const;
+
+const assessmentTimeline = ['Audit opened', 'Operating population established', 'Evidence position reviewed', 'Workspace route prepared'] as const;
+
+function FastWorkspaceTypewriter({ text, onComplete }: { text: string; onComplete?: () => void }) {
+  const reduceMotion = useReducedMotion();
+  const [visibleText, setVisibleText] = useState(reduceMotion ? text : '');
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setVisibleText(text);
+      onCompleteRef.current?.();
+      return;
+    }
+    setVisibleText('');
+    let index = 0;
+    let interval: number | undefined;
+    const start = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        index += 1;
+        setVisibleText(text.slice(0, index));
+        if (index >= text.length) {
+          if (interval) window.clearInterval(interval);
+          onCompleteRef.current?.();
+        }
+      }, 3);
+    }, 70);
+    return () => {
+      window.clearTimeout(start);
+      if (interval) window.clearInterval(interval);
+    };
+  }, [reduceMotion, text]);
+
+  return <>{visibleText}{!reduceMotion && visibleText.length < text.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</>;
+}
+
+function WorkspaceResponseBuild() {
+  const reduceMotion = useReducedMotion();
+  const [activeItem, setActiveItem] = useState(0);
+  const items = [
+    { text: 'Coverage established across 124,860 orders, 1,842 shipments, 7,630 returns, 31,940 fee records, and 28,600 inventory movements across 8 settlement periods.', highlight: 'yellow' },
+    { text: 'The operating population spans 4 marketplaces and 3 legal entities, with 1,126 affected records across 318 SKUs.', highlight: 'blue' },
+    { text: 'This is not one bounded event. The records establish a portfolio-level control position.', highlight: 'green' },
+  ];
+  const highlightClasses: Record<string, string> = { yellow: 'bg-[#FFF1A8]', blue: 'bg-[#DDEBFF]', green: 'bg-[#DDF4E5]' };
+
+  const advance = () => {
+    if (reduceMotion) return;
+    window.setTimeout(() => setActiveItem((current) => current + 1 >= items.length ? 0 : current + 1), 140);
+  };
+
+  return (
+    <div className="enterprise-response-build">
+      <header className="pb-5">
+        <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] bg-[#F1F2F2] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">Illustrative audit population · decision-grade account position</mark></p>
+        <h1 id="recovery-workspace-title" className="mt-1.5 max-w-2xl font-google-sans text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[24px]">The Audit establishes the account&apos;s financial position</h1>
+      </header>
+      <section className="py-4" aria-labelledby="workspace-opening-position">
+        <div className="space-y-1.5">
+          {items.map((item, index) => {
+            const visible = reduceMotion || index <= activeItem;
+            const active = reduceMotion || index === activeItem;
+            const typedContent = reduceMotion ? item.text : active ? <FastWorkspaceTypewriter text={item.text} onComplete={advance} /> : index < activeItem ? item.text : null;
+            const highlightComplete = reduceMotion || index < activeItem;
+            return (
+              <motion.div key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className="text-[14px] leading-6 text-[#595E68]">
+                <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightComplete ? highlightClasses[item.highlight] : 'bg-transparent'}`}>{typedContent}</mark>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export default function RecoveryWorkspace() {
   usePageMeta({
     title: 'Recovery Workspace | Margin',
@@ -23,31 +110,36 @@ export default function RecoveryWorkspace() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-white font-sans text-[#191B20]">
-      <header className="sticky top-0 z-50 bg-white">
+    <div className="min-h-screen overflow-x-auto bg-white font-sans text-[#191B20]">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-start gap-4 px-4 sm:px-6 lg:px-6">
           <div className="min-w-0 px-1.5 py-1.5">
             <p className="text-[11px] font-medium tracking-tight text-[#595E68]">Northstar Home US · Amazon Financial Audit</p>
             <p className="mt-0.5 text-[10px] tracking-tight text-[#858792]">31 August 2026 — 13:41 UTC</p>
           </div>
-          <Link to="/" title="Margin home" className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
-            <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
-          </Link>
         </div>
       </header>
 
-      <main className="font-google-sans mx-auto max-w-[1180px] px-4 py-5 sm:px-6 sm:py-5 lg:px-6">
-        <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
-          <article className="order-1 min-w-0 rounded-none bg-white px-0 py-5 shadow-none sm:rounded-[16px] sm:px-6 sm:py-5 sm:shadow-[0_1px_2px_rgba(25,27,32,0.05)] lg:order-1" aria-labelledby="recovery-workspace-title">
-            <header className="pb-5">
-              <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]">Illustrative audit population · decision-grade account position</p>
-              <h1 id="recovery-workspace-title" className="max-w-2xl font-google-sans text-[14px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[17px]">The Audit establishes the account&apos;s financial position</h1>
-              <p className="mt-2 inline-block max-w-2xl text-[13px] leading-5 text-[#595E68] sm:text-[14px]">Coverage established across <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#FFF1A8]">124,860 orders, 1,842 shipments, 7,630 returns, 31,940 fee records, and 28,600 inventory movements</mark> across 8 settlement periods.</p>
-              <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">The operating population spans <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">4 marketplaces and 3 legal entities</mark>, with 1,126 affected records across 318 SKUs.</p>
-              <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">This is not one bounded event. The records establish a <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">portfolio-level control position</mark>.</p>
-            </header>
+      <main className="font-google-sans mx-auto min-w-[900px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6">
+        <div className="flex items-start gap-3 lg:gap-4">
+          <aside aria-label="Recovery Workspace assessment controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
+            {assessmentRail.map(({ label, href, icon: Icon }, index) => (
+              <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? 'bg-[#D9E0E3] text-[#26333A]' : ''}`}>
+                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} />
+              </a>
+            ))}
+          </aside>
+          <div className="min-w-0 flex-1">
+          <div className="flex flex-col gap-4">
+          <article id="recovery-workspace-record" className="relative order-1 min-w-0 rounded-none bg-white px-0 py-5 shadow-none sm:px-6 sm:py-5" aria-labelledby="recovery-workspace-title">
+            <div aria-label="Recovery Workspace assessment timeline" className="pointer-events-none absolute bottom-8 left-2 top-8 flex w-6 flex-col items-center justify-between">
+              <span aria-hidden="true" className="absolute bottom-2 top-2 w-px bg-[#C9D6DE]" />
+              <span className="relative z-10 h-[7px] w-[7px] rounded-full bg-[#0B74DE] shadow-[0_0_0_3px_white]" title={assessmentTimeline[0]} />
+            </div>
+            <div className="enterprise-assessment-copy pl-12" style={{ zoom: 0.75 }}>
+              <WorkspaceResponseBuild />
 
-            <section className="py-4" aria-labelledby="what-we-found">
+              <section className="py-4" aria-labelledby="what-we-found">
               <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Financial pattern</mark></p>
               <h2 id="what-we-found" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Portfolio-level finding</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">Inbound receiving variances</mark> recur across multiple settlement periods and marketplaces. The population requires event-level entitlement, evidence testing, settlement reconciliation, and entity attribution before recovery treatment is determined.</p>
@@ -182,10 +274,13 @@ export default function RecoveryWorkspace() {
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You can cancel Workspace at any time.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">If you cancel, Workspace remains active through the period you've paid for. Ongoing monitoring and new Workspace operations stop when that paid period ends. Your completed recovery history and recorded outcomes remain available.</p>
             </section>
+            </div>
           </article>
+          </div>
+          </div>
 
-          <aside className="order-2 lg:sticky lg:top-20" aria-label="Recovery Workspace decision summary">
-            <div className="rounded-[14px] border border-[#D7D7D1] bg-white p-4 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-5">
+          <aside className="order-2 w-full lg:sticky lg:top-[76px] lg:ml-auto lg:max-w-[380px]" aria-label="Recovery Workspace decision summary">
+            <div className="rounded-[10px] border border-[#D7D7D1] bg-white p-4 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-5">
               <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">What happens after you approve</mark></p>
               <h2 className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">The Workspace flow</h2>
               
