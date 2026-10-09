@@ -1,17 +1,8 @@
 import { useEffect, useState } from 'react';
-import { ArrowDown, ArrowRight, Check, FileText, ShieldCheck } from 'lucide-react';
+import { ArrowDown, Check, FileText, ShieldCheck } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
-
-const workflow = [
-  ['01', 'EVIDENCE COLLECTED', 'The relevant Amazon records, case history and supporting documents are assembled.'],
-  ['02', 'INVESTIGATE & VALIDATE', 'Margin connects the evidence to the underlying financial event and establishes what happened.'],
-  ['03', 'DETERMINE & APPROVE', 'The finding establishes what remains unresolved, what the evidence supports, and what action is justified.'],
-  ['04', 'SUBMIT & PURSUE', 'The recovery is submitted where justified, and the case progresses through Amazon’s response and follow-up.'],
-  ['05', 'VERIFY & RECONCILE', 'Margin checks the resulting financial records against the expected outcome.'],
-  ['06', 'FINAL OUTCOME', 'The case reaches a substantiated outcome: recovered, partially recovered, or unresolved.'],
-] as const;
 
 const recoveryStatuses = [
   ['Recovery approved', '#10D991'],
@@ -81,9 +72,7 @@ export default function PaymentProofDemo() {
           <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 font-mono text-[9px] uppercase tracking-[0.14em] text-[#8791B2] sm:bottom-7"><ShieldCheck className="h-3.5 w-3.5" />Evidence-linked financial outcome</div>
         </div>
 
-        <div className="relative mt-10 grid gap-4 md:grid-cols-6 md:gap-0">
-          {workflow.map(([number, title, detail], index) => <div key={number} className="relative flex gap-3 md:block md:px-4 md:first:pl-0 md:last:pr-0"><div className="flex shrink-0 items-center gap-2 md:block"><span className={`flex h-8 w-8 items-center justify-center rounded-full font-mono text-[10px] font-semibold ${stage >= index + 1 ? 'bg-[#182026] text-white' : 'bg-white text-[#8A99A5]'} transition-colors duration-300`}>{number}</span>{index < workflow.length - 1 ? <ArrowRight className="hidden h-3.5 w-3.5 text-[#B1BAC0] md:absolute md:right-[-7px] md:top-3 md:block" /> : null}</div><div className="pt-0.5 md:pt-3"><p className="font-mono text-[9px] font-semibold tracking-[0.08em] text-[#52616A]">{title}</p><p className="mt-1 text-[11px] leading-5 text-[#8A99A5]">{detail}</p></div></div>)}
-        </div>
+
       </section>
     </main>
   );
