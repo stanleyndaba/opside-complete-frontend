@@ -19,9 +19,9 @@ const operationSteps = [
 
 const assessmentRail = [
   { label: 'Assessment record', href: '#recovery-workspace-title', icon: ListChecks },
-  { label: 'Operating scope', href: '#what-we-found', icon: Layers3 },
-  { label: 'Evidence position', href: '#what-we-can-support', icon: Files },
-  { label: 'Workspace decision', href: '#why-recovery-workspace', icon: SlidersHorizontal },
+  { label: 'Operating scope', href: '#financial-pattern', icon: Layers3 },
+  { label: 'Evidence position', href: '#evidence-and-control-position', icon: Files },
+  { label: 'Workspace decision', href: '#why-the-operating-route-matters', icon: SlidersHorizontal },
   { label: 'Next step', href: '#what-you-control', icon: Search },
 ] as const;
 
@@ -65,11 +65,31 @@ function WorkspaceResponseBuild() {
   const reduceMotion = useReducedMotion();
   const [activeItem, setActiveItem] = useState(0);
   const items = [
-    { text: 'Coverage established across 124,860 orders, 1,842 shipments, 7,630 returns, 31,940 fee records, and 28,600 inventory movements across 8 settlement periods.', highlight: 'yellow' },
-    { text: 'The operating population spans 4 marketplaces and 3 legal entities, with 1,126 affected records across 318 SKUs.', highlight: 'blue' },
-    { text: 'This is not one bounded event. The records establish a portfolio-level control position.', highlight: 'green' },
+    { kind: 'paragraph', text: 'Coverage established across 124,860 orders, 1,842 shipments, 7,630 returns, 31,940 fee records, and 28,600 inventory movements across 8 settlement periods.', highlight: 'yellow' },
+    { kind: 'paragraph', text: 'The operating population spans 4 marketplaces and 3 legal entities, with 1,126 affected records across 318 SKUs.', highlight: 'blue' },
+    { kind: 'paragraph', text: 'This is not one bounded event. The records establish a portfolio-level control position.', highlight: 'green' },
+    { kind: 'heading', text: 'Financial pattern' },
+    { kind: 'heading', text: 'Portfolio-level finding' },
+    { kind: 'paragraph', text: 'Inbound receiving variances recur across multiple settlement periods and marketplaces. The population requires event-level entitlement, evidence testing, settlement reconciliation, and entity attribution before recovery treatment is determined.', highlight: 'purple' },
+    { kind: 'list', text: '10 March 2026 — 17 affected units across two related shipments; the receiving and inventory records diverge after the same supplier delivery', highlight: 'blue' },
+    { kind: 'list', text: '24 March 2026 — 9 affected units across one shipment; the settlement record does not reconcile to the receiving quantity', highlight: 'green' },
+    { kind: 'list', text: '9 April and 22 April 2026 — 11 affected units across two shipments; settlement attribution remains unresolved', highlight: 'purple' },
+    { kind: 'paragraph', text: 'The Audit separates independent financial events from duplicate records, recurring control failures, and already-accounted-for activity.' },
+    { kind: 'heading', text: 'What this means for the operation' },
+    { kind: 'paragraph', text: 'A single recovery workflow can address one supported event. It does not establish whether the same control failure is recurring across the account.' },
+    { kind: 'paragraph', text: 'Margin distinguishes an isolated event from a repeated exposure pattern, then connects the pattern to the relevant marketplace, entity, settlement period, and evidence population.' },
+    { kind: 'final', text: 'The Audit determines whether the business needs a defined recovery, recurring examination, or an enterprise control boundary.', highlight: 'blue' },
+    { kind: 'heading', text: 'Evidence and control position' },
+    { kind: 'paragraph', text: 'Margin has separated the reviewed population into supported, partially supported, settlement-pending, and unresolved positions. Supported records can move to controlled preparation; positions without sufficient evidence remain visible but are not counted as recoverable.' },
+    { kind: 'paragraph', text: 'Current control population:', highlight: 'green' },
+    { kind: 'paragraph', text: '$184,200 indicated exposure · $88,200 evidence-ready · $96,000 requiring evidence or settlement review · 14 source gaps requiring additional documentation.' },
+    { kind: 'paragraph', text: 'Unverified conditions remain unresolved — they are not counted as recovered, recoverable, or cleared.' },
+    { kind: 'heading', text: 'Why the operating route matters' },
+    { kind: 'paragraph', text: 'The Audit has established a population that requires more than a single bounded recovery and more than an ungoverned recurring queue.' },
+    { kind: 'paragraph', text: 'The recommended next step is an Enterprise Control Pilot to establish ownership, evidence operations, approval points, and financial close requirements.' },
+    { kind: 'paragraph', text: 'If the population is narrower than the enterprise boundary requires, Margin routes it to Recover Once or Recovery Workspace instead.' },
   ];
-  const highlightClasses: Record<string, string> = { yellow: 'bg-[#FFF1A8]', blue: 'bg-[#DDEBFF]', green: 'bg-[#DDF4E5]' };
+  const highlightClasses: Record<string, string> = { yellow: 'bg-[#FFF1A8]', blue: 'bg-[#DDEBFF]', green: 'bg-[#DDF4E5]', purple: 'bg-[#E9DEFF]' };
 
   const advance = () => {
     if (reduceMotion) return;
@@ -89,9 +109,17 @@ function WorkspaceResponseBuild() {
             const active = reduceMotion || index === activeItem;
             const typedContent = reduceMotion ? item.text : active ? <FastWorkspaceTypewriter text={item.text} onComplete={advance} /> : index < activeItem ? item.text : null;
             const highlightComplete = reduceMotion || index < activeItem;
+            const itemClass = item.kind === 'heading'
+              ? 'mt-3 font-google-sans text-[15px] leading-tight tracking-[-0.02em] text-[#191B20]'
+              : item.kind === 'final'
+                ? 'mt-3 text-[14px] leading-6 text-[#191B20]'
+                : item.kind === 'list'
+                  ? 'flex items-baseline gap-2 text-[14px] leading-6 text-[#595E68]'
+                  : 'text-[14px] leading-6 text-[#595E68]';
             return (
-              <motion.div key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className="text-[14px] leading-6 text-[#595E68]">
-                <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightComplete ? highlightClasses[item.highlight] : 'bg-transparent'}`}>{typedContent}</mark>
+              <motion.div id={item.kind === 'heading' ? item.text.toLowerCase().replaceAll(' ', '-') : undefined} key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className={itemClass}>
+                {item.kind === 'list' ? <span className="text-[#8A99A3]">•</span> : null}
+                {item.highlight ? <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightComplete ? highlightClasses[item.highlight] : 'bg-transparent'}`}>{typedContent}</mark> : typedContent}
               </motion.div>
             );
           })}
@@ -139,40 +167,6 @@ export default function RecoveryWorkspace() {
             </div>
             <div className="enterprise-assessment-copy pl-12" style={{ zoom: 0.75 }}>
               <WorkspaceResponseBuild />
-
-              <section className="py-4" aria-labelledby="what-we-found">
-              <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">Financial pattern</mark></p>
-              <h2 id="what-we-found" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Portfolio-level finding</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">Inbound receiving variances</mark> recur across multiple settlement periods and marketplaces. The population requires event-level entitlement, evidence testing, settlement reconciliation, and entity attribution before recovery treatment is determined.</p>
-              <ul className="mt-2 list-inside list-disc space-y-1.5 text-[14px] text-[#595E68]">
-                <li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">10 March 2026</mark> — 17 affected units across two related shipments; the receiving and inventory records diverge after the same supplier delivery</li>
-                <li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">24 March 2026</mark> — 9 affected units across one shipment; the settlement record does not reconcile to the receiving quantity</li>
-                <li><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#E9DEFF]">9 April and 22 April 2026</mark> — 11 affected units across two shipments; settlement attribution remains unresolved</li>
-              </ul>
-              <p className="mt-2 text-[14px] leading-6 text-[#595E68]">The Audit separates independent financial events from duplicate records, recurring control failures, and already-accounted-for activity.</p>
-            </section>
-
-            <section className="py-4" aria-labelledby="what-this-means">
-              <h2 id="what-this-means" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What this means for the operation</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">A single recovery workflow can address one supported event. It does not establish whether the same control failure is recurring across the account.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Margin distinguishes an isolated event from a repeated exposure pattern, then connects the pattern to the relevant marketplace, entity, settlement period, and evidence population.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">The Audit determines whether the business needs a defined recovery, recurring examination, or an enterprise control boundary.</mark></p>
-            </section>
-
-            <section className="py-4" aria-labelledby="what-we-can-support">
-              <h2 id="what-we-can-support" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Evidence and control position</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Margin has separated the reviewed population into supported, partially supported, settlement-pending, and unresolved positions. Supported records can move to controlled preparation; positions without sufficient evidence remain visible but are not counted as recoverable.</p>
-              <p className="mt-3 text-[14px] leading-6 text-[#191B20] font-normal"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">Current control population:</mark></p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">$184,200 indicated exposure · $88,200 evidence-ready · $96,000 requiring evidence or settlement review · 14 source gaps requiring additional documentation.</p>
-              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Unverified conditions remain unresolved — they are not counted as recovered, recoverable, or cleared.</p>
-            </section>
-
-            <section className="py-4" aria-labelledby="why-recovery-workspace">
-              <h2 id="why-recovery-workspace" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">Why the operating route matters</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The Audit has established a population that requires more than a single bounded recovery and more than an ungoverned recurring queue.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The recommended next step is an <mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDEBFF]">Enterprise Control Pilot</mark> to establish ownership, evidence operations, approval points, and financial close requirements.</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">If the population is narrower than the enterprise boundary requires, Margin routes it to Recover Once or Recovery Workspace instead.</p>
-            </section>
 
             <section className="py-4" aria-labelledby="what-covers">
               <h2 id="what-covers" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What the control review establishes</h2>
@@ -280,7 +274,7 @@ export default function RecoveryWorkspace() {
           </div>
           </div>
 
-          <aside className="order-2 w-full lg:sticky lg:top-[76px] lg:ml-auto lg:max-w-[380px]" aria-label="Recovery Workspace decision summary">
+          <aside className="hidden order-2 w-full lg:sticky lg:top-[76px] lg:ml-auto lg:max-w-[380px]" aria-label="Recovery Workspace decision summary">
             <div className="rounded-[10px] border border-[#D7D7D1] bg-white p-4 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-5">
               <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#F1F2F2]">What happens after you approve</mark></p>
               <h2 className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">The Workspace flow</h2>
