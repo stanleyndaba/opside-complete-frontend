@@ -75,7 +75,7 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
 
   if (item.onClick) {
     return (
-      <button type="button" onClick={item.onClick} className={className} style={{ color: '#94A3B8' }}>
+      <button type="button" onClick={item.onClick} className={className} style={{ color: '#52616A' }}>
         <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]">
           {item.label}
         </span>
@@ -90,12 +90,12 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
         target="_blank" 
         rel="noreferrer" 
         className={className}
-        style={{ color: '#94A3B8' }}
+        style={{ color: '#52616A' }}
       >
         <span 
           className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]"
-          onMouseEnter={(e) => (e.currentTarget.parentElement!.style.color = '#FFFFFF')}
-          onMouseLeave={(e) => (e.currentTarget.parentElement!.style.color = '#94A3B8')}
+          onMouseEnter={(e) => (e.currentTarget.parentElement!.style.color = '#182026')}
+          onMouseLeave={(e) => (e.currentTarget.parentElement!.style.color = '#52616A')}
         >
           {item.label}
         </span>
@@ -105,7 +105,7 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
 
   if (!item.href) {
     return (
-      <span className={className} style={{ color: '#94A3B8' }}>
+      <span className={className} style={{ color: '#52616A' }}>
         {item.label}
       </span>
     );
@@ -116,12 +116,12 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
       <a 
         href={item.href} 
         className={className}
-        style={{ color: '#94A3B8' }}
+        style={{ color: '#52616A' }}
       >
         <span 
           className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]"
-          onMouseEnter={(e) => (e.currentTarget.parentElement!.style.color = '#FFFFFF')}
-          onMouseLeave={(e) => (e.currentTarget.parentElement!.style.color = '#94A3B8')}
+          onMouseEnter={(e) => (e.currentTarget.parentElement!.style.color = '#182026')}
+          onMouseLeave={(e) => (e.currentTarget.parentElement!.style.color = '#52616A')}
         >
           {item.label}
         </span>
@@ -130,11 +130,11 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
   }
 
   return (
-    <Link to={item.href} className={className} style={{ color: '#94A3B8' }}>
+    <Link to={item.href} className={className} style={{ color: '#52616A' }}>
       <span 
         className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]"
-        onMouseEnter={(e) => (e.currentTarget.parentElement!.style.color = '#FFFFFF')}
-        onMouseLeave={(e) => (e.currentTarget.parentElement!.style.color = '#94A3B8')}
+        onMouseEnter={(e) => (e.currentTarget.parentElement!.style.color = '#182026')}
+        onMouseLeave={(e) => (e.currentTarget.parentElement!.style.color = '#52616A')}
       >
         {item.label}
       </span>
@@ -144,7 +144,7 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
 
 const FooterColumn: React.FC<{ title: string; links: FooterLink[] }> = ({ title, links }) => (
   <div>
-    <h3 className="text-lg font-medium tracking-tight" style={{ color: '#FFFFFF' }}>{title}</h3>
+    <h3 className="text-lg font-medium tracking-tight" style={{ color: '#182026' }}>{title}</h3>
     <nav className="mt-5 flex flex-col gap-3" aria-label={title}>
       {links.map((item) => (
         <FooterLinkItem key={item.label} item={item} />
@@ -164,16 +164,16 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
   };
 
   return (
-    <div className="relative z-10 w-full bg-[#1A1A1A]">
+    <div className="relative z-10 w-full bg-white">
       <footer
         id="core-footer"
-        data-navbar-theme="dark"
-        className="relative w-full overflow-hidden bg-[#1A1A1A] text-[#E0E0E0]"
+        data-navbar-theme="light"
+        className="relative w-full overflow-hidden bg-white text-[#182026]"
         style={{ width: '100%', maxWidth: '100%' }}
       >
         <div className={wide ? "mx-auto w-full max-w-[1280px] px-4 py-16 md:px-8 lg:px-10 2xl:px-12" : "container mx-auto px-4 py-16"}>
           <div className="hidden mx-auto mb-12 max-w-3xl text-center">
-            <h2 className="text-2xl font-medium tracking-tight text-white md:text-3xl">
+            <h2 className="text-2xl font-medium tracking-tight text-[#182026] md:text-3xl">
               Join for product updates, insights, and event invites.
             </h2>
 
@@ -192,11 +192,11 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                 }}
                 placeholder="Your email address"
                 aria-describedby="footer-newsletter-status"
-                className="h-12 w-full max-w-md rounded-md border border-gray-700 bg-gray-800 px-4 py-3 text-sm text-white outline-none transition placeholder:text-gray-500 hover:border-gray-600 focus:ring-2 focus:ring-blue-500"
+                className="h-12 w-full max-w-md rounded-md border border-[#D8E3EA] bg-white px-4 py-3 text-sm text-[#182026] outline-none transition placeholder:text-[#94A3B8] hover:border-[#94A3B8] focus:ring-2 focus:ring-blue-500"
               />
               <button
                 type="submit"
-                className="h-12 rounded-md bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#1A1A1A]"
+                className="h-12 rounded-md bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white"
               >
                 Subscribe
               </button>
@@ -208,16 +208,16 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
             </p>
           </div>
 
-          <div className="grid gap-12 border-t border-gray-700 pt-12 lg:grid-cols-[1.1fr_1fr_1.25fr] lg:gap-16">
+          <div className="grid gap-12 border-t border-[#D8E3EA] pt-12 lg:grid-cols-[1.1fr_1fr_1.25fr] lg:gap-16">
             <div className="max-w-[380px]">
               <Link to="/" className="inline-flex items-center gap-3 transition-opacity hover:opacity-85">
-                <img src="/logoimagetwo.png" alt="Margin" width="32" height="32" className="h-8 w-auto object-contain brightness-0 invert" />
-                <span className="brand-wordmark font-merriweather text-2xl tracking-tight" style={{ color: '#FFFFFF' }}>Margin</span>
+                <img src="/logoimagetwo.png" alt="Margin" width="32" height="32" className="h-8 w-auto object-contain" />
+                <span className="brand-wordmark font-merriweather text-2xl tracking-tight" style={{ color: '#182026' }}>Margin</span>
               </Link>
-              <p className="mt-6 max-w-[330px] text-[15px] leading-7 tracking-tight" style={{ color: '#CBD5E1' }}>
+              <p className="mt-6 max-w-[330px] text-[15px] leading-7 tracking-tight" style={{ color: '#52616A' }}>
                 Financial recovery and reconciliation infrastructure for Amazon businesses.
               </p>
-              <p className="mt-4 max-w-[340px] text-sm leading-6 tracking-tight" style={{ color: '#64748B' }}>
+              <p className="mt-4 max-w-[340px] text-sm leading-6 tracking-tight" style={{ color: '#66737F' }}>
                 Margin takes the recovery work off your team’s plate—from investigation and evidence through follow-through and financial close.
               </p>
             </div>
@@ -245,9 +245,9 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               </div>
             </div>
 
-            <div className="border-t border-gray-700 pt-8 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
-              <p className="text-lg font-medium tracking-tight text-white">Talk to Margin</p>
-              <p className="mt-2 max-w-[310px] text-sm leading-6 tracking-tight" style={{ color: '#94A3B8' }}>
+            <div className="border-t border-[#D8E3EA] pt-8 lg:border-l lg:border-t-0 lg:border-[#D8E3EA] lg:pl-10 lg:pt-0">
+              <p className="text-lg font-medium tracking-tight text-[#182026]">Talk to Margin</p>
+              <p className="mt-2 max-w-[310px] text-sm leading-6 tracking-tight" style={{ color: '#52616A' }}>
                 There are people behind the product. Choose the route that matches what you need.
               </p>
               <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
@@ -257,8 +257,8 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                     href={`mailto:${email}`}
                     className="group block w-fit focus-visible:outline-none"
                   >
-                    <span className="block text-[11px] font-medium tracking-tight text-[#64748B]">{label}</span>
-                    <span className="mt-1 block w-fit text-sm text-[#CBD5E1] transition-colors group-hover:text-white group-focus-visible:text-white">
+                    <span className="block text-[11px] font-medium tracking-tight text-[#66737F]">{label}</span>
+                    <span className="mt-1 block w-fit text-sm text-[#52616A] transition-colors group-hover:text-[#182026] group-focus-visible:text-[#182026]">
                       {email}
                     </span>
                   </a>
@@ -267,9 +267,9 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
             </div>
           </div>
 
-          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gray-700 pt-8 md:flex-row">
-            <div className="flex max-w-[1024px] flex-col gap-2 text-sm tracking-tight" style={{ color: '#64748B' }}>
-              <span className="font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] text-white min-[390px]:text-[46px] sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>From uncertainty to resolution</span>
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#D8E3EA] pt-8 md:flex-row">
+            <div className="flex max-w-[1024px] flex-col gap-2 text-sm tracking-tight" style={{ color: '#66737F' }}>
+              <span className="font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] text-[#182026] min-[390px]:text-[46px] sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>From uncertainty to resolution</span>
               <span>© {new Date().getFullYear()} Margin. All rights reserved.</span>
               {selectedLanguageLabel && (
                 <span className="inline-flex items-center gap-1.5">
@@ -288,9 +288,9 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                   rel="noreferrer"
                   aria-label={social.label}
                   className="inline-flex items-center justify-center transition-colors duration-200 focus-visible:outline-none"
-                  style={{ color: '#94A3B8' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+                  style={{ color: '#64748B' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#182026')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#64748B')}
                 >
                   {social.icon}
                 </a>
@@ -305,7 +305,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
             className="brand-wordmark whitespace-nowrap font-merriweather font-black uppercase leading-none tracking-[-0.07em]"
             style={{ 
               fontSize: 'clamp(50px, 22vw, 440px)',
-              color: '#FFFFFF',
+              color: '#182026',
               fontFamily: "'Merriweather', Georgia, serif"
             }}
           >
