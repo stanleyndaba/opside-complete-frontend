@@ -505,7 +505,13 @@ function KineticHeroSection({
           alt=""
           className="h-full w-full scale-[0.98] object-cover object-[60%_top] opacity-[0.92] mix-blend-multiply"
         />
-        <div className="absolute right-[3%] top-[27%] w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.14)] backdrop-blur-xl sm:px-3.5 sm:py-2.5">
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: -28, scaleX: 0.42, scaleY: 0.88 }}
+          animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
+          transition={reduceMotion ? { duration: 0 } : { delay: 0.22, duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
+          style={{ transformOrigin: "top right" }}
+          className="absolute right-[3%] top-[27%] origin-top-right w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.14)] backdrop-blur-xl sm:px-3.5 sm:py-2.5"
+        >
           <div className="flex items-start gap-2.5">
             <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="mt-0.5 h-4 w-4 shrink-0 object-contain" />
             <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
@@ -522,8 +528,14 @@ function KineticHeroSection({
               <p className="truncate text-[#46545B]">[Case ID: 19822888381] Partial approval issued — $26,000 | $18,650 residual</p>
             </div>
           </div>
-        </div>
-        <div className="absolute right-[3%] top-[36%] w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5">
+        </motion.div>
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: -28, scaleX: 0.42, scaleY: 0.88 }}
+          animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
+          transition={reduceMotion ? { duration: 0 } : { delay: 0.50, duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
+          style={{ transformOrigin: "top right" }}
+          className="absolute right-[3%] top-[36%] origin-top-right w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5"
+        >
           <div className="flex items-center gap-2.5">
             <img src="/favicon-margin.svg" alt="Margin" className="h-4 w-4 shrink-0" />
             <ArrowRight className="h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
@@ -533,8 +545,14 @@ function KineticHeroSection({
               <p className="truncate text-[#263438]">[Case ID: 19822888381] Residual evidence response prepared | $2,850</p>
             </div>
           </div>
-        </div>
-        <div className="absolute right-[3%] top-[45%] w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5">
+        </motion.div>
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: -28, scaleX: 0.42, scaleY: 0.88 }}
+          animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
+          transition={reduceMotion ? { duration: 0 } : { delay: 0.78, duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
+          style={{ transformOrigin: "top right" }}
+          className="absolute right-[3%] top-[45%] origin-top-right w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5"
+        >
           <div className="flex items-start gap-2.5">
             <img src="/favicon-margin.svg" alt="Margin" className="mt-0.5 h-4 w-4 shrink-0" />
             <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
@@ -548,7 +566,7 @@ function KineticHeroSection({
               <p className="truncate text-[#46545B]">Amazon approved $26,000 — $19,240 remains open</p>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[860px]">
