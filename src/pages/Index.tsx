@@ -492,20 +492,20 @@ function KineticHeroSection({
       aria-labelledby="margin-hero-title"
     >
       <HeroSwarmBackground reduceMotion={reduceMotion} />
-      <img
-        src="/gmaillist.png"
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full scale-[0.98] object-cover object-[center_top] opacity-[0.42] blur-[0.7px] mix-blend-multiply sm:opacity-[0.48]"
-      />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,1)_0%,rgba(255,255,255,0.83)_20%,rgba(255,255,255,0.61)_46%,rgba(255,255,255,0.20)_72%,rgba(255,255,255,0)_100%)]"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0)_42%,rgba(255,255,255,0.10)_100%)]"
-      />
+        className="pointer-events-none absolute inset-y-0 right-0 w-[66%] overflow-hidden"
+        style={{
+          maskImage: "linear-gradient(to right, transparent 0%, transparent 42%, black 72%, black 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, transparent 42%, black 72%, black 100%)",
+        }}
+      >
+        <img
+          src="/gmaillist.png"
+          alt=""
+          className="h-full w-full scale-[0.98] object-cover object-[center_top] opacity-[0.78] mix-blend-multiply"
+        />
+      </div>
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[1040px]">
           <div className="inline-flex items-center rounded-[5px] bg-[#EFF1F2] px-3 py-1.5 text-[10px] font-semibold tracking-[0.04em] text-[#66737F]">E2E AI-Native recovery compliance</div>
