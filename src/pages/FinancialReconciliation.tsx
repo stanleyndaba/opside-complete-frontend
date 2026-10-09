@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
 import { useReducedMotion } from 'framer-motion';
@@ -17,46 +17,54 @@ const timeline = [
   ['Financial position closed', 'Only the reconciled scope is treated as complete.'],
 ] as const;
 
-const reconciliationStatement = 'Across 684 positions reviewed, Margin approved $2.84M of supported exposure. $2.51M has since settled and been verified, while $184K remains visible as residual exposure under control.';
+const reconciliationNarrative = [
+  'Q1 2026 financial close population. Approved value is not treated as closed until settlement, attribution, ledger treatment, and residual checks agree.',
+  'Across 684 positions reviewed, Margin approved $2.84M of supported exposure. $2.51M has since settled and been verified, while $184K remains visible as residual exposure under control.',
+  'Close-control population: 412 positions are closed, 92 require evidence or settlement action, and $96K remains under reversal or attribution watch.',
+  'Control rule: approved value, credited value, settled value, and downstream ledger treatment remain distinct until the financial position is fully reconciled.',
+] as const;
 
-function ReconciliationStatementBuild() {
+function ReconciliationNarrativeBuild() {
   const reduceMotion = useReducedMotion();
-  const [visibleText, setVisibleText] = useState(reduceMotion ? reconciliationStatement : '');
-  const [complete, setComplete] = useState(Boolean(reduceMotion));
-  const onCompleteRef = useRef<(() => void) | undefined>();
+  const [currentSegment, setCurrentSegment] = useState(reduceMotion ? reconciliationNarrative.length : 0);
+  const [visibleText, setVisibleText] = useState('');
 
   useEffect(() => {
-    if (reduceMotion) {
-      setVisibleText(reconciliationStatement);
-      setComplete(true);
-      return;
-    }
+    if (reduceMotion || currentSegment >= reconciliationNarrative.length) return;
     setVisibleText('');
-    setComplete(false);
     let index = 0;
     let interval: number | undefined;
     const start = window.setTimeout(() => {
       interval = window.setInterval(() => {
         index += 1;
-        setVisibleText(reconciliationStatement.slice(0, index));
-        if (index >= reconciliationStatement.length) {
+        setVisibleText(reconciliationNarrative[currentSegment].slice(0, index));
+        if (index >= reconciliationNarrative[currentSegment].length) {
           if (interval) window.clearInterval(interval);
-          setComplete(true);
-          onCompleteRef.current?.();
+          window.setTimeout(() => setCurrentSegment((segment) => segment + 1), 160);
         }
       }, 3);
-    }, 90);
+    }, currentSegment === 0 ? 90 : 40);
     return () => {
       window.clearTimeout(start);
       if (interval) window.clearInterval(interval);
     };
-  }, [reduceMotion]);
+  }, [currentSegment, reduceMotion]);
 
-  if (!complete) {
-    return <>{visibleText}<span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /></>;
-  }
+  const completed = reduceMotion ? reconciliationNarrative.length : currentSegment;
+  const renderStatement = (text: string) => {
+    if (text !== reconciliationNarrative[1]) return text;
+    return <>Across 684 positions reviewed, Margin approved <mark className="rounded-[2px] bg-[#DDEBFF] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">$2.84M</mark> of supported exposure. <mark className="rounded-[2px] bg-[#DDF4E5] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">$2.51M has since settled and been verified</mark>, while <mark className="rounded-[2px] bg-[#FFF1A8] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">$184K remains visible as residual exposure under control</mark>.</>;
+  };
 
-  return <>Across 684 positions reviewed, Margin approved <mark className="rounded-[2px] bg-[#DDEBFF] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">$2.84M</mark> of supported exposure. <mark className="rounded-[2px] bg-[#DDF4E5] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">$2.51M has since settled and been verified</mark>, while <mark className="rounded-[2px] bg-[#FFF1A8] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">$184K remains visible as residual exposure under control</mark>.</>;
+  return (
+    <div className="mt-1 max-w-[820px] space-y-3 text-[13px] leading-6 text-[#4D5B66]">
+      {completed > 0 || currentSegment === 0 ? <p>{completed > 0 ? reconciliationNarrative[0] : visibleText}{completed === 0 ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</p> : null}
+      {completed > 0 ? <Link to="/approved-reimbursements" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE] hover:text-[#075AAB]">View verified impact <ArrowRight className="h-3.5 w-3.5" /></Link> : null}
+      {completed > 1 || currentSegment === 1 ? <div className="border-y border-[#DCE5E5] py-4"><p className="text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Close-control statement</p><p className="mt-2 text-[16px] leading-7 tracking-[-0.02em] text-[#4D5B66]">{completed > 1 ? renderStatement(reconciliationNarrative[1]) : visibleText}<span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /></p></div> : null}
+      {completed > 2 || currentSegment === 2 ? <p><span className="font-semibold text-[#182026]">Close-control population:</span> {completed > 2 ? reconciliationNarrative[2].replace('Close-control population: ', '') : visibleText.replace('Close-control population: ', '')}<span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /></p> : null}
+      {completed > 3 || currentSegment === 3 ? <p><span className="font-semibold text-[#182026]">Control rule:</span> {completed > 3 ? reconciliationNarrative[3].replace('Control rule: ', '') : visibleText.replace('Control rule: ', '')}<span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /></p> : null}
+    </div>
+  );
 }
 
 const verifiedOutcomes = [
@@ -81,21 +89,12 @@ export default function FinancialReconciliation() {
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-google-sans text-[#182026]">
       <main className="mx-auto max-w-[1180px] px-5 py-5 sm:px-7 sm:py-7">
         <section className="border-b border-[#DCE5E5] pb-5 sm:pb-6" aria-labelledby="approved-reimbursements-title">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-3">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Illustrative control population</p>
               <h2 id="approved-reimbursements-title" className="mt-1 font-google-sans text-[22px] leading-tight tracking-[-0.035em] text-[#182026]">Recovery settlement control</h2>
-              <p className="mt-1 max-w-[680px] text-[12px] leading-5 text-[#66737F]">Q1 2026 financial close population. Approved value is not treated as closed until settlement, attribution, ledger treatment, and residual checks agree.</p>
+              <ReconciliationNarrativeBuild />
             </div>
-            <Link to="/approved-reimbursements" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE] hover:text-[#075AAB]">View verified impact <ArrowRight className="h-3.5 w-3.5" /></Link>
-          </div>
-          <section className="mt-5 border-y border-[#DCE5E5] py-4" aria-label="Reconciliation statement">
-            <p className="text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Close-control statement</p>
-            <p className="mt-2 max-w-[820px] text-[16px] leading-7 tracking-[-0.02em] text-[#4D5B66]"><ReconciliationStatementBuild /></p>
-          </section>
-          <div className="mt-4 max-w-[820px] text-[12px] leading-6 text-[#4D5B66]">
-            <p><span className="font-semibold text-[#182026]">Close-control population:</span> 412 positions are closed, 92 require evidence or settlement action, and $96K remains under reversal or attribution watch.</p>
-            <p className="mt-2"><span className="font-semibold text-[#182026]">Control rule:</span> approved value, credited value, settled value, and downstream ledger treatment remain distinct until the financial position is fully reconciled.</p>
           </div>
           <div className="mt-3 flex items-center gap-3 rounded-[8px] border border-[#E2E8E7] bg-white px-3 py-2 text-[11px] text-[#8A99A5]
           "><span className="text-[16px]">⌕</span><span className="flex-1">Query positions by case ID, entity, or settlement reference</span><span className="rounded-[5px] bg-[#F1F3F4] px-2 py-1 font-google-sans text-[10px] text-[#66737F]">⌘ K</span></div>
