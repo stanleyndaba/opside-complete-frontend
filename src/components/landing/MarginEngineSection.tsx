@@ -7,9 +7,6 @@ export function MarginEngineSection() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(178,220,232,0.28),transparent_38%)]" />
       <div className="relative mx-auto w-full max-w-[1240px] px-5 sm:px-8">
         <div className="mb-10 max-w-[720px] md:mb-14">
-          <div className="mb-5 flex items-center gap-3">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">06 / THE PROMISE</span>
-          </div>
           <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Stop carrying the recovery operation.</h2>
           <p className="mt-4 max-w-[660px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">For an established Amazon operation spanning marketplaces, entities, fulfillment networks, and settlement periods, the cost is not finding one discrepancy. It is keeping thousands of financial threads alive across finance, operations, warehouses, 3PLs, and the close.</p>
         <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Margin turns a defended financial position into an owned operating path: the action is defined, the approval boundary is clear, the response is handled, and the settlement outcome is verified.</p>
