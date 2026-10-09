@@ -538,7 +538,7 @@ function KineticHeroSection({
           <div className="flex items-start gap-2.5">
             <img src="/favicon-margin.svg" alt="Margin" className="mt-0.5 h-4 w-4 shrink-0" />
             <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
-            <img src="/slack2.png" alt="Slack" className="mt-0.5 h-4 w-4 shrink-0 object-contain" />
+            <img src="/slack-icon-2019.png" alt="Slack" className="mt-0.5 h-4 w-4 shrink-0 object-contain" />
             <div className="min-w-0 flex-1 text-[9px] leading-4 tracking-tight text-[#46545B] sm:text-[10px]">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-semibold text-[#263438]">Recovery review · residual exposure</span>
