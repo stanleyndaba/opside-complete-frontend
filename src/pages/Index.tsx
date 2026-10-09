@@ -492,6 +492,20 @@ function KineticHeroSection({
       aria-labelledby="margin-hero-title"
     >
       <HeroSwarmBackground reduceMotion={reduceMotion} />
+      <img
+        src="/gmaillist.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full scale-[1.04] object-cover object-[center_top] opacity-[0.18] blur-[0.7px] mix-blend-multiply sm:opacity-[0.22]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.98)_0%,rgba(255,255,255,0.94)_30%,rgba(255,255,255,0.76)_58%,rgba(255,255,255,0.34)_100%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.78)_0%,rgba(255,255,255,0.14)_42%,rgba(255,255,255,0.68)_100%)]"
+      />
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[1040px]">
           <div className="inline-flex items-center rounded-[5px] bg-[#EFF1F2] px-3 py-1.5 text-[10px] font-semibold tracking-[0.04em] text-[#66737F]">E2E AI-Native recovery compliance</div>
