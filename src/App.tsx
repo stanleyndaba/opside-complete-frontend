@@ -89,6 +89,7 @@ const EvidenceRequired = lazy(() => import('./pages/EvidenceRequired'));
 const AmazonThreadReview = lazy(() => import('./pages/AmazonThreadReview'));
 const ProgressReview = lazy(() => import('./pages/ProgressReview'));
 const FinancialReconciliation = lazy(() => import('./pages/FinancialReconciliation'));
+const PaymentProofDemo = lazy(() => import('./pages/PaymentProofDemo'));
 const MarginStandardDeliverable = lazy(() => import('./pages/MarginStandardDeliverable'));
 const AutoSubmitPreview = lazy(() => import('./pages/AutoSubmitPreview'));
 const DocumentUploads = lazy(() => import("@/components/documentuploads"));
@@ -311,6 +312,7 @@ const App = () => (
                         <Route path='/progress-review' element={<ProgressReview />} />
                         <Route path='/progress-preview' element={<ProgressReview />} />
                         <Route path='/financial-reconciliation' element={<FinancialReconciliation />} />
+                        <Route path='/payment-proof-demo' element={<PaymentProofDemo />} />
                         <Route path='/margin-standard-deliverable' element={<MarginStandardDeliverable />} />
                         <Route path='/auto-submit-preview' element={<AutoSubmitPreview />} />
                         <Route path='/appeals-review' element={<AppealsReview />} />
