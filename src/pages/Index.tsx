@@ -480,7 +480,13 @@ function KineticHeroSection({
   nextBatchHours?: number;
 }) {
   const reduceMotion = useReducedMotion();
+  const [notificationCycle, setNotificationCycle] = useState(0);
   const { scrollYProgress } = useScroll();
+  useEffect(() => {
+    if (reduceMotion) return;
+    const timer = window.setInterval(() => setNotificationCycle((cycle) => cycle + 1), 5200);
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
   const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.98]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0.82]);
 
@@ -505,6 +511,7 @@ function KineticHeroSection({
           alt=""
           className="h-full w-full scale-[0.98] object-cover object-[60%_top] opacity-[0.92] mix-blend-multiply"
         />
+        <div key={notificationCycle} className="contents">
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: -28, scaleX: 0.42, scaleY: 0.88 }}
           animate={{ opacity: 1, y: 0, scaleX: 1, scaleY: 1 }}
@@ -513,9 +520,9 @@ function KineticHeroSection({
           className="absolute right-[3%] top-[27%] origin-top-right w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.14)] backdrop-blur-xl sm:px-3.5 sm:py-2.5"
         >
           <div className="flex items-start gap-2.5">
-            <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="mt-0.5 h-4 w-4 shrink-0 object-contain" />
+            <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0 object-contain" />
             <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
-            <img src="/gmailicon.png" alt="Gmail" className="mt-0.5 h-4 w-4 shrink-0 object-contain" />
+            <img src="/gmailicon.png" alt="Gmail" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0 object-contain" />
             <div className="min-w-0 flex-1 text-[9px] leading-4 tracking-tight text-[#46545B] sm:text-[10px]">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-semibold text-[#263438]">Amazon correspondence</span>
@@ -537,9 +544,9 @@ function KineticHeroSection({
           className="absolute right-[3%] top-[36%] origin-top-right w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5"
         >
           <div className="flex items-center gap-2.5">
-            <img src="/favicon-margin.svg" alt="Margin" className="h-4 w-4 shrink-0" />
+            <img src="/favicon-margin.svg" alt="Margin" className="h-[18.4px] w-[18.4px] shrink-0" />
             <ArrowRight className="h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
-            <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 shrink-0 object-contain" />
+            <img src="/gmailicon.png" alt="Gmail" className="h-[18.4px] w-[18.4px] shrink-0 object-contain" />
             <div className="min-w-0 flex-1 text-[9px] leading-4 tracking-tight text-[#46545B] sm:text-[10px]">
               <div className="flex items-baseline justify-end gap-3"><span className="shrink-0">05/09/26, 13:24:17</span></div>
               <p className="truncate text-[#263438]">[Case ID: 19822888381] Residual evidence response prepared | $2,850</p>
@@ -554,9 +561,9 @@ function KineticHeroSection({
           className="absolute right-[3%] top-[45%] origin-top-right w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5"
         >
           <div className="flex items-start gap-2.5">
-            <img src="/favicon-margin.svg" alt="Margin" className="mt-0.5 h-4 w-4 shrink-0" />
+            <img src="/favicon-margin.svg" alt="Margin" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0" />
             <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
-            <img src="/slack-icon-2019.png" alt="Slack" className="mt-0.5 h-4 w-4 shrink-0 object-contain" />
+            <img src="/slack-icon-2019.png" alt="Slack" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0 object-contain" />
             <div className="min-w-0 flex-1 text-[9px] leading-4 tracking-tight text-[#46545B] sm:text-[10px]">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-semibold text-[#263438]">Recovery review · residual exposure</span>
@@ -567,6 +574,7 @@ function KineticHeroSection({
             </div>
           </div>
         </motion.div>
+        </div>
       </div>
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[860px]">
