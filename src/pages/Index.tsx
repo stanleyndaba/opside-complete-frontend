@@ -505,7 +505,23 @@ function KineticHeroSection({
           alt=""
           className="h-full w-full scale-[0.98] object-cover object-[60%_top] opacity-[0.92] mix-blend-multiply"
         />
-        <div className="absolute right-[7%] top-[38%] w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2.5 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-3">
+        <div className="absolute right-[3%] top-[24%] w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2.5 shadow-[0_18px_44px_rgba(24,32,38,0.14)] backdrop-blur-xl sm:px-3.5 sm:py-3">
+          <div className="flex items-start gap-2.5">
+            <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="mt-0.5 h-4 w-4 shrink-0 object-contain" />
+            <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
+            <img src="/gmailicon.png" alt="Gmail" className="mt-0.5 h-4 w-4 shrink-0 object-contain" />
+            <div className="min-w-0 flex-1 text-[9px] leading-4 tracking-tight text-[#46545B] sm:text-[10px]">
+              <div className="font-semibold text-[#263438]">Amazon correspondence</div>
+              <div className="flex items-baseline justify-between gap-3">
+                <span>Inbound</span>
+                <span className="shrink-0">05/09/26, 11:16:00</span>
+              </div>
+              <div className="mt-0.5 text-[#263438]">Amazon decision · partial approval</div>
+              <p className="truncate text-[#46545B]">[Case ID: 19822888381] Partial approval issued — $26,000 | $18,650 residual</p>
+            </div>
+          </div>
+        </div>
+        <div className="absolute right-[3%] top-[39%] w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2.5 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-3">
           <div className="flex items-center gap-2.5">
             <img src="/favicon-margin.svg" alt="Margin" className="h-4 w-4 shrink-0" />
             <ArrowRight className="h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
