@@ -11,10 +11,18 @@ const recoveryStatuses = [
   ['Reconciled', '#22C7C1'],
 ] as const;
 
-function Connector({ className = '', delay = 0 }: { className?: string; delay?: number }) {
-  return <motion.span aria-hidden="true" className={`absolute block origin-left bg-[#182026] ${className}`} initial={{ scaleX: 0, opacity: 0 }} animate={{ scaleX: 1, opacity: 1 }} transition={{ delay, duration: 0.7, ease: [0.22, 1, 0.36, 1] }} />;
+function CurvedConnections({ stage }: { stage: number }) {
+  const paths = [
+    { d: 'M500 132 C500 174 500 220 500 288', delay: 0.3, visible: stage >= 3 },
+    { d: 'M258 372 C310 372 320 420 390 438 C430 448 462 452 500 452', delay: 0.6, visible: stage >= 2 },
+    { d: 'M500 452 C538 452 570 448 610 438 C680 420 690 372 742 372', delay: 0.9, visible: stage >= 2 },
+  ];
+  return (
+    <svg className="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-visible" viewBox="0 0 1000 720" preserveAspectRatio="none" aria-hidden="true">
+      {paths.map((path) => <motion.path key={path.d} d={path.d} fill="none" stroke="#182026" strokeWidth="2.2" strokeLinecap="round" initial={{ pathLength: 0, opacity: 0 }} animate={path.visible ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }} transition={{ delay: path.delay, duration: 0.85, ease: [0.22, 1, 0.36, 1] }} />)}
+    </svg>
+  );
 }
-
 function OutcomeVerified({ visible }: { visible: boolean }) {
   return (
     <motion.div initial={{ opacity: 0, y: -22, scale: 0.96 }} animate={visible ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: -22, scale: 0.96 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }} className="absolute left-1/2 top-0 z-20 w-[230px] -translate-x-1/2 rounded-[18px] border border-white/80 bg-white/95 px-5 py-5 text-center shadow-[0_18px_50px_rgba(42,61,118,0.12)] backdrop-blur sm:w-[285px] sm:px-7 sm:py-6">
@@ -57,10 +65,13 @@ export default function PaymentProofDemo() {
             <div className="mt-5 space-y-3">{recoveryStatuses.map(([label, color]) => <div key={label} className="flex items-center gap-2.5 text-[11px] text-[#4D5B66] sm:text-[13px]"><span className="h-3 w-3 rounded-full" style={{ backgroundColor: color }} />{label}</div>)}</div>
           </motion.div>
 
-          <Connector className="left-[206px] top-[350px] h-px w-[calc(50%-205px)] sm:left-[278px] sm:top-[365px] sm:w-[calc(50%-278px)]" delay={0.7} />
-          <Connector className="right-[206px] top-[350px] h-px w-[calc(50%-205px)] origin-right sm:right-[278px] sm:top-[365px] sm:w-[calc(50%-278px)]" delay={0.95} />
-          <Connector className="left-1/2 top-[122px] h-[105px] w-px origin-top -translate-x-1/2" delay={1.05} />
-
+          <CurvedConnections stage={stage} />
+          <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: stage >= 2 ? 1 : 0, scale: stage >= 2 ? 1 : 0.85 }} transition={{ delay: 0.55, duration: 0.45 }} className="absolute left-[29%] top-[318px] z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#182026] bg-white p-0.5 shadow-[0_8px_18px_rgba(47,62,122,0.16)] sm:left-[29.5%] sm:top-[330px] sm:h-[68px] sm:w-[68px]">
+            <img src="/approver-michael-thompson.jpg" alt="Margin operator reviewing evidence" className="h-full w-full rounded-full object-cover" />
+          </motion.div>
+          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: stage >= 2 ? 1 : 0, scale: stage >= 2 ? 1 : 0.8 }} transition={{ delay: 0.9, duration: 0.45 }} className="absolute right-[21%] top-[330px] z-20 flex items-center">
+            {['$', '₦', '€'].map((symbol, index) => <span key={symbol} className={`-ml-1 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white text-[15px] font-semibold text-white shadow-[0_5px_12px_rgba(16,185,129,0.2)] sm:h-11 sm:w-11 sm:text-[17px] ${index === 1 ? 'bg-[#22C7C1]' : 'bg-[#10D991]'}`}>{symbol}</span>)}
+          </motion.div>
           <motion.div initial={{ opacity: 0, y: 24, scale: 0.98 }} animate={{ opacity: stage >= 2 ? 1 : 0.35, y: stage >= 2 ? 0 : 24, scale: stage >= 2 ? 1 : 0.98 }} transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }} className="absolute left-1/2 top-[280px] z-10 w-[270px] -translate-x-1/2 rounded-[20px] bg-white px-7 py-8 shadow-[0_24px_60px_rgba(47,62,122,0.15)] sm:top-[300px] sm:w-[370px] sm:px-10 sm:py-10">
             <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#18B987]">Financial Determination</p>
             <p className="mt-3 font-google-sans text-[42px] leading-none tracking-[-0.05em] sm:text-[62px]">$26,000</p>
