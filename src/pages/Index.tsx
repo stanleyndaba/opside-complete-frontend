@@ -520,7 +520,7 @@ function KineticHeroSection({
           style={{ transformOrigin: "top right" }}
           className="absolute right-[3%] top-[27%] origin-top-right w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.14)] backdrop-blur-xl sm:px-3.5 sm:py-2.5"
         >
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-2.5">
             <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0 object-contain" />
             <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
             <img src="/gmailicon.png" alt="Gmail" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0 object-contain" />
@@ -874,15 +874,15 @@ function GuardrailListVisual() {
       <div className="relative flex h-full items-center justify-center p-3 sm:p-5">
         <div className="w-full max-w-[390px] space-y-2.5">
           {items.map(({ title, detail, status, tone }) => (
-            <div key={title} className="rounded-[8px] bg-[#F1F3F3] px-2.5 py-2 shadow-[0_6px_16px_rgba(20,31,34,0.08)] sm:px-3 sm:py-2.5">
+            <div key={title} className="rounded-[8px] bg-[#F1F3F3] px-3 py-2.5 shadow-[0_6px_16px_rgba(20,31,34,0.08)] sm:px-4 sm:py-3">
               <div className="flex items-start gap-2.5">
-                <span className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-[#4FB879] text-white shadow-[0_3px_8px_rgba(31,119,76,0.22)]" aria-hidden="true"><Check className="h-3 w-3" strokeWidth={3} /></span>
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#4FB879] text-white shadow-[0_3px_8px_rgba(31,119,76,0.22)]" aria-hidden="true"><Check className="h-3 w-3" strokeWidth={3} /></span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-start justify-between gap-3">
                 <span className="min-w-0 text-[11px] font-semibold leading-4 tracking-tight text-[#263438] sm:text-[12px]">{title}</span>
                 <span className={`shrink-0 text-[9px] font-semibold leading-4 tracking-tight ${tone}`}>{status}</span>
                   </span>
-                  <span className="mt-0.5 block text-[8px] leading-3 tracking-tight text-[#667177]">{detail}</span>
+                  <span className="mt-0.5 block text-[9px] leading-3.5 tracking-tight text-[#667177]">{detail}</span>
                 </span>
               </div>
             </div>
