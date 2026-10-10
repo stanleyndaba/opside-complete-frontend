@@ -11,23 +11,26 @@ interface LandingAuditCtaProps {
 
 const pathOptions = [
   {
-    label: "Recover Once",
-    title: "One supported exposure. One accountable closeout.",
-    copy: "For a defined financial exposure, Recover Once gives you a fixed-scope operation with a clear beginning and end. Margin establishes entitlement, prepares the evidence, manages the approved submission, follows the response through settlement, and returns a closed financial record — not another claim to chase.",
-    price: "Personalized fixed scope after the Audit.",
-    cta: "Start the Audit — Recover Once",
+    label: "01 / DEFINED ENGAGEMENT",
+    title: "Recover Once",
+    subtitle: "One financial exposure. Taken through to resolution.",
+    copy: "Margin examines a defined financial exposure, establishes what happened, determines what the evidence supports, and takes responsibility for the agreed recovery work.",
+    followUp: "From investigation and evidence preparation to approved submissions, follow-up, and settlement verification, the work continues until the agreed scope reaches a documented outcome.",
+    itemHeading: "What Margin handles",
+    cta: "Start the Free Audit",
     ctaLocation: "homepage_recover_once",
-    items: ["Event-level entitlement", "Evidence-backed preparation", "Seller-approved submission", "Response and appeal control", "Settlement verification"],
+    items: ["Establishing the facts and quantifying the exposure", "Determining what the evidence supports", "Preparing evidence-backed recovery actions", "Managing approved submissions, responses, and appeals within scope", "Verifying settlement and reconciling the financial outcome"],
   },
   {
-    label: "Recovery Workspace",
-    title: "Keep the account under financial control.",
-    copy: "For sellers with recurring exposure, Workspace keeps the account under examination after the first Audit. Margin identifies new financial events, maintains evidence and case continuity, tracks responses and settlements, and keeps the unresolved position visible — so the next problem does not become your team's next project.",
-    price: "$109/month",
-    subPrice: "0% recovery commission · 100% of Amazon reimbursements stay yours.",
-    cta: "Start the Audit — Workspace",
+    label: "02 / ONGOING ENGAGEMENT",
+    title: "Recovery Workspace",
+    subtitle: "Know what happened. Know what remains. Keep it under control.",
+    copy: "For Amazon businesses where financial exceptions recur, Margin provides ongoing examination and resolution rather than leaving your team to restart the investigation every time.",
+    followUp: "Margin maintains continuity across financial events, evidence, cases, responses, and settlements, so you can see what has been established, what requires action, and what remains unresolved.",
+    itemHeading: "What stays under examination",
+    cta: "Start the Free Audit",
     ctaLocation: "homepage_recovery_workspace",
-    items: ["Recurring account examination", "New exposure detection", "Evidence and case continuity", "Response, reversal, and payout tracking", "One accountable financial record"],
+    items: ["Recurring examination of Amazon financial activity", "Identification and assessment of new exceptions", "Evidence and case history maintained over time", "Tracking of submissions, responses, reversals, and settlements", "A continuously updated view of established, actionable, and unresolved value"],
   },
 ];
 
@@ -157,19 +160,22 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
             <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} style={{ background: gradientStyle }} className={`relative rounded-[8px] p-6 sm:p-8 md:p-10 transition-[filter,opacity] duration-500 will-change-[filter,opacity] lg:min-w-0 lg:flex-1 ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
               <p style={{ color: "#68655F" }} className="routing-card-label font-mono text-[11px] font-semibold uppercase tracking-tight">{option.label}</p>
               <h3 className="routing-card-heading mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] sm:text-[36px] md:text-[42px]" style={{ fontWeight: 500 }}>{option.title}</h3>
+              <p className="routing-card-subtitle mt-3 max-w-[520px] font-lora text-[19px] leading-[1.12] tracking-[-0.03em] text-[#FFFDF9] sm:text-[22px]">{option.subtitle}</p>
               <p style={{ color: "#F0EEEA" }} className="routing-card-copy mt-4 max-w-[520px] text-[14px] leading-6 md:text-[15px] md:leading-7">{option.copy}</p>
-              <div className="mt-7 grid gap-0 border-y border-white/40 sm:grid-cols-2">
-                {option.items.map((item) => (
-                  <div key={item} className="routing-card-item flex items-start gap-2 border-b border-[#7B8A82]/30 py-3 text-[12px] leading-5 text-[#F6F4F0] last:border-b-0 sm:pr-4 md:text-[13px]">
-                    <Check className="routing-card-item-icon mt-0.5 h-4 w-4 shrink-0 text-[#F6F4F0]" />
-                    <span>{item}</span>
-                  </div>
-                ))}
+              <p style={{ color: "#F0EEEA" }} className="routing-card-copy mt-3 max-w-[520px] text-[14px] leading-6 md:text-[15px] md:leading-7">{option.followUp}</p>
+              <div className="mt-6 border-y border-white/25">
+                <p className="routing-card-item-heading py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#FFFDF9]">{option.itemHeading}</p>
+                <div className="grid gap-0 sm:grid-cols-2">
+                  {option.items.map((item) => (
+                    <div key={item} className="routing-card-item flex items-start gap-2 border-t border-[#7B8A82]/20 py-3 text-[12px] leading-5 text-[#F6F4F0] sm:pr-4 md:text-[13px]">
+                      <Check className="routing-card-item-icon mt-0.5 h-4 w-4 shrink-0 text-[#F6F4F0]" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className="mt-7 pt-2">
-                <p className="routing-card-price text-[26px] font-semibold tracking-[-0.05em] text-[#FFFCF8] md:text-[30px]">{option.price}</p>
-                {option.subPrice && <p className="routing-card-subprice mt-1 text-[13px] font-medium text-[#E5E1DB]">{option.subPrice}</p>}
-                <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button mt-6 h-12 rounded-[6px] bg-[#0B74DE] px-6 text-[14px] font-semibold text-white shadow-sm hover:bg-[#075EBA]">
+                <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button h-12 rounded-[6px] bg-[#0B74DE] px-6 text-[14px] font-semibold text-white shadow-sm hover:bg-[#075EBA]">
                   {option.cta}<ArrowRight className="ml-2 h-4 w-4 text-white" />
                 </Button>
               </div>
