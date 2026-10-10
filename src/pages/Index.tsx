@@ -1613,8 +1613,7 @@ function NestedRecoveryVisual({
   };
 
   return (
-    <motion.div {...revealProps} className="relative min-h-[620px] overflow-hidden rounded-[12px] border border-[#E3E7EA]/80 bg-white p-2 shadow-[0_24px_70px_rgba(24,32,38,0.10)] sm:min-h-[570px] sm:p-4">
-      <div className="absolute inset-0 bg-white" />
+    <motion.div {...revealProps} className="relative min-h-[620px] overflow-visible bg-transparent p-2 sm:min-h-[570px] sm:p-4">
       <div className="relative h-full min-h-[590px] sm:min-h-[538px]">
         {(Object.keys(browsers) as Array<keyof typeof browsers>).map((key) => {
           const isActive = activeBrowser === key;
