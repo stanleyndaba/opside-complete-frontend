@@ -780,9 +780,9 @@ const recoveryHarnessPoints = [
 
 function ApprovalNotificationOrderVisual() {
   const approvers = [
-    { number: "1", role: "Finance / Ops Owner", name: "Michael Thompson", badge: "Primary authority", badgeClass: "bg-[#EEEAFB] text-[#65519C]", avatarClass: "bg-[#A9B8B0]", avatarSrc: "/approver-michael-thompson.jpg" },
+    { number: "1", role: "Finance / Operations Owner", name: "Michael Thompson", badge: "Primary authority", badgeClass: "bg-[#EEEAFB] text-[#65519C]", avatarClass: "bg-[#A9B8B0]", avatarSrc: "/approver-michael-thompson.jpg" },
     { number: "2", role: "Business Lead", name: "Sarah Mitchell", badge: "Delegated fallback", badgeClass: "bg-[#E9F8EC] text-[#4C9A62]", avatarClass: "bg-[#B4A99D]", avatarSrc: "/approver-sarah-mitchell.jpg" },
-    { number: "3", role: "Finance Executive", name: "Lena Cruz", badge: "Threshold escalation", badgeClass: "bg-[#FAF2E5] text-[#A67C3E]", avatarClass: "bg-[#B8B9C4]", avatarSrc: "/approver-lena-cruz.jpg" },
+    { number: "3", role: "Executive Finance Authority", name: "Lena Cruz", badge: "Threshold escalation", badgeClass: "bg-[#FAF2E5] text-[#A67C3E]", avatarClass: "bg-[#B8B9C4]", avatarSrc: "/approver-lena-cruz.jpg" },
   ];
   const sequence = [
     { type: "approver", approver: approvers[0] },
@@ -833,7 +833,7 @@ function ApprovalNotificationOrderVisual() {
       <div className="border-b border-[#EEF1F2] pb-3">
         <div className="min-w-0">
           <p className="text-[12px] font-semibold leading-4 tracking-tight text-[#182026]">Approval follows policy, not inbox traffic</p>
-          <p className="mt-0.5 text-[9px] leading-3.5 tracking-tight text-[#7A858B]">Margin routes decisions by entity, materiality, recovery class, and delegated authority.</p>
+          <p className="mt-0.5 text-[9px] leading-3.5 tracking-tight text-[#7A858B]">Margin routes the decision according to entity, materiality, recovery class, and delegated authority.</p>
         </div>
       </div>
 
@@ -865,9 +865,9 @@ function ApprovalNotificationOrderVisual() {
 
 function GuardrailListVisual() {
   const items = [
-          { title: "Potential fee variance · Evidence incomplete", detail: "The position remains held until the assessed charge is reconciled to the supporting source population.", status: "Held", tone: "text-[#9A5A03]" },
-          { title: "Reversed payment · Residual unresolved", detail: "The original recovery is not treated as complete until the reversal is reconciled and the remaining financial position is classified.", status: "Review", tone: "text-[#52616A]" },
-          { title: "Amazon rejection · Basis reassessment", detail: "The rejection reason is retained against the event before Margin determines whether to strengthen evidence, escalate, or close.", status: "Rework", tone: "text-[#7A5147]" },
+          { title: "Potential fee variance · Evidence incomplete", detail: "Held until the assessed charge reconciles to supporting sources.", status: "Held", tone: "text-[#9A5A03]" },
+          { title: "Reversed payment · Residual unresolved", detail: "Reversal must reconcile before the remaining position is classified.", status: "Review", tone: "text-[#52616A]" },
+          { title: "Amazon rejection · Basis reassessment", detail: "Rejection remains attached while Margin strengthens evidence, escalates, or closes.", status: "Rework", tone: "text-[#7A5147]" },
   ];
   return (
     <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[4px] border-0 bg-white" aria-label="Guardrails evidence status list">
