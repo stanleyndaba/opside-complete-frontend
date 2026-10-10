@@ -82,6 +82,43 @@ export default function ProgressReview() {
           </div>
         </div>
         <div aria-hidden="true" className="h-20 sm:h-28" />
+        <section aria-labelledby="enterprise-fba-parameters" className="rounded-[10px] border border-[#DCE3E7] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+          <div className="border-b border-[#E8EDF0] pb-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#7A8994]">Enterprise FBA working parameters</p>
+            <h2 id="enterprise-fba-parameters" className="mt-1 text-[15px] font-medium tracking-tight text-[#182026]">Parameterize the original Amazon working scope</h2>
+            <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Northstar Commerce LLC · Amazon US · FBA · Q1 2026 recovery control population</p>
+          </div>
+          <div className="grid gap-5 pt-5 sm:grid-cols-2 sm:gap-8">
+            <fieldset>
+              <legend className="text-[13px] font-semibold tracking-tight text-[#182026]">Claim type</legend>
+              <p className="mt-1 text-[11px] text-[#8A99A3]">What financial exception is being reviewed?</p>
+              <div className="mt-3 space-y-2.5">
+                {['Inbound receiving variance', 'Inventory movement discrepancy', 'Settlement or reimbursement mismatch', 'Payout reconciliation exception', 'Returns or fulfillment exception'].map((label, index) => (
+                  <label key={label} className="flex items-center gap-2.5 text-[12px] leading-5 text-[#36404A]">
+                    <input type="checkbox" defaultChecked={index === 0} className="h-4 w-4 accent-[#3F63D8]" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend className="text-[13px] font-semibold tracking-tight text-[#182026]">Issue location</legend>
+              <p className="mt-1 text-[11px] text-[#8A99A3]">Where was the position first identified?</p>
+              <div className="mt-3 space-y-2.5">
+                {['Fulfillment center receiving', 'Inbound shipment or carrier handoff', 'Inventory storage and movement', 'Settlement or reimbursement ledger', 'Post-receipt reconciliation'].map((label, index) => (
+                  <label key={label} className="flex items-center gap-2.5 text-[12px] leading-5 text-[#36404A]">
+                    <input type="checkbox" defaultChecked={index === 0} className="h-4 w-4 accent-[#3F63D8]" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </div>
+          <div className="mt-5 flex flex-col gap-3 border-t border-[#E8EDF0] pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-[11px] leading-5 text-[#66737F]">Agent uses the selected parameters to keep the review inside the governed Enterprise FBA scope.</p>
+            <button type="button" onClick={() => setToast('Enterprise FBA parameters applied to the review')} className="inline-flex min-h-9 items-center justify-center rounded-[6px] bg-[#3F63D8] px-4 text-[12px] font-semibold text-white shadow-[0_1px_2px_rgba(63,99,216,0.22)] transition-colors hover:bg-[#3152C0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3F63D8]/35">Agent</button>
+          </div>
+        </section>
         </section>
       </div>
     </div>
