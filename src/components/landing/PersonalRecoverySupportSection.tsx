@@ -98,23 +98,10 @@ export function PersonalRecoverySupportSection() {
           </h2>
           <p className="mt-5 max-w-[560px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">A managed recovery should not leave you guessing whether Margin is still working, what Amazon asked for, or why a claim did not move forward.</p>
           <p className="mt-4 max-w-[560px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>Ask in plain language. Margin answers from the position, evidence, and next accountable action.</p>
-          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[12px] font-medium text-[#5E7887]">
-            <span>Recovery-specific</span>
-            <span>Evidence-linked</span>
-            <span>Human-readable</span>
-          </div>
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
           <div className="relative overflow-hidden rounded-[12px] border border-[#C8DCE5] bg-[#FBFCFC] shadow-[0_24px_70px_rgba(37,91,116,0.12)]">
-            <div className="flex items-center justify-between border-b border-[#DCE8ED] px-4 py-3 sm:px-5">
-              <div>
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#6C8795]">Margin recovery support</p>
-                <p className="mt-0.5 text-[11px] text-[#8A9BA3]">REC-2026-0147 · Cross-marketplace exposure</p>
-              </div>
-              <span className="rounded-full border border-[#C8DED1] bg-[#EEF8F1] px-2.5 py-1 text-[10px] font-medium text-[#4F8067]">Position visible</span>
-            </div>
-
             <div className="min-h-[300px] px-5 py-7 sm:min-h-[360px] sm:px-9 sm:py-9">
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 shrink-0 font-mono text-[11px] font-semibold text-[#526F7D]">@Margin</span>
