@@ -109,7 +109,7 @@ function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; i
     <button
       type="button"
       onClick={onSelect}
-      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-[10px] border-b border-[#D6DCE0] px-2 py-2 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F5F8FB]"}`}
+      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-none border-b border-[#D6DCE0] px-2 py-2 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F5F8FB]"}`}
       aria-pressed={selected}
     >
       <span className={`flex h-5 w-5 items-center justify-center rounded-[6px] ${selected ? "bg-[#1689E5]" : "bg-transparent text-[#9AA5AE]"}`}>
