@@ -725,21 +725,7 @@ html, body, #root {
   background-color: #C7B8A8 !important;
 }
 
-/* Resolved graphite: decision and closure */
-.landing-google-sans > main > section:nth-child(18),
-.landing-google-sans > main > section:nth-child(20),
-.landing-google-sans > main > section:nth-child(22) {
-  background-color: #263438 !important;
-  color: #F1EFE8;
-}
-
-/* Keep copy readable on resolved surfaces without recolouring hero internals. */
-.landing-google-sans > main > section:nth-child(22) h2,
-.landing-google-sans > main > section:nth-child(22) p,
-.landing-google-sans > main > section:nth-child(22) label {
-  color: #F1EFE8;
-}
-
+/* Light control surfaces: decision and closure remain inspectable. */
 /* Margin Standard is an inspectable light deliverable, not a resolved graphite surface. */
 .landing-google-sans > main > section.margin-standard-deliverable-section {
   background-color: #FFFFFF !important;
@@ -1164,12 +1150,6 @@ html, body, #root {
   background-color: #FFFFFF !important;
 }
 
-.landing-google-sans.landing-google-sans > main > section:nth-child(18),
-.landing-google-sans.landing-google-sans > main > section:nth-child(20),
-.landing-google-sans.landing-google-sans > main > section:nth-child(22) {
-  background: #263438 !important;
-  background-color: #263438 !important;
-}
 
 .landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface {
   background: #050505 !important;

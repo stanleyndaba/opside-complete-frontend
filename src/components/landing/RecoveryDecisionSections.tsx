@@ -39,7 +39,7 @@ const revealProps = {
 };
 
 export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
-  <section className="audit-routing-section relative bg-[#F6F8F9] py-10 sm:py-10 md:py-14">
+  <section className="audit-routing-section relative bg-white py-10 sm:py-10 md:py-14">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
@@ -100,7 +100,7 @@ const enterpriseOnboardingStages = [
 ];
 
 export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
-  <section className="enterprise-onboarding-section relative overflow-hidden bg-[#F6F8F9] py-12 sm:py-14 md:py-20" aria-labelledby="enterprise-onboarding-title">
+  <section className="enterprise-onboarding-section relative overflow-hidden bg-white py-12 sm:py-14 md:py-20" aria-labelledby="enterprise-onboarding-title">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <motion.div {...revealProps} className="max-w-[850px]">
         <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Your Amazon financials. Under control in 25 days.</h2>
