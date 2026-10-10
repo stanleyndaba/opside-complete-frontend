@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUp, Check, Copy, Slack } from "lucide-react";
+import { ArrowUp, Check, Copy } from "lucide-react";
 
 const prompts = [
   {
@@ -143,7 +143,7 @@ export function PersonalRecoverySupportSection() {
                   </button>
                 </div>
                 <div className="mt-1 flex items-center gap-1.5 px-1.5 text-[#91A3AB] sm:px-2" aria-label="Shared in Slack with one participant">
-                  <Slack className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+                  <img src="/slack-icon-2019.png" alt="Slack" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
                   <span className="text-[11px]">+1</span>
                 </div>
               </div>
