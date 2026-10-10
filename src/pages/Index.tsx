@@ -38,6 +38,7 @@ import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
+import { PersonalRecoverySupportSection } from "@/components/landing/PersonalRecoverySupportSection";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
 import { EnterpriseOnboardingSection, RecoveryOfferSection, RecoveryOfferSectionDuplicate, RecoveryRoutingSection } from "@/components/landing/RecoveryDecisionSections";
@@ -2552,6 +2553,7 @@ export default function Index() {
         <MarginLifecycleSection />
         <FinancialControlOperationsSection />
         <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit")} />
+        <PersonalRecoverySupportSection />
         <NestedRecoveryBrowsers />
 
         {/* Proof and control — Can I trust it without giving up control? */}
