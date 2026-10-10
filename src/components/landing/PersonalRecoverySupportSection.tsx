@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUp, Plus } from "lucide-react";
+import { ArrowUp, Check, Copy, Plus } from "lucide-react";
 
 const prompts = [
   {
@@ -33,6 +33,7 @@ export function PersonalRecoverySupportSection() {
   const [sentQuestion, setSentQuestion] = useState("");
   const [typedResponse, setTypedResponse] = useState("");
   const [phase, setPhase] = useState<"draft" | "response" | "pause">("draft");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let sendTimer: number | undefined;
@@ -45,6 +46,7 @@ export function PersonalRecoverySupportSection() {
     setSentQuestion("");
     setTypedResponse("");
     setPhase("draft");
+    setCopied(false);
 
     if (reducedMotion) {
       setSentQuestion(prompt.question);
@@ -88,6 +90,15 @@ export function PersonalRecoverySupportSection() {
 
   const prompt = prompts[activePrompt];
   const advancePrompt = () => setActivePrompt((current) => (current + 1) % prompts.length);
+  const copyResponse = async () => {
+    try {
+      await navigator.clipboard.writeText(prompt.response);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   return (
     <section className="relative overflow-hidden border-y border-[#D6E3E8] bg-white py-12 sm:py-14 md:py-20" aria-labelledby="personal-recovery-support-title">
@@ -119,7 +130,7 @@ export function PersonalRecoverySupportSection() {
                     {typedResponse}
                     {phase === "response" && <span aria-hidden="true" className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-pulse bg-[#7A929D]" />}
                   </p>
-                  {typedResponse && <p className="mt-3 border-t border-[#E1E9EB] pt-3 font-mono text-[10px] text-[#7B8C93]">{prompt.detail}</p>}
+                  {typedResponse && <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#E1E9EB] pt-3"><p className="font-mono text-[10px] text-[#7B8C93]">{prompt.detail}</p><button type="button" onClick={copyResponse} aria-label={copied ? "Response copied" : "Copy Margin response"} className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] text-[#7A929D] transition-colors hover:bg-[#EEF0F1] hover:text-[#384B55] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/20">{copied ? <Check className="h-3.5 w-3.5" strokeWidth={2.2} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.8} />}</button></div>}
                 </motion.div>
               </div>
 
@@ -138,7 +149,6 @@ export function PersonalRecoverySupportSection() {
               </div>
             </div>
           </div>
-          <p className="mt-3 text-center text-[11px] leading-5 text-[#6B808A]">The prompt is visible. The answer stays grounded in the recovery record.</p>
         </motion.div>
       </div>
     </section>
