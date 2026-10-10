@@ -1,24 +1,21 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Send } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const prompts = [
   {
-    label: "Why is this taking so long?",
     question: "Why is Margin taking this long to process my recovery?",
     response: "The recovery is waiting on settlement evidence from the 14 affected transactions. Margin has kept the position open rather than treating the absence of that evidence as a completed recovery.",
     detail: "Next review · 2 business days",
     status: "Evidence in progress",
   },
   {
-    label: "Why was it rejected?",
     question: "Why did Amazon reject this claim? What was missing?",
     response: "Amazon rejected the first submission because the receiving record did not establish the expected quantity for the affected shipment. Margin has retained the rejection, linked the missing record, and prepared the next justified action.",
     detail: "Missing · receiving quantity confirmation",
     status: "Rejection under review",
   },
   {
-    label: "What happens next?",
     question: "What happens next with this recovery?",
     response: "The case remains under controlled follow-through. Margin will verify the supporting record, confirm whether the evidence threshold is met, and show you the next approval point before anything consequential is submitted.",
     detail: "Owner · Margin recovery operations",
@@ -35,33 +32,58 @@ const revealProps = {
 
 export function PersonalRecoverySupportSection() {
   const [activePrompt, setActivePrompt] = useState(0);
-  const [customQuestion, setCustomQuestion] = useState("");
-  const [submittedQuestion, setSubmittedQuestion] = useState("");
-  const [isSending, setIsSending] = useState(false);
+  const [typedQuestion, setTypedQuestion] = useState("");
+  const [typedResponse, setTypedResponse] = useState("");
+  const [phase, setPhase] = useState<"question" | "response" | "pause">("question");
 
-  const active = prompts[activePrompt];
-  const visibleQuestion = submittedQuestion || active.question;
-  const response = useMemo(() => {
-    if (!submittedQuestion) return active.response;
-    const lower = submittedQuestion.toLowerCase();
-    if (lower.includes("reject") || lower.includes("missing")) return prompts[1].response;
-    if (lower.includes("next") || lower.includes("now")) return prompts[2].response;
-    return "Margin will answer from the recovery record: what happened, what evidence is present, what remains unresolved, and what decision—if any—comes next. The position stays visible while the answer is established.";
-  }, [active, submittedQuestion]);
+  useEffect(() => {
+    let responseTimer: number | undefined;
+    let nextTimer: number | undefined;
+    const prompt = prompts[activePrompt];
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const choosePrompt = (index: number) => {
-    setSubmittedQuestion("");
-    setCustomQuestion("");
-    setActivePrompt(index);
-  };
+    setTypedQuestion("");
+    setTypedResponse("");
+    setPhase("question");
 
-  const askQuestion = () => {
-    const question = customQuestion.trim();
-    if (!question) return;
-    setIsSending(true);
-    setSubmittedQuestion(question);
-    window.setTimeout(() => setIsSending(false), 260);
-  };
+    if (reducedMotion) {
+      setTypedQuestion(prompt.question);
+      setTypedResponse(prompt.response);
+      setPhase("pause");
+      nextTimer = window.setTimeout(() => setActivePrompt((current) => (current + 1) % prompts.length), 6500);
+      return () => window.clearTimeout(nextTimer);
+    }
+
+    let questionIndex = 0;
+    const questionTimer = window.setInterval(() => {
+      questionIndex += 1;
+      setTypedQuestion(prompt.question.slice(0, questionIndex));
+      if (questionIndex >= prompt.question.length) {
+        window.clearInterval(questionTimer);
+        responseTimer = window.setTimeout(() => {
+          setPhase("response");
+          let responseIndex = 0;
+          const responseInterval = window.setInterval(() => {
+            responseIndex += 1;
+            setTypedResponse(prompt.response.slice(0, responseIndex));
+            if (responseIndex >= prompt.response.length) {
+              window.clearInterval(responseInterval);
+              setPhase("pause");
+              nextTimer = window.setTimeout(() => setActivePrompt((current) => (current + 1) % prompts.length), 4200);
+            }
+          }, 17);
+        }, 560);
+      }
+    }, 31);
+
+    return () => {
+      if (questionTimer) window.clearInterval(questionTimer);
+      if (responseTimer) window.clearTimeout(responseTimer);
+      if (nextTimer) window.clearTimeout(nextTimer);
+    };
+  }, [activePrompt]);
+
+  const prompt = prompts[activePrompt];
 
   return (
     <section className="relative overflow-hidden border-y border-[#D6E3E8] bg-[#F3F8F9] py-12 sm:py-14 md:py-20" aria-labelledby="personal-recovery-support-title">
@@ -93,38 +115,33 @@ export function PersonalRecoverySupportSection() {
               <span className="rounded-full border border-[#C8DED1] bg-[#EEF8F1] px-2.5 py-1 text-[10px] font-medium text-[#4F8067]">Position visible</span>
             </div>
 
-            <div className="space-y-4 px-4 py-5 sm:px-7 sm:py-7">
-              <div className="flex justify-end">
-                <motion.div key={visibleQuestion} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="max-w-[88%] rounded-[10px] rounded-br-[3px] bg-[#E4F0F6] px-3.5 py-3 text-[13px] leading-5 text-[#294B61] sm:max-w-[76%] sm:px-4">
-                  {visibleQuestion}
-                </motion.div>
+            <div className="min-h-[300px] px-5 py-7 sm:min-h-[360px] sm:px-9 sm:py-9">
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 shrink-0 font-mono text-[11px] font-semibold text-[#526F7D]">@Margin</span>
+                <motion.p key={`question-${activePrompt}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-[24px] max-w-[620px] text-[15px] leading-7 text-[#294B61] sm:text-[17px] sm:leading-8">
+                  {typedQuestion}
+                  {phase === "question" && <span aria-hidden="true" className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-pulse bg-[#0B74DE]" />}
+                </motion.p>
               </div>
-              <div className="flex gap-3">
-                <div className="mt-1 h-7 w-7 shrink-0 rounded-full border border-[#C8D6DD] bg-[#F2F5F5] text-center font-mono text-[9px] leading-7 text-[#53707E]">M</div>
-                <motion.div key={`${activePrompt}-${submittedQuestion}`} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="min-w-0 max-w-[92%] rounded-[10px] rounded-tl-[3px] border border-[#E0E5E4] bg-[#FFFDF9] px-3.5 py-3 text-[13px] leading-5 text-[#384B55] shadow-[0_4px_12px_rgba(44,64,72,0.04)] sm:px-4">
-                  <p>{response}</p>
-                  <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-[#E8E8E2] pt-2 text-[10px] font-medium text-[#7B8C93]">
-                    <span>{submittedQuestion ? "Response grounded in record" : active.status}</span>
-                    <span>{submittedQuestion ? "Review context attached" : active.detail}</span>
-                  </div>
-                </motion.div>
-              </div>
+
+              <motion.div key={`answer-${activePrompt}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: typedResponse ? 1 : 0.35, y: 0 }} transition={{ duration: 0.35 }} className="mt-8 max-w-[660px] border-l-2 border-[#C7DCE4] pl-4 sm:mt-10 sm:pl-5">
+                <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#7A929D]">Margin replies</p>
+                <p className="min-h-[84px] text-[14px] leading-7 text-[#384B55] sm:text-[16px] sm:leading-8">
+                  {typedResponse}
+                  {phase === "response" && <span aria-hidden="true" className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-pulse bg-[#7A929D]" />}
+                </p>
+                <div className="mt-5 flex flex-wrap gap-x-5 gap-y-1 border-t border-[#E1E9EB] pt-3 text-[10px] font-medium text-[#7B8C93]">
+                  <span>{prompt.status}</span>
+                  <span>{prompt.detail}</span>
+                </div>
+              </motion.div>
             </div>
 
-            <div className="border-t border-[#DCE8ED] bg-[#F6F9F9] px-3 py-3 sm:px-5">
-              <div className="mb-2 flex flex-wrap gap-1.5">
-                {prompts.map((prompt, index) => (
-                  <button key={prompt.label} type="button" onClick={() => choosePrompt(index)} className={`rounded-full border px-2.5 py-1.5 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/25 ${activePrompt === index && !submittedQuestion ? "border-[#B8CFDA] bg-white text-[#294B61]" : "border-transparent text-[#6D838E] hover:border-[#D5E1E5] hover:bg-white"}`}>
-                    {prompt.label}
-                  </button>
-                ))}
-              </div>
-              <div className="flex items-center gap-2 rounded-[8px] border border-[#C8D8DE] bg-white p-1.5 focus-within:border-[#8EB2C1] focus-within:ring-2 focus-within:ring-[#8EB2C1]/15">
-                <input aria-label="Ask Margin about this recovery" value={customQuestion} onChange={(event) => setCustomQuestion(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") askQuestion(); }} placeholder="Ask what happened, what is missing, or what comes next" className="min-w-0 flex-1 bg-transparent px-2 text-[12px] text-[#294B61] outline-none placeholder:text-[#98AAB2] sm:text-[13px]" />
-                <button type="button" onClick={askQuestion} disabled={!customQuestion.trim() || isSending} aria-label="Ask Margin" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] bg-[#0B74DE] text-white transition-colors hover:bg-[#075EBA] disabled:cursor-not-allowed disabled:bg-[#B7C9D2]">
-                  <Send className="h-3.5 w-3.5" strokeWidth={2} />
-                </button>
-              </div>
+            <div className="flex items-center justify-between border-t border-[#DCE8ED] bg-[#F6F9F9] px-4 py-3 sm:px-5">
+              <span className="font-mono text-[10px] uppercase tracking-tight text-[#8A9BA3]">Live recovery explanation</span>
+              <button type="button" onClick={() => setActivePrompt((current) => (current + 1) % prompts.length)} className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#0B74DE] transition-colors hover:text-[#075EBA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/25" aria-label="Show the next recovery question">
+                Next question <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.8} />
+              </button>
             </div>
           </div>
           <p className="mt-3 text-center text-[11px] leading-5 text-[#6B808A]">Not a generic help desk. A readable explanation of the recovery position already being managed.</p>
