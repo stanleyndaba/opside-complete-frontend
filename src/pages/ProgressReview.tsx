@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowRight, Check, Files, Layers3, ListChecks, Search } from "lucide-react";
+import { ArrowRight, Check, Files, Layers3, ListChecks } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 type ProgressEvent = {
@@ -30,7 +30,6 @@ const events: ProgressEvent[] = [
 
 export default function ProgressReview() {
   const [toast, setToast] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const [animationCycle, setAnimationCycle] = useState(0);
   const [isTimelinePaused, setIsTimelinePaused] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -64,15 +63,8 @@ export default function ProgressReview() {
         </button>
       </aside>
       <div className="min-w-0 flex-1">
-        <nav aria-label="Progress preview search" className="mb-3 rounded-[10px] border border-[#DCE3E7] bg-white p-1.5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
-          <label className="flex h-9 items-center gap-2 rounded-[10px] bg-[#FBFCFC] px-3 focus-within:ring-2 focus-within:ring-[#0B74DE]/10">
-            <img src="/logoimagetwo.png" alt="Margin" className="h-3.5 w-auto shrink-0 object-contain" />
-            <Search className="h-3.5 w-3.5 shrink-0 text-[#8A99A3]" strokeWidth={1.8} aria-hidden="true" />
-            <input aria-label="Margin Search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Margin Search" className="min-w-0 flex-1 bg-transparent text-[12px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A99A3]" />
-          </label>
-        </nav>
         <section className="rounded-[5px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
-        <div className="mb-4 pb-3"><p className="text-[11px] font-medium tracking-tight text-[#66737F]">Governed financial control record</p><h1 className="mt-0.5 font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Progress review</h1><p className="mt-1 text-[11px] leading-5 text-[#66737F]">The governed record of one Amazon financial event within a multi-source recovery control population—from source intake and causal reconstruction through controlled action, settlement verification, and closure.</p></div>
+        <div className="mb-4 pb-3"><h1 className="font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Updated Review</h1></div>
         <div className="space-y-1"><div className="text-[12px] font-medium tracking-tight text-[#182026]">EVT-FBA-2026-0001847 · Northstar Commerce LLC · Legal entity NTH-US-01 · Amazon US · FBA</div><div className="text-[11px] font-medium text-[#0B74DE]">The position is tracked from scope acceptance through evidence sufficiency, approval authority, controlled execution, response classification, settlement verification, and residual close state.</div><div className="text-[10px] font-medium text-[#4B5563]">Review period: 01 Jan–31 Mar 2026 · Source run: NTH-US-Q1-2026-0904 · Materiality: operational exception · Close state: partial outcome with residual under watch · Currency: USD</div></div>
         <div className="mt-5 rounded-[8px] border border-[#DCE8EE] bg-white p-2 sm:p-3">
           <div className="h-[58vh] min-h-[420px] max-h-[760px] overflow-y-auto overscroll-contain pr-1 sm:pr-2" onMouseEnter={() => setIsTimelinePaused(true)} onMouseLeave={() => setIsTimelinePaused(false)}>
