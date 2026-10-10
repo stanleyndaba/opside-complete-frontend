@@ -81,10 +81,9 @@ export default function ProgressReview() {
           </div>
           </div>
         </div>
-        <div aria-hidden="true" className="h-20 sm:h-28" />
-        <section aria-labelledby="enterprise-fba-parameters" className="rounded-[10px] border border-[#DCE3E7] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+        <div aria-hidden="true" className="h-6 sm:h-8" />
+        <section aria-labelledby="enterprise-fba-parameters" className="px-0 py-2">
           <div className="border-b border-[#E8EDF0] pb-4">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#7A8994]">Enterprise FBA working parameters</p>
             <h2 id="enterprise-fba-parameters" className="mt-1 text-[15px] font-medium tracking-tight text-[#182026]">Parameterize the original Amazon working scope</h2>
             <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Northstar Commerce LLC · Amazon US · FBA · Q1 2026 recovery control population</p>
           </div>
