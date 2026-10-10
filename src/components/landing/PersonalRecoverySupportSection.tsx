@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUp, Check, Copy, Plus } from "lucide-react";
+import { ArrowUp, Check, Copy, Slack } from "lucide-react";
 
 const prompts = [
   {
@@ -142,9 +142,9 @@ export function PersonalRecoverySupportSection() {
                     <ArrowUp className="h-4 w-4" strokeWidth={2.2} />
                   </button>
                 </div>
-                <div className="mt-1 flex items-center gap-3 px-1.5 text-[#91A3AB] sm:px-2">
-                  <Plus className="h-4 w-4" strokeWidth={1.8} />
-                  <span className="text-[11px]">Margin keeps the recovery context attached.</span>
+                <div className="mt-1 flex items-center gap-1.5 px-1.5 text-[#91A3AB] sm:px-2" aria-label="Shared in Slack with one participant">
+                  <Slack className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+                  <span className="text-[11px]">+1</span>
                 </div>
               </div>
             </div>
