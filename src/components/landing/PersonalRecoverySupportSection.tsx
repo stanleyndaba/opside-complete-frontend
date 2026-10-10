@@ -90,12 +90,9 @@ export function PersonalRecoverySupportSection() {
   const advancePrompt = () => setActivePrompt((current) => (current + 1) % prompts.length);
 
   return (
-    <section className="relative overflow-hidden border-y border-[#D6E3E8] bg-[#F3F8F9] py-12 sm:py-14 md:py-20" aria-labelledby="personal-recovery-support-title">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-28 top-[-110px] h-72 w-72 rounded-full bg-[#DCEAF2]/80 blur-3xl" />
-      <div aria-hidden="true" className="pointer-events-none absolute -bottom-36 left-[-80px] h-80 w-80 rounded-full bg-[#E9E4D8]/60 blur-3xl" />
+    <section className="relative overflow-hidden border-y border-[#D6E3E8] bg-white py-12 sm:py-14 md:py-20" aria-labelledby="personal-recovery-support-title">
       <div className="relative mx-auto grid w-full max-w-[1280px] items-center gap-10 px-5 sm:px-6 md:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16 lg:px-10 2xl:px-12">
         <motion.div {...revealProps} className="max-w-[600px]">
-          <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[#5E7887]">13 / RECOVERY EXPLANATION</p>
           <h2 id="personal-recovery-support-title" className="font-lora text-[36px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
             <span className="heading-tone-dark">When the recovery changes,</span>{" "}
             <span className="heading-tone-muted">you should know why.</span>
@@ -105,7 +102,7 @@ export function PersonalRecoverySupportSection() {
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
-          <div className="relative overflow-hidden rounded-[12px] border border-[#C8DCE5] bg-[#FBFCFC] shadow-[0_24px_70px_rgba(37,91,116,0.12)]">
+          <div className="relative overflow-hidden rounded-[12px] bg-white">
             <div className="min-h-[390px] px-4 py-5 sm:min-h-[470px] sm:px-8 sm:py-8">
               <div className="flex min-h-[190px] flex-col justify-end gap-4 sm:min-h-[235px] sm:gap-5">
                 {sentQuestion && (
