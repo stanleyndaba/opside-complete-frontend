@@ -110,7 +110,7 @@ export function PersonalRecoverySupportSection() {
               <div className="flex min-h-[190px] flex-col justify-end gap-4 sm:min-h-[235px] sm:gap-5">
                 {sentQuestion && (
                   <motion.div key={`sent-${activePrompt}`} initial={{ opacity: 0, y: 8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="flex justify-end">
-                    <div className="max-w-[92%] rounded-[10px] rounded-br-[3px] border border-[#D0DFE7] bg-[#E5F1F7] px-3.5 py-3 text-[13px] leading-5 text-[#294B61] shadow-[0_4px_12px_rgba(44,80,96,0.05)] sm:max-w-[80%] sm:px-4 sm:text-[14px]">
+                    <div className="max-w-[92%] rounded-[10px] rounded-br-[3px] bg-[#EEF0F1] px-3.5 py-3 text-[13px] leading-5 text-[#384B55] shadow-[0_4px_12px_rgba(44,80,96,0.04)] sm:max-w-[80%] sm:px-4 sm:text-[14px]">
                       <span className="mr-1.5 rounded-[4px] bg-[#D2DDF5] px-1.5 py-1 font-mono text-[12px] font-semibold text-[#526AB1]">@Margin</span>
                       {sentQuestion}
                     </div>
