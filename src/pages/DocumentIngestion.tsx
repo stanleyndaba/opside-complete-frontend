@@ -109,7 +109,7 @@ export default function DocumentIngestion() {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#8A969E]"><Paperclip className="h-3.5 w-3.5" />Document pack</div>
-                  <h2 id="document-pack-title" className="mt-3 max-w-[360px] font-google-sans text-[22px] font-normal leading-[1.08] tracking-[-0.045em] text-[#26333A]">Records ready to be connected.</h2>
+                  <h2 id="document-pack-title" className="mt-3 max-w-[360px] font-google-sans text-[22px] font-normal leading-[1.08] tracking-[-0.045em] text-[#26333A]">Ingested SOP Records</h2>
                   <p className="mt-2 max-w-[380px] text-[11px] leading-5 tracking-tight text-[#89959D]">A compact operating set for evidence, reconciliation, and controlled follow-through.</p>
                 </div>
                 <FileText className="hidden h-7 w-7 shrink-0 text-[#C6D0D5] sm:block" strokeWidth={1.1} />
