@@ -1,101 +1,141 @@
-import { Check } from 'lucide-react';
-import { PublicNavbar } from '@/components/layout/PublicNavbar';
-import { BrandFooter } from '@/components/layout/BrandFooter';
-import { usePageMeta } from '@/hooks/usePageMeta';
-import { SITE_META } from '@/config/site';
+import { useMemo, useState } from 'react';
+import { Check, FileText, Link2, Paperclip, ShieldCheck } from 'lucide-react';
+
 
 type Source = {
+  id: string;
   name: string;
-  context: string;
+  detail: string;
   icon?: string;
-  glyph?: string;
-  checked?: boolean;
+  mark?: string;
+  defaultChecked?: boolean;
+};
+
+type DocumentRecord = {
+  type: 'PDF' | 'CSV' | 'GMAIL';
+  title: string;
+  source: string;
+  status: 'Ingested' | 'Needs mapping' | 'Review';
 };
 
 const sources: Source[] = [
-  { name: 'QuickBooks Enterprise', context: 'cost basis', icon: '/quickbooks.png' },
-  { name: 'Gmail', context: 'source correspondence', icon: '/gmailicon.png', checked: true },
-  { name: 'Dropbox', context: 'document repository', icon: '/Dropbox_Icon.svg.png', checked: true },
-  { name: 'Outlook', context: 'source correspondence', icon: '/outlookicon.webp', checked: true },
-  { name: 'Amazon SP-API', context: 'orders + settlements', icon: '/amazon-logo-transparent-circle.png' },
-  { name: 'SAP S/4HANA', context: 'inventory ledger', icon: '/integration-icons/sap-s4hana.png' },
-  { name: 'Oracle NetSuite', context: 'GL + clearing', icon: '/integration-icons/netsuite.png' },
-  { name: '3PL EDI', context: 'receiving events', glyph: 'EDI' },
-  { name: 'Carrier events', context: 'movement evidence', glyph: '↗' },
-  { name: 'Settlement files', context: 'payout activity', icon: '/gd.png' },
-  { name: 'Amazon S3 / SFTP', context: 'controlled files', icon: '/integration-icons/amazons3.jpg' },
-  { name: 'Xero', context: 'accounting records', icon: '/xero.png' },
+  { id: 'quickbooks', name: 'QuickBooks Enterprise', detail: 'cost basis', icon: '/quickbooks.png' },
+  { id: 'gmail', name: 'Gmail', detail: 'source correspondence', icon: '/gmailicon.png', defaultChecked: true },
+  { id: 'dropbox', name: 'Dropbox', detail: 'document repository', icon: '/Dropbox_Icon.svg.png', defaultChecked: true },
+  { id: 'outlook', name: 'Outlook', detail: 'source correspondence', icon: '/outlookicon.webp', defaultChecked: true },
+  { id: 'netsuite', name: 'Oracle NetSuite', detail: 'GL + clearing', icon: '/integration-icons/netsuite.png', defaultChecked: true },
+  { id: 'settlements', name: 'Settlement files', detail: 'payout activity', mark: 'SF' },
+  { id: 's3', name: 'Amazon S3 / SFTP', detail: 'controlled files', icon: '/integration-icons/amazons3.jpg' },
+  { id: 'amazon', name: 'Amazon SP-API', detail: 'orders + settlements', icon: '/amazon-logo-transparent-circle.png' },
+  { id: 'sap', name: 'SAP S/4HANA', detail: 'inventory ledger', icon: '/integration-icons/sap-s4hana.png' },
+  { id: 'edi', name: '3PL EDI', detail: 'receiving events', mark: 'EDI' },
+  { id: 'carrier', name: 'Carrier events', detail: 'movement evidence', mark: '↗' },
+  { id: 'xero', name: 'Xero', detail: 'accounting records', icon: '/xero.png' },
 ];
 
-const documents = [
-  { type: 'PDF', icon: '/pdf-file-icon.webp', title: 'Amazon FBA settlement report · Apr 2026', meta: 'Gmail attachment · reimbursement settlement period 2026-04', status: 'Ingested' },
-  { type: 'PDF', icon: '/pdf-file-icon.webp', title: 'FBA inbound receiving variance record', meta: 'Dropbox file · ONT8 · 60 dispatched / 46 received', status: 'Ingested' },
-  { type: 'GMAIL', icon: '/gmailicon.png', title: 'Amazon FBA reimbursement correspondence', meta: 'Outlook thread · case response and evidence request', status: 'Ingested' },
-  { type: 'PDF', icon: '/pdf-file-icon.webp', title: 'FBA carrier delivery and receiving record', meta: 'Dropbox file · shipment-linked source document', status: 'Ingested' },
-  { type: 'CSV', icon: '/evidence-csv-mark.png', title: 'FBA inventory movement extract', meta: 'Gmail attachment · SKU and unit-level activity', status: 'Needs mapping', review: true },
+const documents: DocumentRecord[] = [
+  { type: 'PDF', title: 'Amazon FBA settlement report · Apr 2026', source: 'Gmail attachment · reimbursement settlement period 2026-04', status: 'Ingested' },
+  { type: 'PDF', title: 'FBA inbound receiving variance record', source: 'Dropbox file · ONT8 · 60 dispatched / 46 received', status: 'Ingested' },
+  { type: 'GMAIL', title: 'Amazon FBA reimbursement correspondence', source: 'Outlook thread · case response and evidence request', status: 'Ingested' },
+  { type: 'PDF', title: 'FBA carrier delivery and receiving record', source: 'Dropbox file · shipment-linked source document', status: 'Ingested' },
+  { type: 'CSV', title: 'FBA inventory movement extract', source: 'Gmail attachment · SKU and unit-level activity', status: 'Needs mapping' },
+  { type: 'PDF', title: 'Oracle NetSuite clearing activity', source: 'NetSuite export · account and settlement matching', status: 'Review' },
+  { type: 'PDF', title: 'Amazon payout activity statement', source: 'Settlement file · payout period and disbursement record', status: 'Ingested' },
+  { type: 'CSV', title: 'Controlled transaction file', source: 'Amazon S3 / SFTP · reconciliation-ready extract', status: 'Review' },
 ];
 
-function SourceIcon({ source }: { source: Source }) {
-  if (source.icon) return <img src={source.icon} alt="" className="h-7 w-7 shrink-0 object-contain" />;
-  return <span className="grid h-7 w-7 shrink-0 place-items-center rounded-[7px] bg-[#F0F4F6] text-[10px] font-bold text-[#52636E]">{source.glyph}</span>;
+function SourceMark({ source }: { source: Source }) {
+  if (source.icon) return <img src={source.icon} alt="" className="h-4 w-4 shrink-0 object-contain opacity-80" />;
+  return <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#F3F5F6] text-[6px] font-semibold tracking-[-0.02em] text-[#7A8790]">{source.mark}</span>;
 }
 
-function SourceRow({ source }: { source: Source }) {
-  return (
-    <div className="flex min-w-0 items-center gap-3 px-1 py-2.5">
-      <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-[5px] ${source.checked ? 'bg-[#176FE5] text-white' : 'bg-[#F1F4F5] text-transparent'}`} aria-label={source.checked ? `Check ${source.name}` : `${source.name} not checked`}>
-        {source.checked ? <Check className="h-3.5 w-3.5" strokeWidth={3} /> : null}
-      </span>
-      <SourceIcon source={source} />
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-[12px] font-bold text-[#182026]">{source.name}</p>
-        <p className="mt-0.5 text-[10px] text-[#8A969D]">{source.context}</p>
-      </div>
-    </div>
-  );
-}
-
-function DocumentCard({ document }: { document: (typeof documents)[number] }) {
-  return (
-    <article className="grid grid-cols-[42px_minmax(0,1fr)_auto] items-center gap-3 bg-transparent px-1 py-3.5">
-      <img src={document.icon} alt={document.type} className="h-10 w-10 object-contain" />
-      <div className="min-w-0">
-        <p className="truncate text-[14px] font-bold tracking-[-0.01em] text-[#182026]">{document.title}</p>
-        <p className="mt-1 truncate text-[11px] text-[#84929A]">{document.meta}</p>
-      </div>
-      <span className={`whitespace-nowrap rounded-[6px] px-2 py-1 text-[10px] font-bold ${document.review ? 'bg-[#FFF8E7] text-[#8A6719]' : 'bg-[#EDF9F1] text-[#26714A]'}`}>{document.status}</span>
-    </article>
-  );
+function DocumentMark({ type }: { type: DocumentRecord['type'] }) {
+  if (type === 'GMAIL') return <img src="/gmailicon.png" alt="" className="h-4 w-4 object-contain opacity-80" />;
+  if (type === 'CSV') return <span className="flex h-5 w-5 items-center justify-center rounded-[3px] bg-[#F4F6F7] text-[6px] font-semibold text-[#7A8790]">CSV</span>;
+  return <img src="/pdf-file-icon.webp" alt="" className="h-5 w-5 object-contain opacity-75" />;
 }
 
 export default function DocumentIngestion() {
-  usePageMeta({
-    title: 'Document Ingestion | Margin',
-    description: 'Connect the source records Margin needs to establish an evidence-backed financial position.',
-    url: `${SITE_META.url}/document-ingestion`,
-    image: SITE_META.image,
-  });
+  const [selected, setSelected] = useState(() => new Set(sources.filter((source) => source.defaultChecked).map((source) => source.id)));
+  const selectedCount = useMemo(() => selected.size, [selected]);
+
+  const toggleSource = (id: string) => {
+    setSelected((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-[#EDF2F4] font-google-sans text-[#182026]">
-      <PublicNavbar variant="light" wide />
-      <main className="overflow-x-auto bg-[linear-gradient(135deg,#F7FAFB_0%,#EDF3F5_100%)] px-4 py-10 sm:px-6 sm:py-14 lg:px-10">
-        <div className="mx-auto grid min-w-[1040px] grid-cols-[0.82fr_1.18fr] gap-8 rounded-[18px] border border-[#D7E2E7] bg-white/80 p-4 shadow-[0_24px_70px_rgba(36,62,74,0.12)] sm:min-w-[1180px] sm:p-7 lg:min-w-0 lg:max-w-[1420px]">
-          <section className="p-0 sm:p-2" aria-labelledby="sources-title">
-            <h1 id="sources-title" className="text-[18px] font-semibold leading-[1.08] tracking-[-0.03em]">9+ Sources</h1>
-            <p className="mt-3 max-w-[560px] text-[14px] leading-6 text-[#66737F]">Select the records available for ingestion. Margin keeps each source tied to the financial event it supports.</p>
-            <div className="mt-6 grid gap-2">
-              {sources.map((source) => <SourceRow key={source.name} source={source} />)}
+    <main className="min-h-screen overflow-x-hidden bg-white text-[#182026]">
+      <section className="mx-auto max-w-[1180px] px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-20 lg:px-10">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.88fr)_minmax(420px,1.12fr)] lg:gap-20">
+          <div>
+            <div className="mb-5 flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#87939B]">
+              <ShieldCheck className="h-3.5 w-3.5" strokeWidth={1.7} />
+              <span>Controlled source register</span>
             </div>
-          </section>
-          <section className="px-0 py-3 sm:px-3 sm:py-7" aria-label="Incoming documents">
-            <div className="grid gap-3">
-              {documents.map((document) => <DocumentCard key={document.title} document={document} />)}
+            <h1 className="max-w-[430px] font-google-sans text-[38px] font-normal leading-[1.04] tracking-[-0.055em] sm:text-[46px]">
+              Record sources
+            </h1>
+            <p className="mt-4 max-w-[450px] text-[14px] leading-6 tracking-tight text-[#66737F]">
+              Select the enterprise records available for ingestion. Margin keeps each source tied to the financial event it supports.
+            </p>
+            <p className="mt-3 max-w-[430px] text-[12px] leading-5 tracking-tight text-[#98A4AC]">
+              Connect only the systems and controlled files that can strengthen the operating record.
+            </p>
+            <div className="mt-8 flex items-center gap-3 text-[11px] tracking-tight text-[#7A8790]">
+              <span className="inline-flex items-center gap-1.5"><Link2 className="h-3.5 w-3.5" />{selectedCount} sources selected</span>
+              <span className="text-[#C2C9CD]">·</span>
+              <span>Read-only by design</span>
+            </div>
+            <div className="mt-7 divide-y divide-[#EEF1F2] border-y border-[#EEF1F2]">
+              {sources.map((source) => {
+                const isSelected = selected.has(source.id);
+                return (
+                  <button key={source.id} type="button" onClick={() => toggleSource(source.id)} className="flex w-full items-center gap-3 py-3 text-left transition-colors hover:bg-[#FBFCFC]">
+                    <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border transition-colors ${isSelected ? 'border-[#2877D8] bg-[#2877D8] text-white' : 'border-[#E7EBED] bg-[#FAFBFB] text-transparent'}`} aria-hidden="true"><Check className="h-3 w-3" strokeWidth={3} /></span>
+                    <SourceMark source={source} />
+                    <span className="min-w-0">
+                      <span className="block truncate text-[11px] font-semibold tracking-tight text-[#26333A]">{source.name}</span>
+                      <span className="mt-0.5 block truncate text-[10px] tracking-tight text-[#8B969D]">{source.detail}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <section aria-labelledby="document-pack-title" className="relative self-start overflow-hidden rounded-[5px] border border-[#E7EBED] bg-[#FCFDFD] px-5 py-6 sm:px-7 sm:py-8">
+            <div className="pointer-events-none absolute -right-3 top-8 select-none font-google-sans text-[62px] font-semibold leading-none tracking-[-0.09em] text-[#F1F3F4] sm:text-[88px]">PACK</div>
+            <div className="relative">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#8A969E]"><Paperclip className="h-3.5 w-3.5" />Document pack</div>
+                  <h2 id="document-pack-title" className="mt-3 max-w-[360px] font-google-sans text-[22px] font-normal leading-[1.08] tracking-[-0.045em] text-[#26333A]">Records ready to be connected.</h2>
+                  <p className="mt-2 max-w-[380px] text-[11px] leading-5 tracking-tight text-[#89959D]">A compact operating set for evidence, reconciliation, and controlled follow-through.</p>
+                </div>
+                <FileText className="hidden h-7 w-7 shrink-0 text-[#C6D0D5] sm:block" strokeWidth={1.1} />
+              </div>
+              <div className="mt-7 divide-y divide-[#EEF1F2] border-y border-[#EEF1F2]">
+                {documents.map((document) => (
+                  <div key={document.title} className="flex items-center gap-3 py-3.5">
+                    <DocumentMark type={document.type} />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[11px] font-semibold tracking-tight text-[#26333A]">{document.title}</p>
+                      <p className="mt-0.5 truncate text-[10px] tracking-tight text-[#8A969E]">{document.source}</p>
+                    </div>
+                    <span className={`shrink-0 rounded-full px-2 py-1 text-[8px] font-semibold tracking-tight ${document.status === 'Ingested' ? 'bg-[#F0F7F2] text-[#4F8067]' : document.status === 'Review' ? 'bg-[#F5F6F7] text-[#71808A]' : 'bg-[#FBF5E9] text-[#9A762D]'}`}>{document.status}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-5 flex items-center gap-2 text-[10px] tracking-tight text-[#9AA5AB]"><ShieldCheck className="h-3.5 w-3.5 text-[#7F9B8A]" />Source relationships remain visible through the operating record.</div>
             </div>
           </section>
         </div>
-      </main>
-      <BrandFooter wide />
-    </div>
+      </section>
+    </main>
   );
 }
