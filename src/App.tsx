@@ -94,7 +94,6 @@ const PaymentProofDemo = lazy(() => import('./pages/PaymentProofDemo'));
 const MarginStandardDeliverable = lazy(() => import('./pages/MarginStandardDeliverable'));
 const AutoSubmitPreview = lazy(() => import('./pages/AutoSubmitPreview'));
 const DocumentUploads = lazy(() => import("@/components/documentuploads"));
-const DocumentIngestion = lazy(() => import('./pages/DocumentIngestion'));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
 const Standalone = lazy(() => import("./pages/standalone"));
 const StandardAgreement = lazy(() => import("./pages/StandardAgreement"));
@@ -318,7 +317,6 @@ const App = () => (
                         <Route path='/payment-proof-demo' element={<PaymentProofDemo />} />
                         <Route path='/margin-standard-deliverable' element={<MarginStandardDeliverable />} />
                         <Route path='/auto-submit-preview' element={<AutoSubmitPreview />} />
-                        <Route path='/document-ingestion' element={<DocumentIngestion />} />
                         <Route path='/appeals-review' element={<AppealsReview />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/connect-amazon" element={<Navigate to="/audit" replace />} />
