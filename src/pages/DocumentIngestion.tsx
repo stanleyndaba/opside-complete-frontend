@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Check, FileText, Link2, Paperclip, ShieldCheck } from 'lucide-react';
+import { Check, FileText, Link2, Paperclip } from 'lucide-react';
 
 
 type Source = {
@@ -69,14 +69,9 @@ export default function DocumentIngestion() {
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-white text-[#182026]">
-      <section className="mx-auto max-w-[1180px] px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-20 lg:px-10">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.88fr)_minmax(420px,1.12fr)] lg:gap-20">
-          <div>
-            <div className="mb-5 flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#87939B]">
-              <ShieldCheck className="h-3.5 w-3.5" strokeWidth={1.7} />
-              <span>Controlled source register</span>
-            </div>
+    <main className="min-h-screen overflow-x-auto bg-[#EEF2F3] text-[#182026]">
+      <div className="mx-auto grid min-w-[1180px] max-w-[1180px] grid-cols-[minmax(0,0.88fr)_minmax(420px,1.12fr)]">
+          <section className="px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-20 lg:px-10" aria-labelledby="sources-title">
             <h1 className="max-w-[430px] font-google-sans text-[38px] font-normal leading-[1.04] tracking-[-0.055em] sm:text-[46px]">
               Record sources
             </h1>
@@ -106,9 +101,9 @@ export default function DocumentIngestion() {
                 );
               })}
             </div>
-          </div>
+          </section>
 
-          <section aria-labelledby="document-pack-title" className="relative self-start overflow-hidden rounded-[5px] border border-[#E7EBED] bg-[#FCFDFD] px-5 py-6 sm:px-7 sm:py-8">
+          <section aria-labelledby="document-pack-title" className="relative self-start overflow-hidden border-l border-[#E7EBED] bg-white px-5 py-6 sm:px-7 sm:py-8">
             <div className="pointer-events-none absolute -right-3 top-8 select-none font-google-sans text-[62px] font-semibold leading-none tracking-[-0.09em] text-[#F1F3F4] sm:text-[88px]">PACK</div>
             <div className="relative">
               <div className="flex items-center justify-between gap-4">
@@ -131,11 +126,9 @@ export default function DocumentIngestion() {
                   </div>
                 ))}
               </div>
-              <div className="mt-5 flex items-center gap-2 text-[10px] tracking-tight text-[#9AA5AB]"><ShieldCheck className="h-3.5 w-3.5 text-[#7F9B8A]" />Source relationships remain visible through the operating record.</div>
             </div>
           </section>
-        </div>
-      </section>
+      </div>
     </main>
   );
 }
