@@ -79,8 +79,8 @@ export default function DocumentIngestion() {
   return (
     <div className="min-h-screen bg-[#EDF2F4] font-google-sans text-[#182026]">
       <PublicNavbar variant="light" wide />
-      <main className="bg-[linear-gradient(135deg,#F7FAFB_0%,#EDF3F5_100%)] px-4 py-10 sm:px-6 sm:py-14 lg:px-10">
-        <div className="mx-auto grid max-w-[1420px] gap-8 rounded-[18px] border border-[#D7E2E7] bg-white/80 p-4 shadow-[0_24px_70px_rgba(36,62,74,0.12)] sm:p-7 lg:grid-cols-[0.82fr_1.18fr]">
+      <main className="overflow-x-auto bg-[linear-gradient(135deg,#F7FAFB_0%,#EDF3F5_100%)] px-4 py-10 sm:px-6 sm:py-14 lg:px-10">
+        <div className="mx-auto grid min-w-[1040px] grid-cols-[0.82fr_1.18fr] gap-8 rounded-[18px] border border-[#D7E2E7] bg-white/80 p-4 shadow-[0_24px_70px_rgba(36,62,74,0.12)] sm:min-w-[1180px] sm:p-7 lg:min-w-0 lg:max-w-[1420px]">
           <section className="p-0 sm:p-2" aria-labelledby="sources-title">
             <h1 id="sources-title" className="text-[18px] font-semibold leading-[1.08] tracking-[-0.03em]">9+ Sources</h1>
             <p className="mt-3 max-w-[560px] text-[14px] leading-6 text-[#66737F]">Select the records available for ingestion. Margin keeps each source tied to the financial event it supports.</p>
