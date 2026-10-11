@@ -2403,7 +2403,7 @@ function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boo
     if (reduceMotion) return;
     window.setTimeout(() => setActiveStep((current) => current + 1 >= steps.length ? 0 : current + 1), 420);
   };
-  const headingText = isProof ? 'Artifacts Margin will collect.' : 'Cross-marketplace recovery exposure';
+  const headingText = isProof ? 'Evidence Margin will Assemble' : 'Cross-marketplace recovery exposure';
   const headingSubtext = isProof
     ? 'Margin will test the connected operating record across the defined marketplace and entity scope before requesting any additional evidence.'
     : 'A material recovery exposure has been isolated across settlement, fulfillment, and finance records. · $184,220 indicated exposure · $96,480 currently supported';
