@@ -70,15 +70,15 @@ export default function DocumentIngestion() {
 
   return (
     <main className="min-h-screen overflow-x-auto bg-[#EEF2F3] text-[#182026]">
-      <div className="mx-auto grid min-w-[1180px] max-w-[1180px] grid-cols-[minmax(0,0.88fr)_minmax(420px,1.12fr)]">
+      <div className="mx-auto grid min-w-[1180px] max-w-[1180px] grid-cols-[minmax(0,1fr)_minmax(420px,1.15fr)]">
           <section className="px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-20 lg:px-10" aria-labelledby="sources-title">
-            <h1 className="max-w-[430px] font-google-sans text-[38px] font-normal leading-[1.04] tracking-[-0.055em] sm:text-[46px]">
+            <h1 className="max-w-[360px] font-google-sans text-[22px] font-normal leading-[1.08] tracking-[-0.045em]">
               Record sources
             </h1>
-            <p className="mt-4 max-w-[450px] text-[14px] leading-6 tracking-tight text-[#66737F]">
+            <p className="mt-2 max-w-[380px] text-[11px] leading-5 tracking-tight text-[#66737F]">
               Select the enterprise records available for ingestion. Margin keeps each source tied to the financial event it supports.
             </p>
-            <p className="mt-3 max-w-[430px] text-[12px] leading-5 tracking-tight text-[#98A4AC]">
+            <p className="mt-2 max-w-[380px] text-[10px] leading-5 tracking-tight text-[#98A4AC]">
               Connect only the systems and controlled files that can strengthen the operating record.
             </p>
             <div className="mt-8 flex items-center gap-3 text-[11px] tracking-tight text-[#7A8790]">
