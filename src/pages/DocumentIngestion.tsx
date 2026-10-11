@@ -70,7 +70,7 @@ export default function DocumentIngestion() {
 
   return (
     <main className="min-h-screen overflow-x-auto bg-[#EEF2F3] text-[#182026]">
-      <div className="mx-auto grid min-w-[1180px] max-w-[1180px] grid-cols-[minmax(0,1fr)_minmax(420px,1.15fr)]">
+      <div className="mx-auto grid min-w-[1180px] max-w-[1180px] grid-cols-[minmax(0,0.85fr)_minmax(420px,1.15fr)]">
           <section className="px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-20 lg:px-10" aria-labelledby="sources-title">
             <h1 className="max-w-[360px] font-google-sans text-[22px] font-normal leading-[1.08] tracking-[-0.045em]">
               Record sources
