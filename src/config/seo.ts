@@ -52,6 +52,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/progress-review'),
     image: SITE_META.image,
   },
+  '/document-ingestion': {
+    path: '/document-ingestion',
+    title: 'Document Ingestion | Margin',
+    description:
+      'Connect the source records Margin needs to establish an evidence-backed financial position.',
+    canonical: routeUrl('/document-ingestion'),
+    ogTitle: 'Document Ingestion | Margin',
+    ogDescription:
+      'Connect source systems, ingest supporting documents, and preserve evidence lineage around the underlying financial event.',
+    ogUrl: routeUrl('/document-ingestion'),
+    image: SITE_META.image,
+  },
   '/amazon-fba-reimbursement': {
     path: '/amazon-fba-reimbursement',
     title: 'Amazon FBA Reimbursement Service | Margin',
