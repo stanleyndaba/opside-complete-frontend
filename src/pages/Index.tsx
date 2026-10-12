@@ -1371,18 +1371,13 @@ function OneRecordAnalysisVisual() {
     ];
 
     return (
-    <div className="relative isolate max-h-[360px] overflow-y-auto rounded-[8px] border border-[#BFD8E6]/80 bg-[#EAF4F8] shadow-[0_18px_60px_rgba(37,91,116,0.16)] sm:max-h-none sm:overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(135deg,#EAF5F9_0%,#DDECF3_50%,#F5FAFB_100%)]" />
-        <motion.div aria-hidden="true" className="absolute -left-12 -top-12 h-44 w-44 rounded-full bg-[#B9E0EF]/65 blur-3xl" animate={{ x: [0, 16, 0], y: [0, 12, 0], scale: [1, 1.1, 1] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
-        <motion.div aria-hidden="true" className="absolute -bottom-16 -right-10 h-48 w-48 rounded-full bg-[#C9D5F0]/65 blur-3xl" animate={{ x: [0, -15, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
-        <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
-        <div className="relative grid gap-3 p-3 sm:p-4 lg:grid-cols-[1.32fr_0.68fr] lg:gap-4">
-          <div className="rounded-[10px] border border-white/85 bg-white/58 p-3 shadow-[0_16px_34px_rgba(56,95,112,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl sm:p-4">
-            <div className="flex items-center justify-between gap-3 border-b border-[#C9DDE5]/80 pb-2">
+    <div className="relative isolate max-h-[360px] overflow-y-auto bg-white sm:max-h-none sm:overflow-hidden">
+        <div className="relative grid gap-3 bg-white p-3 sm:p-4 lg:grid-cols-[1.32fr_0.68fr] lg:gap-4">
+          <div className="bg-white p-3 sm:p-4">
+            <div className="flex items-center justify-between gap-3 pb-2">
               <div>
                 <p className="mt-0.5 font-lora text-[14px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[15px]">Inbound receiving variance · Amazon US · Q3 2026</p>
               </div>
-              <span className="rounded-full bg-[#E3F0F5] px-2 py-1 text-[10px] font-medium tracking-tight text-[#0B74DE]">Financial position established</span>
             </div>
             <div className="mt-2.5 space-y-1.5 text-[11px] leading-5 text-[#4D5B66]">
               <p><strong className="font-semibold text-[#182026]">Northstar Commerce LLC</strong> · Review scope: <strong className="font-semibold text-[#182026]">9,284 inbound shipments</strong> · <strong className="font-semibold text-[#182026]">2.8M units</strong> · Amazon US · Q3 2026</p><p>For this event, Amazon&apos;s receiving record shows <strong className="font-semibold text-[#182026]">2,352 units received</strong> against a shipment plan for 2,416 units. The supported exposure is <strong className="font-semibold text-[#182026]">$4,144.00</strong>, based on a verified unit cost of <strong className="font-semibold text-[#182026]">$64.75</strong>.</p>
@@ -1393,14 +1388,14 @@ function OneRecordAnalysisVisual() {
             </div>
           </div>
           <div className="space-y-1.5 p-1 sm:p-2">
-            <p className="mb-1 text-[11px] font-medium tracking-tight text-[#66737F]">What the reconciliation establishes</p>
+            <p className="mb-1 text-[11px] font-medium tracking-tight text-[#182026]">What the reconciliation establishes</p>
             {checks.map(([title, detail]) => (
-              <div key={title} className="flex items-start gap-2 rounded-[7px] border border-white/70 bg-white/44 px-2 py-1.5 shadow-[0_8px_18px_rgba(56,95,112,0.08),inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-md">
+              <div key={title} className="flex items-start gap-2 rounded-[7px] bg-[#F1F3F4] px-2 py-1.5 text-[#182026]">
                 <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#16866B] text-white" aria-hidden="true"><Check className="h-2 w-2" strokeWidth={3} /></span>
-                <span className="min-w-0"><span className="block text-[10px] font-semibold leading-3.5 tracking-tight text-[#182026]">{title}</span><span className="mt-0.5 block text-[9px] leading-3.5 text-[#66737F]">{detail}</span></span>
+                <span className="min-w-0"><span className="block text-[10px] font-semibold leading-3.5 tracking-tight text-[#182026]">{title}</span><span className="mt-0.5 block text-[9px] leading-3.5 text-[#4D5B66]">{detail}</span></span>
               </div>
             ))}
-            <div className="mt-1 flex items-center justify-between border-t border-[#BFD8E6]/70 pt-3 text-[11px] font-medium tracking-tight text-[#182026]">
+            <div className="mt-1 flex items-center justify-between pt-3 text-[11px] font-medium tracking-tight text-[#182026]">
               <span>Supported recovery basis</span>
               <ArrowRight className="h-3.5 w-3.5 text-[#0B74DE]" aria-hidden="true" />
             </div>
