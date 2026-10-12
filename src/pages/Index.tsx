@@ -1694,18 +1694,24 @@ function FinancialCertaintyNestedVisual() {
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof financialCertaintyBrowsers>('issues');
 
   return (
-    <div className="min-w-0">
-      <div className="mb-3 flex flex-wrap gap-2" role="tablist" aria-label="Financial certainty previews">
-        {(Object.keys(financialCertaintyBrowsers) as Array<keyof typeof financialCertaintyBrowsers>).map((key) => (
-          <button key={key} type="button" role="tab" aria-selected={activeBrowser === key} onClick={() => setActiveBrowser(key)} className={`rounded-full px-3 py-1.5 text-[11px] font-medium tracking-tight transition-colors ${activeBrowser === key ? 'bg-[#DCEBF2] text-[#284B5B]' : 'bg-white/70 text-[#6A7D86] hover:bg-white'}`}>
-            {financialCertaintyBrowsers[key].label}
-          </button>
-        ))}
-      </div>
-      <div className="relative min-h-[520px] overflow-hidden rounded-[10px] border border-[#C9D7DB] bg-white shadow-[0_24px_70px_rgba(37,73,91,0.16)] sm:min-h-[620px]">
-        {(Object.keys(financialCertaintyBrowsers) as Array<keyof typeof financialCertaintyBrowsers>).map((key) => (
-          <iframe key={key} title={`${financialCertaintyBrowsers[key].label} page preview`} src={financialCertaintyBrowsers[key].path} className={`absolute inset-0 h-full w-full border-0 bg-[#FBFAF7] ${activeBrowser === key ? 'pointer-events-auto z-10' : 'pointer-events-none z-0 opacity-0'}`} loading="lazy" />
-        ))}
+    <div className="relative min-h-[620px] overflow-hidden bg-transparent p-2 sm:min-h-[570px] sm:p-4">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(135deg,#EAF5F9_0%,#DCECF2_52%,#F6FAFB_100%)]" />
+      <motion.div aria-hidden="true" className="absolute -left-14 -top-16 h-48 w-48 rounded-full bg-[#B9E0EF]/60 blur-3xl" animate={{ x: [0, 18, 0], y: [0, 14, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} />
+      <motion.div aria-hidden="true" className="absolute -bottom-16 -right-12 h-52 w-52 rounded-full bg-[#C9D5F0]/65 blur-3xl" animate={{ x: [0, -16, 0], y: [0, -12, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }} />
+      <div className="relative h-full min-h-[590px] sm:min-h-[538px]">
+        {(Object.keys(financialCertaintyBrowsers) as Array<keyof typeof financialCertaintyBrowsers>).map((key) => {
+          const browser = financialCertaintyBrowsers[key];
+          const isActive = activeBrowser === key;
+          const frameClass = key === 'issues'
+            ? 'left-[1%] top-[3%] h-[78%] w-[92%] sm:left-[3%] sm:top-[5%] sm:h-[76%] sm:w-[78%]'
+            : 'bottom-[2%] right-[1%] h-[76%] w-[92%] sm:bottom-[3%] sm:right-[3%] sm:h-[73%] sm:w-[78%]';
+          return (
+            <div key={key} role="button" tabIndex={0} onClick={() => setActiveBrowser(key)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setActiveBrowser(key); }} aria-label={`Show ${browser.label}`} className={`absolute overflow-hidden rounded-[10px] border text-left transition-all duration-500 ${frameClass} ${isActive ? 'z-20 border-white/95 shadow-[0_24px_48px_rgba(37,73,91,0.25)]' : 'z-10 border-white/65 shadow-[0_12px_30px_rgba(37,73,91,0.14)]'}`}>
+              <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md"><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /></div>
+              <iframe title={`${browser.label} page preview`} src={browser.path} className={`h-[calc(100%-28px)] w-full border-0 bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`} loading="lazy" />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
