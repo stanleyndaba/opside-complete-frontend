@@ -2627,7 +2627,6 @@ export default function Index() {
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/audit-start"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
         <RealityCheckSection />
         <ReconstructionGapSection />
-        <FinancialWorkProofSection />
 
         {/* Diagnosis — Why can’t I reasonably handle this myself? */}
         <AccountingEvidenceSection />
@@ -2658,6 +2657,7 @@ export default function Index() {
         <MarginStandardDeliverableSection />
 
         <AutoSubmitSection />
+        <FinancialWorkProofSection />
 
         {/* Section 14 — Trust / FAQ */}
         <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
