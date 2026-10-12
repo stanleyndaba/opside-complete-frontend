@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, Check, ChevronDown, Files, Layers3, ListChecks, Search, SlidersHorizontal } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 type TabId = "approval" | "filing" | "filed" | "attention" | "payout" | "resolved";
 type Tone = "ready" | "moving" | "filed" | "attention" | "payout" | "resolved";
@@ -143,22 +143,72 @@ cards.resolved.push(...makeAdditionalCards("RFD-164", "resolved", "Recovered", [
   { type: "Inbound shortage", title: "Carton Count Recovered", amount: "$598.32", detail: "The carton shortage credit was received and matched to the signed delivery and shipment plan.", meta: "Shipment FBA15KL7M2Q9 · 14 units · SKU NS-LAUNDRY-BASKET · ASIN B0C1V8M4QK", proof: "Paid 12 May", route: "Settlement reconciliation / Confirmed reimbursement", packet: "POD, shipment plan, settlement line", safety: "Final balance verified", next: "Record closed", docs: ["pod-FBA15KL7M2Q9.pdf", "shipment-plan.csv", "settlement-line.csv"] },
 ]));
 
-const analysisLines = [
-  "Coverage established across 124,860 orders, 1,842 shipments, 7,630 returns, 31,940 fee records, and 28,600 inventory movements across 8 settlement periods.",
-  "The operating population spans 4 marketplaces and 3 legal entities, with 1,126 affected records across 318 SKUs.",
-  "The control review establishes the operating boundary, separates supported exposure from unresolved signal, and records the evidence, settlement, attribution, ledger, ownership, approval, deadline, reversal, and residual-position requirements.",
-  "Each month, Margin can show what new issues were identified, what evidence supports each issue, what Margin is doing about it, what has been submitted, what Amazon decided, what Amazon credited and what reached settlement, and what remains unresolved.",
-  "If the account is clear, Margin reports that honestly. If it is not, the unresolved position stays visible.",
+const analysisItems = [
+  { kind: 'paragraph', text: 'Coverage established across 124,860 orders, 1,842 shipments, 7,630 returns, 31,940 fee records, and 28,600 inventory movements across 8 settlement periods.', highlight: 'yellow' },
+  { kind: 'paragraph', text: 'The operating population spans 4 marketplaces and 3 legal entities, with 1,126 affected records across 318 SKUs.', highlight: 'blue' },
+  { kind: 'paragraph', text: 'The control review establishes the operating boundary, separates supported exposure from unresolved signal, and records the evidence, settlement, attribution, ledger, ownership, approval, deadline, reversal, and residual-position requirements.', highlight: 'green' },
+  { kind: 'paragraph', text: 'Each month, Margin can show what new issues were identified, what evidence supports each issue, what Margin is doing about it, what has been submitted, what Amazon decided, what Amazon credited and what reached settlement, and what remains unresolved.', highlight: 'purple' },
+  { kind: 'final', text: 'If the account is clear, Margin reports that honestly. If it is not, the unresolved position stays visible.', highlight: 'blue' },
 ] as const;
 
-function EvidenceAnalysisPanel({ complete, visibleCount }: { complete: boolean; visibleCount: number }) {
-  return <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="rounded-[10px] border border-[#D8E3E8] bg-[#FBFCFD] px-5 py-5 shadow-[0_10px_30px_rgba(24,32,38,0.04)] sm:px-6">
-    <div className="flex items-center justify-between gap-4">
-      <div><div className="text-[10px] font-medium uppercase tracking-[0.08em] text-[#7B8A97]">Margin text analysis</div><h2 className="mt-1 font-google-sans text-[16px] font-normal tracking-tight text-[#182026]">Establishing the operating position</h2></div>
-      <span className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-tight text-[#66737F]"><span className={`h-2 w-2 rounded-full ${complete ? "bg-[#26704E]" : "bg-[#C99A42] animate-pulse"}`} />{complete ? "Analysis complete" : "Processing evidence"}</span>
-    </div>
-    <div className="mt-5 space-y-3 border-l border-[#C9D6DE] pl-4 text-[12px] leading-5 tracking-tight text-[#4D5B66]"><AnimatePresence initial={false}>{analysisLines.map((line, index) => index < visibleCount ? <motion.p key={line} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="relative"><span className="absolute -left-[21px] top-[7px] h-2 w-2 rounded-full bg-[#6F9A86]" />{line}</motion.p> : null)}</AnimatePresence></div>
-    {!complete ? <p className="mt-4 text-[10px] font-medium tracking-tight text-[#8A99A5]">Connecting records, testing coverage, and separating supported positions from unresolved signal…</p> : <p className="mt-4 text-[10px] font-semibold tracking-tight text-[#26704E]">The analysis has established the evidence context. Loading the governed case positions next.</p>}
+function FastDuplicateTypewriter({ text, onComplete }: { text: string; onComplete?: () => void }) {
+  const reduceMotion = useReducedMotion();
+  const [visibleText, setVisibleText] = useState(reduceMotion ? text : '');
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setVisibleText(text);
+      onCompleteRef.current?.();
+      return;
+    }
+    setVisibleText('');
+    let index = 0;
+    let interval: number | undefined;
+    const start = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        index += 1;
+        setVisibleText(text.slice(0, index));
+        if (index >= text.length) {
+          if (interval) window.clearInterval(interval);
+          onCompleteRef.current?.();
+        }
+      }, 3);
+    }, 70);
+    return () => {
+      window.clearTimeout(start);
+      if (interval) window.clearInterval(interval);
+    };
+  }, [reduceMotion, text]);
+
+  return <>{visibleText}{!reduceMotion && visibleText.length < text.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</>;
+}
+
+function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
+  const reduceMotion = useReducedMotion();
+  const [activeItem, setActiveItem] = useState(0);
+  const highlightClasses: Record<string, string> = { yellow: 'bg-[#FFF1A8]', blue: 'bg-[#DDEBFF]', green: 'bg-[#DDF4E5]', purple: 'bg-[#E9DEFF]' };
+  const analysisComplete = reduceMotion || activeItem >= analysisItems.length;
+  useEffect(() => {
+    if (analysisComplete) onComplete();
+  }, [analysisComplete, onComplete]);
+  const advance = () => {
+    if (reduceMotion) return;
+    window.setTimeout(() => setActiveItem((current) => current + 1), 140);
+  };
+
+  return <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-white px-1 py-2 sm:px-2">
+    <header className="pb-4"><p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] bg-[#F1F2F2] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">Illustrative audit population · decision-grade account position</mark></p><h2 className="mt-1.5 max-w-2xl font-google-sans text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[24px]">The analysis establishes the account&apos;s operating position</h2></header>
+    <section className="py-2" aria-live="polite"><div className="space-y-1.5">{analysisItems.map((item, index) => {
+      const visible = reduceMotion || index <= activeItem;
+      const active = reduceMotion || index === activeItem;
+      const typedContent = reduceMotion ? item.text : active ? <FastDuplicateTypewriter text={item.text} onComplete={advance} /> : index < activeItem ? item.text : null;
+      const highlightComplete = reduceMotion || index < activeItem;
+      const itemClass = item.kind === 'final' ? 'mt-3 text-[14px] leading-6 text-[#191B20]' : 'text-[14px] leading-6 text-[#595E68]';
+      return <motion.p key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className={itemClass}>{item.highlight ? <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightComplete ? highlightClasses[item.highlight] : 'bg-transparent'}`}>{typedContent}</mark> : typedContent}</motion.p>;
+    })}</div></section>
+    <p className="mt-4 text-[10px] font-medium tracking-tight text-[#8A99A5]">{analysisComplete ? 'Analysis complete · loading the governed case positions next.' : 'Margin is reading the supplied account position and separating supported evidence from unresolved signal.'}</p>
   </motion.div>;
 }
 
@@ -201,15 +251,8 @@ export default function FilingPipelinePreview() {
   const [query, setQuery] = useState("");
   const [queueMode, setQueueMode] = useState<"all" | "priority" | "recent">("all");
   const [toast, setToast] = useState<string | null>(null);
-  const [analysisIndex, setAnalysisIndex] = useState(0);
   const [casesVisible, setCasesVisible] = useState(false);
-  const analysisComplete = analysisIndex >= analysisLines.length;
-
-  useEffect(() => {
-    if (analysisComplete) return;
-    const timer = window.setTimeout(() => setAnalysisIndex((current) => current + 1), 720);
-    return () => window.clearTimeout(timer);
-  }, [analysisComplete, analysisIndex]);
+  const [analysisComplete, setAnalysisComplete] = useState(false);
 
   useEffect(() => {
     if (!analysisComplete) return;
@@ -230,7 +273,7 @@ export default function FilingPipelinePreview() {
     setToast("Filing control recorded. Submission is now in progress.");
     window.setTimeout(() => setToast(null), 3200);
   };
-  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6"><aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside><section className="min-w-0 flex-1 bg-white"><header className="px-5 py-5 sm:px-6"><div className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Enterprise recovery control</div><h1 id="pipeline-title" className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Recovery operations</h1></header><div className="px-5 py-5 sm:px-6">{!casesVisible ? <EvidenceAnalysisPanel complete={analysisComplete} visibleCount={analysisIndex} /> : null}</div><div className={casesVisible ? "overflow-x-auto" : "hidden"}><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight transition-colors ${activeTab === item.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>{item.label}</button>)}</div></div><div id="approval-queue" className={casesVisible ? "px-5 py-5 sm:px-6" : "hidden"}><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-google-sans text-[14px] font-normal tracking-tight text-[#182026]">{sectionTitle}</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "$186,420" : tab.id === "filing" ? "$94,680" : tab.id === "filed" ? "$312,740" : tab.id === "attention" ? "$58,940" : tab.id === "payout" ? "$146,280" : "$1.84M"}</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "Supported cohort queue. Review evidence sufficiency, materiality, control exceptions, and expected recovery before anything is submitted." : tab.id === "filing" ? "Live submissions with locked packets, receipt capture, response windows, and cross-system financial state." : tab.id === "attention" ? "Control exceptions held before filing because source relationships, valuation, or clearing evidence require resolution." : "Margin keeps the event record, evidence state, Amazon response, settlement truth, and next controlled action connected."}</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{tab.count} governed positions in this queue</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><div className="relative hidden sm:block"><button type="button" onClick={() => setQueueMode(queueMode === "all" ? "priority" : queueMode === "priority" ? "recent" : "all")} className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A]">Review queue: {queueMode === "all" ? "All cases" : queueMode === "priority" ? "Priority first" : "Recently updated"}<ChevronDown className="h-3.5 w-3.5" /></button></div></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={approveCard} />)}{visibleCards.length === 0 ? <div className="rounded-[10px] border border-dashed border-[#D8E3E8] px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}</div></div></section></div></main>;
+  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6"><aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside><section className="min-w-0 flex-1 bg-white"><header className="px-5 py-5 sm:px-6"><div className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Enterprise recovery control</div><h1 id="pipeline-title" className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Recovery operations</h1></header><div className="px-5 py-5 sm:px-6">{!casesVisible ? <EvidenceAnalysisPanel onComplete={() => setAnalysisComplete(true)} /> : null}</div><div className={casesVisible ? "overflow-x-auto" : "hidden"}><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight transition-colors ${activeTab === item.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>{item.label}</button>)}</div></div><div id="approval-queue" className={casesVisible ? "px-5 py-5 sm:px-6" : "hidden"}><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-google-sans text-[14px] font-normal tracking-tight text-[#182026]">{sectionTitle}</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "$186,420" : tab.id === "filing" ? "$94,680" : tab.id === "filed" ? "$312,740" : tab.id === "attention" ? "$58,940" : tab.id === "payout" ? "$146,280" : "$1.84M"}</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "Supported cohort queue. Review evidence sufficiency, materiality, control exceptions, and expected recovery before anything is submitted." : tab.id === "filing" ? "Live submissions with locked packets, receipt capture, response windows, and cross-system financial state." : tab.id === "attention" ? "Control exceptions held before filing because source relationships, valuation, or clearing evidence require resolution." : "Margin keeps the event record, evidence state, Amazon response, settlement truth, and next controlled action connected."}</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{tab.count} governed positions in this queue</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><div className="relative hidden sm:block"><button type="button" onClick={() => setQueueMode(queueMode === "all" ? "priority" : queueMode === "priority" ? "recent" : "all")} className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A]">Review queue: {queueMode === "all" ? "All cases" : queueMode === "priority" ? "Priority first" : "Recently updated"}<ChevronDown className="h-3.5 w-3.5" /></button></div></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={approveCard} />)}{visibleCards.length === 0 ? <div className="rounded-[10px] border border-dashed border-[#D8E3E8] px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}</div></div></section></div></main>;
 }
 
 export const __previewRecords = cards;
