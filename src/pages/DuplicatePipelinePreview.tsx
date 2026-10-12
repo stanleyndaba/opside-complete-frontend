@@ -211,26 +211,28 @@ function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
     if (reduceMotion) return;
     window.setTimeout(() => setActiveItem((current) => current + 1), 80);
   };
+  const analysisColumns = [analysisItems.slice(0, 9), analysisItems.slice(9)];
+  const renderAnalysisItem = (item: typeof analysisItems[number], index: number) => {
+    const visible = reduceMotion || index <= activeItem;
+    const active = reduceMotion || index === activeItem;
+    const typedContent = reduceMotion ? item.text : active ? <FastDuplicateTypewriter text={item.text} onComplete={advance} /> : index < activeItem ? item.text : null;
+    const highlightComplete = reduceMotion || index < activeItem;
+    const itemClass = item.kind === 'heading'
+      ? 'mt-2 font-google-sans text-[11.25px] leading-tight tracking-[-0.02em] text-[#191B20]'
+      : item.kind === 'final'
+        ? 'mt-2 text-[10.5px] leading-[1.5rem] text-[#191B20]'
+        : item.kind === 'list'
+          ? 'flex items-baseline gap-2 text-[10.5px] leading-[1.5rem] text-[#595E68]'
+          : 'text-[10.5px] leading-[1.5rem] text-[#595E68]';
+    return <motion.div key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className={itemClass}>
+      {item.kind === 'list' ? <span className="text-[#8A99A3]">•</span> : null}
+      {item.highlight ? <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightComplete ? highlightClasses[item.highlight] : 'bg-transparent'}`}>{typedContent}</mark> : typedContent}
+    </motion.div>;
+  };
 
   return <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-white px-1 py-1 sm:px-2">
     <header className="pb-2.5"><p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] bg-[#F1F2F2] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">Illustrative audit population · decision-grade account position</mark></p><h2 className="mt-1.5 max-w-2xl font-google-sans text-[15px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[18px]">The analysis establishes the account&apos;s operating position</h2></header>
-    <section className="py-1" aria-live="polite"><div className="space-y-1">{analysisItems.map((item, index) => {
-      const visible = reduceMotion || index <= activeItem;
-      const active = reduceMotion || index === activeItem;
-      const typedContent = reduceMotion ? item.text : active ? <FastDuplicateTypewriter text={item.text} onComplete={advance} /> : index < activeItem ? item.text : null;
-      const highlightComplete = reduceMotion || index < activeItem;
-      const itemClass = item.kind === 'heading'
-        ? 'mt-2 font-google-sans text-[11.25px] leading-tight tracking-[-0.02em] text-[#191B20]'
-        : item.kind === 'final'
-          ? 'mt-2 text-[10.5px] leading-[1.5rem] text-[#191B20]'
-          : item.kind === 'list'
-            ? 'flex items-baseline gap-2 text-[10.5px] leading-[1.5rem] text-[#595E68]'
-            : 'text-[10.5px] leading-[1.5rem] text-[#595E68]';
-      return <motion.div key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className={itemClass}>
-        {item.kind === 'list' ? <span className="text-[#8A99A3]">•</span> : null}
-        {item.highlight ? <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightComplete ? highlightClasses[item.highlight] : 'bg-transparent'}`}>{typedContent}</mark> : typedContent}
-      </motion.div>;
-    })}</div></section>
+    <section className="py-1" aria-live="polite"><div className="grid grid-cols-1 gap-x-8 gap-y-5 lg:grid-cols-2">{analysisColumns.map((column, columnIndex) => <div key={columnIndex} className="min-w-0 space-y-1">{column.map((item, itemIndex) => renderAnalysisItem(item, columnIndex === 0 ? itemIndex : itemIndex + 9))}</div>)}</div></section>
     <p className="mt-2 text-[8px] leading-3 font-medium tracking-tight text-[#8A99A5]">{analysisComplete ? 'Analysis complete · loading the governed case positions next.' : 'Margin is reading the supplied account position and separating supported evidence from unresolved signal.'}</p>
   </motion.div>;
 }
