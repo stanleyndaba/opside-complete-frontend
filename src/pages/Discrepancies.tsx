@@ -99,8 +99,6 @@ export default function Discrepancies() {
   const [showProcessed, setShowProcessed] = useState(false);
   const [activeFilter, setActiveFilter] = useState<'all' | 'ready' | 'attention'>('all');
   const [introStage, setIntroStage] = useState(0);
-  const [timelineCount, setTimelineCount] = useState(1);
-  const [timelinePaused, setTimelinePaused] = useState(false);
   const reduceMotion = useReducedMotion();
   const visibleFindings = useMemo(() => findings.filter((finding) => {
     const matchesQuery = !query.trim() || Object.values(finding).join(' ').toLowerCase().includes(query.toLowerCase());
@@ -114,17 +112,8 @@ export default function Discrepancies() {
   const reviewCount = findings.filter((finding) => finding.status === 'In review').length;
 
   React.useEffect(() => {
-    setTimelineCount(1);
     setIntroStage(0);
   }, [activeFilter, query, showProcessed]);
-
-  React.useEffect(() => {
-    if (reduceMotion || timelinePaused || introStage < 3 || visibleFindings.length === 0) return;
-    const timer = window.setInterval(() => {
-      setTimelineCount((current) => current >= visibleFindings.length ? 1 : current + 1);
-    }, 1500);
-    return () => window.clearInterval(timer);
-  }, [introStage, reduceMotion, timelinePaused, visibleFindings.length]);
 
   const markerTone: Record<Finding["tone"], string> = {
     muted: 'bg-[#9AA7B0]',
@@ -158,9 +147,8 @@ export default function Discrepancies() {
             <button type="button" className="inline-flex items-center rounded-[5px] border border-[#E9E9EC] bg-white px-3 py-1.5 text-[10px] font-medium tracking-tight text-[#66737F] hover:bg-[#FAFAFB]"><Download className="mr-2 h-3 w-3" />Export findings</button>
           </div>
           <div className="mt-5">
-            <div onMouseEnter={() => setTimelinePaused(true)} onMouseLeave={() => setTimelinePaused(false)}>
-            {(reduceMotion ? visibleFindings : visibleFindings.slice(0, timelineCount)).map((finding, index, shownFindings) => <motion.article key={finding.reference} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.34, ease: [0.22, 1, 0.36, 1] }} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
-              {index < shownFindings.length - 1 ? <motion.span initial={reduceMotion ? false : { scaleY: 0 }} animate={{ scaleY: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22, duration: 0.28 }} style={{ transformOrigin: 'top' }} className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
+            {visibleFindings.map((finding, index) => <article key={finding.reference} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
+              {index < visibleFindings.length - 1 ? <span className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
               <span className={cn('relative z-10 ml-[9px] mt-2 h-1 w-1 rounded-full', markerTone[finding.tone])} aria-label={`${finding.state} finding`} />
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1"><p className="font-semibold tracking-tight text-[#182026]">{finding.reference} · {finding.title}</p><span className={cn('inline-flex rounded-full px-2 py-0.5 text-[8px] font-bold tracking-tight', stateTone[finding.tone])}>{finding.state}</span></div>
@@ -172,8 +160,7 @@ export default function Discrepancies() {
                 <p className="mt-1 text-[11px] leading-4 text-[#66737F]">Control decision: {finding.status === 'Ready' ? 'Evidence supports the next justified recovery action.' : finding.status === 'In review' ? 'Margin is holding the position for further reconciliation.' : 'Further reconciliation is required before action.'}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-3"><span className="text-[11px] font-semibold tracking-tight text-[#36404A]">Next controlled step: {finding.movement === 'Blocked' ? 'Resolve evidence blocker' : finding.movement === 'Filed' ? 'Verify response and payout' : finding.status === 'Ready' ? 'Prepare case' : 'Review evidence chain'}</span><button type="button" className="inline-flex items-center gap-1 rounded-[5px] px-1 py-0.5 text-[11px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#EFF6FF]">Open finding<ArrowRight className="h-3 w-3" /></button></div>
               </div>
-            </motion.article>)}
-            </div>
+            </article>)}
             {visibleFindings.length === 0 ? <div className="px-6 py-20 text-center text-[12px] tracking-tight text-[#7B8A97]">No findings match this search.</div> : null}
           </div>
           <p className="pt-2 text-[10px] font-medium tracking-tight text-[#7B8A97]">Read-only representative register for Northstar Commerce LLC · US FBA. Nothing submits from this page.</p>
