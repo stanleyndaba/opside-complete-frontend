@@ -1376,17 +1376,31 @@ function OneRecordAnalysisVisual() {
     useEffect(() => {
       if (reduceMotion) { setVisibleChecks(checks.length); return; }
       if (!isInView) return;
-      setVisibleChecks(0);
       let nextCheck = 0;
-      let interval: number | undefined;
-      const startDelay = window.setTimeout(() => {
-        interval = window.setInterval(() => {
-          nextCheck += 1;
-          setVisibleChecks(nextCheck);
-          if (nextCheck >= checks.length && interval) window.clearInterval(interval);
-        }, 760);
-      }, 420);
-      return () => { window.clearTimeout(startDelay); if (interval) window.clearInterval(interval); };
+      let timer: number | undefined;
+      let cancelled = false;
+      const runBuild = () => {
+        if (cancelled) return;
+        if (nextCheck < checks.length) {
+          timer = window.setTimeout(() => {
+            nextCheck += 1;
+            setVisibleChecks(nextCheck);
+            runBuild();
+          }, 360);
+          return;
+        }
+        timer = window.setTimeout(() => {
+          nextCheck = 0;
+          setVisibleChecks(0);
+          runBuild();
+        }, 4000);
+      };
+      setVisibleChecks(0);
+      timer = window.setTimeout(runBuild, 280);
+      return () => {
+        cancelled = true;
+        if (timer) window.clearTimeout(timer);
+      };
     }, [isInView, reduceMotion]);
     const narrative = [
       <p key="scope"><strong className="font-semibold text-[#182026]">Northstar Commerce LLC</strong> · Review scope: <strong className="font-semibold text-[#182026]">9,284 inbound shipments</strong> · <strong className="font-semibold text-[#182026]">2.8M units</strong> · Amazon US · Q3 2026</p>,
@@ -1402,12 +1416,12 @@ function OneRecordAnalysisVisual() {
           <div className="bg-white p-3 sm:p-4">
             <div className="flex items-center justify-between gap-3 pb-2"><div><p className="mt-0.5 font-lora text-[14px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[15px]">Inbound receiving variance · Amazon US · Q3 2026</p></div></div>
             <div className="mt-2.5 space-y-1.5 text-[11px] leading-5 text-[#4D5B66]" aria-live="polite" aria-atomic="false">
-              {narrative.map((line, index) => <motion.div key={index} initial={false} animate={reduceMotion || visibleChecks > index ? { opacity: 1, y: 0 } : { opacity: 0, y: 5 }} transition={{ duration: reduceMotion ? 0 : 0.34, ease: [0.22, 1, 0.36, 1] }} className={reduceMotion || visibleChecks > index ? "" : "pointer-events-none h-0 overflow-hidden"}>{line}</motion.div>)}
+              {narrative.map((line, index) => <motion.div key={index} initial={false} animate={reduceMotion || visibleChecks > index ? { opacity: 1, y: 0, height: "auto" } : { opacity: 0, y: -14, height: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden">{line}</motion.div>)}
             </div>
           </div>
           <div className="space-y-1.5 p-1 sm:p-2">
             <p className="mb-1 text-[11px] font-medium tracking-tight text-[#182026]">What the reconciliation establishes</p>
-            {checks.map(([title, detail], index) => <motion.div key={title} initial={false} animate={reduceMotion || visibleChecks > index ? { opacity: 1, y: 0, height: "auto" } : { opacity: 0, y: 8, height: 0 }} transition={{ duration: reduceMotion ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden"><div className="flex items-start gap-2 rounded-[7px] bg-[#F1F3F4] px-2 py-1.5 text-[#182026]"><span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#16866B] text-white" aria-hidden="true"><Check className="h-2 w-2" strokeWidth={3} /></span><span className="min-w-0"><span className="block text-[10px] font-semibold leading-3.5 tracking-tight text-[#182026]">{title}</span><span className="mt-0.5 block text-[9px] leading-3.5 text-[#4D5B66]">{detail}</span></span></div></motion.div>)}
+            {checks.map(([title, detail], index) => <motion.div key={title} initial={false} animate={reduceMotion || visibleChecks > index ? { opacity: 1, y: 0, height: "auto" } : { opacity: 0, y: -14, height: 0 }} transition={{ duration: reduceMotion ? 0 : 0.34, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden"><div className="flex items-start gap-2 rounded-[7px] bg-[#F1F3F4] px-2 py-1.5 text-[#182026]"><span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#16866B] text-white" aria-hidden="true"><Check className="h-2 w-2" strokeWidth={3} /></span><span className="min-w-0"><span className="block text-[10px] font-semibold leading-3.5 tracking-tight text-[#182026]">{title}</span><span className="mt-0.5 block text-[9px] leading-3.5 text-[#4D5B66]">{detail}</span></span></div></motion.div>)}
             <motion.div animate={reduceMotion || visibleChecks >= checks.length ? { opacity: 1, y: 0 } : { opacity: 0, y: 5 }} transition={{ duration: 0.35 }} className="mt-1 flex items-center justify-between pt-3 text-[11px] font-medium tracking-tight text-[#182026]"><span>Supported recovery basis</span><ArrowRight className="h-3.5 w-3.5 text-[#0B74DE]" aria-hidden="true" /></motion.div>
           </div>
         </div>
