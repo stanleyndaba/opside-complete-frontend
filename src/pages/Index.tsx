@@ -761,27 +761,27 @@ function FinancialWorkProofSection() {
   ];
 
   return (
-    <section aria-labelledby="financial-work-proof-title" className="financial-work-proof-surface relative overflow-hidden bg-[#050505] py-12 text-white md:py-16">
+    <section aria-labelledby="financial-work-proof-title" className="financial-work-proof-surface relative overflow-hidden bg-[#F1F3F2] py-12 text-[#182026] md:py-16">
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-20">
           <motion.div {...revealProps} className="max-w-[620px]">
             <h2 id="financial-work-proof-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
               <span className="heading-tone-dark">Built to get</span> <span className="heading-tone-muted">the financial work done.</span>
             </h2>
-            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#A7B1B8] md:text-[17px] md:leading-8">Margin is built around three things that matter when money does not add up: less time spent searching, clearer answers, and work that actually gets finished.</p>
+            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#5F6D77] md:text-[17px] md:leading-8">Margin is built around three things that matter when money does not add up: less time spent searching, clearer answers, and work that actually gets finished.</p>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[#2B3034]">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[#D8E3E8]">
             {proofPoints.map((point) => (
-              <div key={point.title} className="grid gap-3 border-b border-[#2B3034] py-5 sm:grid-cols-[110px_minmax(0,0.9fr)_minmax(0,1.1fr)] sm:items-baseline sm:gap-5 sm:py-6">
-                <span className={`${point.value === "SP-API" ? "text-[24px] sm:text-[28px]" : "text-[38px] sm:text-[44px]"} font-lora leading-none tracking-[-0.045em] text-white`} style={{ fontWeight: 500 }}>{point.value}</span>
-                <h3 className="text-[16px] font-semibold leading-5 tracking-tight text-white sm:text-[17px]">{point.title}</h3>
+              <div key={point.title} className="grid gap-3 border-b border-[#D8E3E8] py-5 sm:grid-cols-[110px_minmax(0,0.9fr)_minmax(0,1.1fr)] sm:items-baseline sm:gap-5 sm:py-6">
+                <span className={`${point.value === "SP-API" ? "text-[24px] sm:text-[28px]" : "text-[38px] sm:text-[44px]"} font-lora leading-none tracking-[-0.045em] text-[#182026]`} style={{ fontWeight: 500 }}>{point.value}</span>
+                <h3 className="text-[16px] font-semibold leading-5 tracking-tight text-[#182026] sm:text-[17px]">{point.title}</h3>
                 {point.details ? (
-                  <ul className="grid gap-1 text-[13px] leading-5 text-[#8F9BA3] sm:text-[14px] sm:leading-6">
+                  <ul className="grid gap-1 text-[13px] leading-5 text-[#66737F] sm:text-[14px] sm:leading-6">
                     {point.details.map((detail) => <li key={detail}>{detail}</li>)}
                   </ul>
                 ) : (
-                  <p className="text-[13px] leading-5 text-[#8F9BA3] sm:text-[14px] sm:leading-6">{point.description}</p>
+                  <p className="text-[13px] leading-5 text-[#66737F] sm:text-[14px] sm:leading-6">{point.description}</p>
                 )}
               </div>
             ))}
