@@ -310,15 +310,6 @@ const ingestedDocumentStages = [
   { title: "Follow through and reconcile", detail: "Approved actions are submitted, responses are handled, outcomes are tracked, and the resulting financial entries are verified." },
 ] as const;
 
-const ingestedDocumentRecords = [
-  { type: "PDF", icon: "/pdf-file-icon.webp", title: "Amazon FBA settlement report · Apr 2026", source: "Settlement period · reimbursement and fee lines" },
-  { type: "CSV", icon: "/evidence-csv-mark.png", title: "FBA inventory movement extract · ONT8", source: "SKU population · received quantity and adjustment events" },
-  { type: "PDF", icon: "/pdf-file-icon.webp", title: "Inbound receiving variance record · FBA17-ONT8", source: "ASN · carton count · receiving timestamps" },
-  { type: "GMAIL", icon: "/gmailicon.png", title: "Amazon reimbursement case correspondence", source: "Evidence request · decision history · reversal watch" },
-  { type: "CSV", icon: "/evidence-csv-mark.png", title: "Settlement reconciliation by merchant order", source: "Order ID · settlement date · fee class · net proceeds" },
-  { type: "PDF", icon: "/pdf-file-icon.webp", title: "Carrier proof of delivery packet", source: "Appointment ID · scan events · signed delivery record" },
-] as const;
-
 function IngestedDocumentsOutcomeSection() {
   return (
     <section className="relative overflow-hidden bg-white py-14 sm:py-20 md:py-24" aria-labelledby="ingested-documents-outcome-title">
@@ -339,19 +330,8 @@ function IngestedDocumentsOutcomeSection() {
               ))}
             </div>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 overflow-hidden border-l border-[#E7EBED] bg-[#FAFBFB] px-5 py-7 sm:px-8 sm:py-9">
-            <div className="pointer-events-none absolute -right-5 top-8 select-none font-google-sans text-[66px] font-semibold leading-none tracking-[-0.09em] text-[#F0F2F3] sm:text-[92px]">INGEST</div>
-            <div className="relative">
-              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#89959D]">Document ingestion</p>
-              <h3 className="mt-3 max-w-[480px] font-google-sans text-[25px] font-normal leading-[1.06] tracking-[-0.045em] text-[#26333A] sm:text-[31px]">The records arrive connected to the exposure.</h3>
-              <p className="mt-3 max-w-[500px] text-[12px] leading-5 text-[#89959D]">Source lineage stays visible while the operating population is prepared for matching, evidence review, and controlled action.</p>
-              <div className="mt-7 divide-y divide-[#E8EDF0] border-y border-[#E8EDF0]">
-                {ingestedDocumentRecords.map((record) => (
-                  <div key={record.title} className="flex items-center gap-3 py-3.5"><img src={record.icon} alt={record.type} className="h-5 w-5 shrink-0 object-contain opacity-80" /><div className="min-w-0 flex-1"><p className="truncate text-[11px] font-semibold tracking-tight text-[#26333A]">{record.title}</p><p className="mt-0.5 truncate text-[10px] tracking-tight text-[#8A969E]">{record.source}</p></div><span className="h-4 w-4 shrink-0 rounded-[3px] bg-[#F1F4F5]" aria-hidden="true" /></div>
-                ))}
-              </div>
-              <div className="mt-5 flex items-center gap-2 font-mono text-[9px] font-semibold tracking-tight text-[#7B8790]"><span className="h-1.5 w-1.5 rounded-full bg-[#3EAD72]" /><span>Source lineage preserved</span><span className="text-[#B5C2CA]">·</span><span>Exposure ready for review</span></div>
-            </div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="min-w-0">
+            <FinalDelegationPreview compactMobile tallMobile src="/document-ingestion" title="Document Ingestion page preview" />
           </motion.div>
         </div>
       </div>
