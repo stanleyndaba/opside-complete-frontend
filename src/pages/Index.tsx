@@ -302,14 +302,6 @@ function AccountingEvidenceSection() {
   );
 }
 
-const ingestedDocumentStages = [
-  { title: "Collect and prepare records", detail: "Transaction reports, settlements, inventory records, claim history, and relevant accounting data are assembled into one reviewable population." },
-  { title: "Match transactions and identify exceptions", detail: "Expected events are compared with recorded movements, payments, adjustments, and reimbursements." },
-  { title: "Investigate each exception", detail: "Each difference is tested for timing, legitimate explanation, prior resolution, or potential action." },
-  { title: "Establish the evidence and next action", detail: "Eligibility, claim history, deadlines, supporting records, and the correct procedure are checked before work advances." },
-  { title: "Follow through and reconcile", detail: "Approved actions are submitted, responses are handled, outcomes are tracked, and the resulting financial entries are verified." },
-] as const;
-
 function IngestedDocumentsOutcomeSection() {
   return (
     <section className="relative overflow-hidden bg-white py-14 sm:py-20 md:py-24" aria-labelledby="ingested-documents-outcome-title">
@@ -321,14 +313,6 @@ function IngestedDocumentsOutcomeSection() {
             </h2>
             <p className="mt-6 max-w-[570px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">At exposure, the seller gets a reviewable operating record: what was collected, what matched, what remains exceptional, what is supported by evidence, and what should happen next.</p>
             <p className="mt-4 max-w-[570px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin moves the account from disconnected source files to a controlled path from discovery through reconciliation.</p>
-            <div className="mt-8 border-t border-[#D9E1E5] pt-2">
-              {ingestedDocumentStages.map((stage, index) => (
-                <div key={stage.title} className="flex gap-3 border-b border-[#E8EDF0] py-4">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] bg-[#F1F4F5] font-mono text-[9px] font-bold text-[#6F7E87]">{String(index + 1).padStart(2, "0")}</span>
-                  <div><h3 className="text-[13px] font-semibold tracking-[-0.015em] text-[#26333A]">{stage.title}</h3><p className="mt-1 text-[12px] leading-5 text-[#7B8790]">{stage.detail}</p></div>
-                </div>
-              ))}
-            </div>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="min-w-0">
             <FinalDelegationPreview compactMobile tallMobile src="/document-ingestion" title="Document Ingestion page preview" />
