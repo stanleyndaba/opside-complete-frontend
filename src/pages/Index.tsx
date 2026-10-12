@@ -671,12 +671,7 @@ function RealityCheckSection() {
         </motion.div>
         </div>
         <motion.div {...revealProps} className="relative min-w-0 overflow-hidden">
-          <iframe
-            title="Amazon financial discrepancy control — Issues found"
-            src="/issues-found"
-            className="block h-[520px] w-full rounded-[8px] border-0 bg-[#FAFAF7] sm:h-[620px]"
-            loading="lazy"
-          />
+          <FinancialCertaintyNestedVisual />
         </motion.div>
       </div>
       </div>
@@ -1655,7 +1650,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
 
 const nestedRecoveryBrowsers = {
   progress: { label: 'Progress review', path: '/progress-review' },
-  evidence: { label: 'Recover Once', path: '/recover-once' },
+  evidence: { label: 'Evidence required', path: '/evidence-required' },
 } as const;
 
 function NestedRecoveryVisual({
@@ -1687,6 +1682,32 @@ function NestedRecoveryVisual({
         })}
       </div>
     </motion.div>
+  );
+}
+
+const financialCertaintyBrowsers = {
+  issues: { label: 'Issues found', path: '/issues-found' },
+  operations: { label: 'Recovery operations', path: '/filing-pipeline-preview' },
+} as const;
+
+function FinancialCertaintyNestedVisual() {
+  const [activeBrowser, setActiveBrowser] = useState<keyof typeof financialCertaintyBrowsers>('issues');
+
+  return (
+    <div className="min-w-0">
+      <div className="mb-3 flex flex-wrap gap-2" role="tablist" aria-label="Financial certainty previews">
+        {(Object.keys(financialCertaintyBrowsers) as Array<keyof typeof financialCertaintyBrowsers>).map((key) => (
+          <button key={key} type="button" role="tab" aria-selected={activeBrowser === key} onClick={() => setActiveBrowser(key)} className={`rounded-full px-3 py-1.5 text-[11px] font-medium tracking-tight transition-colors ${activeBrowser === key ? 'bg-[#DCEBF2] text-[#284B5B]' : 'bg-white/70 text-[#6A7D86] hover:bg-white'}`}>
+            {financialCertaintyBrowsers[key].label}
+          </button>
+        ))}
+      </div>
+      <div className="relative min-h-[520px] overflow-hidden rounded-[10px] border border-[#C9D7DB] bg-white shadow-[0_24px_70px_rgba(37,73,91,0.16)] sm:min-h-[620px]">
+        {(Object.keys(financialCertaintyBrowsers) as Array<keyof typeof financialCertaintyBrowsers>).map((key) => (
+          <iframe key={key} title={`${financialCertaintyBrowsers[key].label} page preview`} src={financialCertaintyBrowsers[key].path} className={`absolute inset-0 h-full w-full border-0 bg-[#FBFAF7] ${activeBrowser === key ? 'pointer-events-auto z-10' : 'pointer-events-none z-0 opacity-0'}`} loading="lazy" />
+        ))}
+      </div>
+    </div>
   );
 }
 
