@@ -2,25 +2,23 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, FileText, Folder, Play } from 'lucide-react';
 
 interface UploadedFile {
   id: string;
   name: string;
   type: 'csv' | 'folder' | 'video';
   fileType: string;
-  iconSrc: string;
-  iconAlt: string;
 }
 
 export default function DocumentUploads() {
   const [isUploaded, setIsUploaded] = useState(false);
 
   const files: UploadedFile[] = [
-    { id: '1', name: 'Carrier Bill of Lading SHP-48291.csv', type: 'csv', fileType: 'CSV File', iconSrc: '/gd.png', iconAlt: 'Google Drive' },
-    { id: '2', name: 'Supplier Commercial Invoice INV-0922.csv', type: 'csv', fileType: 'CSV File', iconSrc: '/gmailicon.png', iconAlt: 'Gmail' },
-    { id: '3', name: 'FBA Packing List BoxCount.csv', type: 'csv', fileType: 'CSV File', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
-    { id: '4', name: 'Proof of Delivery POD Signature.csv', type: 'csv', fileType: 'CSV File', iconSrc: '/Dropbox_Icon.svg.png', iconAlt: 'Dropbox' },
+    { id: '1', name: 'Carrier Bill of Lading SHP-48291.csv', type: 'csv', fileType: 'CSV File' },
+    { id: '2', name: 'Supplier Commercial Invoice INV-0922.csv', type: 'csv', fileType: 'CSV File' },
+    { id: '3', name: 'FBA Packing List BoxCount.csv', type: 'csv', fileType: 'CSV File' },
+    { id: '4', name: 'Proof of Delivery POD Signature.csv', type: 'csv', fileType: 'CSV File' },
   ];
 
   const handleUpload = () => {
@@ -72,19 +70,11 @@ export default function DocumentUploads() {
                           ease: "easeInOut"
                         }}
                       >
-                        <img src={file.iconSrc} alt={file.iconAlt} className="h-4 w-4 shrink-0 rounded-[3px] bg-white object-contain p-0.5" />
+                        <FileText className="w-3 h-3" />
                         <span className="max-w-[100px] truncate">{file.name}</span>
                       </motion.div>
                     );
                   })}
-                  <motion.div
-                    className="absolute bottom-5 right-5 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gray-950 text-xs font-semibold text-white shadow-md"
-                    initial={{ opacity: 0, scale: 0.7 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 2.6, duration: 0.35 }}
-                  >
-                    +39
-                  </motion.div>
                 </div>
                 
                 {/* Upload Icon */}
@@ -128,17 +118,35 @@ export default function DocumentUploads() {
 
               {/* Attached Files Grid */}
               <div className="grid grid-cols-2 gap-3 mb-6">
-                {files.map((file, index) => (
+                {files.slice(0, 3).map((file, index) => (
                   <motion.div
                     key={file.id}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.1, duration: 0.4 }}
-                    className="relative flex min-h-[132px] flex-col items-start rounded-xl border border-gray-200 bg-gray-50 p-3.5 transition-colors hover:border-gray-300 hover:bg-white"
+                    className={`relative flex min-h-[132px] flex-col items-start rounded-xl border border-gray-200 bg-gray-50 p-3.5 transition-colors hover:border-gray-300 hover:bg-white ${
+                      index === 2 ? 'col-span-2 w-[calc(50%-6px)] justify-self-center' : ''
+                    }`}
                   >
                     {/* File Icon */}
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm">
-                      <img src={file.iconSrc} alt={file.iconAlt} className="h-6 w-6 object-contain" />
+                    <div
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        file.type === 'csv'
+                          ? 'bg-[#EE3E38]'
+                          : file.type === 'folder'
+                            ? 'bg-blue-500'
+                            : 'bg-blue-500'
+                      }`}
+                    >
+                      {file.type === 'csv' && (
+                        <FileText className="w-[18px] h-[18px] text-white" />
+                      )}
+                      {file.type === 'folder' && (
+                        <Folder className="w-[18px] h-[18px] text-white" />
+                      )}
+                      {file.type === 'video' && (
+                        <Play className="w-[18px] h-[18px] text-white" />
+                      )}
                     </div>
 
                     {/* File Info */}

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, Check, ChevronDown, Files, FileText, Image as ImageIcon, Layers3, ListChecks, Mail, Search, SlidersHorizontal, Table2 } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, Files, Layers3, ListChecks, Search, SlidersHorizontal } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 type TabId = "approval" | "filing" | "filed" | "attention" | "payout" | "resolved";
@@ -236,13 +236,20 @@ function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
 }
 
 const intakeDocuments = [
-  { type: 'PDF', name: 'Settlement reconciliation schedule · Apr 2026', source: 'Settlement file · payout activity' },
-  { type: 'CSV', name: 'Inbound receiving variance population · ONT8', source: 'Amazon SP-API · 60 dispatched / 46 received' },
-  { type: 'MAIL', name: 'Reimbursement case correspondence · REC-2026-004817', source: 'Gmail thread · case response and evidence request' },
-  { type: 'XLS', name: 'Inventory valuation and movement schedule · FY2026 Q1', source: 'NetSuite export · SKU and unit-level activity' },
+  { type: 'PDF', name: 'Settlement reconciliation schedule · Apr 2026', source: 'Settlement file · payout activity', iconSrc: '/gd.png', iconAlt: 'Google Drive' },
+  { type: 'CSV', name: 'Inbound receiving variance population · ONT8', source: 'Amazon SP-API · 60 dispatched / 46 received', iconSrc: '/amazon-logo-transparent-circle.png', iconAlt: 'Amazon' },
+  { type: 'MAIL', name: 'Reimbursement case correspondence · REC-2026-004817', source: 'Gmail thread · case response and evidence request', iconSrc: '/gmailicon.png', iconAlt: 'Gmail' },
+  { type: 'XLS', name: 'Inventory valuation and movement schedule · FY2026 Q1', source: 'NetSuite export · SKU and unit-level activity', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
 ];
 
-const intakeSources = ['Amazon', 'Settlement', 'Gmail', 'NetSuite', 'S3 / SFTP', 'Carrier'];
+const intakeSources = [
+  { name: 'Amazon', iconSrc: '/amazon-logo-transparent-circle.png', iconAlt: 'Amazon' },
+  { name: 'Settlement', iconSrc: '/gd.png', iconAlt: 'Google Drive' },
+  { name: 'Gmail', iconSrc: '/gmailicon.png', iconAlt: 'Gmail' },
+  { name: 'NetSuite', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
+  { name: 'S3 / SFTP', iconSrc: '/Dropbox_Icon.svg.png', iconAlt: 'Dropbox' },
+  { name: 'Carrier', iconSrc: '/outlookicon.webp', iconAlt: 'Outlook' },
+];
 
 function documentVariant(document: string) {
   const score = Array.from(document).reduce((total, character) => total + character.charCodeAt(0), 0) % 7;
@@ -253,10 +260,10 @@ function DocumentMark({ document }: { document: string }) {
   const variant = documentVariant(document);
   if (variant === 'csv') return <img src="/evidence-csv-mark.png" alt="CSV" className="h-4 w-4 shrink-0 object-contain" />;
   if (variant === 'spreadsheet') return <img src="/evidence-spreadsheet-mark.png" alt="Spreadsheet" className="h-4 w-4 shrink-0 object-contain" />;
-  if (variant === 'image') return <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#EAF5F9] text-[#527284]"><ImageIcon className="h-3 w-3" strokeWidth={2} aria-label="Image" /></span>;
-  if (variant === 'email') return <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#F2F6FA] text-[#527284]"><Mail className="h-3 w-3" strokeWidth={2} aria-label="Email" /></span>;
-  if (variant === 'table') return <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#F1F6F8] text-[#527284]"><Table2 className="h-3 w-3" strokeWidth={2} aria-label="Table" /></span>;
-  if (variant === 'document') return <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#F7F3EC] text-[#8A6A3C]"><FileText className="h-3 w-3" strokeWidth={2} aria-label="Document" /></span>;
+  if (variant === 'image') return <img src="/gd.png" alt="Google Drive" className="h-4 w-4 shrink-0 rounded-[3px] object-contain" />;
+  if (variant === 'email') return <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 shrink-0 rounded-[3px] object-contain" />;
+  if (variant === 'table') return <img src="/gd.png" alt="Google Drive" className="h-4 w-4 shrink-0 rounded-[3px] object-contain" />;
+  if (variant === 'document') return <img src="/onedriive.png" alt="OneDrive" className="h-4 w-4 shrink-0 rounded-[3px] object-contain" />;
   return <img src="/pdf-file-icon.webp" alt="PDF" className="h-4 w-4 shrink-0 object-contain" />;
 }
 
@@ -333,16 +340,25 @@ function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
                   transition={reduceMotion ? { duration: 0 } : { delay: index * 0.1, duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
                   className="absolute left-1/2 top-1/2 flex h-7 -translate-x-1/2 -translate-y-1/2 items-center rounded-full border border-[#C8DCE5] bg-white px-2.5 text-[9px] font-semibold tracking-tight text-[#527284] shadow-[0_6px_16px_rgba(37,73,91,0.12)]"
                 >
-                  {source}
+                  <img src={source.iconSrc} alt={source.iconAlt} className="h-3.5 w-3.5 shrink-0 rounded-[3px] object-contain" />
+                  <span>{source.name}</span>
                 </motion.span>
               ))}
+              <motion.span
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: stage === 'dropzone' ? 1 : 0.78, scale: 1 }}
+                transition={reduceMotion ? { duration: 0 } : { delay: 0.65, duration: 0.35 }}
+                className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#111827] text-[10px] font-semibold tracking-tight text-white shadow-[0_6px_14px_rgba(17,24,39,0.18)]"
+              >
+                +39
+              </motion.span>
             </div>
           </div>
           {stage === 'documents' ? (
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="relative mt-3 border-t border-[#E3ECEF] pt-3">
               <div className="mb-2 flex items-center justify-between"><p className="text-[10px] font-semibold tracking-tight text-[#36404A]">Ingested documents</p><span className="text-[9px] font-medium tracking-tight text-[#7B8A97]">4 records linked</span></div>
               <div className="grid gap-2 sm:grid-cols-2">
-                {intakeDocuments.map((document) => <div key={document.name} className="flex min-w-0 items-center gap-2 rounded-[6px] border border-[#E0E9EC] bg-white px-2.5 py-2"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#EEF5F7]"><DocumentMark document={`${document.name}.${document.type.toLowerCase()}`} /></span><span className="min-w-0"><span className="block truncate text-[10px] font-semibold tracking-tight text-[#36404A]">{document.name}</span><span className="mt-0.5 block truncate text-[9px] tracking-tight text-[#8A99A5]">{document.source}</span></span><Check className="ml-auto h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></div>)}
+                {intakeDocuments.map((document) => <div key={document.name} className="flex min-w-0 items-center gap-2 rounded-[6px] border border-[#E0E9EC] bg-white px-2.5 py-2"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#EEF5F7]"><img src={document.iconSrc} alt={document.iconAlt} className="h-4 w-4 rounded-[3px] object-contain" /></span><span className="min-w-0"><span className="block truncate text-[10px] font-semibold tracking-tight text-[#36404A]">{document.name}</span><span className="mt-0.5 block truncate text-[9px] tracking-tight text-[#8A99A5]">{document.source}</span></span><Check className="ml-auto h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></div>)}
               </div>
             </motion.div>
           ) : null}
