@@ -308,6 +308,63 @@ function AccountingEvidenceSection() {
   );
 }
 
+const ingestedDocumentStages = [
+  { title: "Collect and prepare records", detail: "Transaction reports, settlements, inventory records, claim history, and relevant accounting data are assembled into one reviewable population." },
+  { title: "Match transactions and identify exceptions", detail: "Expected events are compared with recorded movements, payments, adjustments, and reimbursements." },
+  { title: "Investigate each exception", detail: "Each difference is tested for timing, legitimate explanation, prior resolution, or potential action." },
+  { title: "Establish the evidence and next action", detail: "Eligibility, claim history, deadlines, supporting records, and the correct procedure are checked before work advances." },
+  { title: "Follow through and reconcile", detail: "Approved actions are submitted, responses are handled, outcomes are tracked, and the resulting financial entries are verified." },
+] as const;
+
+const ingestedDocumentRecords = [
+  { type: "PDF", icon: "/pdf-file-icon.webp", title: "Amazon FBA settlement report · Apr 2026", source: "Settlement period · reimbursement and fee lines" },
+  { type: "CSV", icon: "/evidence-csv-mark.png", title: "FBA inventory movement extract · ONT8", source: "SKU population · received quantity and adjustment events" },
+  { type: "PDF", icon: "/pdf-file-icon.webp", title: "Inbound receiving variance record · FBA17-ONT8", source: "ASN · carton count · receiving timestamps" },
+  { type: "GMAIL", icon: "/gmailicon.png", title: "Amazon reimbursement case correspondence", source: "Evidence request · decision history · reversal watch" },
+  { type: "CSV", icon: "/evidence-csv-mark.png", title: "Settlement reconciliation by merchant order", source: "Order ID · settlement date · fee class · net proceeds" },
+  { type: "PDF", icon: "/pdf-file-icon.webp", title: "Carrier proof of delivery packet", source: "Appointment ID · scan events · signed delivery record" },
+] as const;
+
+function IngestedDocumentsOutcomeSection() {
+  return (
+    <section className="relative overflow-hidden bg-white py-14 sm:py-20 md:py-24" aria-labelledby="ingested-documents-outcome-title">
+      <div className={containerClass}>
+        <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-16 xl:gap-20">
+          <motion.div {...revealProps} className="min-w-0">
+            <h2 id="ingested-documents-outcome-title" className="max-w-[620px] font-lora text-[35px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[54px]" style={{ fontWeight: 400 }}>
+              <span className="heading-tone-dark">Ingested records become a financial position.</span> <span className="heading-tone-muted">Not another document pile.</span>
+            </h2>
+            <p className="mt-6 max-w-[570px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">At exposure, the seller gets a reviewable operating record: what was collected, what matched, what remains exceptional, what is supported by evidence, and what should happen next.</p>
+            <p className="mt-4 max-w-[570px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin moves the account from disconnected source files to a controlled path from discovery through reconciliation.</p>
+            <div className="mt-8 border-t border-[#D9E1E5] pt-2">
+              {ingestedDocumentStages.map((stage, index) => (
+                <div key={stage.title} className="flex gap-3 border-b border-[#E8EDF0] py-4">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] bg-[#F1F4F5] font-mono text-[9px] font-bold text-[#6F7E87]">{String(index + 1).padStart(2, "0")}</span>
+                  <div><h3 className="text-[13px] font-semibold tracking-[-0.015em] text-[#26333A]">{stage.title}</h3><p className="mt-1 text-[12px] leading-5 text-[#7B8790]">{stage.detail}</p></div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 overflow-hidden border-l border-[#E7EBED] bg-[#FAFBFB] px-5 py-7 sm:px-8 sm:py-9">
+            <div className="pointer-events-none absolute -right-5 top-8 select-none font-google-sans text-[66px] font-semibold leading-none tracking-[-0.09em] text-[#F0F2F3] sm:text-[92px]">INGEST</div>
+            <div className="relative">
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#89959D]">Document ingestion</p>
+              <h3 className="mt-3 max-w-[480px] font-google-sans text-[25px] font-normal leading-[1.06] tracking-[-0.045em] text-[#26333A] sm:text-[31px]">The records arrive connected to the exposure.</h3>
+              <p className="mt-3 max-w-[500px] text-[12px] leading-5 text-[#89959D]">Source lineage stays visible while the operating population is prepared for matching, evidence review, and controlled action.</p>
+              <div className="mt-7 divide-y divide-[#E8EDF0] border-y border-[#E8EDF0]">
+                {ingestedDocumentRecords.map((record) => (
+                  <div key={record.title} className="flex items-center gap-3 py-3.5"><img src={record.icon} alt={record.type} className="h-5 w-5 shrink-0 object-contain opacity-80" /><div className="min-w-0 flex-1"><p className="truncate text-[11px] font-semibold tracking-tight text-[#26333A]">{record.title}</p><p className="mt-0.5 truncate text-[10px] tracking-tight text-[#8A969E]">{record.source}</p></div><span className="h-4 w-4 shrink-0 rounded-[3px] bg-[#F1F4F5]" aria-hidden="true" /></div>
+                ))}
+              </div>
+              <div className="mt-5 flex items-center gap-2 font-mono text-[9px] font-semibold tracking-tight text-[#7B8790]"><span className="h-1.5 w-1.5 rounded-full bg-[#3EAD72]" /><span>Source lineage preserved</span><span className="text-[#B5C2CA]">·</span><span>Exposure ready for review</span></div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const financialControlOperations = [
   "Detect the variance",
   "Reconstruct the event",
@@ -2545,6 +2602,7 @@ export default function Index() {
 
         {/* Diagnosis — Why can’t I reasonably handle this myself? */}
         <AccountingEvidenceSection />
+        <IngestedDocumentsOutcomeSection />
         <RecoveryWorkStatement />
         <MarginStandardSection />
 
