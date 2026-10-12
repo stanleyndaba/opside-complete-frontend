@@ -235,6 +235,64 @@ function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
   </motion.div>;
 }
 
+const intakeDocuments = [
+  { type: 'PDF', name: 'Amazon settlement report · Apr 2026', source: 'Settlement file · payout activity' },
+  { type: 'CSV', name: 'Inbound receiving variance record', source: 'Amazon SP-API · ONT8 · 60 dispatched / 46 received' },
+  { type: 'MAIL', name: 'Amazon reimbursement correspondence', source: 'Gmail thread · case response and evidence request' },
+  { type: 'XLS', name: 'Inventory movement extract', source: 'NetSuite export · SKU and unit-level activity' },
+];
+
+const intakeSources = ['Amazon', 'Settlement', 'Gmail', 'NetSuite', 'S3 / SFTP', 'Carrier'];
+
+function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
+  const reduceMotion = useReducedMotion();
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-5 py-5 sm:px-6">
+      <div className="rounded-[10px] border border-[#D8E3E8] bg-[#FBFCFD] p-4 sm:p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Evidence intake</p>
+            <h2 className="mt-1 font-google-sans text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">Assembling the operating record</h2>
+            <p className="mt-1 text-[11px] leading-5 tracking-tight text-[#66737F]">Margin is gathering the source records needed to establish each financial position.</p>
+          </div>
+          <span className="shrink-0 rounded-full bg-[#EAF5F9] px-2.5 py-1 text-[9px] font-semibold tracking-tight text-[#2D6178]">Read-only intake</span>
+        </div>
+        <div className="relative mt-5 min-h-[222px] overflow-hidden rounded-[8px] border border-dashed border-[#AFC8D4] bg-white px-4 py-5">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,rgba(220,236,242,0.72),transparent_48%)]" />
+          <div className="relative flex min-h-[174px] items-center justify-center">
+            <div className="relative flex h-[142px] w-[min(100%,420px)] items-center justify-center rounded-[8px] border border-[#C8DCE5] bg-[#F7FBFC] shadow-[0_12px_30px_rgba(37,73,91,0.08)]">
+              <div className="text-center">
+                <Files className="mx-auto h-7 w-7 text-[#6E9DB1]" strokeWidth={1.35} />
+                <p className="mt-2 text-[13px] font-semibold tracking-tight text-[#36404A]">Drop records for review</p>
+                <p className="mt-1 text-[10px] tracking-tight text-[#8A99A5]">Margin is connecting source files to the operating event.</p>
+              </div>
+              {intakeSources.map((source, index) => (
+                <motion.span
+                  key={source}
+                  initial={reduceMotion ? { opacity: 0.75, scale: 0.78 } : { opacity: 0, x: (index % 2 ? 1 : -1) * (82 + index * 28), y: index % 2 ? -110 - index * 7 : 108 + index * 8, scale: 0.68 }}
+                  animate={stage === 'dropzone' ? { opacity: 0.9, x: 0, y: 0, scale: 0.78 } : { opacity: 0.25, x: 0, y: 0, scale: 0.62 }}
+                  transition={reduceMotion ? { duration: 0 } : { delay: index * 0.1, duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute left-1/2 top-1/2 flex h-7 -translate-x-1/2 -translate-y-1/2 items-center rounded-full border border-[#C8DCE5] bg-white px-2.5 text-[9px] font-semibold tracking-tight text-[#527284] shadow-[0_6px_16px_rgba(37,73,91,0.12)]"
+                >
+                  {source}
+                </motion.span>
+              ))}
+            </div>
+          </div>
+          {stage === 'documents' ? (
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="relative mt-3 border-t border-[#E3ECEF] pt-3">
+              <div className="mb-2 flex items-center justify-between"><p className="text-[10px] font-semibold tracking-tight text-[#36404A]">Ingested documents</p><span className="text-[9px] font-medium tracking-tight text-[#7B8A97]">4 records linked</span></div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {intakeDocuments.map((document) => <div key={document.name} className="flex min-w-0 items-center gap-2 rounded-[6px] border border-[#E0E9EC] bg-white px-2.5 py-2"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#EEF5F7] text-[8px] font-bold text-[#527284]">{document.type}</span><span className="min-w-0"><span className="block truncate text-[10px] font-semibold tracking-tight text-[#36404A]">{document.name}</span><span className="mt-0.5 block truncate text-[9px] tracking-tight text-[#8A99A5]">{document.source}</span></span><Check className="ml-auto h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></div>)}
+              </div>
+            </motion.div>
+          ) : null}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 const toneClasses: Record<Tone, { card: string; badge: string; status: string }> = {
   ready: { card: "border-[#D8E3E8] bg-white", badge: "border-[#BFE3D7] bg-[#F1FAF6] text-[#26704E]", status: "bg-[#F1F3F4] text-[#36404A]" },
   moving: { card: "border-[#D8E3E8] bg-white", badge: "border-[#CFE2F2] bg-[#F2F8FC] text-[#1967A3]", status: "bg-[#FCF8EE] text-[#8A641B]" },
@@ -276,11 +334,20 @@ export default function FilingPipelinePreview() {
   const [toast, setToast] = useState<string | null>(null);
   const [casesVisible, setCasesVisible] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
+  const [intakeStage, setIntakeStage] = useState<'analysis' | 'dropzone' | 'documents' | 'claims'>('analysis');
 
   useEffect(() => {
     if (!analysisComplete) return;
-    const timer = window.setTimeout(() => setCasesVisible(true), 1000);
-    return () => window.clearTimeout(timer);
+    setIntakeStage('dropzone');
+    const documentTimer = window.setTimeout(() => setIntakeStage('documents'), 2000);
+    const claimsTimer = window.setTimeout(() => {
+      setIntakeStage('claims');
+      setCasesVisible(true);
+    }, 3600);
+    return () => {
+      window.clearTimeout(documentTimer);
+      window.clearTimeout(claimsTimer);
+    };
   }, [analysisComplete]);
 
   const tab = tabs.find((item) => item.id === activeTab)!;
@@ -296,7 +363,7 @@ export default function FilingPipelinePreview() {
     setToast("Filing control recorded. Submission is now in progress.");
     window.setTimeout(() => setToast(null), 3200);
   };
-  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6"><aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside><section className="min-w-0 flex-1 bg-white"><header className="px-5 py-5 sm:px-6"><div className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Enterprise recovery control</div><h1 id="pipeline-title" className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Recovery operations</h1></header>{!casesVisible ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel onComplete={() => setAnalysisComplete(true)} /></div> : null}<div className={casesVisible ? "max-h-24 overflow-x-auto opacity-100 transition-all duration-700 ease-out" : "max-h-0 overflow-hidden opacity-0 transition-all duration-500 ease-out"}><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight transition-colors ${activeTab === item.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>{item.label}</button>)}</div></div><div id="approval-queue" className={casesVisible ? "max-h-[4000px] overflow-hidden px-5 py-5 opacity-100 transition-all duration-700 ease-out sm:px-6" : "max-h-0 overflow-hidden px-5 py-0 opacity-0 transition-all duration-500 ease-out sm:px-6"}><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-google-sans text-[14px] font-normal tracking-tight text-[#182026]">{sectionTitle}</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "$186,420" : tab.id === "filing" ? "$94,680" : tab.id === "filed" ? "$312,740" : tab.id === "attention" ? "$58,940" : tab.id === "payout" ? "$146,280" : "$1.84M"}</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "Supported cohort queue. Review evidence sufficiency, materiality, control exceptions, and expected recovery before anything is submitted." : tab.id === "filing" ? "Live submissions with locked packets, receipt capture, response windows, and cross-system financial state." : tab.id === "attention" ? "Control exceptions held before filing because source relationships, valuation, or clearing evidence require resolution." : "Margin keeps the event record, evidence state, Amazon response, settlement truth, and next controlled action connected."}</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{tab.count} governed positions in this queue</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><div className="relative hidden sm:block"><button type="button" onClick={() => setQueueMode(queueMode === "all" ? "priority" : queueMode === "priority" ? "recent" : "all")} className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A]">Review queue: {queueMode === "all" ? "All cases" : queueMode === "priority" ? "Priority first" : "Recently updated"}<ChevronDown className="h-3.5 w-3.5" /></button></div></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={approveCard} />)}{visibleCards.length === 0 ? <div className="rounded-[10px] border border-dashed border-[#D8E3E8] px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}</div></div></section></div></main>;
+  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6"><aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside><section className="min-w-0 flex-1 bg-white"><header className="px-5 py-5 sm:px-6"><div className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Enterprise recovery control</div><h1 id="pipeline-title" className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Recovery operations</h1></header>{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel onComplete={() => setAnalysisComplete(true)} /></div> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : null}<div className={casesVisible ? "max-h-24 overflow-x-auto opacity-100 transition-all duration-700 ease-out" : "max-h-0 overflow-hidden opacity-0 transition-all duration-500 ease-out"}><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight transition-colors ${activeTab === item.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>{item.label}</button>)}</div></div><div id="approval-queue" className={casesVisible ? "max-h-[4000px] overflow-hidden px-5 py-5 opacity-100 transition-all duration-700 ease-out sm:px-6" : "max-h-0 overflow-hidden px-5 py-0 opacity-0 transition-all duration-500 ease-out sm:px-6"}><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-google-sans text-[14px] font-normal tracking-tight text-[#182026]">{sectionTitle}</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "$186,420" : tab.id === "filing" ? "$94,680" : tab.id === "filed" ? "$312,740" : tab.id === "attention" ? "$58,940" : tab.id === "payout" ? "$146,280" : "$1.84M"}</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "Supported cohort queue. Review evidence sufficiency, materiality, control exceptions, and expected recovery before anything is submitted." : tab.id === "filing" ? "Live submissions with locked packets, receipt capture, response windows, and cross-system financial state." : tab.id === "attention" ? "Control exceptions held before filing because source relationships, valuation, or clearing evidence require resolution." : "Margin keeps the event record, evidence state, Amazon response, settlement truth, and next controlled action connected."}</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{tab.count} governed positions in this queue</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><div className="relative hidden sm:block"><button type="button" onClick={() => setQueueMode(queueMode === "all" ? "priority" : queueMode === "priority" ? "recent" : "all")} className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A]">Review queue: {queueMode === "all" ? "All cases" : queueMode === "priority" ? "Priority first" : "Recently updated"}<ChevronDown className="h-3.5 w-3.5" /></button></div></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={approveCard} />)}{visibleCards.length === 0 ? <div className="rounded-[10px] border border-dashed border-[#D8E3E8] px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}</div></div></section></div></main>;
 }
 
 export const __previewRecords = cards;
