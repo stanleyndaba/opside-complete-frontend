@@ -27,10 +27,6 @@ type RecordCard = {
 
 const tabs: Array<{ id: TabId; label: string; count: number }> = [
   { id: "approval", label: "Awaiting seller approval", count: 43 },
-  { id: "filing", label: "Filing in progress", count: 28 },
-  { id: "filed", label: "Filed", count: 61 },
-  { id: "payout", label: "Awaiting payout", count: 39 },
-  { id: "resolved", label: "Reconciled outcomes", count: 214 },
 ];
 
 const cards: Record<TabId, RecordCard[]> = {
