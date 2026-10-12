@@ -236,10 +236,10 @@ function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
 }
 
 const intakeDocuments = [
-  { type: 'PDF', name: 'Settlement reconciliation schedule · Apr 2026', source: 'Settlement file · payout activity', iconSrc: '/gd.png', iconAlt: 'Google Drive' },
-  { type: 'CSV', name: 'Inbound receiving variance population · ONT8', source: 'Amazon SP-API · 60 dispatched / 46 received', iconSrc: '/amazon-logo-transparent-circle.png', iconAlt: 'Amazon' },
+  { type: 'PDF', name: 'Settlement reconciliation schedule · Apr 2026', source: 'Settlement file · payout activity', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
+  { type: 'CSV', name: 'Inbound receiving variance population · ONT8', source: 'Amazon SP-API · 60 dispatched / 46 received', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
   { type: 'MAIL', name: 'Reimbursement case correspondence · REC-2026-004817', source: 'Gmail thread · case response and evidence request', iconSrc: '/gmailicon.png', iconAlt: 'Gmail' },
-  { type: 'XLS', name: 'Inventory valuation and movement schedule · FY2026 Q1', source: 'NetSuite export · SKU and unit-level activity', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
+  { type: 'XLS', name: 'Inventory valuation and movement schedule · FY2026 Q1', source: 'NetSuite export · SKU and unit-level activity', iconSrc: '/gd.png', iconAlt: 'Google Drive' },
 ];
 
 const intakeSources = [
@@ -364,7 +364,7 @@ function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="relative mt-3 border-t border-[#E3ECEF] pt-3">
               <div className="mb-2 flex items-center justify-between"><p className="text-[10px] font-semibold tracking-tight text-[#36404A]">Ingested documents</p><span className="text-[9px] font-medium tracking-tight text-[#7B8A97]">4 records linked</span></div>
               <div className="grid gap-2 sm:grid-cols-2">
-                {intakeDocuments.map((document) => <div key={document.name} className="flex min-w-0 items-center gap-2 rounded-[6px] border border-[#E0E9EC] bg-white px-2.5 py-2"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#EEF5F7]"><img src={document.iconSrc} alt={document.iconAlt} className="h-4 w-4 rounded-[3px] object-contain" /></span><span className="min-w-0"><span className="block truncate text-[10px] font-semibold tracking-tight text-[#36404A]">{document.name}</span><span className="mt-0.5 block truncate text-[9px] tracking-tight text-[#8A99A5]">{document.source}</span></span><Check className="ml-auto h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></div>)}
+                {intakeDocuments.map((document, index) => <motion.div key={document.name} initial={{ opacity: 0, y: 8, scale: 0.985 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.08 + index * 0.1, duration: 0.42, ease: [0.22, 1, 0.36, 1] }} className="flex min-w-0 items-center gap-2 rounded-[6px] border border-[#E0E9EC] bg-white px-2.5 py-2"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#EEF5F7]"><img src={document.iconSrc} alt={document.iconAlt} className="h-4 w-4 rounded-[3px] object-contain" /></span><span className="min-w-0"><span className="block truncate text-[10px] font-semibold tracking-tight text-[#36404A]">{document.name}</span><span className="mt-0.5 block truncate text-[9px] tracking-tight text-[#8A99A5]">{document.source}</span></span><Check className="ml-auto h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></motion.div>)}
               </div>
             </motion.div>
           ) : null}
