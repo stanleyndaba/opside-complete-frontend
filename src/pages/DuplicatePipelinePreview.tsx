@@ -143,13 +143,31 @@ cards.resolved.push(...makeAdditionalCards("RFD-164", "resolved", "Recovered", [
   { type: "Inbound shortage", title: "Carton Count Recovered", amount: "$598.32", detail: "The carton shortage credit was received and matched to the signed delivery and shipment plan.", meta: "Shipment FBA15KL7M2Q9 · 14 units · SKU NS-LAUNDRY-BASKET · ASIN B0C1V8M4QK", proof: "Paid 12 May", route: "Settlement reconciliation / Confirmed reimbursement", packet: "POD, shipment plan, settlement line", safety: "Final balance verified", next: "Record closed", docs: ["pod-FBA15KL7M2Q9.pdf", "shipment-plan.csv", "settlement-line.csv"] },
 ]));
 
-const analysisItems = [
-  { kind: 'paragraph', text: 'Coverage established across 124,860 orders, 1,842 shipments, 7,630 returns, 31,940 fee records, and 28,600 inventory movements across 8 settlement periods.', highlight: 'yellow' },
-  { kind: 'paragraph', text: 'The operating population spans 4 marketplaces and 3 legal entities, with 1,126 affected records across 318 SKUs.', highlight: 'blue' },
-  { kind: 'paragraph', text: 'The control review establishes the operating boundary, separates supported exposure from unresolved signal, and records the evidence, settlement, attribution, ledger, ownership, approval, deadline, reversal, and residual-position requirements.', highlight: 'green' },
-  { kind: 'paragraph', text: 'Each month, Margin can show what new issues were identified, what evidence supports each issue, what Margin is doing about it, what has been submitted, what Amazon decided, what Amazon credited and what reached settlement, and what remains unresolved.', highlight: 'purple' },
-  { kind: 'final', text: 'If the account is clear, Margin reports that honestly. If it is not, the unresolved position stays visible.', highlight: 'blue' },
-] as const;
+  const analysisItems = [
+    { kind: 'paragraph', text: 'Coverage established across 124,860 orders, 1,842 shipments, 7,630 returns, 31,940 fee records, and 28,600 inventory movements across 8 settlement periods.', highlight: 'yellow' },
+    { kind: 'paragraph', text: 'The operating population spans 4 marketplaces and 3 legal entities, with 1,126 affected records across 318 SKUs.', highlight: 'blue' },
+    { kind: 'paragraph', text: 'This is not one bounded event. The records establish a portfolio-level control position.', highlight: 'green' },
+    { kind: 'heading', text: 'Financial pattern' },
+    { kind: 'heading', text: 'Portfolio-level finding' },
+    { kind: 'paragraph', text: 'Inbound receiving variances recur across multiple settlement periods and marketplaces. The population requires event-level entitlement, evidence testing, settlement reconciliation, and entity attribution before recovery treatment is determined.', highlight: 'purple' },
+    { kind: 'list', text: '10 March 2026 — 17 affected units across two related shipments; the receiving and inventory records diverge after the same supplier delivery', highlight: 'blue' },
+    { kind: 'list', text: '24 March 2026 — 9 affected units across one shipment; the settlement record does not reconcile to the receiving quantity', highlight: 'green' },
+    { kind: 'list', text: '9 April and 22 April 2026 — 11 affected units across two shipments; settlement attribution remains unresolved', highlight: 'purple' },
+    { kind: 'paragraph', text: 'The Audit separates independent financial events from duplicate records, recurring control failures, and already-accounted-for activity.' },
+    { kind: 'heading', text: 'What this means for the operation' },
+    { kind: 'paragraph', text: 'A single recovery workflow can address one supported event. It does not establish whether the same control failure is recurring across the account.' },
+    { kind: 'paragraph', text: 'Margin distinguishes an isolated event from a repeated exposure pattern, then connects the pattern to the relevant marketplace, entity, settlement period, and evidence population.' },
+    { kind: 'final', text: 'The Audit determines whether the business needs a defined recovery, recurring examination, or an enterprise control boundary.', highlight: 'blue' },
+    { kind: 'heading', text: 'Evidence and control position' },
+    { kind: 'paragraph', text: 'Margin has separated the reviewed population into supported, partially supported, settlement-pending, and unresolved positions. Supported records can move to controlled preparation; positions without sufficient evidence remain visible but are not counted as recoverable.' },
+    { kind: 'paragraph', text: 'Current control population:', highlight: 'green' },
+    { kind: 'paragraph', text: '$184,200 indicated exposure · $88,200 evidence-ready · $96,000 requiring evidence or settlement review · 14 source gaps requiring additional documentation.' },
+    { kind: 'paragraph', text: 'Unverified conditions remain unresolved — they are not counted as recovered, recoverable, or cleared.' },
+    { kind: 'heading', text: 'Why the operating route matters' },
+    { kind: 'paragraph', text: 'The Audit has established a population that requires more than a single bounded recovery and more than an ungoverned recurring queue.' },
+    { kind: 'paragraph', text: 'The recommended next step is an Enterprise Control Pilot to establish ownership, evidence operations, approval points, and financial close requirements.' },
+    { kind: 'paragraph', text: 'If the population is narrower than the enterprise boundary requires, Margin routes it to Recover Once or Recovery Workspace instead.' },
+  ];
 
 function FastDuplicateTypewriter({ text, onComplete }: { text: string; onComplete?: () => void }) {
   const reduceMotion = useReducedMotion();
@@ -205,8 +223,17 @@ function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
       const active = reduceMotion || index === activeItem;
       const typedContent = reduceMotion ? item.text : active ? <FastDuplicateTypewriter text={item.text} onComplete={advance} /> : index < activeItem ? item.text : null;
       const highlightComplete = reduceMotion || index < activeItem;
-      const itemClass = item.kind === 'final' ? 'mt-3 text-[14px] leading-6 text-[#191B20]' : 'text-[14px] leading-6 text-[#595E68]';
-      return <motion.p key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className={itemClass}>{item.highlight ? <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightComplete ? highlightClasses[item.highlight] : 'bg-transparent'}`}>{typedContent}</mark> : typedContent}</motion.p>;
+      const itemClass = item.kind === 'heading'
+        ? 'mt-3 font-google-sans text-[15px] leading-tight tracking-[-0.02em] text-[#191B20]'
+        : item.kind === 'final'
+          ? 'mt-3 text-[14px] leading-6 text-[#191B20]'
+          : item.kind === 'list'
+            ? 'flex items-baseline gap-2 text-[14px] leading-6 text-[#595E68]'
+            : 'text-[14px] leading-6 text-[#595E68]';
+      return <motion.div key={`${item.text}-${index}`} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 6 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.18 }} className={itemClass}>
+        {item.kind === 'list' ? <span className="text-[#8A99A3]">•</span> : null}
+        {item.highlight ? <mark className={`rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] ${highlightComplete ? highlightClasses[item.highlight] : 'bg-transparent'}`}>{typedContent}</mark> : typedContent}
+      </motion.div>;
     })}</div></section>
     <p className="mt-4 text-[10px] font-medium tracking-tight text-[#8A99A5]">{analysisComplete ? 'Analysis complete · loading the governed case positions next.' : 'Margin is reading the supplied account position and separating supported evidence from unresolved signal.'}</p>
   </motion.div>;
