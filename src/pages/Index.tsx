@@ -2500,7 +2500,7 @@ function DiscrepancyModalVisual({ compactMobile = false }: { compactMobile?: boo
         <div className="flex items-start justify-between gap-4 border-b border-[#E9E9EC] px-4 pb-2.5 pt-3">
           <div>
             <p className="text-[10px] text-[#8A99A5]">{isProof ? 'Proof required' : 'Finding detail'}</p>
-            <h3 className="mt-1 text-[20px] font-normal leading-tight tracking-tight">{headingText}</h3>
+            <h3 className={`mt-1 font-normal leading-tight tracking-tight ${isProof ? 'whitespace-nowrap text-[18px] sm:text-[20px]' : 'text-[20px]'}`}>{headingText}</h3>
             <p className="mt-1 max-w-[610px] text-[10px] leading-4 tracking-tight text-[#6B7280]"><TypewriterText key={headingSubtext} text={headingSubtext} speed={3} /></p>
           </div>
           <button type="button" aria-label="Close preview" className="text-[18px] leading-none text-[#9CA3AF]">×</button>
