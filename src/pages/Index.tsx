@@ -1655,7 +1655,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
 
 const nestedRecoveryBrowsers = {
   progress: { label: 'Progress review', path: '/progress-review' },
-  evidence: { label: 'Evidence required', path: '/evidence-required' },
+  evidence: { label: 'Recover Once', path: '/recover-once' },
 } as const;
 
 function NestedRecoveryVisual({
