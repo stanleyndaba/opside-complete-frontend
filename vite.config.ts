@@ -32,6 +32,9 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
+        // Keep the bootstrap entry stable so an edge-cached app shell cannot
+        // point at a deleted hashed entry bundle after a deployment.
+        entryFileNames: 'assets/app.js',
         // manualChunks removed to prevent Rollup circular dependency OOMs
       },
     },
