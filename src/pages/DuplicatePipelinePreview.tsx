@@ -275,6 +275,19 @@ function DocumentMark({ document }: { document: string }) {
   return <img src="/pdf-file-icon.webp" alt="PDF" className="h-4 w-4 shrink-0 object-contain" />;
 }
 
+const evidenceRegisterProviderIcons = [
+  { src: '/onedriive.png', alt: 'OneDrive' },
+  { src: '/onedriive.png', alt: 'OneDrive' },
+  { src: '/gmailicon.png', alt: 'Gmail' },
+  { src: '/gd.png', alt: 'Google Drive' },
+];
+
+function EvidenceRegisterMark({ document, index }: { document: string; index: number }) {
+  const providerIcon = evidenceRegisterProviderIcons[index];
+  if (providerIcon) return <img src={providerIcon.src} alt={providerIcon.alt} className="h-4 w-4 shrink-0 rounded-[3px] object-contain" />;
+  return <DocumentMark document={document} />;
+}
+
 function enterpriseDocumentName(document: string) {
   const extension = document.split('.').pop()?.toUpperCase() || 'RECORD';
   const stem = document.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -312,7 +325,7 @@ function EvidenceRegisterStage() {
     <div className="rounded-[10px] border border-[#D8E3E8] bg-white p-4 sm:p-5">
       <div className="flex items-end justify-between gap-4 border-b border-[#E3ECEF] pb-3"><div><p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Evidence register</p><h2 className="mt-1 text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">Source records assembled for review</h2></div><span className="text-[10px] font-semibold tracking-tight text-[#527284]">17 records linked</span></div>
       <div className="divide-y divide-[#E8EFF1]">
-        {evidenceRegister.map((document, index) => <motion.div key={document.name} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.055, duration: 0.25 }} className="flex items-start gap-3 py-3 first:pt-4 last:pb-1"><span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#F1F6F8]"><DocumentMark document={`${document.name}.${document.type.toLowerCase()}`} /></span><div className="min-w-0 flex-1"><p className="text-[11px] font-semibold tracking-tight text-[#36404A]">{document.name}</p><p className="mt-0.5 text-[10px] leading-4 tracking-tight text-[#66737F]"><HighlightedDescription description={document.description} highlight={document.highlight} /></p></div><Check className="mt-1 h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></motion.div>)}
+        {evidenceRegister.map((document, index) => <motion.div key={document.name} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.055, duration: 0.25 }} className="flex items-start gap-3 py-3 first:pt-4 last:pb-1"><span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#F1F6F8]"><EvidenceRegisterMark document={`${document.name}.${document.type.toLowerCase()}`} index={index} /></span><div className="min-w-0 flex-1"><p className="text-[11px] font-semibold tracking-tight text-[#36404A]">{document.name}</p><p className="mt-0.5 text-[10px] leading-4 tracking-tight text-[#66737F]"><HighlightedDescription description={document.description} highlight={document.highlight} /></p></div><Check className="mt-1 h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></motion.div>)}
       </div>
     </div>
   </motion.div>;
