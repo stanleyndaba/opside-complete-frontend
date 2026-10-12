@@ -612,6 +612,34 @@ function KineticHeroSection({
   );
 }
 
+function DuplicatePipelineDemoSection() {
+  return (
+    <section aria-labelledby="duplicate-pipeline-demo-title" className="relative overflow-hidden bg-white pb-12 pt-2 sm:pb-16 sm:pt-4 md:pb-20">
+      <div className={containerClass}>
+        <motion.div
+          {...revealProps}
+          initial={{ opacity: 0, x: 46, y: 18, scale: 0.985 }}
+          transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
+          className="overflow-hidden rounded-[12px] border border-[#D8E3E8] bg-[#F4F7F8] shadow-[0_24px_70px_rgba(37,73,91,0.16)]"
+        >
+          <div className="flex h-9 items-center gap-2 border-b border-[#D8E3E8] bg-[#EEF2F3] px-3 sm:h-10 sm:px-4">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
+            <span id="duplicate-pipeline-demo-title" className="ml-2 truncate rounded-[5px] bg-white/80 px-3 py-1 text-[10px] tracking-tight text-[#7B8A97] sm:text-[11px]">margin-finance.com/duplicate-pipeline-preview</span>
+          </div>
+          <iframe
+            title="Margin recovery operations demo"
+            src="/duplicate-pipeline-preview"
+            className="block h-[620px] w-full border-0 bg-white sm:h-[720px] lg:h-[780px]"
+            loading="lazy"
+          />
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 
 function OneRecoverySection() {
   return (
@@ -2625,6 +2653,7 @@ export default function Index() {
       <main>
         {/* Recognition — Is this my problem? */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/audit-start"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <DuplicatePipelineDemoSection />
         <RealityCheckSection />
         <ReconstructionGapSection />
 
