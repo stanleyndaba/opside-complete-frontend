@@ -614,19 +614,19 @@ function KineticHeroSection({
 
 function DuplicatePipelineDemoSection() {
   return (
-    <section aria-labelledby="duplicate-pipeline-demo-title" className="relative overflow-hidden bg-white pb-12 pt-2 sm:pb-16 sm:pt-4 md:pb-20">
+    <section aria-label="Recovery operations demo" className="relative overflow-hidden bg-white pb-12 pt-2 sm:pb-16 sm:pt-4 md:pb-20">
       <div className={containerClass}>
         <motion.div
           {...revealProps}
           initial={{ opacity: 0, x: 46, y: 18, scale: 0.985 }}
           transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-          className="overflow-hidden rounded-[12px] border border-[#D8E3E8] bg-[#F4F7F8] shadow-[0_24px_70px_rgba(37,73,91,0.16)]"
+          className="overflow-hidden rounded-[5px] border border-[#C8DCE5]/80 shadow-[0_24px_70px_rgba(37,73,91,0.16)]"
+          style={{ background: 'radial-gradient(circle at 18% 12%, rgba(255,255,255,0.95), transparent 34%), linear-gradient(135deg, #EAF5F9 0%, #DCECF2 52%, #F6FAFB 100%)' }}
         >
-          <div className="flex h-9 items-center gap-2 border-b border-[#D8E3E8] bg-[#EEF2F3] px-3 sm:h-10 sm:px-4">
+          <div className="flex h-9 items-center gap-2 border-b border-white/55 bg-white/35 px-3 backdrop-blur-md sm:h-10 sm:px-4">
             <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
-            <span id="duplicate-pipeline-demo-title" className="ml-2 truncate rounded-[5px] bg-white/80 px-3 py-1 text-[10px] tracking-tight text-[#7B8A97] sm:text-[11px]">margin-finance.com/duplicate-pipeline-preview</span>
           </div>
           <iframe
             title="Margin recovery operations demo"
