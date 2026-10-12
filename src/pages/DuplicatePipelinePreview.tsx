@@ -188,7 +188,7 @@ function FastDuplicateTypewriter({ text, onComplete }: { text: string; onComplet
           if (interval) window.clearInterval(interval);
           onCompleteRef.current?.();
         }
-      }, 3);
+      }, 1);
     }, 70);
     return () => {
       window.clearTimeout(start);
@@ -209,7 +209,7 @@ function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
   }, [analysisComplete, onComplete]);
   const advance = () => {
     if (reduceMotion) return;
-    window.setTimeout(() => setActiveItem((current) => current + 1), 140);
+    window.setTimeout(() => setActiveItem((current) => current + 1), 80);
   };
 
   return <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-white px-1 py-1 sm:px-2">
