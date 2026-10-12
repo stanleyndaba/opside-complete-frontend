@@ -42,6 +42,10 @@ const documents: DocumentRecord[] = [
   { type: 'PDF', title: 'Oracle NetSuite clearing activity', source: 'NetSuite export · account and settlement matching', status: 'Review' },
   { type: 'PDF', title: 'Amazon payout activity statement', source: 'Settlement file · payout period and disbursement record', status: 'Ingested' },
   { type: 'CSV', title: 'Controlled transaction file', source: 'Amazon S3 / SFTP · reconciliation-ready extract', status: 'Review' },
+  { type: 'PDF', title: 'FBA inbound shipment appointment and POD packet', source: 'Carrier file · appointment ID, carton count, signed delivery, and scan events', status: 'Review' },
+  { type: 'CSV', title: 'FBA fee assessment by shipment and SKU', source: 'Amazon settlement export · fulfillment, storage, referral, and adjustment lines', status: 'Needs mapping' },
+  { type: 'PDF', title: '3PL receiving exception and ASN reconciliation', source: 'Operations file · advance shipment notice, receipt variance, and warehouse timestamps', status: 'Review' },
+  { type: 'GMAIL', title: 'Amazon claim decision and reversal correspondence', source: 'Gmail thread · approval notice, reversal event, and residual balance', status: 'Review' },
 ];
 
 function SourceMark({ source }: { source: Source }) {
@@ -51,7 +55,7 @@ function SourceMark({ source }: { source: Source }) {
 
 function DocumentMark({ type }: { type: DocumentRecord['type'] }) {
   if (type === 'GMAIL') return <img src="/gmailicon.png" alt="" className="h-4 w-4 object-contain opacity-80" />;
-  if (type === 'CSV') return <span className="flex h-5 w-5 items-center justify-center rounded-[3px] bg-[#F4F6F7] text-[6px] font-semibold text-[#7A8790]">CSV</span>;
+  if (type === 'CSV') return <img src="/evidence-csv-mark.png" alt="CSV" className="h-5 w-5 object-contain opacity-80" />;
   return <img src="/pdf-file-icon.webp" alt="" className="h-5 w-5 object-contain opacity-75" />;
 }
 
@@ -71,17 +75,8 @@ export default function DocumentIngestion() {
   return (
     <main className="min-h-screen overflow-x-auto bg-[#EEF2F3] text-[#182026]">
       <div className="mx-auto grid min-w-[1180px] max-w-[1180px] grid-cols-[minmax(0,0.85fr)_minmax(420px,1.15fr)]">
-          <section className="px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-20 lg:px-10" aria-labelledby="sources-title">
-            <h1 className="max-w-[360px] font-google-sans text-[22px] font-normal leading-[1.08] tracking-[-0.045em]">
-              Record sources
-            </h1>
-            <p className="mt-2 max-w-[380px] text-[11px] leading-5 tracking-tight text-[#66737F]">
-              Select the enterprise records available for ingestion. Margin keeps each source tied to the financial event it supports.
-            </p>
-            <p className="mt-2 max-w-[380px] text-[10px] leading-5 tracking-tight text-[#98A4AC]">
-              Connect only the systems and controlled files that can strengthen the operating record.
-            </p>
-            <div className="mt-8 flex items-center gap-3 text-[11px] tracking-tight text-[#7A8790]">
+          <section className="px-5 pb-14 pt-10 sm:px-8 sm:pb-20 sm:pt-12 lg:px-10" aria-label="Enterprise source integrations">
+            <div className="flex items-center gap-3 text-[11px] tracking-tight text-[#7A8790]">
               <span className="inline-flex items-center gap-1.5"><Link2 className="h-3.5 w-3.5" />{selectedCount} sources selected</span>
               <span className="text-[#C2C9CD]">·</span>
               <span>Read-only by design</span>
@@ -123,6 +118,7 @@ export default function DocumentIngestion() {
                       <p className="mt-0.5 truncate text-[10px] tracking-tight text-[#8A969E]">{document.source}</p>
                     </div>
                     <span className={`shrink-0 rounded-full px-2 py-1 text-[8px] font-semibold tracking-tight ${document.status === 'Ingested' ? 'bg-[#F0F7F2] text-[#4F8067]' : document.status === 'Review' ? 'bg-[#F5F6F7] text-[#71808A]' : 'bg-[#FBF5E9] text-[#9A762D]'}`}>{document.status}</span>
+                    <span className="h-4 w-4 shrink-0 rounded-[3px] bg-[#F3F5F6]" aria-label={`Select ${document.title}`} />
                   </div>
                 ))}
               </div>
