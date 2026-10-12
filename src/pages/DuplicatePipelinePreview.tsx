@@ -257,7 +257,7 @@ function DocumentMark({ document }: { document: string }) {
   if (variant === 'email') return <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#F2F6FA] text-[#527284]"><Mail className="h-3 w-3" strokeWidth={2} aria-label="Email" /></span>;
   if (variant === 'table') return <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#F1F6F8] text-[#527284]"><Table2 className="h-3 w-3" strokeWidth={2} aria-label="Table" /></span>;
   if (variant === 'document') return <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#F7F3EC] text-[#8A6A3C]"><FileText className="h-3 w-3" strokeWidth={2} aria-label="Document" /></span>;
-  return <img src="/evidence-pdf-mark.png" alt="PDF" className="h-4 w-4 shrink-0 object-contain" />;
+  return <img src="/pdf-file-icon.webp" alt="PDF" className="h-4 w-4 shrink-0 object-contain" />;
 }
 
 function enterpriseDocumentName(document: string) {
@@ -297,7 +297,7 @@ function EvidenceRegisterStage() {
     <div className="rounded-[10px] border border-[#D8E3E8] bg-white p-4 sm:p-5">
       <div className="flex items-end justify-between gap-4 border-b border-[#E3ECEF] pb-3"><div><p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Evidence register</p><h2 className="mt-1 text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">Source records assembled for review</h2></div><span className="text-[10px] font-semibold tracking-tight text-[#527284]">17 records linked</span></div>
       <div className="divide-y divide-[#E8EFF1]">
-        {evidenceRegister.map((document, index) => <motion.div key={document.name} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.055, duration: 0.25 }} className="flex items-start gap-3 py-3 first:pt-4 last:pb-1"><span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#F1F6F8] text-[8px] font-bold text-[#527284]">{document.type}</span><div className="min-w-0 flex-1"><p className="text-[11px] font-semibold tracking-tight text-[#36404A]">{document.name}</p><p className="mt-0.5 text-[10px] leading-4 tracking-tight text-[#66737F]"><HighlightedDescription description={document.description} highlight={document.highlight} /></p></div><Check className="mt-1 h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></motion.div>)}
+        {evidenceRegister.map((document, index) => <motion.div key={document.name} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.055, duration: 0.25 }} className="flex items-start gap-3 py-3 first:pt-4 last:pb-1"><span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#F1F6F8]"><DocumentMark document={`${document.name}.${document.type.toLowerCase()}`} /></span><div className="min-w-0 flex-1"><p className="text-[11px] font-semibold tracking-tight text-[#36404A]">{document.name}</p><p className="mt-0.5 text-[10px] leading-4 tracking-tight text-[#66737F]"><HighlightedDescription description={document.description} highlight={document.highlight} /></p></div><Check className="mt-1 h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></motion.div>)}
       </div>
     </div>
   </motion.div>;
@@ -342,7 +342,7 @@ function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="relative mt-3 border-t border-[#E3ECEF] pt-3">
               <div className="mb-2 flex items-center justify-between"><p className="text-[10px] font-semibold tracking-tight text-[#36404A]">Ingested documents</p><span className="text-[9px] font-medium tracking-tight text-[#7B8A97]">4 records linked</span></div>
               <div className="grid gap-2 sm:grid-cols-2">
-                {intakeDocuments.map((document) => <div key={document.name} className="flex min-w-0 items-center gap-2 rounded-[6px] border border-[#E0E9EC] bg-white px-2.5 py-2"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#EEF5F7] text-[8px] font-bold text-[#527284]">{document.type}</span><span className="min-w-0"><span className="block truncate text-[10px] font-semibold tracking-tight text-[#36404A]">{document.name}</span><span className="mt-0.5 block truncate text-[9px] tracking-tight text-[#8A99A5]">{document.source}</span></span><Check className="ml-auto h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></div>)}
+                {intakeDocuments.map((document) => <div key={document.name} className="flex min-w-0 items-center gap-2 rounded-[6px] border border-[#E0E9EC] bg-white px-2.5 py-2"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#EEF5F7]"><DocumentMark document={`${document.name}.${document.type.toLowerCase()}`} /></span><span className="min-w-0"><span className="block truncate text-[10px] font-semibold tracking-tight text-[#36404A]">{document.name}</span><span className="mt-0.5 block truncate text-[9px] tracking-tight text-[#8A99A5]">{document.source}</span></span><Check className="ml-auto h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></div>)}
               </div>
             </motion.div>
           ) : null}
