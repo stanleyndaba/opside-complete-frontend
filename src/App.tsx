@@ -410,6 +410,7 @@ const App = () => (
                         <Route path="/early-access" element={<EarlyAccess />} />
                         <Route path="/onboarding-approval" element={<AuditFirst />} />
                         <Route path="/document-uploads" element={<DocumentUploads />} />
+                        <Route path="/duplicate-pipeline-preview" element={<DocumentUploads />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
                         <Route path="/branding" element={<Branding />} />
                         {/* AUTH & OAUTH ROUTES - No tenant required */}
