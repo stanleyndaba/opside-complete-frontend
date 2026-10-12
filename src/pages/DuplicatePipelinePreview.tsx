@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, Check, ChevronDown, Files, Layers3, ListChecks, Search, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, Files, Image as ImageIcon, Layers3, ListChecks, Search, SlidersHorizontal } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 type TabId = "approval" | "filing" | "filed" | "attention" | "payout" | "resolved";
@@ -236,13 +236,32 @@ function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
 }
 
 const intakeDocuments = [
-  { type: 'PDF', name: 'Amazon settlement report · Apr 2026', source: 'Settlement file · payout activity' },
-  { type: 'CSV', name: 'Inbound receiving variance record', source: 'Amazon SP-API · ONT8 · 60 dispatched / 46 received' },
-  { type: 'MAIL', name: 'Amazon reimbursement correspondence', source: 'Gmail thread · case response and evidence request' },
-  { type: 'XLS', name: 'Inventory movement extract', source: 'NetSuite export · SKU and unit-level activity' },
+  { type: 'PDF', name: 'Settlement reconciliation schedule · Apr 2026', source: 'Settlement file · payout activity' },
+  { type: 'CSV', name: 'Inbound receiving variance population · ONT8', source: 'Amazon SP-API · 60 dispatched / 46 received' },
+  { type: 'MAIL', name: 'Reimbursement case correspondence · REC-2026-004817', source: 'Gmail thread · case response and evidence request' },
+  { type: 'XLS', name: 'Inventory valuation and movement schedule · FY2026 Q1', source: 'NetSuite export · SKU and unit-level activity' },
 ];
 
 const intakeSources = ['Amazon', 'Settlement', 'Gmail', 'NetSuite', 'S3 / SFTP', 'Carrier'];
+
+function documentVariant(document: string) {
+  const score = Array.from(document).reduce((total, character) => total + character.charCodeAt(0), 0) % 4;
+  return ['pdf', 'csv', 'image', 'spreadsheet'][score];
+}
+
+function DocumentMark({ document }: { document: string }) {
+  const variant = documentVariant(document);
+  if (variant === 'csv') return <img src="/evidence-csv-mark.png" alt="CSV" className="h-4 w-4 shrink-0 object-contain" />;
+  if (variant === 'spreadsheet') return <img src="/evidence-spreadsheet-mark.png" alt="Spreadsheet" className="h-4 w-4 shrink-0 object-contain" />;
+  if (variant === 'image') return <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#EAF5F9] text-[#527284]"><ImageIcon className="h-3 w-3" strokeWidth={2} aria-label="Image" /></span>;
+  return <img src="/evidence-pdf-mark.png" alt="PDF" className="h-4 w-4 shrink-0 object-contain" />;
+}
+
+function enterpriseDocumentName(document: string) {
+  const extension = document.split('.').pop()?.toUpperCase() || 'RECORD';
+  const stem = document.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+  return `${stem} · ${extension}`;
+}
 
 function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
   const reduceMotion = useReducedMotion();
@@ -317,7 +336,7 @@ function RecoveryCard({ card, onApprove }: { card: RecordCard; onApprove: () => 
       <p className="mt-1 text-[10px] tracking-tight text-[#9CA3AF]">{card.meta}</p>
       <p className="mt-2 text-[11px] font-semibold leading-4 tracking-tight text-[#36404A]">{card.detail}</p>
       <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-medium tracking-tight text-[#66737F]"><span>Proof: <strong className="font-semibold text-[#36404A]">{card.proof}</strong></span>{card.days ? <span>{card.days}</span> : null}</div>
-      <div className="mt-2 flex flex-wrap gap-2">{card.docs.map((doc) => { const isCsv = doc.toLowerCase().endsWith(".csv"); return <span key={doc} className="inline-flex max-w-full items-center gap-1.5 rounded-[8px] border border-[#D8E3E8] bg-[#F8FAFB] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#546575]"><img src={isCsv ? "/evidence-csv-mark.png" : "/pdf-file-icon.webp"} alt={isCsv ? "CSV" : "PDF"} className="h-4 w-4 shrink-0 object-contain" /><span className="truncate">{doc}</span></span>; })}</div>
+      <div className="mt-2 flex flex-wrap gap-2">{card.docs.map((doc) => <span key={doc} className="inline-flex max-w-full items-center gap-1.5 rounded-[8px] border border-[#D8E3E8] bg-[#F8FAFB] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#546575]"><DocumentMark document={doc} /><span className="truncate">{enterpriseDocumentName(doc)}</span></span>)}</div>
       <div className="mt-3 grid gap-1.5 text-[10px] leading-4 tracking-tight text-[#66737F] sm:grid-cols-2"><p><span className="font-semibold text-[#8A99A5]">Amazon route:</span> {card.route}</p><p><span className="font-semibold text-[#8A99A5]">Evidence packet:</span> {card.packet}</p><p><span className="font-semibold text-[#8A99A5]">Safety:</span> {card.safety}</p><p><span className="font-semibold text-[#8A99A5]">Last movement:</span> {card.movement}</p></div>
       <div className="mt-3 space-y-1">{card.checks.map((check) => <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#6B7C88]"><span className={`h-1.5 w-1.5 shrink-0 rounded-full ${card.tone === "attention" ? "bg-[#B34B4B]" : "bg-[#07845A]"}`} />{check}</div>)}</div>
       <p className="mt-3 text-[11px] font-bold leading-4 tracking-tight text-[#111827]">Status: <span className={card.tone === "attention" ? "text-[#A23A3A]" : card.tone === "payout" ? "text-[#8A641B]" : "text-[#26704E]"}>{card.status}</span></p>
@@ -343,7 +362,7 @@ export default function FilingPipelinePreview() {
     const claimsTimer = window.setTimeout(() => {
       setIntakeStage('claims');
       setCasesVisible(true);
-    }, 3600);
+    }, 5000);
     return () => {
       window.clearTimeout(documentTimer);
       window.clearTimeout(claimsTimer);
