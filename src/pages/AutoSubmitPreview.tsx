@@ -14,6 +14,11 @@ type AutoSubmitCase = {
   amount: string;
   date: string;
   docs: string[];
+  route: string;
+  packet: string;
+  safety: string;
+  checks: string[];
+  movement: string;
 };
 
 const cases: AutoSubmitCase[] = [
@@ -28,6 +33,11 @@ const cases: AutoSubmitCase[] = [
     amount: "$14,832",
     date: "Today · 08:42",
     docs: ["EvidenceIndex-REC-2026-004817.csv", "ShipmentPopulation-FY2026.json", "ReceivingCohort-ONT8-LGB8-PHX7.csv", "ValuationBasis-OneDrive.xlsx"],
+    route: "Seller Central / FBA inventory reimbursement / Controlled inbound cohort",
+    packet: "SP-API snapshot, POD, receiving reports, ERP ledger, settlement clearing",
+    safety: "No duplicate credit identified · clearing test complete",
+    checks: ["Event identity resolved", "Valuation basis verified", "Seller approval required"],
+    movement: "Updated 9 minutes ago",
   },
   {
     reference: "RFD-169-01",
@@ -40,6 +50,11 @@ const cases: AutoSubmitCase[] = [
     amount: "$329.84",
     date: "30 Sep · 14:18",
     docs: ["FeePreview-Gmail.eml", "StorageReport-204-771.csv", "RateCard-OneDrive.pdf"],
+    route: "Seller Central / Fee reimbursement / Storage",
+    packet: "Fee preview, storage report, rate card",
+    safety: "Rate comparison completed",
+    checks: ["Policy window checked", "Source records matched", "No duplicate recovery found"],
+    movement: "Updated 3 minutes ago",
   },
   {
     reference: "RFD-169-02",
@@ -52,6 +67,11 @@ const cases: AutoSubmitCase[] = [
     amount: "$472.16",
     date: "29 Sep · 11:06",
     docs: ["POD-FBA18LQ4C2P1.pdf", "CartonManifest.csv", "SellerApproval-Gmail.eml"],
+    route: "Seller Central / FBA inventory reimbursement / Inbound",
+    packet: "POD, carton manifest, receiving report",
+    safety: "Carrier handoff verified",
+    checks: ["Policy window checked", "Source records matched", "No duplicate recovery found"],
+    movement: "Updated 4 minutes ago",
   },
 ];
 
@@ -103,8 +123,13 @@ function CaseTimelineRow({ item }: { item: AutoSubmitCase }) {
         <div className="mt-2 space-y-1 pt-2 text-[9px] leading-4 sm:text-[10px] sm:leading-5">
           <p><span className="font-semibold text-[#56646D]">Financial basis:</span> <span className="text-[#71808A]">{item.basis}</span></p>
           <p><span className="font-semibold text-[#56646D]">Control state:</span> <span className="text-[#71808A]">{item.control}</span></p>
+          <p><span className="font-semibold text-[#56646D]">Amazon route:</span> <span className="text-[#71808A]">{item.route}</span></p>
+          <p><span className="font-semibold text-[#56646D]">Evidence packet:</span> <span className="text-[#71808A]">{item.packet}</span></p>
+          <p><span className="font-semibold text-[#56646D]">Safety:</span> <span className="text-[#71808A]">{item.safety}</span></p>
+          <p><span className="font-semibold text-[#56646D]">Last movement:</span> <span className="text-[#71808A]">{item.movement}</span></p>
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 pt-2">
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-[#E7ECEE] pt-2">
+          {item.checks.map((check) => <span key={check} className="text-[8px] text-[#6B7881] sm:text-[9px]">{check}</span>)}
           {item.docs.map((file) => (
             <span key={file} className="flex min-w-0 items-center gap-1 text-[8px] text-[#6B7881] sm:text-[9px]">
               <EvidenceIcon file={file} />
