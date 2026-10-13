@@ -87,7 +87,7 @@ function EvidenceIcon({ file }: { file: string }) {
   const icon = lowerFile.includes("gmail")
       ? "/gmailicon.png"
       : lowerFile.includes("onedrive") || isCsv
-      ? "/evidence-spreadsheet-mark.png"
+      ? "/excel-icon-margin.png"
       : "/pdf-file-icon.webp";
   return (
     <img src={icon} alt={isCsv || lowerFile.includes("onedrive") ? "Excel or CSV evidence" : lowerFile.includes("gmail") ? "Gmail evidence" : "PDF evidence"} className="h-4 w-4 shrink-0 object-contain" />
@@ -125,7 +125,7 @@ function CaseTimelineRow({ item }: { item: AutoSubmitCase }) {
           <p><span className="font-semibold text-[#56646D]">Last movement:</span> <span className="text-[#71808A]">{item.movement}</span></p>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-[#E7ECEE] pt-2">
-          <img src="/evidence-spreadsheet-mark.png" alt="Excel or CSV source" className="h-4 w-4 shrink-0 object-contain" />
+          <img src="/excel-icon-margin.png" alt="Excel or CSV source" className="h-4 w-4 shrink-0 object-contain" />
           {item.checks.map((check) => <span key={check} className="text-[8px] text-[#6B7881] sm:text-[9px]">{check}</span>)}
           {item.docs.map((file) => (
             <span key={file} className="flex min-w-0 items-center gap-1 text-[8px] text-[#6B7881] sm:text-[9px]">
