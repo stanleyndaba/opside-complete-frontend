@@ -304,7 +304,7 @@ const App = () => (
                         <Route path="/" element={<Index />} />
                         <Route path="/information-required" element={<InformationRequired />} />
                         <Route path='/recover-once' element={<RecoverOnce />} />
-                        <Route path='/recovery-workspace' element={<FilingPipelinePreview />} />
+                        <Route path='/recovery-workspace' element={<RecoveryWorkspace />} />
                         <Route path='/document-ingestion' element={<DocumentIngestion />} />
                         <Route path='/speak-to-sales' element={<SpeakToSales />} />
                         <Route path='/talk-to-sales' element={<SpeakToSales />} />
