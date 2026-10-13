@@ -269,7 +269,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
 
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#D8E3EA] pt-8 md:flex-row">
             <div className="flex max-w-[1024px] flex-col gap-2 text-sm tracking-tight" style={{ color: '#66737F' }}>
-              <span className="font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] text-[#182026] min-[390px]:text-[46px] sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>From uncertainty to resolution</span>
+              <span className="font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] text-[#182026] min-[390px]:text-[46px] sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 500 }}>From uncertainty to resolution</span>
               <span>© {new Date().getFullYear()} Margin. All rights reserved.</span>
               {selectedLanguageLabel && (
                 <span className="inline-flex items-center gap-1.5">
