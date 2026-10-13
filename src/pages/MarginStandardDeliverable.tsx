@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AlertCircle, Check, Circle, Minus, Plus } from "lucide-react";
+import { AlertCircle, Check, Minus, Plus, X } from "lucide-react";
 
 const findingRows = [
   {
@@ -50,6 +50,30 @@ const findingRows = [
     detail: "No unsupported amount is treated as recovered or payable",
     value: "Unresolved",
   },
+  {
+    reference: "REC-008",
+    state: "review",
+    label: "Review",
+    title: "Carrier receiving evidence requires source confirmation",
+    detail: "Carrier scan and receiving record remain under comparison",
+    value: "Pending",
+  },
+  {
+    reference: "REC-007",
+    state: "supported",
+    label: "Supported",
+    title: "Inventory movement agrees to the shipment record",
+    detail: "Movement history and source quantity are aligned",
+    value: "Matched",
+  },
+  {
+    reference: "REC-006",
+    state: "exception",
+    label: "Exception",
+    title: "Settlement adjustment remains unattributed to an entity",
+    detail: "Payout activity requires entity-level reconciliation",
+    value: "Open",
+  },
 ];
 
 const closeoutRows = [
@@ -85,6 +109,22 @@ const closeoutRows = [
     detail: "Financial position closed without extending assumptions",
     value: "Complete",
   },
+  {
+    reference: "REC-010",
+    state: "supported",
+    label: "Reconciled",
+    title: "Payout activity tied to the corresponding settlement period",
+    detail: "Settlement and payout records agree at closeout",
+    value: "Matched",
+  },
+  {
+    reference: "REC-009",
+    state: "supported",
+    label: "Recorded",
+    title: "Evidence lineage retained with the financial position",
+    detail: "Source records remain linked to the outcome",
+    value: "Complete",
+  },
 ];
 
 type RowState = "exception" | "review" | "action" | "supported" | "held";
@@ -92,14 +132,14 @@ type ControlRow = (typeof findingRows)[number];
 
 const stateStyles: Record<RowState, { icon: React.ReactNode; className: string }> = {
   exception: { icon: <AlertCircle className="h-3 w-3" strokeWidth={3} />, className: "bg-[#2D7FF9] text-white" },
-  review: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#7E8A92] text-white" },
+  review: { icon: <X className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#7E8A92] text-white" },
   action: { icon: <Minus className="h-3 w-3" strokeWidth={3} />, className: "bg-[#F39A45] text-white" },
   supported: { icon: <Check className="h-3 w-3" strokeWidth={3} />, className: "bg-[#35C56B] text-white" },
-  held: { icon: <Circle className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#9AA8B7] text-white" },
+  held: { icon: <X className="h-3.5 w-3.5" strokeWidth={2.5} />, className: "bg-[#9AA8B7] text-white" },
 };
 
 function ThreeStrokeMark() {
-  return <span className="flex h-3 w-3 items-end justify-center gap-[1px]" aria-hidden="true"><i className="h-1.5 w-px rounded-full bg-current" /><i className="h-2.5 w-px rounded-full bg-current" /><i className="h-2 w-px rounded-full bg-current" /></span>;
+  return <span className="flex h-[10px] w-[10px] items-end justify-center gap-[1px]" aria-hidden="true"><i className="h-[5px] w-px rounded-full bg-current" /><i className="h-[9px] w-px rounded-full bg-current" /><i className="h-[7px] w-px rounded-full bg-current" /></span>;
 }
 
 function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; index: number; selected: boolean; onSelect: () => void }) {
@@ -109,19 +149,17 @@ function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; i
     <button
       type="button"
       onClick={onSelect}
-      className={`group grid w-full grid-cols-[32px_88px_30px_minmax(0,1fr)] items-center gap-2 rounded-none border-b border-[#E5E9EB] px-2 py-2 text-left transition-colors sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F5F8FB]"}`}
+      className={`group grid w-full grid-cols-[28px_76px_26px_minmax(0,1fr)] items-center gap-2 rounded-none border-b border-[#E5E9EB] px-2 py-[4px] text-left transition-colors sm:grid-cols-[36px_94px_32px_minmax(0,1fr)] sm:gap-2 sm:px-3 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F5F8FB]"}`}
       aria-pressed={selected}
     >
-      <span className={`flex h-5 w-5 items-center justify-center rounded-[6px] ${selected ? "bg-[#1689E5]" : "bg-transparent text-[#9AA5AE]"}`}>
-        {selected ? <Check className="h-3 w-3 text-white" strokeWidth={3} /> : <ThreeStrokeMark />}
+      <span className={`flex h-[17px] w-[17px] items-center justify-center rounded-[5px] ${selected ? "bg-[#1689E5]" : "bg-transparent text-[#9AA5AE]"}`}>
+        {selected ? <Check className="h-[10px] w-[10px] text-white" strokeWidth={3} /> : <ThreeStrokeMark />}
       </span>
-      <span className="truncate text-[11px] font-medium tracking-tight text-[#8A949C] sm:text-[11px]">{row.reference}</span>
-      <span className={`flex h-5 w-5 items-center justify-center rounded-full ${state.className}`}>{state.icon}</span>
+      <span className="truncate text-[9px] font-medium tracking-tight text-[#8A949C] sm:text-[9px]">{row.reference}</span>
+      <span className={`flex h-[17px] w-[17px] items-center justify-center rounded-full ${state.className}`}>{state.icon}</span>
       <span className="min-w-0">
-        <span className={`block truncate text-[12px] font-medium leading-5 tracking-tight sm:text-[13px] ${selected ? "text-[#17242D]" : "text-[#26343D]"}`}>{row.title}</span>
-        <span className="block truncate text-[10px] leading-4 text-[#8B969E] sm:text-[10px]">{row.detail}</span>
+        <span className={`block truncate text-[8px] font-medium leading-3 tracking-tight sm:text-[9px] ${selected ? "text-[#17242D]" : "text-[#26343D]"}`}>{row.title}</span>
       </span>
-      <span className="hidden truncate text-right text-[11px] font-semibold text-[#56636D] sm:block">{row.value}</span>
     </button>
   );
 }
@@ -158,17 +196,16 @@ export default function MarginStandardDeliverable() {
 
         <div className="mt-5 flex items-center justify-between gap-4 sm:mt-6">
           <div className="flex items-center gap-2 text-[11px] font-semibold text-[#4D5B64] sm:text-[12px]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#E9EDF0] text-[#65727B]"><Minus className="h-3.5 w-3.5" strokeWidth={2.5} /></span>
+            <span className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#2D7FF9] text-white"><Minus className="h-3.5 w-3.5" strokeWidth={2.5} /></span>
             <span>{view === "finding" ? "Audit findings" : "Closeout record"}</span>
           </div>
         </div>
 
-        <div className="mt-3 grid grid-cols-[32px_88px_30px_minmax(0,1fr)] gap-2 border-b border-[#E5E9EB] px-2.5 pb-2 text-[9px] font-semibold uppercase tracking-[0.02em] text-[#A0A9AF] sm:grid-cols-[42px_108px_38px_minmax(0,1fr)_140px] sm:gap-3 sm:px-3 sm:text-[10px]">
+        <div className="mt-3 grid grid-cols-[28px_76px_26px_minmax(0,1fr)] gap-2 border-b border-[#E5E9EB] px-2.5 pb-1.5 text-[8px] font-semibold uppercase tracking-[0.02em] text-[#A0A9AF] sm:grid-cols-[36px_94px_32px_minmax(0,1fr)] sm:gap-2 sm:px-3 sm:text-[9px]">
           <span aria-hidden="true" />
           <span>Reference</span>
           <span aria-hidden="true" />
           <span>Financial control item</span>
-          <span className="hidden text-right sm:block">Position</span>
         </div>
 
         <div className="mt-2 space-y-0">
