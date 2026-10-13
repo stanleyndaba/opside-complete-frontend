@@ -359,6 +359,10 @@ const artifactAnalysisItems = [
     highlight: ['governed recovery cohort', 'duplicate credit', 'controlled preparation'],
     text: 'The evidence is sufficient to form a governed recovery cohort. Margin linked the source records, tested the receiving variance against the related financial events, checked for duplicate credit, and separated supported exposure from positions that still require confirmation. The resulting position is ready for controlled preparation and review before any filing or seller action.',
   },
+  {
+    highlight: ['account-level control position', 'supported exposure', 'unresolved positions'],
+    text: 'The resulting record is an account-level control position, not a one-off answer to a single discrepancy. Supported exposure can move into a governed review queue, while unresolved positions remain visible with their evidence gaps, ownership, and next required action clearly separated from recoverable value.',
+  },
 ] as const;
 
 function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
