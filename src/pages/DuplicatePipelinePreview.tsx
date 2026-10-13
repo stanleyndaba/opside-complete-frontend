@@ -336,11 +336,11 @@ function HighlightedDescription({ description, highlight, highlightComplete = tr
   return <>{parts}</>;
 }
 
-function EvidenceRegisterStage() {
-  return <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} className="px-5 pb-5 sm:px-6">
-    <div className="rounded-[10px] border border-[#D8E3E8] bg-white p-4 sm:p-5">
-      <div className="flex items-end justify-between gap-4 border-b border-[#E3ECEF] pb-3"><div><p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Evidence register</p><h2 className="mt-1 text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">Source records assembled for review</h2></div><span className="text-[10px] font-semibold tracking-tight text-[#527284]">17 records linked</span></div>
-      <div className="divide-y divide-[#E8EFF1]">
+function EvidenceRegisterStage({ workspaceMode = false }: { workspaceMode?: boolean }) {
+  return <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} className={workspaceMode ? "px-0 pb-5" : "px-5 pb-5 sm:px-6"}>
+    <div className={workspaceMode ? "rounded-none border-0 bg-transparent p-0" : "rounded-[10px] border border-[#D8E3E8] bg-white p-4 sm:p-5"}>
+      <div className={workspaceMode ? "flex items-end justify-between gap-4 pb-3" : "flex items-end justify-between gap-4 border-b border-[#E3ECEF] pb-3"}><div><p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Evidence register</p><h2 className="mt-1 text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">Source records assembled for review</h2></div><span className="text-[10px] font-semibold tracking-tight text-[#527284]">17 records linked</span></div>
+      <div className={workspaceMode ? "" : "divide-y divide-[#E8EFF1]"}>
         {evidenceRegister.map((document, index) => <motion.div key={document.name} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.055, duration: 0.25 }} className="flex items-start gap-3 py-3 first:pt-4 last:pb-1"><span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] bg-[#F1F6F8]"><EvidenceRegisterMark document={`${document.name}.${document.type.toLowerCase()}`} index={index} /></span><div className="min-w-0 flex-1"><p className="text-[11px] font-semibold tracking-tight text-[#36404A]">{document.name}</p><p className="mt-0.5 text-[10px] leading-4 tracking-tight text-[#66737F]"><HighlightedDescription description={document.description} highlight={document.highlight} /></p></div><Check className="mt-1 h-3.5 w-3.5 shrink-0 text-[#26704E]" strokeWidth={2.5} /></motion.div>)}
       </div>
     </div>
@@ -541,7 +541,7 @@ export function RecoveryPipelineSequence({ workspaceMode = false }: { workspaceM
 
   return <section className="mt-5" aria-label="Recovery evidence and claims progression">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
-    {stage === 'register' ? <EvidenceRegisterStage /> : null}
+    {stage === 'register' ? <EvidenceRegisterStage workspaceMode={workspaceMode} /> : null}
     {stage === 'artifact-analysis' ? <ArtifactAnalysisStage onComplete={() => setStage('claims')} /> : null}
     {stage === 'claims' ? <>
       <div className="max-h-24 overflow-x-auto border-y border-[#E8EFF1] opacity-100"><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight ${activeTab === item.id ? 'border-[#0B74DE] text-[#0B74DE]' : 'border-transparent text-[#66737F] hover:text-[#182026]'}`}>{workspaceMode && item.id === 'approval' ? 'Evidence to Cases' : item.label}</button>)}</div></div>
