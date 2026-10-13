@@ -129,6 +129,7 @@ function CaseTimelineRow({ item }: { item: AutoSubmitCase }) {
           <p><span className="font-semibold text-[#56646D]">Last movement:</span> <span className="text-[#71808A]">{item.movement}</span></p>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-[#E7ECEE] pt-2">
+          <span className="flex items-center gap-1 text-[8px] font-medium text-[#6B7881] sm:text-[9px]"><img src="/onedrive-icon.png" alt="OneDrive source" className="h-4 w-4 object-contain" />OneDrive source</span>
           {item.checks.map((check) => <span key={check} className="text-[8px] text-[#6B7881] sm:text-[9px]">{check}</span>)}
           {item.docs.map((file) => (
             <span key={file} className="flex min-w-0 items-center gap-1 text-[8px] text-[#6B7881] sm:text-[9px]">
