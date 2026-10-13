@@ -196,7 +196,7 @@ export default function MarginStandardDeliverable() {
 
         <div className="mt-5 flex items-center justify-between gap-4 sm:mt-6">
           <div className="flex items-center gap-2 text-[11px] font-semibold text-[#4D5B64] sm:text-[12px]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#2D7FF9] text-white"><Minus className="h-3.5 w-3.5" strokeWidth={2.5} /></span>
+            <span className="flex h-5 w-5 items-center justify-center rounded-[5px] bg-[#2D7FF9] text-white"><Minus className="h-3 w-3" strokeWidth={2.5} /></span>
             <span>{view === "finding" ? "Audit findings" : "Closeout record"}</span>
           </div>
         </div>
