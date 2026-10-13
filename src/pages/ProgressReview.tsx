@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { ArrowRight, Check, Files, Layers3, ListChecks, Search, SlidersHorizontal } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
 
 type ProgressEvent = {
   type: string;
@@ -38,15 +37,6 @@ const events: ProgressEvent[] = [
 
 export default function ProgressReview() {
   const [toast, setToast] = useState<string | null>(null);
-  const [animationCycle, setAnimationCycle] = useState(0);
-  const [isTimelinePaused, setIsTimelinePaused] = useState(false);
-  const reduceMotion = useReducedMotion();
-
-  React.useEffect(() => {
-    if (reduceMotion || isTimelinePaused) return;
-    const cycle = window.setInterval(() => setAnimationCycle((current) => current + 1), 16000);
-    return () => window.clearInterval(cycle);
-  }, [isTimelinePaused, reduceMotion]);
   const getDocumentIcon = (event: ProgressEvent, doc: string) => {
     if (event.status === "partial reimbursement identified") return { src: "/gmailicon.png", alt: "Amazon response" };
     if (doc.toLowerCase().endsWith(".csv")) return { src: "/excel-icon-margin.png", alt: "CSV" };
@@ -61,7 +51,7 @@ export default function ProgressReview() {
     <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
       <aside aria-label="Progress preview controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
         {assessmentRail.map(({ label, href, icon: Icon }, index) => (
-          <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? 'bg-[#D9E0E3] text-[#26333A]' : ''}`}>
+          <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? 'bg-[#D9E0E3] text-[#26333A]' : ''}`}>
             <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} />
           </a>
         ))}
@@ -71,14 +61,12 @@ export default function ProgressReview() {
         <div className="mb-4 pb-3"><h1 id="progress-review-title" className="font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Updated Review</h1></div>
         <div className="space-y-1"><div className="text-[12px] font-medium tracking-tight text-[#182026]">EVT-FBA-2026-0001847 · Northstar Commerce LLC · Legal entity NTH-US-01 · Amazon US · FBA</div><div className="text-[11px] font-medium text-[#0B74DE]">The position is tracked from scope acceptance through evidence sufficiency, approval authority, controlled execution, response classification, settlement verification, and residual close state.</div><div className="text-[10px] font-medium text-[#4B5563]">Review period: 01 Jan–31 Mar 2026 · Source run: NTH-US-Q1-2026-0904 · Materiality: operational exception · Close state: partial outcome with residual under watch · Currency: USD</div></div>
         <div id="progress-timeline" className="mt-5 rounded-[8px] border border-[#DCE8EE] bg-white p-2 sm:p-3">
-          <div className="h-[58vh] min-h-[420px] max-h-[760px] overflow-y-auto overscroll-contain pr-1 sm:pr-2" onMouseEnter={() => setIsTimelinePaused(true)} onMouseLeave={() => setIsTimelinePaused(false)}>
-          <div key={animationCycle}>
-          {events.map((event, index) => <motion.article key={`${event.date}-${event.status}`} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 1.05, duration: 0.34, ease: [0.22, 1, 0.36, 1] }} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
-            {index < events.length - 1 ? <motion.span initial={reduceMotion ? false : { scaleY: 0 }} animate={{ scaleY: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 1.05 + 0.66, duration: 0.34, ease: [0.22, 1, 0.36, 1] }} style={{ transformOrigin: "top" }} className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
-            <motion.span initial={reduceMotion ? false : { scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 1.05 + 0.42, duration: 0.2, ease: [0.22, 1, 0.36, 1] }} className="relative z-10 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded event"><Check className="h-3 w-3 text-white" strokeWidth={3} /></motion.span>
-            <div className="min-w-0"><p className="font-medium tracking-tight text-[#182026]">{event.type} · {event.status}</p><p className="mt-1 leading-5 text-[#4D5B66]">{event.message}</p><time className="mt-2 block text-[10px] font-medium tabular-nums tracking-tight text-[#66737F]">{event.date}</time>{event.amount ? <p className="mt-1 font-medium tabular-nums text-[#0B74DE]">Supported amount: {event.amount}</p> : null}<div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[#4B5563]"><span className="text-[11px] font-medium tracking-tight text-[#66737F]">Docs</span>{event.docs.map((doc) => <button type="button" key={doc} onClick={() => openDoc(doc)} className="inline-flex items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] transition-colors hover:text-[#0B74DE]">{(() => { const icon = getDocumentIcon(event, doc); return <><img src={icon.src} alt={icon.alt} className="h-4 w-4 object-contain" />{doc}</>; })()}<ArrowRight className="h-3 w-3" /></button>)}</div></div>
-          </motion.article>)}
-          </div>
+          <div className="h-[58vh] min-h-[420px] max-h-[760px] overflow-y-auto overscroll-contain pr-1 sm:pr-2">
+          {events.map((event, index) => <article key={`${event.date}-${event.status}`} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
+            {index < events.length - 1 ? <span className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
+            <span className="relative z-10 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded event"><Check className="h-3 w-3 text-white" strokeWidth={3} /></span>
+            <div className="min-w-0"><p className="font-medium tracking-tight text-[#182026]">{event.type} · {event.status}</p><p className="mt-1 leading-5 text-[#4D5B66]">{event.message}</p><time className="mt-2 block text-[10px] font-medium tabular-nums tracking-tight text-[#66737F]">{event.date}</time>{event.amount ? <p className="mt-1 font-medium tabular-nums text-[#0B74DE]">Supported amount: {event.amount}</p> : null}<div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[#4B5563]"><span className="text-[11px] font-medium tracking-tight text-[#66737F]">Docs</span>{event.docs.map((doc) => <button type="button" key={doc} onClick={() => openDoc(doc)} className="inline-flex items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] hover:text-[#0B74DE]">{(() => { const icon = getDocumentIcon(event, doc); return <><img src={icon.src} alt={icon.alt} className="h-4 w-4 object-contain" />{doc}</>; })()}<ArrowRight className="h-3 w-3" /></button>)}</div></div>
+          </article>)}
           </div>
         </div>
         <div aria-hidden="true" className="h-6 sm:h-8" />
@@ -115,7 +103,7 @@ export default function ProgressReview() {
           </div>
           <div className="mt-5 flex flex-col gap-3 border-t border-[#E8EDF0] pt-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-[11px] leading-5 text-[#66737F]">Agent uses the selected parameters to keep the review inside the governed Enterprise FBA scope.</p>
-            <button type="button" onClick={() => setToast('Enterprise FBA parameters applied to the review')} className="inline-flex min-h-9 items-center justify-center rounded-[6px] bg-[#3F63D8] px-4 text-[12px] font-semibold text-white shadow-[0_1px_2px_rgba(63,99,216,0.22)] transition-colors hover:bg-[#3152C0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3F63D8]/35">Agent</button>
+            <button type="button" onClick={() => setToast('Enterprise FBA parameters applied to the review')} className="inline-flex min-h-9 items-center justify-center rounded-[6px] bg-[#3F63D8] px-4 text-[12px] font-semibold text-white shadow-[0_1px_2px_rgba(63,99,216,0.22)] hover:bg-[#3152C0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3F63D8]/35">Agent</button>
           </div>
         </section>
         </section>

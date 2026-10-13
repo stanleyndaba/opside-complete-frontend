@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { ArrowRight, Check, Files, Layers3, ListChecks, Search } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
 
 type EvidenceItem = {
   kind: string;
@@ -129,14 +128,6 @@ const evidenceLog = [
 export default function EvidenceRequired() {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [animationCycle, setAnimationCycle] = useState(0);
-  const [isTimelinePaused, setIsTimelinePaused] = useState(false);
-  const reduceMotion = useReducedMotion();
-  React.useEffect(() => {
-    if (reduceMotion || isTimelinePaused) return;
-    const cycle = window.setInterval(() => setAnimationCycle((current) => current + 1), 16000);
-    return () => window.clearInterval(cycle);
-  }, [isTimelinePaused, reduceMotion]);
   const showDocument = (item: EvidenceItem) => {
     setToast(`${item.file} opened for review`);
     window.setTimeout(() => setToast(null), 2600);
@@ -145,13 +136,13 @@ export default function EvidenceRequired() {
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
     <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
       <aside aria-label="Evidence preview controls" className="sticky top-4 flex w-[52px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1.5">
-        <button type="button" title="Evidence record" aria-label="Evidence record" onClick={() => setToast("Evidence record selected")} className="flex h-9 w-9 items-center justify-center rounded-[5px] bg-[#D9E0E3] text-[#26333A] transition-colors hover:bg-[#D1DADD] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
+        <button type="button" title="Evidence record" aria-label="Evidence record" onClick={() => setToast("Evidence record selected")} className="flex h-9 w-9 items-center justify-center rounded-[5px] bg-[#D9E0E3] text-[#26333A] hover:bg-[#D1DADD] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
           <ListChecks className="h-4 w-4" strokeWidth={1.8} />
         </button>
-        <button type="button" title="Evidence files" aria-label="Evidence files" onClick={() => setToast("Evidence files selected")} className="flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
+        <button type="button" title="Evidence files" aria-label="Evidence files" onClick={() => setToast("Evidence files selected")} className="flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
           <Files className="h-4 w-4" strokeWidth={1.8} />
         </button>
-        <button type="button" title="Control layers" aria-label="Control layers" onClick={() => setToast("Control layers selected")} className="mt-12 flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
+        <button type="button" title="Control layers" aria-label="Control layers" onClick={() => setToast("Control layers selected")} className="mt-12 flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
           <Layers3 className="h-4 w-4" strokeWidth={1.8} />
         </button>
       </aside>
@@ -169,14 +160,13 @@ export default function EvidenceRequired() {
           <h1 className="mt-1 font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Evidence control for EVT-FBA-2026-0001847</h1>
           <p className="mt-2 text-[12px] leading-5 tracking-tight text-[#66737F]">Northstar Commerce LLC · Legal entity NTH-US-01 · Amazon US · FBA · Review period: 01 Jan–31 Mar 2026 · Source run: NTH-US-Q1-2026-0904 · Materiality: operational exception · USD. Each record establishes a different part of the governed position; no document is treated as proof in isolation.</p>
         </header>
-        <div onMouseEnter={() => setIsTimelinePaused(true)} onMouseLeave={() => setIsTimelinePaused(false)}>
-        <div key={animationCycle}>
+        <div>
         <section className="px-5 pb-5 pt-4 sm:px-6">
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Governed evidence population</h2><span className="text-[11px] font-medium text-[#9AA7B0]">12 required · 10 available · 2 outstanding</span><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
           <div className="relative">
-            {matchedDocuments.map((item, index) => <motion.article key={item.file} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 0.82, duration: 0.34, ease: [0.22, 1, 0.36, 1] }} className="relative pl-5 sm:pl-6">
-              {index < matchedDocuments.length - 1 ? <motion.div initial={reduceMotion ? false : { scaleY: 0 }} animate={{ scaleY: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 0.82 + 0.58, duration: 0.24, ease: [0.22, 1, 0.36, 1] }} style={{ transformOrigin: "top" }} className="absolute bottom-0 left-[1px] top-0 w-px bg-[#C9D6DE]" aria-hidden="true" /> : null}
-              <motion.span initial={reduceMotion ? false : { scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 0.82 + 0.4, duration: 0.2, ease: [0.22, 1, 0.36, 1] }} className="absolute left-0 top-[22px] z-10 h-[2px] w-[2px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" />
+            {matchedDocuments.map((item, index) => <article key={item.file} className="relative pl-5 sm:pl-6">
+              {index < matchedDocuments.length - 1 ? <div className="absolute bottom-0 left-[1px] top-0 w-px bg-[#C9D6DE]" aria-hidden="true" /> : null}
+              <span className="absolute left-0 top-[22px] z-10 h-[2px] w-[2px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" />
               {index === matchedDocuments.length - 1 ? <span className="absolute bottom-0 left-[-3px] h-1 w-2 bg-white" aria-hidden="true" /> : null}
               <p className="pb-2 pt-1 text-[10px] leading-4 tracking-tight text-[#66737F]">{item.connection}</p>
               <div className="flex items-center gap-3 px-3 py-3 sm:px-4">
@@ -185,21 +175,20 @@ export default function EvidenceRequired() {
                   <div className="min-w-0 flex-1"><div className="flex min-w-0 items-center gap-3"><p className="min-w-0 truncate text-[11px] font-semibold tracking-tight text-[#36404A]">{item.file}</p><span className="shrink-0 text-[11px] font-semibold tracking-tight text-[#4D5B66]">{item.confidence}</span><button type="button" onClick={() => showDocument(item)} className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] hover:text-[#0B74DE]">Open<ArrowRight className="h-3.5 w-3.5" /></button></div><p className="mt-0.5 truncate text-[10px] tracking-tight text-[#66737F]">{item.title}</p></div>
                 </div>
               </div>
-            </motion.article>)}
+            </article>)}
           </div>
         </section>
         <section className="border-t border-[#E7EEF2] px-5 pb-6 pt-5 sm:px-6">
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Evidence sufficiency log</h2><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
           <div className="space-y-3">
-            {evidenceLog.map((entry, index) => <motion.div key={entry.file} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={reduceMotion ? { duration: 0 } : { delay: matchedDocuments.length * 0.82 + 0.8 + index * 0.82, duration: 0.34, ease: [0.22, 1, 0.36, 1] }} className="relative grid grid-cols-[58px_24px_minmax(0,1fr)] gap-3 px-3 py-3 sm:grid-cols-[70px_26px_minmax(0,1fr)] sm:gap-4 sm:px-4">
-              {index < evidenceLog.length - 1 ? <motion.span initial={reduceMotion ? false : { scaleY: 0 }} animate={{ scaleY: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: matchedDocuments.length * 0.82 + 0.8 + index * 0.82 + 0.58, duration: 0.24, ease: [0.22, 1, 0.36, 1] }} style={{ transformOrigin: "top" }} className="absolute bottom-[-14px] left-[68px] hidden h-3 w-px bg-[#C9D6DE] sm:block" aria-hidden="true" /> : null}
+            {evidenceLog.map((entry, index) => <div key={entry.file} className="relative grid grid-cols-[58px_24px_minmax(0,1fr)] gap-3 px-3 py-3 sm:grid-cols-[70px_26px_minmax(0,1fr)] sm:gap-4 sm:px-4">
+              {index < evidenceLog.length - 1 ? <span className="absolute bottom-[-14px] left-[68px] hidden h-3 w-px bg-[#C9D6DE] sm:block" aria-hidden="true" /> : null}
               <time className="pt-1 font-mono text-[10px] tracking-tight text-[#7B8991]">{entry.time}</time>
-              <motion.span initial={reduceMotion ? false : { scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={reduceMotion ? { duration: 0 } : { delay: matchedDocuments.length * 0.82 + 0.8 + index * 0.82 + 0.4, duration: 0.2, ease: [0.22, 1, 0.36, 1] }} className="flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded check"><Check className="h-3 w-3 text-white" strokeWidth={3} /></motion.span>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded check"><Check className="h-3 w-3 text-white" strokeWidth={3} /></span>
               <div className="min-w-0"><p className="text-[11px] font-semibold tracking-tight text-[#36404A]">{entry.label}</p><p className="mt-1 text-[11px] leading-4 tracking-tight text-[#66737F]">{entry.detail}</p><p className="mt-1 truncate text-[10px] tracking-tight text-[#9AA7B0]">{entry.file}</p></div>
-            </motion.div>)}
+            </div>)}
           </div>
         </section>
-        </div>
         </div>
       </section>
       </div>
