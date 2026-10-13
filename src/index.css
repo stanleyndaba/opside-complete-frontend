@@ -740,7 +740,7 @@ html, body, #root {
 }
 
 .landing-google-sans > main > section.margin-standard-deliverable-section iframe {
-  background-color: #FFFFFF !important;
+  background-color: #E7E9EB !important;
 }
 
 /* Evidence plates: filed rather than floating. */
@@ -1163,8 +1163,8 @@ html, body, #root {
   color: #182026 !important;
 }
 .landing-google-sans.landing-google-sans > main > section.margin-standard-deliverable-section iframe {
-  background: #FFFFFF !important;
-  background-color: #FFFFFF !important;
+  background: #E7E9EB !important;
+  background-color: #E7E9EB !important;
 }
 
 /* Final surface guard: Enterprise and Margin Standard are light editorial sections, regardless of positional theming. */

@@ -149,7 +149,7 @@ function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; i
     <button
       type="button"
       onClick={onSelect}
-      className={`group grid w-full grid-cols-[28px_76px_26px_minmax(0,1fr)] items-center gap-2 rounded-none border-b border-[#E5E9EB] px-2 py-[4px] text-left transition-colors sm:grid-cols-[36px_94px_32px_minmax(0,1fr)] sm:gap-2 sm:px-3 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F5F8FB]"}`}
+      className={`group grid w-full grid-cols-[28px_76px_26px_minmax(0,1fr)] items-center gap-2 rounded-none border-b border-[#E5E9EB] px-2 py-[6px] text-left transition-colors sm:grid-cols-[36px_94px_32px_minmax(0,1fr)] sm:gap-2 sm:px-3 ${selected ? "bg-[#DCEEFF]" : "bg-transparent hover:bg-[#F5F8FB]"}`}
       aria-pressed={selected}
     >
       <span className={`flex h-[17px] w-[17px] items-center justify-center rounded-[5px] ${selected ? "bg-[#1689E5]" : "bg-transparent text-[#9AA5AE]"}`}>
@@ -158,7 +158,7 @@ function ControlRowView({ row, index, selected, onSelect }: { row: ControlRow; i
       <span className="truncate text-[9px] font-medium tracking-tight text-[#8A949C] sm:text-[9px]">{row.reference}</span>
       <span className={`flex h-[17px] w-[17px] items-center justify-center rounded-full ${state.className}`}>{state.icon}</span>
       <span className="min-w-0">
-        <span className={`block truncate text-[8px] font-medium leading-3 tracking-tight sm:text-[9px] ${selected ? "text-[#17242D]" : "text-[#26343D]"}`}>{row.title}</span>
+        <span className={`block truncate text-[9px] font-medium leading-3.5 tracking-tight sm:text-[10px] ${selected ? "text-[#17242D]" : "text-[#26343D]"}`}>{row.title}</span>
       </span>
     </button>
   );
@@ -170,7 +170,7 @@ export default function MarginStandardDeliverable() {
   const rows = view === "finding" ? findingRows : closeoutRows;
 
   return (
-    <main className="min-h-screen overflow-x-auto !bg-white font-google-sans text-[#202A31]" style={{ backgroundColor: "#FFFFFF" }}>
+    <main className="min-h-screen overflow-x-auto bg-[#E7E9EB] font-google-sans text-[#202A31]" style={{ backgroundColor: "#E7E9EB" }}>
       <div className="mx-auto min-w-[600px] max-w-[820px] px-3 py-3 sm:px-4 sm:py-4"><section className="rounded-[8px] border border-white/80 bg-white/72 p-3 shadow-[0_1px_2px_rgba(49,62,72,0.04)] backdrop-blur-xl sm:p-4" aria-label="Amazon Financial Review actuarial control board">
         <header className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 flex-col items-start gap-2">
