@@ -269,8 +269,8 @@ function documentVariant(document: string) {
 
 function DocumentMark({ document }: { document: string }) {
   const variant = documentVariant(document);
-  if (variant === 'csv') return <img src="/evidence-csv-mark.png" alt="CSV" className="h-4 w-4 shrink-0 object-contain" />;
-  if (variant === 'spreadsheet') return <img src="/evidence-spreadsheet-mark.png" alt="Spreadsheet" className="h-4 w-4 shrink-0 object-contain" />;
+  if (variant === 'csv') return <img src="/excel-icon-margin.png" alt="CSV" className="h-4 w-4 shrink-0 object-contain" />;
+  if (variant === 'spreadsheet') return <img src="/excel-icon-margin.png" alt="Spreadsheet" className="h-4 w-4 shrink-0 object-contain" />;
   if (variant === 'image') return <img src="/gd.png" alt="Google Drive" className="h-4 w-4 shrink-0 rounded-[3px] object-contain" />;
   if (variant === 'email') return <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 shrink-0 rounded-[3px] object-contain" />;
   if (variant === 'table') return <img src="/gd.png" alt="Google Drive" className="h-4 w-4 shrink-0 rounded-[3px] object-contain" />;

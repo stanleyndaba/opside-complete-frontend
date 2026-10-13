@@ -49,7 +49,7 @@ export default function ProgressReview() {
   }, [isTimelinePaused, reduceMotion]);
   const getDocumentIcon = (event: ProgressEvent, doc: string) => {
     if (event.status === "partial reimbursement identified") return { src: "/gmailicon.png", alt: "Amazon response" };
-    if (doc.toLowerCase().endsWith(".csv")) return { src: "/evidence-csv-mark.png", alt: "CSV" };
+    if (doc.toLowerCase().endsWith(".csv")) return { src: "/excel-icon-margin.png", alt: "CSV" };
     return { src: "/pdf-file-icon.webp", alt: "PDF" };
   };
   const openDoc = (doc: string) => {

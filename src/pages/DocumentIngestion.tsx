@@ -55,7 +55,7 @@ function SourceMark({ source }: { source: Source }) {
 
 function DocumentMark({ type }: { type: DocumentRecord['type'] }) {
   if (type === 'GMAIL') return <img src="/gmailicon.png" alt="" className="h-4 w-4 object-contain opacity-80" />;
-  if (type === 'CSV') return <img src="/evidence-csv-mark.png" alt="CSV" className="h-5 w-5 object-contain opacity-80" />;
+  if (type === 'CSV') return <img src="/excel-icon-margin.png" alt="CSV" className="h-5 w-5 object-contain opacity-80" />;
   return <img src="/pdf-file-icon.webp" alt="" className="h-5 w-5 object-contain opacity-75" />;
 }
 
