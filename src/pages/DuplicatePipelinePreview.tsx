@@ -353,15 +353,15 @@ function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
                 <p className="mt-2 text-[13px] font-semibold tracking-tight text-[#36404A]">Drop records for review</p>
                 <p className="mt-1 text-[10px] tracking-tight text-[#8A99A5]">Margin is connecting source files to the operating event.</p>
               </div>
-              {intakeSources.map((source, index) => (
+              {[...intakeSources, ...intakeSources].map((source, index) => (
                 <motion.span
-                  key={source.name}
-                  initial={reduceMotion ? { opacity: 0.75, scale: 0.86 } : { opacity: 0, x: (index % 2 ? 1 : -1) * (118 + (index % 6) * 24), y: index % 2 ? -118 - (index % 4) * 10 : 116 + (index % 4) * 10, scale: 0.82 }}
-                  animate={stage === 'dropzone' ? { opacity: 0.9, x: 0, y: 0, scale: 0.78 } : { opacity: 0.25, x: 0, y: 0, scale: 0.62 }}
-                  transition={reduceMotion ? { duration: 0 } : { delay: index * 0.16, duration: 1.35, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute left-1/2 top-1/2 flex h-9 -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 rounded-full border border-[#C8DCE5] bg-white px-3.5 text-[10px] font-semibold tracking-tight text-[#527284] shadow-[0_8px_20px_rgba(37,73,91,0.14)]"
+                  key={`${source.name}-${index}`}
+                  initial={reduceMotion ? { opacity: 0.75, scale: 1 } : { opacity: 0, x: (index % 2 ? 1 : -1) * (118 + (index % 6) * 24), y: index % 2 ? -118 - (index % 4) * 10 : 116 + (index % 4) * 10, scale: 0.92 }}
+                  animate={stage === 'dropzone' ? { opacity: 0.9, x: 0, y: 0, scale: 1 } : { opacity: 0.25, x: 0, y: 0, scale: 0.78 }}
+                  transition={reduceMotion ? { duration: 0 } : { delay: index * 0.12, duration: 2.7, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute left-1/2 top-1/2 flex h-12 -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full border border-[#C8DCE5] bg-white px-5 text-[12px] font-semibold tracking-tight text-[#527284] shadow-[0_10px_24px_rgba(37,73,91,0.16)]"
                 >
-                  <img src={source.iconSrc} alt={source.iconAlt} className="h-4 w-4 shrink-0 rounded-[3px] object-contain" />
+                  <img src={source.iconSrc} alt={source.iconAlt} className="h-5 w-5 shrink-0 rounded-[3px] object-contain" />
                   <span>{source.name}</span>
                 </motion.span>
               ))}
