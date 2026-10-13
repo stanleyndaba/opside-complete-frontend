@@ -3,6 +3,7 @@ import { Files, Layers3, ListChecks, Search, SlidersHorizontal } from 'lucide-re
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
+import { RecoveryPipelineSequence } from './DuplicatePipelinePreview';
 
 const operationSteps = [
   'Decision-grade audit position established',
@@ -61,7 +62,7 @@ function FastWorkspaceTypewriter({ text, onComplete }: { text: string; onComplet
   return <>{visibleText}{!reduceMotion && visibleText.length < text.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</>;
 }
 
-function WorkspaceResponseBuild() {
+function WorkspaceResponseBuild({ onFirstParagraphComplete }: { onFirstParagraphComplete?: () => void }) {
   const reduceMotion = useReducedMotion();
   const [activeItem, setActiveItem] = useState(0);
   const items = [
@@ -92,6 +93,10 @@ function WorkspaceResponseBuild() {
   const highlightClasses: Record<string, string> = { yellow: 'bg-[#FFF1A8]', blue: 'bg-[#DDEBFF]', green: 'bg-[#DDF4E5]', purple: 'bg-[#E9DEFF]' };
 
   const advance = () => {
+    if (activeItem === 0) {
+      onFirstParagraphComplete?.();
+      return;
+    }
     if (reduceMotion) return;
     window.setTimeout(() => setActiveItem((current) => current + 1 >= items.length ? 0 : current + 1), 140);
   };
@@ -104,7 +109,7 @@ function WorkspaceResponseBuild() {
       </header>
       <section className="py-4" aria-labelledby="workspace-opening-position">
         <div className="space-y-1.5">
-          {items.map((item, index) => {
+          {items.slice(0, 1).map((item, index) => {
             const visible = reduceMotion || index <= activeItem;
             const active = reduceMotion || index === activeItem;
             const typedContent = reduceMotion ? item.text : active ? <FastWorkspaceTypewriter text={item.text} onComplete={advance} /> : index < activeItem ? item.text : null;
@@ -130,6 +135,8 @@ function WorkspaceResponseBuild() {
 }
 
 export default function RecoveryWorkspace() {
+  const [showRecoveryPipeline, setShowRecoveryPipeline] = useState(false);
+
   usePageMeta({
     title: 'Recovery Workspace | Margin',
     description: 'Review the Audit position and determine the appropriate enterprise recovery operating structure.',
@@ -166,7 +173,8 @@ export default function RecoveryWorkspace() {
               <span className="relative z-10 h-[7px] w-[7px] rounded-full bg-[#0B74DE] shadow-[0_0_0_3px_white]" title={assessmentTimeline[0]} />
             </div>
             <div className="enterprise-assessment-copy pl-12" style={{ zoom: 0.75 }}>
-              <WorkspaceResponseBuild />
+              <WorkspaceResponseBuild onFirstParagraphComplete={() => setShowRecoveryPipeline(true)} />
+              {showRecoveryPipeline ? <RecoveryPipelineSequence /> : null}
 
             <section className="py-4" aria-labelledby="what-covers">
               <h2 id="what-covers" className="mt-1.5 inline-block font-google-sans text-[15px] font-normal leading-tight tracking-[-0.02em]">What the control review establishes</h2>

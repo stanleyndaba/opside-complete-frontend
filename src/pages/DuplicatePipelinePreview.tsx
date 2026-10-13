@@ -513,6 +513,43 @@ function RecoveryCard({ card, onApprove }: { card: RecordCard; onApprove: () => 
   </article>;
 }
 
+export function RecoveryPipelineSequence() {
+  const [stage, setStage] = useState<'register' | 'artifact-analysis' | 'claims'>('register');
+  const [activeTab, setActiveTab] = useState<TabId>('approval');
+  const [query, setQuery] = useState('');
+  const [queueMode, setQueueMode] = useState<'all' | 'priority' | 'recent'>('all');
+  const [toast, setToast] = useState<string | null>(null);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setStage('artifact-analysis'), 4200);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const tab = tabs.find((item) => item.id === activeTab)!;
+  const normalizedQuery = query.trim().toLowerCase();
+  const visibleCards = useMemo(() => {
+    const filtered = cards[activeTab].filter((card) => !normalizedQuery || Object.values(card).join(' ').toLowerCase().includes(normalizedQuery));
+    if (queueMode === 'priority') return [...filtered].sort((a, b) => (a.priority ? -1 : 1) - (b.priority ? -1 : 1));
+    if (queueMode === 'recent') return [...filtered].sort((a, b) => a.movement.localeCompare(b.movement));
+    return filtered;
+  }, [activeTab, normalizedQuery, queueMode]);
+
+  const approveCard = () => {
+    setToast('Filing control recorded. Submission is now in progress.');
+    window.setTimeout(() => setToast(null), 3200);
+  };
+
+  return <section className="mt-5" aria-label="Recovery evidence and claims progression">
+    {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
+    {stage === 'register' ? <EvidenceRegisterStage /> : null}
+    {stage === 'artifact-analysis' ? <ArtifactAnalysisStage onComplete={() => setStage('claims')} /> : null}
+    {stage === 'claims' ? <>
+      <div className="max-h-24 overflow-x-auto border-y border-[#E8EFF1] opacity-100"><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight ${activeTab === item.id ? 'border-[#0B74DE] text-[#0B74DE]' : 'border-transparent text-[#66737F] hover:text-[#182026]'}`}>{item.label}</button>)}</div></div>
+      <div id="recovery-claims" className="px-5 py-5 sm:px-6"><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-google-sans text-[14px] font-normal tracking-tight text-[#182026]">Awaiting Seller Approval</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">$186,420</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">Supported cohort queue. Review evidence sufficiency, materiality, control exceptions, and expected recovery before anything is submitted.</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{tab.count} governed positions in this queue</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><button type="button" onClick={() => setQueueMode(queueMode === 'all' ? 'priority' : queueMode === 'priority' ? 'recent' : 'all')} className="hidden h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A] sm:inline-flex">Review queue: {queueMode === 'all' ? 'All cases' : queueMode === 'priority' ? 'Priority first' : 'Recently updated'}<ChevronDown className="h-3.5 w-3.5" /></button></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={approveCard} />)}</div></div>
+    </> : null}
+  </section>;
+}
+
 export default function FilingPipelinePreview() {
   const [activeTab, setActiveTab] = useState<TabId>("approval");
   const [query, setQuery] = useState("");
