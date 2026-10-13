@@ -326,7 +326,7 @@ function HighlightedDescription({ description, highlight }: { description: strin
   highlights.forEach(({ value, start }, index) => {
     if (start < cursor) return;
     if (start > cursor) parts.push(description.slice(cursor, start));
-    parts.push(<mark key={`${value}-${index}`} className="rounded-[2px] bg-[#DDEEFF] px-0.5 font-bold text-[#1E5878] underline decoration-[#7DB6D2] decoration-1 underline-offset-2">{value}</mark>);
+    parts.push(<mark key={`${value}-${index}`} data-evidence-highlight="true" style={{ backgroundColor: '#DDEEFF', color: '#1E5878', textDecorationColor: '#7DB6D2' }} className="rounded-[2px] px-0.5 font-bold underline decoration-1 underline-offset-2">{value}</mark>);
     cursor = start + value.length;
   });
   if (cursor < description.length) parts.push(description.slice(cursor));
@@ -365,8 +365,10 @@ function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
   const analysisComplete = reduceMotion || activeItem >= artifactAnalysisItems.length;
 
   useEffect(() => {
-    if (analysisComplete) onComplete();
-  }, [analysisComplete, onComplete]);
+    if (!analysisComplete) return;
+    const completionTimer = window.setTimeout(onComplete, reduceMotion ? 3200 : 0);
+    return () => window.clearTimeout(completionTimer);
+  }, [analysisComplete, onComplete, reduceMotion]);
 
   const advance = () => {
     if (reduceMotion) return;
