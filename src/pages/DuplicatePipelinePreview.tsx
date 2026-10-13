@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ArrowUpRight, Check, ChevronDown, Files, Layers3, ListChecks, Search, SlidersHorizontal } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -295,29 +295,42 @@ function enterpriseDocumentName(document: string) {
 }
 
 const evidenceRegister = [
-  { name: 'FBA inbound shipment plan', type: 'CSV', highlight: 'shipment plan', description: 'Planned carton count, destination FC, SKU mix, and declared units for the inbound movement.' },
-  { name: 'Carrier proof of delivery record', type: 'PDF', highlight: 'proof of delivery', description: 'Signed delivery evidence used to test the handoff between the carrier and fulfilment centre.' },
-  { name: 'Receiving discrepancy report', type: 'CSV', highlight: 'receiving discrepancy', description: 'Amazon-recognized quantity variance between dispatched, delivered, and received units.' },
-  { name: 'FBA inventory adjustment ledger', type: 'CSV', highlight: 'inventory adjustment', description: 'Unit-level adjustments showing when inventory moved, changed state, or left the ledger.' },
-  { name: 'Fulfilment centre transfer manifest', type: 'PDF', highlight: 'transfer manifest', description: 'Internal transfer routing, carton identifiers, and fulfilment-centre movement history.' },
-  { name: 'Removal order reconciliation', type: 'XLS', highlight: 'removal order', description: 'Requested, shipped, and credited units for removal activity requiring financial reconciliation.' },
-  { name: 'Customer return disposition report', type: 'CSV', highlight: 'return disposition', description: 'Return receipt, condition, disposition, and reimbursement state for returned customer units.' },
-  { name: 'Reimbursement case correspondence', type: 'MAIL', highlight: 'case correspondence', description: 'Amazon response history, requested evidence, submission events, and unresolved case language.' },
-  { name: 'Settlement transaction detail', type: 'CSV', highlight: 'settlement transaction', description: 'Payout lines, fees, reimbursements, reversals, and adjustments across the relevant settlement period.' },
-  { name: 'Fee assessment schedule', type: 'XLS', highlight: 'fee assessment', description: 'Fulfilment, storage, referral, and service fees matched to the affected order or inventory event.' },
-  { name: 'Amazon reimbursement approval notice', type: 'PDF', highlight: 'approval notice', description: 'Approved amount, case reference, decision date, and the conditions attached to the reimbursement.' },
-  { name: 'Account health and performance extract', type: 'CSV', highlight: 'account health', description: 'Operational context used to separate isolated recovery events from recurring account exposure.' },
-  { name: 'SKU cost basis schedule', type: 'XLS', highlight: 'cost basis', description: 'Entity-specific unit economics used to test valuation, entitlement, and materiality.' },
-  { name: 'Marketplace order population', type: 'CSV', highlight: 'order population', description: 'Order identifiers, marketplace, dates, quantities, and financial state across the reviewed scope.' },
-  { name: 'Inventory ageing and disposition file', type: 'CSV', highlight: 'inventory ageing', description: 'Age, location, condition, and disposition indicators for units under operational review.' },
-  { name: 'Payout reconciliation workbook', type: 'XLS', highlight: 'payout reconciliation', description: 'Expected, reported, and cleared amounts tied back to settlement and bank-recognized activity.' },
-  { name: 'Supplier and commercial invoice pack', type: 'PDF', highlight: 'commercial invoice', description: 'Source documentation supporting ownership, unit value, supplier relationship, and recoverable basis.' },
+  { name: 'FBA inbound shipment plan', type: 'CSV', highlight: ['shipment plan', 'declared units'], description: 'Planned carton count, destination FC, SKU mix, and declared units for the inbound movement.' },
+  { name: 'Carrier proof of delivery record', type: 'PDF', highlight: ['proof of delivery', 'carrier'], description: 'Signed delivery evidence used to test the handoff between the carrier and fulfilment centre.' },
+  { name: 'Receiving discrepancy report', type: 'CSV', highlight: ['quantity variance', 'received units'], description: 'Amazon-recognized quantity variance between dispatched, delivered, and received units.' },
+  { name: 'FBA inventory adjustment ledger', type: 'CSV', highlight: ['inventory adjustment', 'Unit-level'], description: 'Unit-level adjustments showing when inventory moved, changed state, or left the ledger.' },
+  { name: 'Fulfilment centre transfer manifest', type: 'PDF', highlight: ['transfer manifest', 'carton identifiers'], description: 'Internal transfer routing, carton identifiers, and fulfilment-centre movement history.' },
+  { name: 'Removal order reconciliation', type: 'XLS', highlight: ['removal activity', 'credited units'], description: 'Requested, shipped, and credited units for removal activity requiring financial reconciliation.' },
+  { name: 'Customer return disposition report', type: 'CSV', highlight: ['return receipt', 'reimbursement state'], description: 'Return receipt, condition, disposition, and reimbursement state for returned customer units.' },
+  { name: 'Reimbursement case correspondence', type: 'MAIL', highlight: ['requested evidence', 'unresolved case'], description: 'Amazon response history, requested evidence, submission events, and unresolved case language.' },
+  { name: 'Settlement transaction detail', type: 'CSV', highlight: ['Payout lines', 'reversals'], description: 'Payout lines, fees, reimbursements, reversals, and adjustments across the relevant settlement period.' },
+  { name: 'Fee assessment schedule', type: 'XLS', highlight: ['storage', 'service fees'], description: 'Fulfilment, storage, referral, and service fees matched to the affected order or inventory event.' },
+  { name: 'Amazon reimbursement approval notice', type: 'PDF', highlight: ['Approved amount', 'decision date'], description: 'Approved amount, case reference, decision date, and the conditions attached to the reimbursement.' },
+  { name: 'Account health and performance extract', type: 'CSV', highlight: ['isolated recovery', 'recurring account'], description: 'Operational context used to separate isolated recovery events from recurring account exposure.' },
+  { name: 'SKU cost basis schedule', type: 'XLS', highlight: ['unit economics', 'materiality'], description: 'Entity-specific unit economics used to test valuation, entitlement, and materiality.' },
+  { name: 'Marketplace order population', type: 'CSV', highlight: ['Order identifiers', 'financial state'], description: 'Order identifiers, marketplace, dates, quantities, and financial state across the reviewed scope.' },
+  { name: 'Inventory ageing and disposition file', type: 'CSV', highlight: ['disposition indicators', 'operational review'], description: 'Age, location, condition, and disposition indicators for units under operational review.' },
+  { name: 'Payout reconciliation workbook', type: 'XLS', highlight: ['cleared amounts', 'bank-recognized'], description: 'Expected, reported, and cleared amounts tied back to settlement and bank-recognized activity.' },
+  { name: 'Supplier and commercial invoice pack', type: 'PDF', highlight: ['ownership', 'recoverable basis'], description: 'Source documentation supporting ownership, unit value, supplier relationship, and recoverable basis.' },
 ];
 
-function HighlightedDescription({ description, highlight }: { description: string; highlight: string }) {
-  const start = description.indexOf(highlight);
-  if (start < 0) return <>{description}</>;
-  return <>{description.slice(0, start)}<mark className="rounded-[2px] bg-[#EAF5F9] px-0.5 font-semibold text-[#2D6178]">{highlight}</mark>{description.slice(start + highlight.length)}</>;
+function HighlightedDescription({ description, highlight }: { description: string; highlight: string | string[] }) {
+  const highlights = (Array.isArray(highlight) ? highlight : [highlight])
+    .map((value) => ({ value, start: description.indexOf(value) }))
+    .filter(({ start }) => start >= 0)
+    .sort((a, b) => a.start - b.start);
+  if (!highlights.length) return <>{description}</>;
+
+  const parts: ReactNode[] = [];
+  let cursor = 0;
+  highlights.forEach(({ value, start }, index) => {
+    if (start < cursor) return;
+    if (start > cursor) parts.push(description.slice(cursor, start));
+    parts.push(<mark key={`${value}-${index}`} className="rounded-[2px] bg-[#EAF5F9] px-0.5 font-semibold text-[#2D6178]">{value}</mark>);
+    cursor = start + value.length;
+  });
+  if (cursor < description.length) parts.push(description.slice(cursor));
+  return <>{parts}</>;
 }
 
 function EvidenceRegisterStage() {
