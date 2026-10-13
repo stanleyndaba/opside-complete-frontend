@@ -39,7 +39,7 @@ const tabs: Array<{ id: TabId; label: string; count: number }> = [
 ];
 
 const INTAKE_REPLAY_DELAY_MS = 36000;
-const ARTIFACT_ANALYSIS_DWELL_MS = 12000;
+const ARTIFACT_ANALYSIS_DWELL_MS = 2000;
 
 const cards: Record<TabId, RecordCard[]> = {
   approval: [{ reference: "REC-2026-004817", type: "Governed event cohort", title: "Inbound Receiving Cohort", amount: "$14,832", detail: "Three related inbound events were reconstructed across Amazon receiving, carrier delivery, procurement, inventory movement, and settlement records. Supported exposure is isolated from unresolved items.", meta: "NTH-US-01 · FY2026 Q1 · 3 shipments · 1,240 expected / 1,168 received · ONT8 · LGB8 · PHX7 · 72 units", priority: "Material position", proof: "Sufficiency gate passed", days: "Policy window valid", route: "Seller Central / FBA inventory reimbursement / Controlled inbound cohort", packet: "SP-API snapshot, POD, receiving reports, ERP ledger, settlement clearing", safety: "No duplicate credit identified · clearing test complete", checks: ["Event identity resolved", "Valuation basis verified", "Seller approval required"], status: "Approve controlled action", next: "Approve controlled filing", movement: "Updated 9 minutes ago", docs: ["EvidenceIndex-REC-2026-004817.csv", "ShipmentPopulation-FY2026.json", "ReceivingCohort-ONT8-LGB8-PHX7.csv", "ValuationBasis-REC-2026-004817.xlsx"], tone: "ready" }],
