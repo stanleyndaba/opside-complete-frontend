@@ -348,16 +348,16 @@ function EvidenceRegisterStage() {
 
 const artifactAnalysisItems = [
   {
-    label: 'Record relationships established',
-    text: 'Margin connected the inbound shipment plan, carrier proof of delivery, and Amazon receiving records. The supplied population shows 1,240 expected units against 1,168 received, isolating a 72-unit receiving variance.',
+    highlight: ['separates independent financial events', 'duplicate records', 'recurring control failures'],
+    text: 'The Audit separates independent financial events from duplicate records, recurring control failures, and activity already accounted for. Margin connected the inbound shipment plan, carrier proof of delivery, Amazon receiving records, settlement schedule, inventory ledger, and reimbursement correspondence so the reviewed population can be assessed as a governed operating position rather than a loose collection of files.',
   },
   {
-    label: 'Financial position separated',
-    text: 'The settlement schedule, inventory ledger, and reimbursement correspondence were matched against the operating events. Supported exposure is separated from records that still require confirmation before anything is treated as recoverable.',
+    highlight: ['single recovery workflow', 'recurring exposure pattern', 'event-level entitlement'],
+    text: 'A single recovery workflow can address one supported event, but it does not establish whether the same control failure is recurring across the account. Margin distinguishes an isolated event from a repeated exposure pattern, then connects that pattern to the relevant marketplace, legal entity, settlement period, and evidence population before any recovery position is treated as supportable.',
   },
   {
-    label: 'Next controlled position',
-    text: 'The evidence is sufficient to form a governed recovery cohort. Margin linked the source records, checked for duplicate credit, and prepared the position for review before any filing or seller action.',
+    highlight: ['governed recovery cohort', 'duplicate credit', 'controlled preparation'],
+    text: 'The evidence is sufficient to form a governed recovery cohort. Margin linked the source records, tested the receiving variance against the related financial events, checked for duplicate credit, and separated supported exposure from positions that still require confirmation. The resulting position is ready for controlled preparation and review before any filing or seller action.',
   },
 ] as const;
 
@@ -372,29 +372,26 @@ function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
     return () => window.clearTimeout(completionTimer);
   }, [analysisComplete, onComplete, reduceMotion]);
 
-  const advance = () => {
-    if (reduceMotion) return;
-    window.setTimeout(() => setActiveItem((current) => current + 1), 220);
-  };
+  useEffect(() => {
+    if (reduceMotion || activeItem >= artifactAnalysisItems.length) return;
+    const advanceTimer = window.setTimeout(() => setActiveItem((current) => current + 1), 1800);
+    return () => window.clearTimeout(advanceTimer);
+  }, [activeItem, reduceMotion]);
 
   return <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="px-5 pb-5 sm:px-6">
-    <div className="rounded-[10px] border border-[#D8E3E8] bg-white p-4 sm:p-5">
-      <div className="border-b border-[#E3ECEF] pb-3">
+    <div className="bg-white py-1 sm:py-2">
+      <div className="max-w-[980px]">
         <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Artifact analysis</p>
-        <h2 className="mt-1 font-google-sans text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">What the assembled record establishes</h2>
+        <h2 className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[22px]">What the assembled record establishes</h2>
         <p className="mt-1 text-[11px] leading-5 tracking-tight text-[#66737F]">Margin is reading the connected artifacts before presenting a governed position for review.</p>
       </div>
-      <div className="space-y-4 pt-4" aria-live="polite">
+      <div className="mt-5 max-w-[980px] space-y-5" aria-live="polite">
         {artifactAnalysisItems.map((item, index) => {
-          const visible = reduceMotion || index <= activeItem;
-          const active = reduceMotion || index === activeItem;
-          return <motion.div key={item.label} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8 }} transition={{ duration: 0.22 }} className="grid gap-1.5 sm:grid-cols-[190px_minmax(0,1fr)] sm:gap-5">
-            <p className="text-[10px] font-semibold tracking-tight text-[#527284]">{item.label}</p>
-            <p className="text-[11px] leading-6 tracking-tight text-[#595E68]">{reduceMotion || !active ? (index < activeItem || reduceMotion ? item.text : null) : <FastDuplicateTypewriter text={item.text} onComplete={advance} />}</p>
-          </motion.div>;
+          const visible = reduceMotion || index < activeItem;
+          return <motion.p key={item.text} initial={{ opacity: 0, y: 8 }} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8 }} transition={{ duration: 0.35 }} className="text-[12px] leading-6 tracking-tight text-[#595E68] sm:text-[13px] sm:leading-7"><HighlightedDescription description={item.text} highlight={item.highlight} /></motion.p>;
         })}
       </div>
-      <p className="mt-4 text-[9px] font-medium tracking-tight text-[#8A99A5]">{analysisComplete ? 'Artifact analysis complete · loading governed positions next.' : 'Margin is connecting source artifacts and separating supported evidence from unresolved signal.'}</p>
+      <p className="mt-6 max-w-[980px] text-[10px] font-medium tracking-tight text-[#8A99A5]">{analysisComplete ? 'Artifact analysis complete · loading governed positions next.' : 'Margin is connecting source artifacts and separating supported evidence from unresolved signal.'}</p>
     </div>
   </motion.div>;
 }
