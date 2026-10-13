@@ -326,7 +326,7 @@ function HighlightedDescription({ description, highlight }: { description: strin
   highlights.forEach(({ value, start }, index) => {
     if (start < cursor) return;
     if (start > cursor) parts.push(description.slice(cursor, start));
-    parts.push(<mark key={`${value}-${index}`} className="rounded-[2px] bg-[#EAF5F9] px-0.5 font-semibold text-[#2D6178]">{value}</mark>);
+    parts.push(<mark key={`${value}-${index}`} className="rounded-[2px] bg-[#DDEEFF] px-0.5 font-bold text-[#1E5878] underline decoration-[#7DB6D2] decoration-1 underline-offset-2">{value}</mark>);
     cursor = start + value.length;
   });
   if (cursor < description.length) parts.push(description.slice(cursor));
