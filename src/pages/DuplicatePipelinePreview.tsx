@@ -344,6 +344,57 @@ function EvidenceRegisterStage() {
   </motion.div>;
 }
 
+const artifactAnalysisItems = [
+  {
+    label: 'Record relationships established',
+    text: 'Margin connected the inbound shipment plan, carrier proof of delivery, and Amazon receiving records. The supplied population shows 1,240 expected units against 1,168 received, isolating a 72-unit receiving variance.',
+  },
+  {
+    label: 'Financial position separated',
+    text: 'The settlement schedule, inventory ledger, and reimbursement correspondence were matched against the operating events. Supported exposure is separated from records that still require confirmation before anything is treated as recoverable.',
+  },
+  {
+    label: 'Next controlled position',
+    text: 'The evidence is sufficient to form a governed recovery cohort. Margin linked the source records, checked for duplicate credit, and prepared the position for review before any filing or seller action.',
+  },
+] as const;
+
+function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
+  const reduceMotion = useReducedMotion();
+  const [activeItem, setActiveItem] = useState(0);
+  const analysisComplete = reduceMotion || activeItem >= artifactAnalysisItems.length;
+
+  useEffect(() => {
+    if (analysisComplete) onComplete();
+  }, [analysisComplete, onComplete]);
+
+  const advance = () => {
+    if (reduceMotion) return;
+    window.setTimeout(() => setActiveItem((current) => current + 1), 220);
+  };
+
+  return <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="px-5 pb-5 sm:px-6">
+    <div className="rounded-[10px] border border-[#D8E3E8] bg-white p-4 sm:p-5">
+      <div className="border-b border-[#E3ECEF] pb-3">
+        <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Artifact analysis</p>
+        <h2 className="mt-1 font-google-sans text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">What the assembled record establishes</h2>
+        <p className="mt-1 text-[11px] leading-5 tracking-tight text-[#66737F]">Margin is reading the connected artifacts before presenting a governed position for review.</p>
+      </div>
+      <div className="space-y-4 pt-4" aria-live="polite">
+        {artifactAnalysisItems.map((item, index) => {
+          const visible = reduceMotion || index <= activeItem;
+          const active = reduceMotion || index === activeItem;
+          return <motion.div key={item.label} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8 }} transition={{ duration: 0.22 }} className="grid gap-1.5 sm:grid-cols-[190px_minmax(0,1fr)] sm:gap-5">
+            <p className="text-[10px] font-semibold tracking-tight text-[#527284]">{item.label}</p>
+            <p className="text-[11px] leading-6 tracking-tight text-[#595E68]">{reduceMotion || !active ? (index < activeItem || reduceMotion ? item.text : null) : <FastDuplicateTypewriter text={item.text} onComplete={advance} />}</p>
+          </motion.div>;
+        })}
+      </div>
+      <p className="mt-4 text-[9px] font-medium tracking-tight text-[#8A99A5]">{analysisComplete ? 'Artifact analysis complete · loading governed positions next.' : 'Margin is connecting source artifacts and separating supported evidence from unresolved signal.'}</p>
+    </div>
+  </motion.div>;
+}
+
 function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
   const reduceMotion = useReducedMotion();
   return (
@@ -443,7 +494,7 @@ export default function FilingPipelinePreview() {
   const [toast, setToast] = useState<string | null>(null);
   const [casesVisible, setCasesVisible] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
-  const [intakeStage, setIntakeStage] = useState<'analysis' | 'dropzone' | 'documents' | 'register' | 'claims'>('analysis');
+  const [intakeStage, setIntakeStage] = useState<'analysis' | 'dropzone' | 'documents' | 'register' | 'artifact-analysis' | 'claims'>('analysis');
   const [intakeCycle, setIntakeCycle] = useState(0);
 
   useEffect(() => {
@@ -451,20 +502,17 @@ export default function FilingPipelinePreview() {
     setIntakeStage('dropzone');
     const documentTimer = window.setTimeout(() => setIntakeStage('documents'), 2000);
     const registerTimer = window.setTimeout(() => setIntakeStage('register'), 5000);
-    const claimsTimer = window.setTimeout(() => {
-      setIntakeStage('claims');
-      setCasesVisible(true);
-    }, 9000);
+    const artifactTimer = window.setTimeout(() => setIntakeStage('artifact-analysis'), 8000);
     const replayTimer = window.setTimeout(() => {
       setCasesVisible(false);
       setAnalysisComplete(false);
       setIntakeStage('analysis');
       setIntakeCycle((cycle) => cycle + 1);
-    }, 16000);
+    }, 22000);
     return () => {
       window.clearTimeout(documentTimer);
       window.clearTimeout(registerTimer);
-      window.clearTimeout(claimsTimer);
+      window.clearTimeout(artifactTimer);
       window.clearTimeout(replayTimer);
     };
   }, [analysisComplete]);
@@ -482,7 +530,7 @@ export default function FilingPipelinePreview() {
     setToast("Filing control recorded. Submission is now in progress.");
     window.setTimeout(() => setToast(null), 3200);
   };
-  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6"><aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside><section className="min-w-0 flex-1 bg-white">{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setAnalysisComplete(true)} /></div> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "register" ? <EvidenceRegisterStage /> : null}<div className={casesVisible ? "max-h-24 overflow-x-auto opacity-100 transition-all duration-700 ease-out" : "max-h-0 overflow-hidden opacity-0 transition-all duration-500 ease-out"}><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight transition-colors ${activeTab === item.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>{item.label}</button>)}</div></div><div id="approval-queue" className={casesVisible ? "max-h-[4000px] overflow-hidden px-5 py-5 opacity-100 transition-all duration-700 ease-out sm:px-6" : "max-h-0 overflow-hidden px-5 py-0 opacity-0 transition-all duration-500 ease-out sm:px-6"}><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-google-sans text-[14px] font-normal tracking-tight text-[#182026]">{sectionTitle}</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "$186,420" : tab.id === "filing" ? "$94,680" : tab.id === "filed" ? "$312,740" : tab.id === "attention" ? "$58,940" : tab.id === "payout" ? "$146,280" : "$1.84M"}</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "Supported cohort queue. Review evidence sufficiency, materiality, control exceptions, and expected recovery before anything is submitted." : tab.id === "filing" ? "Live submissions with locked packets, receipt capture, response windows, and cross-system financial state." : tab.id === "attention" ? "Control exceptions held before filing because source relationships, valuation, or clearing evidence require resolution." : "Margin keeps the event record, evidence state, Amazon response, settlement truth, and next controlled action connected."}</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{tab.count} governed positions in this queue</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><div className="relative hidden sm:block"><button type="button" onClick={() => setQueueMode(queueMode === "all" ? "priority" : queueMode === "priority" ? "recent" : "all")} className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A]">Review queue: {queueMode === "all" ? "All cases" : queueMode === "priority" ? "Priority first" : "Recently updated"}<ChevronDown className="h-3.5 w-3.5" /></button></div></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={approveCard} />)}{visibleCards.length === 0 ? <div className="rounded-[10px] border border-dashed border-[#D8E3E8] px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}</div></div></section></div></main>;
+  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6"><aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside><section className="min-w-0 flex-1 bg-white">{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setAnalysisComplete(true)} /></div> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => { setIntakeStage('claims'); setCasesVisible(true); }} /> : null}<div className={casesVisible ? "max-h-24 overflow-x-auto opacity-100 transition-all duration-700 ease-out" : "max-h-0 overflow-hidden opacity-0 transition-all duration-500 ease-out"}><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight transition-colors ${activeTab === item.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>{item.label}</button>)}</div></div><div id="approval-queue" className={casesVisible ? "max-h-[4000px] overflow-hidden px-5 py-5 opacity-100 transition-all duration-700 ease-out sm:px-6" : "max-h-0 overflow-hidden px-5 py-0 opacity-0 transition-all duration-500 ease-out sm:px-6"}><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-google-sans text-[14px] font-normal tracking-tight text-[#182026]">{sectionTitle}</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "$186,420" : tab.id === "filing" ? "$94,680" : tab.id === "filed" ? "$312,740" : tab.id === "attention" ? "$58,940" : tab.id === "payout" ? "$146,280" : "$1.84M"}</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "Supported cohort queue. Review evidence sufficiency, materiality, control exceptions, and expected recovery before anything is submitted." : tab.id === "filing" ? "Live submissions with locked packets, receipt capture, response windows, and cross-system financial state." : tab.id === "attention" ? "Control exceptions held before filing because source relationships, valuation, or clearing evidence require resolution." : "Margin keeps the event record, evidence state, Amazon response, settlement truth, and next controlled action connected."}</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{tab.count} governed positions in this queue</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><div className="relative hidden sm:block"><button type="button" onClick={() => setQueueMode(queueMode === "all" ? "priority" : queueMode === "priority" ? "recent" : "all")} className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A]">Review queue: {queueMode === "all" ? "All cases" : queueMode === "priority" ? "Priority first" : "Recently updated"}<ChevronDown className="h-3.5 w-3.5" /></button></div></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={approveCard} />)}{visibleCards.length === 0 ? <div className="rounded-[10px] border border-dashed border-[#D8E3E8] px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}</div></div></section></div></main>;
 }
 
 export const __previewRecords = cards;
