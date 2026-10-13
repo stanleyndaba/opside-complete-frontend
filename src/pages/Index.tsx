@@ -215,6 +215,8 @@ const accountingRows = [
 ];
 
 function AccountingEvidenceSection() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F6F8F9] py-10 md:py-16" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
