@@ -19,6 +19,7 @@ import { usePrivateRouteRobots } from "@/hooks/usePrivateRouteRobots";
 import { AnalyticsRouteTracker } from "@/components/AnalyticsRouteTracker";
 import { PublicSiteInstrumentation } from "@/components/analytics/PublicSiteInstrumentation";
 import Index from "./pages/Index";
+import DuplicatePipelinePreviewPage from "./pages/DuplicatePipelinePreview";
 
 // Route-level code splitting
 const Dashboard = lazy(() => import("@/components/layout/Dashboard").then(m => ({ default: m.Dashboard })));
@@ -86,7 +87,6 @@ const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
 const DocumentIngestion = lazy(() => import('./pages/DocumentIngestion'));
 const SpeakToSales = lazy(() => import('./pages/SpeakToSales'));
 const FilingPipelinePreview = lazy(() => import('./pages/FilingPipelinePreview'));
-const DuplicatePipelinePreview = lazy(() => import('./pages/DuplicatePipelinePreview'));
 const EvidenceRequired = lazy(() => import('./pages/EvidenceRequired'));
 const AmazonThreadReview = lazy(() => import('./pages/AmazonThreadReview'));
 const ProgressReview = lazy(() => import('./pages/ProgressReview'));
@@ -310,7 +310,7 @@ const App = () => (
                         <Route path='/speak-to-sales' element={<SpeakToSales />} />
                         <Route path='/talk-to-sales' element={<SpeakToSales />} />
                         <Route path='/filing-pipeline-preview' element={<FilingPipelinePreview />} />
-                        <Route path='/duplicate-pipeline-preview' element={<DuplicatePipelinePreview />} />
+                        <Route path='/duplicate-pipeline-preview' element={<DuplicatePipelinePreviewPage />} />
                         <Route path='/evidence-required' element={<EvidenceRequired />} />
                         <Route path='/amazon-thread-review' element={<AmazonThreadReview />} />
                         <Route path='/progress-review' element={<ProgressReview />} />
