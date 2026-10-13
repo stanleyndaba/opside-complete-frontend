@@ -33,6 +33,8 @@ import {
   Truck,
   UserCheck,
   Square,
+  BatteryFull,
+  Wifi,
 } from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
@@ -614,19 +616,25 @@ function KineticHeroSection({
 
 function DuplicatePipelineDemoSection() {
   return (
-    <section aria-label="Recovery operations demo" className="relative overflow-hidden bg-white pb-12 pt-2 sm:pb-16 sm:pt-4 md:pb-20">
+    <section aria-label="Recovery operations demo" className="relative overflow-hidden bg-white pb-12 pt-10 sm:pb-16 sm:pt-12 md:pb-20 md:pt-16">
       <div className={containerClass}>
+        <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-center sm:mb-10">
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Financial control, built for the complexity of Amazon</h2>
+          <p className="mx-auto mt-5 max-w-[820px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">From transaction-level investigation to evidence-backed recovery and settlement reconciliation, Margin gives your business a systematic way to establish what happened and account for every material exception</p>
+        </motion.div>
         <motion.div
           {...revealProps}
           initial={{ opacity: 0, x: 46, y: 18, scale: 0.985 }}
           transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-          className="overflow-hidden rounded-[5px] border border-[#C8DCE5]/80 shadow-[0_24px_70px_rgba(37,73,91,0.16)]"
-          style={{ background: 'radial-gradient(circle at 18% 12%, rgba(255,255,255,0.95), transparent 34%), linear-gradient(135deg, #EAF5F9 0%, #DCECF2 52%, #F6FAFB 100%)' }}
+          className="overflow-hidden rounded-[5px] bg-white"
         >
-          <div className="flex h-9 items-center gap-2 border-b border-white/55 bg-white/35 px-3 backdrop-blur-md sm:h-10 sm:px-4">
+          <div className="flex h-10 items-center justify-between bg-white px-3 text-[#66737F] sm:h-11 sm:px-4" aria-label="Mac browser preview chrome">
+            <div className="flex items-center gap-1.5" aria-hidden="true">
             <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
+            </div>
+            <div className="flex items-center gap-2.5" aria-hidden="true"><Wifi className="h-3.5 w-3.5" strokeWidth={2} /><BatteryFull className="h-4 w-4" strokeWidth={2} /><span className="flex items-center gap-1 rounded-full bg-[#F1F3F4] px-2 py-1 text-[9px] font-semibold tracking-tight text-[#26333A]"><span className="relative flex h-3.5 w-5 items-center" aria-hidden="true"><span className="absolute left-0 top-[5px] h-1 w-3 rounded-sm bg-[#182026]" /><span className="absolute left-1 top-[2px] h-1 w-3 rounded-sm bg-[#182026]" /></span>Margin<span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" /></span></div>
           </div>
           <iframe
             title="Margin recovery operations demo"

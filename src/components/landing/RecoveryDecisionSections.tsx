@@ -46,12 +46,17 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Financial control, built for the complexity of Amazon</h2>
-          <p className="mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">From transaction-level investigation to evidence-backed recovery and settlement reconciliation, Margin gives your business a systematic way to establish what happened and account for every material exception</p>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Know the account&apos;s financial position before you decide what to hand over.</h2>
+          <div className="audit-routing-body mt-6 max-w-[760px] space-y-4 text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">
+            <p><span className="font-semibold text-[#182026]">Before:</span> The Audit begins with one financial question: Does the money reconcile at event level?</p>
+            <p><span className="font-semibold text-[#182026]">Now:</span> Margin examines shipments, returns, fees, reimbursements, settlements, inventory movements, and related account records as one control population. It establishes what is accounted for, what is supported, what remains unresolved, what requires evidence, and what should not be treated as recoverable.</p>
+          </div>
+          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit does not turn every variance into a claim. It establishes the operating position first.</p>
+          <p className="mt-4 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">You leave with a controlled view of the account—what requires action, what can be handed over, and what is already accounted for.</p>
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-2">
-          <FinalDelegationPreview compactMobile tallMobile showMacChrome src="/recovery-workspace" title="Recovery Workspace page preview" />
+          <FinalDelegationPreview compactMobile tallMobile src="/recovery-workspace" title="Recovery Workspace page preview" />
         </motion.div>
       </div>
 
