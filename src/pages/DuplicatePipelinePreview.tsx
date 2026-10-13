@@ -38,7 +38,7 @@ const tabs: Array<{ id: TabId; label: string; count: number }> = [
   { id: "approval", label: "Awaiting seller approval", count: 43 },
 ];
 
-const INTAKE_REPLAY_DELAY_MS = 22000;
+const INTAKE_REPLAY_DELAY_MS = 36000;
 
 const cards: Record<TabId, RecordCard[]> = {
   approval: [{ reference: "REC-2026-004817", type: "Governed event cohort", title: "Inbound Receiving Cohort", amount: "$14,832", detail: "Three related inbound events were reconstructed across Amazon receiving, carrier delivery, procurement, inventory movement, and settlement records. Supported exposure is isolated from unresolved items.", meta: "NTH-US-01 · FY2026 Q1 · 3 shipments · 1,240 expected / 1,168 received · ONT8 · LGB8 · PHX7 · 72 units", priority: "Material position", proof: "Sufficiency gate passed", days: "Policy window valid", route: "Seller Central / FBA inventory reimbursement / Controlled inbound cohort", packet: "SP-API snapshot, POD, receiving reports, ERP ledger, settlement clearing", safety: "No duplicate credit identified · clearing test complete", checks: ["Event identity resolved", "Valuation basis verified", "Seller approval required"], status: "Approve controlled action", next: "Approve controlled filing", movement: "Updated 9 minutes ago", docs: ["EvidenceIndex-REC-2026-004817.csv", "ShipmentPopulation-FY2026.json", "ReceivingCohort-ONT8-LGB8-PHX7.csv", "ValuationBasis-REC-2026-004817.xlsx"], tone: "ready" }],
@@ -362,6 +362,10 @@ const artifactAnalysisItems = [
   {
     highlight: ['account-level control position', 'supported exposure', 'unresolved positions'],
     text: 'The resulting record is an account-level control position, not a one-off answer to a single discrepancy. Supported exposure can move into a governed review queue, while unresolved positions remain visible with their evidence gaps, ownership, and next required action clearly separated from recoverable value.',
+  },
+  {
+    highlight: ['decision-grade record', 'nothing submits until approved', 'next controlled action'],
+    text: 'The final position is a decision-grade record: the evidence is connected, the financial exposure is bounded, and the remaining uncertainty is named rather than hidden. Nothing submits until approved; the operation can now move from reconstruction to the next controlled action with the record intact.',
   },
 ] as const;
 
