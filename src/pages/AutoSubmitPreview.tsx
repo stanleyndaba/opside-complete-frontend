@@ -18,40 +18,40 @@ type AutoSubmitCase = {
 
 const cases: AutoSubmitCase[] = [
   {
-    reference: "REC-014",
+    reference: "REC-2026-004817",
     status: "ready",
-    statusLabel: "Eligible under mandate",
-    title: "Inbound receiving variance",
-    event: "Shipment FBA17-ONT8-260114 · SKU NCS-48OZ-BLK · ONT8",
-    basis: "60 units dispatched; 46 units received. Supported exposure calculated at $1,184.60 using the verified unit-cost basis.",
-    control: "Evidence complete · entitlement established · policy window open · threshold passed",
-    amount: "$1,184.60",
+    statusLabel: "Eligible under Mandate",
+    title: "Inbound Receiving Cohort",
+    event: "NTH-US-01 · FY2026 Q1 · 3 shipments · 1,240 expected / 1,168 received · ONT8 · LGB8 · PHX7",
+    basis: "Three related inbound events were reconstructed across Amazon receiving, carrier delivery, procurement, inventory movement, and settlement records. Supported exposure is isolated from unresolved items.",
+    control: "Sufficiency gate passed · policy window valid · event identity resolved · valuation basis verified",
+    amount: "$14,832",
     date: "Today · 08:42",
-    docs: ["ShipmentPlan-FBA17-ONT8-260114.pdf", "ReceivingReport-ONT8.csv", "Invoice-NCS-2026-114.pdf"],
+    docs: ["EvidenceIndex-REC-2026-004817.csv", "ShipmentPopulation-FY2026.json", "ReceivingCohort-ONT8-LGB8-PHX7.csv", "ValuationBasis-OneDrive.xlsx"],
   },
   {
-    reference: "REC-013",
+    reference: "RFD-169-01",
     status: "submitted",
-    statusLabel: "Submitted under mandate",
-    title: "FBA fee overcharge correction",
-    event: "Settlement 205-771 · fee event 8F-441 · Amazon US",
-    basis: "Charged fee basis exceeded the applicable fee schedule for the fulfilled unit class. Reimbursement request filed for $388.50.",
-    control: "Receipt recorded · Amazon response pending · financial position remains open",
-    amount: "$388.50",
+    statusLabel: "Submitted Under Mandate",
+    title: "Storage Fee Miscalculation",
+    event: "Settlement 204-771 · 186 units · SKU NS-STACKABLE-BIN · ASIN B0D6K8R4VQ",
+    basis: "Monthly storage charges exceed the documented cubic-foot rate for the affected inventory period. The verified fee variance is isolated from unrelated settlement activity.",
+    control: "Rate comparison completed · source records matched · duplicate recovery check passed · receipt recorded",
+    amount: "$329.84",
     date: "30 Sep · 14:18",
-    docs: ["CasePacket-NTH-FBA-2601-0047.pdf", "FeeBasis-8F-441.pdf", "SubmissionReceipt.pdf"],
+    docs: ["FeePreview-Gmail.eml", "StorageReport-204-771.csv", "RateCard-OneDrive.pdf"],
   },
   {
-    reference: "REC-012",
+    reference: "RFD-169-02",
     status: "approved",
-    statusLabel: "Approved · settlement pending",
-    title: "Inventory adjustment reimbursement",
-    event: "Adjustment 19822888381 · SKU NCS-48OZ-BLK · Amazon US",
-    basis: "Amazon approved the supported inventory adjustment and credited $742.00 against the established recovery record.",
-    control: "Amazon decision recorded · credit identified · payout reconciliation outstanding",
-    amount: "$742.00",
+    statusLabel: "Approved settlement pending",
+    title: "Carton Quantity Variance",
+    event: "Shipment FBA18LQ4C2P1 · 16 units · SKU NS-LINEN-SHELF · ASIN B0D1P7X5TR",
+    basis: "The receiving record shows two cartons fewer than the signed carrier handoff and shipment plan. The supported quantity variance remains open for settlement reconciliation.",
+    control: "Carrier handoff verified · policy window checked · source records matched · settlement credit pending",
+    amount: "$472.16",
     date: "29 Sep · 11:06",
-    docs: ["AmazonResponse-19822888381.pdf", "ApprovalRecord-REC-012.pdf", "Settlement-205-771.csv"],
+    docs: ["POD-FBA18LQ4C2P1.pdf", "CartonManifest.csv", "SellerApproval-Gmail.eml"],
   },
 ];
 
@@ -63,9 +63,17 @@ const statusStyles: Record<CaseStatus, { dot: string; text: string; badge: strin
 
 function EvidenceIcon({ file }: { file: string }) {
   const isCsv = file.toLowerCase().endsWith(".csv");
+  const lowerFile = file.toLowerCase();
+  const icon = lowerFile.includes("gmail")
+      ? "/gmailicon.png"
+      : lowerFile.includes("onedrive")
+      ? "/onedrive-icon.png"
+      : isCsv
+        ? "/evidence-csv-mark.png"
+        : "/pdf-file-icon.webp";
   return (
     <span className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-[3px] bg-white shadow-[0_1px_2px_rgba(32,42,49,0.1)]">
-      <img src={isCsv ? "/evidence-csv-mark.png" : "/pdf-file-icon.webp"} alt={isCsv ? "CSV evidence" : "PDF evidence"} className="h-4 w-4 object-contain" />
+      <img src={icon} alt={isCsv ? "CSV evidence" : lowerFile.includes("gmail") ? "Gmail evidence" : lowerFile.includes("onedrive") ? "OneDrive evidence" : "PDF evidence"} className="h-4 w-4 object-contain" />
     </span>
   );
 }
