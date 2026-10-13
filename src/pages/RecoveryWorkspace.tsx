@@ -167,7 +167,7 @@ export default function RecoveryWorkspace() {
           </aside>
           <div className="min-w-0 flex-1">
           <div className="flex flex-col gap-4">
-          {showRecoveryPipeline ? <RecoveryPipelineSequence /> : <article id="recovery-workspace-record" className="relative order-1 min-w-0 rounded-none bg-white px-0 py-5 shadow-none sm:px-6 sm:py-5" aria-labelledby="recovery-workspace-title">
+          {showRecoveryPipeline ? <RecoveryPipelineSequence workspaceMode /> : <article id="recovery-workspace-record" className="relative order-1 min-w-0 rounded-none bg-white px-0 py-5 shadow-none sm:px-6 sm:py-5" aria-labelledby="recovery-workspace-title">
             <div aria-label="Recovery Workspace assessment timeline" className="pointer-events-none absolute bottom-8 left-2 top-8 flex w-6 flex-col items-center justify-between">
               <span aria-hidden="true" className="absolute bottom-2 top-2 w-px bg-[#C9D6DE]" />
               <span className="relative z-10 h-[7px] w-[7px] rounded-full bg-[#0B74DE] shadow-[0_0_0_3px_white]" title={assessmentTimeline[0]} />
