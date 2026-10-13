@@ -317,7 +317,7 @@ const evidenceRegister = [
   { name: 'Supplier and commercial invoice pack', type: 'PDF', highlight: ['ownership', 'recoverable basis'], description: 'Source documentation supporting ownership, unit value, supplier relationship, and recoverable basis.' },
 ];
 
-function HighlightedDescription({ description, highlight }: { description: string; highlight: string | string[] }) {
+function HighlightedDescription({ description, highlight, highlightComplete = true }: { description: string; highlight: string | string[]; highlightComplete?: boolean }) {
   const highlights = (Array.isArray(highlight) ? highlight : [highlight])
     .map((value) => ({ value, start: description.indexOf(value) }))
     .filter(({ start }) => start >= 0)
@@ -329,7 +329,7 @@ function HighlightedDescription({ description, highlight }: { description: strin
   highlights.forEach(({ value, start }, index) => {
     if (start < cursor) return;
     if (start > cursor) parts.push(description.slice(cursor, start));
-    parts.push(<mark key={`${value}-${index}`} data-evidence-highlight="true" style={{ backgroundColor: '#DDEEFF', color: '#1E5878', textDecorationColor: '#7DB6D2' }} className="rounded-[2px] px-0.5 font-bold underline decoration-1 underline-offset-2">{value}</mark>);
+    parts.push(<mark key={`${value}-${index}`} data-evidence-highlight="true" style={{ backgroundColor: highlightComplete ? '#DDEEFF' : 'transparent', color: '#1E5878', textDecorationColor: '#7DB6D2' }} className="rounded-[2px] px-0.5 font-bold underline decoration-1 underline-offset-2">{value}</mark>);
     cursor = start + value.length;
   });
   if (cursor < description.length) parts.push(description.slice(cursor));
@@ -370,6 +370,15 @@ const artifactAnalysisItems = [
   },
 ] as const;
 
+const artifactAnalysisChecks = [
+  ['Event identity resolved', 'Shipment, SKU, ASIN, receiving node, carrier movement, and settlement period resolve to one canonical financial event.'],
+  ['Expected versus received reconciled', '2,416 units were expected; 2,352 were received. The 64-unit variance remains open after the receiving window closed.'],
+  ['Cross-system evidence agrees', 'Carrier delivery, 3PL intake, and Amazon receiving records support the same delivery window and custody trail.'],
+  ['Offsets and timing noise excluded', 'Inventory adjustments, duplicate lines, and subsequent settlement activity do not clear or duplicate the variance.'],
+  ['Materiality and ownership assessed', 'Supported exposure is $4,144.00 at a verified $64.75 unit cost; Finance Operations owns the decision.'],
+  ['Decision package ready', 'The supported exposure is separated from unresolved items and ready for the next controlled action.'],
+] as const;
+
 function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
   const [activeItem, setActiveItem] = useState(0);
@@ -381,11 +390,10 @@ function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
     return () => window.clearTimeout(completionTimer);
   }, [analysisComplete, onComplete, reduceMotion]);
 
-  useEffect(() => {
-    if (reduceMotion || activeItem >= artifactAnalysisItems.length) return;
-    const advanceTimer = window.setTimeout(() => setActiveItem((current) => current + 1), 1800);
-    return () => window.clearTimeout(advanceTimer);
-  }, [activeItem, reduceMotion]);
+  const advance = () => {
+    if (reduceMotion) return;
+    window.setTimeout(() => setActiveItem((current) => Math.min(current + 1, artifactAnalysisItems.length)), 80);
+  };
 
   return <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="px-5 pb-5 sm:px-6">
     <div className="bg-white py-1 sm:py-2">
@@ -394,12 +402,20 @@ function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
         <h2 className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[22px]">What the assembled record establishes</h2>
         <p className="mt-1 text-[11px] leading-5 tracking-tight text-[#66737F]">Margin is reading the connected artifacts before presenting a governed position for review.</p>
       </div>
-      <div className="mt-5 max-w-[980px] space-y-5" aria-live="polite">
+      <div className="mt-5 max-w-[980px] space-y-5" aria-live="polite" aria-atomic="false">
         {artifactAnalysisItems.map((item, index) => {
-          const visible = reduceMotion || index < activeItem;
-          return <motion.p key={item.text} initial={{ opacity: 0, y: 8 }} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8 }} transition={{ duration: 0.35 }} className="text-[12px] leading-6 tracking-tight text-[#595E68] sm:text-[13px] sm:leading-7"><HighlightedDescription description={item.text} highlight={item.highlight} /></motion.p>;
+          const visible = reduceMotion || index <= activeItem;
+          const active = !reduceMotion && index === activeItem;
+          const content = reduceMotion || index < activeItem ? item.text : active ? <FastDuplicateTypewriter text={item.text} onComplete={advance} /> : null;
+          return <motion.p key={item.text} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8, height: visible ? 'auto' : 0 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden text-[12px] leading-6 tracking-tight text-[#595E68] sm:text-[13px] sm:leading-7"><HighlightedDescription description={typeof content === 'string' ? content : item.text.slice(0, 0)} highlight={item.highlight} highlightComplete={reduceMotion || index < activeItem} />{typeof content === 'string' ? null : content}</motion.p>;
         })}
       </div>
+      <motion.div initial={false} animate={analysisComplete ? { opacity: 1, y: 0, height: 'auto' } : { opacity: 0, y: 8, height: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="mt-7 max-w-[980px] overflow-hidden" aria-live="polite">
+        <p className="mb-3 text-[11px] font-medium tracking-tight text-[#182026]">What the reconciliation establishes</p>
+        <div className="space-y-3">
+          {artifactAnalysisChecks.map(([title, detail], index) => <motion.div key={title} initial={{ opacity: 0, y: 8 }} animate={analysisComplete ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }} transition={{ delay: index * 0.09, duration: 0.34, ease: [0.22, 1, 0.36, 1] }} className="flex items-start gap-2 text-[#182026]"><span className="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#16866B] text-white" aria-hidden="true"><Check className="h-2 w-2" strokeWidth={3} /></span><span className="min-w-0"><span className="block text-[10px] font-semibold leading-3.5 tracking-tight text-[#182026]">{title}</span><span className="mt-0.5 block text-[9px] leading-3.5 text-[#4D5B66]">{detail}</span></span></motion.div>)}
+        </div>
+      </motion.div>
       <p className="mt-6 max-w-[980px] text-[10px] font-medium tracking-tight text-[#8A99A5]">{analysisComplete ? 'Artifact analysis complete · loading governed positions next.' : 'Margin is connecting source artifacts and separating supported evidence from unresolved signal.'}</p>
     </div>
   </motion.div>;
