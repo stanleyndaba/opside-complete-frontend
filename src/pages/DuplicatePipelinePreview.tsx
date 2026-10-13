@@ -38,6 +38,8 @@ const tabs: Array<{ id: TabId; label: string; count: number }> = [
   { id: "approval", label: "Awaiting seller approval", count: 43 },
 ];
 
+const INTAKE_REPLAY_DELAY_MS = 22000;
+
 const cards: Record<TabId, RecordCard[]> = {
   approval: [{ reference: "REC-2026-004817", type: "Governed event cohort", title: "Inbound Receiving Cohort", amount: "$14,832", detail: "Three related inbound events were reconstructed across Amazon receiving, carrier delivery, procurement, inventory movement, and settlement records. Supported exposure is isolated from unresolved items.", meta: "NTH-US-01 · FY2026 Q1 · 3 shipments · 1,240 expected / 1,168 received · ONT8 · LGB8 · PHX7 · 72 units", priority: "Material position", proof: "Sufficiency gate passed", days: "Policy window valid", route: "Seller Central / FBA inventory reimbursement / Controlled inbound cohort", packet: "SP-API snapshot, POD, receiving reports, ERP ledger, settlement clearing", safety: "No duplicate credit identified · clearing test complete", checks: ["Event identity resolved", "Valuation basis verified", "Seller approval required"], status: "Approve controlled action", next: "Approve controlled filing", movement: "Updated 9 minutes ago", docs: ["EvidenceIndex-REC-2026-004817.csv", "ShipmentPopulation-FY2026.json", "ReceivingCohort-ONT8-LGB8-PHX7.csv", "ValuationBasis-REC-2026-004817.xlsx"], tone: "ready" }],
   filing: [{ reference: "REC-2026-004531", type: "Submission execution", title: "Removal and Warehouse-Loss Cohort", amount: "$22,480", detail: "Eighteen related events across four fulfillment centers cleared the evidence and materiality gates. Margin is sending the locked packet and capturing the Amazon receipt.", meta: "NTH-US-01 · FY2026 Q2 · 18 events · 312 units · ONT8 · PHX7 · ABE8 · FTW1", proof: "Evidence package locked", days: "Response expected in 12 days", route: "Seller Central / Removal reimbursement / Controlled cohort", packet: "Removal orders, carrier manifests, WMS release logs, inventory ledger", safety: "Duplicate claim check passed · submission route confirmed", checks: ["Submission receipt pending", "Case references linked", "Seller approval recorded"], status: "Submitting", next: "Capture Amazon receipt", movement: "Updated 4 minutes ago", docs: ["RemovalCohort-REC-2026-004531.csv", "CarrierManifestPopulation.xlsx", "SubmissionPacket-REC-2026-004531.pdf"], tone: "moving" }],
@@ -505,12 +507,14 @@ export default function FilingPipelinePreview() {
     const documentTimer = window.setTimeout(() => setIntakeStage('documents'), 2000);
     const registerTimer = window.setTimeout(() => setIntakeStage('register'), 5000);
     const artifactTimer = window.setTimeout(() => setIntakeStage('artifact-analysis'), 8000);
+    // Keep the preview as a continuous loop: once the claims are visible,
+    // reset the stages and remount the analysis panel for the next pass.
     const replayTimer = window.setTimeout(() => {
       setCasesVisible(false);
       setAnalysisComplete(false);
       setIntakeStage('analysis');
       setIntakeCycle((cycle) => cycle + 1);
-    }, 22000);
+    }, INTAKE_REPLAY_DELAY_MS);
     return () => {
       window.clearTimeout(documentTimer);
       window.clearTimeout(registerTimer);
