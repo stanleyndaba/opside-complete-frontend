@@ -61,8 +61,8 @@
             try {
               // Version this key so a deployment can recover users who already
               // completed an earlier cleanup while holding an old app shell.
-              if (sessionStorage.getItem('margin:service-worker-cleanup-reloaded-v4') !== 'true') {
-                sessionStorage.setItem('margin:service-worker-cleanup-reloaded-v4', 'true');
+              if (sessionStorage.getItem('margin:service-worker-cleanup-reloaded-v5') !== 'true') {
+                sessionStorage.setItem('margin:service-worker-cleanup-reloaded-v5', 'true');
                 window.location.reload();
               }
             } catch (error) {

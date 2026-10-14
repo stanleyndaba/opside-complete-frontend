@@ -286,6 +286,12 @@
       ]
     },
     {
+      "source": "/accuracy-graph",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
+      ]
+    },
+    {
       "source": "/",
       "headers": [
         { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
