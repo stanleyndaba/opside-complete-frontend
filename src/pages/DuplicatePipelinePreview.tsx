@@ -482,37 +482,50 @@ function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
 function TeamHandoffStage() {
   const reduceMotion = useReducedMotion();
   const handoffMessages = [
-    { role: 'Finance', text: 'Cost basis confirmed.', tone: 'text-[#36404A]' },
-    { role: 'Operations', text: 'Warehouse event matches the receiving record.', tone: 'text-[#36404A]' },
-    { role: 'Owner', text: 'Approved for filing.', tone: 'text-[#26704E]' },
+    { role: 'Finance Operations', subject: 'Cost basis confirmed', preview: 'Unit value agrees with the attached valuation schedule.', avatar: '/recovery-finance-avatar.png', highlight: 'bg-[#F7E7CF]' },
+    { role: 'Fulfilment Operations', subject: 'Warehouse event matched', preview: 'Receiving and carrier records resolve to the same event.', avatar: '/recovery-operations-avatar.png', highlight: 'bg-[#DDEBFF]' },
+    { role: 'Recovery Owner', subject: 'Approved for filing', preview: 'Evidence is sufficient for the next controlled action.', avatar: '/recovery-owner-avatar.png', highlight: 'bg-[#DDF4E5]' },
   ];
 
   return <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="px-5 pb-5 sm:px-6">
-    <div className="border-y border-[#E3ECEF] py-5 sm:py-6">
-      <div className="flex items-start gap-3">
-        <img src="/slack-icon-2019.png" alt="Slack" className="mt-0.5 h-6 w-6 shrink-0 object-contain" />
-        <div className="min-w-0">
-          <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Illustrative team handoff</p>
-          <h2 className="mt-1 font-google-sans text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">The recovery now has an owner</h2>
-          <p className="mt-1 max-w-[680px] text-[11px] leading-5 tracking-tight text-[#66737F]">Margin has moved the supported position from assembled evidence into a controlled team decision.</p>
+    <div className="bg-[#F7FAFB] px-4 py-5 sm:px-6 sm:py-6">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex min-w-0 items-start gap-3">
+          <img src="/slack-icon-2019.png" alt="Slack" className="mt-0.5 h-6 w-6 shrink-0 object-contain" />
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Illustrative team handoff</p>
+            <h2 className="mt-1 font-google-sans text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">The recovery now has an owner</h2>
+            <p className="mt-1 max-w-[680px] text-[11px] leading-5 tracking-tight text-[#66737F]">A focused decision thread for the supported position.</p>
+          </div>
         </div>
+        <span className="hidden shrink-0 text-[10px] font-medium tracking-tight text-[#8A99A5] sm:block">Focused · Just now</span>
       </div>
-      <div className="mt-5 max-w-[760px] space-y-3 pl-0 sm:pl-9" aria-live="polite">
-        <motion.div initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: reduceMotion ? 0 : 0.16, duration: 0.35 }} className="border-l-2 border-[#0B74DE] pl-3">
-          <p className="text-[10px] font-semibold tracking-tight text-[#0B74DE]">Margin</p>
-          <p className="mt-1 text-[12px] font-semibold leading-5 tracking-tight text-[#182026]">Supported recovery position identified: <span className="tabular-nums">$1,284.60</span></p>
-          <p className="mt-0.5 text-[11px] leading-5 tracking-tight text-[#66737F]">Evidence is attached. No duplicate credit found. Seller approval is required before filing.</p>
+
+      <div className="mt-6 max-w-[760px] space-y-5" aria-live="polite">
+        <motion.div initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: reduceMotion ? 0 : 0.16, duration: 0.35 }} className="flex items-start gap-3">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#182026] shadow-[0_3px_8px_rgba(24,32,38,0.12)]"><img src="/slack-icon-2019.png" alt="Margin team handoff" className="h-4 w-4 object-contain brightness-0 invert" /></span>
+          <div className="min-w-0 pt-0.5">
+            <p className="text-[10px] font-semibold tracking-tight text-[#7B8A97]">Margin <span className="ml-1 font-normal text-[#A0AAB0]">just now</span></p>
+            <p className="mt-1 text-[12px] font-semibold leading-5 tracking-tight text-[#182026]"><mark className="rounded-[3px] bg-[#DDEBFF] px-1 py-0.5 font-semibold text-[#1E5878]">Supported recovery position · $1,284.60</mark></p>
+            <p className="mt-1 text-[11px] leading-5 tracking-tight text-[#66737F]">Evidence attached · no duplicate credit found · seller approval required</p>
+            <div className="mt-2 flex flex-wrap gap-1.5 text-[9px] font-medium tracking-tight text-[#66737F]"><span className="rounded-full bg-white px-2 py-1">Receiving record</span><span className="rounded-full bg-white px-2 py-1">Cost basis</span><span className="rounded-full bg-white px-2 py-1">Settlement line</span></div>
+          </div>
         </motion.div>
-        {handoffMessages.map((message, index) => <motion.div key={message.role} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduceMotion ? 0 : 0.48 + index * 0.2, duration: 0.32 }} className="flex items-baseline gap-2 border-b border-[#EEF2F3] pb-2 last:border-b-0 last:pb-0">
-          <span className="shrink-0 text-[10px] font-semibold tracking-tight text-[#7B8A97]">{message.role}</span>
-          <span className={`text-[11px] leading-5 tracking-tight ${message.tone}`}>{message.text}</span>
+
+        {handoffMessages.map((message, index) => <motion.div key={message.role} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduceMotion ? 0 : 0.48 + index * 0.2, duration: 0.32 }} className="flex items-start gap-3">
+          <img src={message.avatar} alt={`${message.role} participant`} className="h-8 w-8 shrink-0 rounded-full object-cover shadow-[0_3px_8px_rgba(24,32,38,0.1)]" />
+          <div className="min-w-0 pt-0.5">
+            <p className="text-[10px] font-semibold tracking-tight text-[#7B8A97]">{message.role} <span className="ml-1 font-normal text-[#A0AAB0]">in recovery handoff</span></p>
+            <p className="mt-1 text-[12px] font-semibold leading-5 tracking-tight text-[#182026]"><mark className={`rounded-[3px] px-1 py-0.5 font-semibold text-[#36404A] ${message.highlight}`}>{message.subject}</mark></p>
+            <p className="mt-1 text-[11px] leading-5 tracking-tight text-[#66737F]">{message.preview}</p>
+          </div>
         </motion.div>)}
       </div>
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduceMotion ? 0 : 1.12, duration: 0.3 }} className="mt-5 pl-0 text-[10px] font-medium tracking-tight text-[#26704E] sm:pl-9">Handoff complete · Evidence attached · Owner assigned</motion.p>
+
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduceMotion ? 0 : 1.12, duration: 0.3 }} className="mt-6 flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#26704E]"><span className="h-1.5 w-1.5 rounded-full bg-[#26704E]" />Decision recorded · Owner assigned</motion.p>
     </div>
   </motion.div>;
 }
-
 const toneClasses: Record<Tone, { card: string; badge: string; status: string }> = {
   ready: { card: "border-[#D8E3E8] bg-white", badge: "border-[#BFE3D7] bg-[#F1FAF6] text-[#26704E]", status: "bg-[#F1F3F4] text-[#36404A]" },
   moving: { card: "border-[#D8E3E8] bg-white", badge: "border-[#CFE2F2] bg-[#F2F8FC] text-[#1967A3]", status: "bg-[#FCF8EE] text-[#8A641B]" },
