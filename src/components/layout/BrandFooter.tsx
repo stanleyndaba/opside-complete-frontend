@@ -268,8 +268,13 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
           </div>
 
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#D8E3EA] pt-8 md:flex-row">
-            <div className="flex max-w-[1024px] flex-col gap-2 text-sm tracking-tight" style={{ color: '#66737F' }}>
-              <span className="font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] text-[#182026] min-[390px]:text-[46px] sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 500 }}>From uncertainty to resolution</span>
+            <div className="flex min-w-0 flex-1 flex-col gap-2 text-sm tracking-tight" style={{ color: '#66737F' }}>
+              <div className="footer-resolution-marquee w-full overflow-hidden" aria-label="From uncertainty to resolution">
+                <div className="footer-resolution-track flex w-max items-baseline whitespace-nowrap" aria-hidden="true">
+                  <span className="shrink-0 pr-[8vw] font-google-sans text-[160px] leading-[0.9] tracking-[-0.045em] text-[#182026] min-[390px]:text-[184px] sm:text-[240px] md:text-[296px] lg:text-[336px]" style={{ fontWeight: 400 }}>From uncertainty to resolution</span>
+                  <span className="shrink-0 pr-[8vw] font-google-sans text-[160px] leading-[0.9] tracking-[-0.045em] text-[#182026] min-[390px]:text-[184px] sm:text-[240px] md:text-[296px] lg:text-[336px]" style={{ fontWeight: 400 }}>From uncertainty to resolution</span>
+                </div>
+              </div>
               <span>© {new Date().getFullYear()} Margin. All rights reserved.</span>
               {selectedLanguageLabel && (
                 <span className="inline-flex items-center gap-1.5">
