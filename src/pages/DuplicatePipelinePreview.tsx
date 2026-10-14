@@ -643,10 +643,11 @@ export default function FilingPipelinePreview() {
     const registerTimer = window.setTimeout(() => setIntakeStage('register'), 5000);
     const handoffTimer = window.setTimeout(() => setIntakeStage('handoff'), 11200);
     const artifactTimer = window.setTimeout(() => setIntakeStage('artifact-analysis'), 15200);
-    // Keep the preview as a continuous loop: once the claims are visible,
-    // reset the stages and remount the analysis panel for the next pass.
+    // Keep the preview as a continuous loop. Once the claims and correspondence
+    // are visible, leave them mounted while the intake animation replays above;
+    // the operational story should remain inspectable instead of disappearing
+    // during the next pass.
     const replayTimer = window.setTimeout(() => {
-      setCasesVisible(false);
       setAnalysisComplete(false);
       setIntakeStage('analysis');
       setIntakeCycle((cycle) => cycle + 1);
