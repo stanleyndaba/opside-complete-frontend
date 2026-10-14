@@ -665,6 +665,28 @@ const routes = [
     },
   },
   {
+    path: '/duplicate-pipeline-preview',
+    title: 'Duplicate Pipeline Preview | Margin',
+    description:
+      'Preview how Margin connects source evidence, financial positions, seller approval, filing control, and payout reconciliation in one recovery workflow.',
+    ogTitle: 'Duplicate Pipeline Preview | Margin',
+    ogDescription:
+      'See how evidence becomes controlled recovery positions with source records, review states, and financial closeout kept connected.',
+    shell: {
+      label: 'Recovery evidence pipeline preview',
+      h1: 'Duplicate pipeline preview',
+      intro:
+        'A working preview of how Margin turns connected evidence into governed recovery positions and keeps the path to financial resolution visible.',
+      sections: [
+        {
+          heading: 'Evidence stays attached to the position',
+          body:
+            'Source records, control checks, seller decisions, filing activity, and payout outcomes remain connected as the recovery moves through the workflow.',
+        },
+      ],
+    },
+  },
+  {
     path: '/amazon-fba-reimbursement',
     title: 'Amazon FBA Reimbursement Service | Margin',
     description:
