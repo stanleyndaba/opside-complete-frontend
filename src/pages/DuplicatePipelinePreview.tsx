@@ -598,9 +598,9 @@ export default function FilingPipelinePreview() {
     if (!analysisComplete) return;
     setIntakeStage('dropzone');
     const documentTimer = window.setTimeout(() => setIntakeStage('documents'), 2000);
-    const handoffTimer = window.setTimeout(() => setIntakeStage('handoff'), 5000);
-    const registerTimer = window.setTimeout(() => setIntakeStage('register'), 9200);
-    const artifactTimer = window.setTimeout(() => setIntakeStage('artifact-analysis'), 12200);
+    const registerTimer = window.setTimeout(() => setIntakeStage('register'), 5000);
+    const handoffTimer = window.setTimeout(() => setIntakeStage('handoff'), 11200);
+    const artifactTimer = window.setTimeout(() => setIntakeStage('artifact-analysis'), 15200);
     // Keep the preview as a continuous loop: once the claims are visible,
     // reset the stages and remount the analysis panel for the next pass.
     const replayTimer = window.setTimeout(() => {
