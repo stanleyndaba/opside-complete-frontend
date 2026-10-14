@@ -59,7 +59,7 @@ const AccuracyGraph = () => {
               <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence scoring curve</span>
               <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#2F8A62]">Outcome verified</span>
             </div>
-            <div className="relative min-h-0 flex-1">
+            <div className="relative h-[230px] min-h-[230px] flex-none sm:h-[260px] sm:min-h-[260px] lg:h-auto lg:min-h-0 lg:flex-1">
           <svg 
             width="100%" 
             height="100%" 
