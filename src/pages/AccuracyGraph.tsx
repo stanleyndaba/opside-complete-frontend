@@ -37,8 +37,8 @@ const AccuracyGraph = () => {
   }, "");
 
   return (
-    <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-white p-2 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
-      <section className="mx-auto flex h-[calc(100dvh-104px)] max-h-[500px] w-full max-w-5xl flex-col overflow-hidden border border-[#CFE0EA] bg-white">
+    <main className="min-h-screen w-full overflow-auto bg-white p-2 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
+      <section className="mx-auto flex h-[calc(100dvh-104px)] max-h-[500px] w-full max-w-5xl flex-col overflow-visible border-0 bg-white">
 
         <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[1fr_300px]">
           <div className="relative flex min-h-0 flex-col bg-white px-4 py-4">
