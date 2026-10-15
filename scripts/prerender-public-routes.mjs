@@ -595,10 +595,10 @@ const sellerboardAlternativeRoute = createAcquisitionRoute({
 const routes = [
   {
     path: '/',
-    title: 'Margin | Amazon FBA Recovery and Payout Visibility',
+    title: 'Margin | Reconciliation Infrastructure for Amazon at Scale',
     description:
       'For Amazon FBA sellers with an unresolved recovery or recurring recovery work, Margin shows what is supported, keeps seller-approved recovery work moving, and distinguishes what was approved from what was paid.',
-    ogTitle: 'Margin | Amazon FBA Recovery and Payout Visibility',
+    ogTitle: 'Margin | Reconciliation Infrastructure for Amazon at Scale',
     ogDescription:
       'For Amazon FBA sellers with an unresolved recovery or recurring recovery work: see what is supported, approve the work that moves forward, and understand the payout outcome.',
     shell: {

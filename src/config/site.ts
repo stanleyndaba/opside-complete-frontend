@@ -45,10 +45,9 @@ export const AGENT_HIGHLIGHTS = [
 ];
 
 export const SITE_META = {
-  title: 'Margin | Amazon FBA Recovery and Payout Visibility',
+  title: 'Margin | Reconciliation Infrastructure for Amazon at Scale',
   description: 'For Amazon FBA sellers with an unresolved recovery or recurring recovery work, Margin shows what is supported, keeps seller-approved recovery work moving, and distinguishes what was approved from what was paid.',
   url: 'https://margin-finance.com',
   image: 'https://margin-finance.com/margin-logo-reveal.gif',
   preloadImages: []
 };
-
