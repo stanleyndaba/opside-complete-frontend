@@ -1,6 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+type DocumentReferenceProps = { name: string; source: string; icon: string };
+
+function DocumentReference({ name, source, icon }: DocumentReferenceProps) {
+  return (
+    <span className="mx-1 inline-flex max-w-full translate-y-[0.12em] items-center gap-1.5 rounded-[4px] bg-[#F1F3F4] px-2 py-1 align-baseline text-[11px] leading-4 tracking-[-0.01em] text-[#3B4650]" title={`${source}: ${name}`}>
+      <img src={icon} alt={source} className="h-4 w-4 shrink-0 object-contain" />
+      <span className="font-semibold">{name}</span>
+    </span>
+  );
+}
+
 const AccuracyGraph = () => {
   const dataPoints = [
     { cases: 0, accuracy: 58 },
@@ -27,38 +38,10 @@ const AccuracyGraph = () => {
 
   return (
     <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 font-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
-      <section className="flex h-[calc(100dvh-104px)] max-h-[500px] w-full max-w-5xl flex-col overflow-hidden border border-[#CFE0EA] bg-white">
-        <header className="flex shrink-0 items-start justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
-          <div className="max-w-2xl">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Outcome intelligence</p>
-            <h1
-              className="mt-1 text-[20px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
-              style={{ fontFamily: 'Georgia, Merriweather, serif' }}
-            >
-              Evidence Calibration
-            </h1>
-            <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#66737F]">
-              Margin learns from approved, rejected, underpaid, and reversed outcomes to improve how future evidence packs are scored before filing.
-            </p>
-          </div>
-          <div className="hidden min-w-[290px] grid-cols-2 border border-[#DCE8EE] text-left sm:grid">
-            <div className="border-r border-[#DCE8EE] px-4 py-3">
-              <span className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Resolved cases</span>
-              <p className="mt-1 font-mono text-sm text-[#182026]">5,000</p>
-            </div>
-            <div className="px-4 py-3">
-              <span className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Current score</span>
-              <p className="mt-1 font-mono text-sm text-[#182026]">96%</p>
-            </div>
-          </div>
-        </header>
+      <section className="mx-auto flex h-[calc(100dvh-104px)] max-h-[500px] w-full max-w-5xl flex-col overflow-hidden border border-[#CFE0EA] bg-white">
 
         <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[1fr_300px]">
           <div className="relative flex min-h-0 flex-col bg-white px-4 py-4">
-            <div className="mb-3 flex items-center justify-between border-b border-[#DCE8EE] pb-2">
-              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence scoring curve</span>
-              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#2F8A62]">Outcome verified</span>
-            </div>
             <div className="relative h-[230px] min-h-[230px] flex-none sm:h-[260px] sm:min-h-[260px] lg:h-auto lg:min-h-0 lg:flex-1">
           <svg 
             width="100%" 
@@ -161,37 +144,29 @@ const AccuracyGraph = () => {
             })}
           </svg>
 
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 font-mono text-[9px] font-medium uppercase tracking-tight text-[#66737F]">
-            Resolved recovery cases learned from
-          </div>
           </div>
           </div>
 
-          <aside className="border-l border-[#DCE8EE] bg-[#F8FAFC] p-4">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Accuracy inputs</p>
-            <h2
-              className="mt-2 text-[18px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
-              style={{ fontFamily: 'Georgia, Merriweather, serif' }}
-            >
-              Outcome patterns
-            </h2>
-            <div className="mt-4 border-y border-[#DCE8EE] py-3">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Signals learned</p>
-              <ul className="mt-3 space-y-2 text-[12px] leading-5 text-[#33404A]">
-                <li>Claim category</li>
-                <li>Evidence type accepted</li>
-                <li>Amazon response path</li>
-                <li>Payout reconciliation result</li>
-              </ul>
-            </div>
-            <div className="mt-4 border border-[#DCE8EE] bg-white p-3">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#2F8A62]">Recovery intelligence updated</p>
-              <p className="mt-2 text-[12px] leading-5 text-[#4D5B66]">
-                Future cases are scored against anonymized outcome patterns, not another seller's private records.
-              </p>
-            </div>
-          </aside>
         </div>
+      </section>
+
+      <section className="mx-auto mt-6 max-w-5xl bg-white px-5 py-6 font-google-sans text-[15px] leading-7 tracking-[-0.012em] text-[#595E68] sm:px-8">
+        <p>
+          <mark className="rounded-[2px] bg-[#DDEBFF] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">Financial position established</mark> · controlled recovery ready to transfer. Margin reconstructed the financial event across operational, inventory, settlement, and ledger records, then connected the affected populations into a <mark className="rounded-[2px] bg-[#DDF4E5] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">single evidence-backed recovery stance</mark> with clear boundaries around <mark className="rounded-[2px] bg-[#FFF1A8] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">what is supported</mark>, what is already accounted for, and <mark className="rounded-[2px] bg-[#E9DEFF] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">what remains unresolved</mark>. <DocumentReference icon="/amazon-logo-transparent-circle.png" source="Amazon" name="Amazon Fulfilment Network Inventory Adjustment and Disposition Ledger" /> <DocumentReference icon="/Dropbox_Icon.svg.png" source="Dropbox" name="Seller Evidence Intake and Shipment Support Folder" /> <DocumentReference icon="/onedrive-icon.png" source="OneDrive" name="Settlement Period Reconciliation and Clearing Workbook" /> The result separates supported exposure from amounts already accounted for and items that remain unresolved. <DocumentReference icon="/excel-icon-margin.png" source="Excel" name="FBA Inbound Receiving Variance and Shipment Reconciliation Schedule" /> <DocumentReference icon="/Dropbox_Icon.svg.png" source="Dropbox" name="Inventory Custody and Valuation Evidence Register" /> <DocumentReference icon="/onedrive-icon.png" source="OneDrive" name="Returns and Reimbursement Exception Register" /> The defined operating responsibility can transfer after seller approval. Control conclusion: Delegable supported exposure: $121,840. The position is evidenced, material, and bounded for controlled recovery action. This is an exposure conclusion, not a guaranteed Amazon reimbursement. Reconciliation bridge: From identified variance to supported action. Gross identified variance: $184,260. All detected signals. <DocumentReference icon="/gd.png" source="Google Drive" name="Amazon Settlement Transaction Detail and Reimbursement Clearing Extract" /> Already accounted for: ($42,300). Credits and cleared outcomes. Insufficient basis: ($20,120). Held pending reconciliation. Supported exposure: $121,840. Actionable position. Margin does not convert a gross signal into a claim. The bridge isolates what the records support, what later activity cleared, and what remains outside the current decision basis. Evidence sufficiency: Source lineage behind the conclusion. <DocumentReference icon="/Dropbox_Icon.svg.png" source="Dropbox" name="Enterprise Accounts Payable Invoice and Cost-Basis Support Register" /> Shipment movement: 18,420 records, matched, supported. FC receiving events: 17,982 records, 96.8% matched, exception review. <DocumentReference icon="/onedrive-icon.png" source="OneDrive" name="Inventory Ledger Adjustment, Valuation, and Custody Reconciliation Workbook" /> Inventory ledger: 6,104 adjustments, matched to SAP, supported. Settlement activity: 2.8M rows, reconciled, supported. Returns &amp; reimbursements: 42,610 events, partial match, held. General ledger clearing: NetSuite postings, 3 open items, review. The case is bounded by matched shipment, receiving, inventory, and settlement records. Returns, reimbursements, and three ledger items remain visible as exceptions rather than being silently absorbed into the supported position.
+        </p>
+        <section aria-label="Progressive recovery stance" className="mt-8 border-t border-[#E8E7E1] pt-5">
+          <p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]">Progressive recovery stance</p>
+          <div className="mt-3 space-y-2.5 text-[14px] leading-6 text-[#595E68]">
+            {[
+              'Financial position established',
+              'Evidence coverage established',
+              'Shipment and receiving delta confirmed',
+              'Inventory and settlement delta reconciled',
+              'Supported exposure separated from unresolved signal',
+              'Recovery stance confirmed for controlled action',
+            ].map((statement) => <div key={statement} className="flex items-center gap-2.5"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#26734D] text-[12px] font-bold leading-none text-white" aria-hidden="true">✓</span><span>{statement}</span></div>)}
+          </div>
+        </section>
       </section>
     </main>
   );
