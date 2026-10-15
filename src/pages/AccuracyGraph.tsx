@@ -14,21 +14,21 @@ function DocumentReference({ name, source, icon }: DocumentReferenceProps) {
 
 const AccuracyGraph = () => {
   const dataPoints = [
-    { cases: 0, accuracy: 58 },
-    { cases: 100, accuracy: 67 },
-    { cases: 250, accuracy: 74 },
-    { cases: 500, accuracy: 82 },
-    { cases: 1000, accuracy: 88 },
-    { cases: 2500, accuracy: 93 },
-    { cases: 5000, accuracy: 96 },
+    { cases: 0, accuracy: 0.58 },
+    { cases: 100, accuracy: 0.67 },
+    { cases: 250, accuracy: 0.74 },
+    { cases: 500, accuracy: 0.82 },
+    { cases: 1000, accuracy: 0.88 },
+    { cases: 2500, accuracy: 0.93 },
+    { cases: 5000, accuracy: 0.96 },
   ];
 
   const width = 800;
-  const height = 230;
-  const padding = 40;
+  const height = 340;
+  const padding = 48;
 
   const xScale = (cases: number) => (cases / 5000) * (width - 2 * padding) + padding;
-  const yScale = (accuracy: number) => height - padding - ((accuracy - 50) / 50) * (height - 2 * padding);
+  const yScale = (accuracy: number) => height - padding - ((accuracy - 0.4) / 0.6) * (height - 2 * padding);
 
   const pathData = dataPoints.reduce((acc, point, i) => {
     const x = xScale(point.cases);
@@ -42,7 +42,8 @@ const AccuracyGraph = () => {
 
         <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[1fr_300px]">
           <div className="relative flex min-h-0 flex-col bg-white px-4 py-4">
-            <div className="relative h-[230px] min-h-[230px] flex-none sm:h-[260px] sm:min-h-[260px] lg:h-auto lg:min-h-0 lg:flex-1">
+            <h1 className="mb-5 font-lora text-[24px] font-normal leading-tight tracking-[-0.04em] text-[#182026] sm:text-[28px]">Workflow improvements</h1>
+            <div className="relative h-[340px] min-h-[340px] flex-none sm:h-[380px] sm:min-h-[380px] lg:h-auto lg:min-h-0 lg:flex-1">
           <svg 
             width="100%" 
             height="100%" 
@@ -50,7 +51,7 @@ const AccuracyGraph = () => {
             className="overflow-visible"
           >
             {/* Horizontal Grid Lines (The Benchmarks) */}
-            {[60, 70, 80, 90, 100].map((level) => (
+            {[0.4, 0.6, 0.8, 0.9, 1.0].map((level) => (
               <g key={level}>
                 <line
                   x1={padding}
@@ -67,7 +68,7 @@ const AccuracyGraph = () => {
                   alignmentBaseline="middle"
                   className="fill-[#8A99A4] text-[9px] font-mono font-medium"
                 >
-                  {level}%
+                  {level.toFixed(1)}
                 </text>
               </g>
             ))}
@@ -102,7 +103,7 @@ const AccuracyGraph = () => {
             {/* Area Fill (The Intelligence Volume) */}
             <motion.path
               d={`${pathData} L ${xScale(5000)} ${height - padding} L ${padding} ${height - padding} Z`}
-              fill="rgba(11,116,222,0.035)"
+              fill="rgba(234,118,47,0.11)"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -119,7 +120,7 @@ const AccuracyGraph = () => {
                   <motion.circle
                     cx={cx}
                     cy={cy}
-                    r="3.5"
+                    r="1.75"
                     fill="#182026"
                     initial={{ opacity: 0, scale: 0 }}
                     whileInView={{ opacity: 1, scale: 1 }}
@@ -137,7 +138,7 @@ const AccuracyGraph = () => {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.2 + 0.7, duration: 0.3 }}
                   >
-                    {point.accuracy}%
+                    {point.accuracy.toFixed(2)}
                   </motion.text>
                 </g>
               );
