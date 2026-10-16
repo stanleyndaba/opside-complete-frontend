@@ -603,7 +603,7 @@ function DuplicatePipelineDemoSection() {
           <iframe
             title="Margin recovery operations demo"
             src="/duplicate-pipeline-preview"
-            className="block h-[620px] w-full border-0 bg-white sm:h-[720px] lg:h-[780px]"
+            className="block h-[390px] w-full border-0 bg-white sm:h-[680px] lg:h-[780px]"
             loading="lazy"
           />
         </motion.div>
