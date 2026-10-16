@@ -30,20 +30,16 @@ const AccuracyGraph = () => {
   const xScale = (cases: number) => (cases / 5000) * (width - 2 * padding) + padding;
   const yScale = (accuracy: number) => height - padding - ((accuracy - 0.4) / 0.6) * (height - 2 * padding);
 
-  const pathData = dataPoints.reduce((acc, point, i) => {
-    const x = xScale(point.cases);
-    const y = yScale(point.accuracy);
-    return i === 0 ? `M ${x} ${y}` : `${acc} L ${x} ${y}`;
-  }, "");
+  const pointColors = ['#7C3AED', '#2563EB', '#0891B2', '#059669', '#CA8A04', '#EA580C', '#DC2626'];
 
   return (
     <main className="min-h-screen w-full overflow-auto bg-white p-2 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
-      <section className="mx-auto flex h-auto w-full max-w-5xl flex-col overflow-visible border-0 bg-white">
+      <section className="mx-auto w-full max-w-5xl overflow-visible border-0 bg-white">
 
-        <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[1fr_300px]">
-          <div className="relative flex min-h-0 flex-col bg-white px-4 py-4">
-            <h1 className="mb-5 font-google-sans text-[24px] font-normal leading-tight tracking-[-0.04em] text-[#182026] sm:text-[28px]">Benchmark Evaluations</h1>
-            <div className="relative h-[340px] min-h-[340px] flex-none sm:h-[380px] sm:min-h-[380px] lg:h-auto lg:min-h-0 lg:flex-1">
+        <div className="grid grid-cols-1">
+          <div className="relative bg-white px-4 pt-4 pb-0">
+            <h1 className="mb-3 font-google-sans text-[24px] font-normal leading-tight tracking-[-0.04em] text-[#182026] sm:text-[28px]">Benchmark Evaluations</h1>
+            <div className="relative h-[460px] w-full sm:h-[520px]">
           <svg 
             width="100%" 
             height="100%" 
@@ -86,29 +82,25 @@ const AccuracyGraph = () => {
               </text>
             ))}
 
-            {/* The Learning Path — thin charcoal line */}
-            <motion.path
-              d={pathData}
-              fill="none"
-              stroke="#182026"
-              strokeWidth="1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={{ pathLength: 0 }}
-              whileInView={{ pathLength: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 2.5, ease: "easeInOut" }}
-            />
-
-            {/* Area Fill (The Intelligence Volume) */}
-            <motion.path
-              d={`${pathData} L ${xScale(5000)} ${height - padding} L ${padding} ${height - padding} Z`}
-              fill="rgba(234,118,47,0.11)"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 1.5, duration: 1 }}
-            />
+            {/* Each evidence progression carries the color of the destination benchmark. */}
+            {dataPoints.slice(1).map((point, i) => {
+              const previous = dataPoints[i];
+              return (
+                <motion.path
+                  key={`${previous.cases}-${point.cases}`}
+                  d={`M ${xScale(previous.cases)} ${yScale(previous.accuracy)} L ${xScale(point.cases)} ${yScale(point.accuracy)}`}
+                  fill="none"
+                  stroke={pointColors[i + 1]}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  initial={{ pathLength: 0 }}
+                  whileInView={{ pathLength: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.2, duration: 0.55, ease: "easeInOut" }}
+                />
+              );
+            })}
 
             {/* Accuracy Nodes + Percentage Labels */}
             {dataPoints.map((point, i) => {
@@ -121,7 +113,7 @@ const AccuracyGraph = () => {
                     cx={cx}
                     cy={cy}
                     r="1.75"
-                    fill="#182026"
+                    fill={pointColors[i]}
                     initial={{ opacity: 0, scale: 0 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
