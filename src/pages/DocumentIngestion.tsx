@@ -74,7 +74,7 @@ export default function DocumentIngestion() {
 
   return (
     <main className="min-h-screen overflow-x-auto bg-[#EEF2F3] text-[#182026]">
-      <div className="mx-auto grid min-w-[1180px] max-w-[1180px] grid-cols-[minmax(0,0.85fr)_minmax(420px,1.15fr)]">
+      <div className="mx-auto grid min-w-[760px] max-w-[1180px] grid-cols-[220px_minmax(540px,1fr)] sm:min-w-[1180px] sm:grid-cols-[minmax(0,0.85fr)_minmax(420px,1.15fr)]">
           <section className="px-5 pb-14 pt-10 sm:px-8 sm:pb-20 sm:pt-12 lg:px-10" aria-label="Enterprise source integrations">
             <div className="flex items-center gap-3 text-[11px] tracking-tight text-[#7A8790]">
               <span className="inline-flex items-center gap-1.5"><Link2 className="h-3.5 w-3.5" />{selectedCount} sources selected</span>

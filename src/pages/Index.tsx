@@ -280,7 +280,7 @@ function IngestedDocumentsOutcomeSection() {
             <p className="mt-4 max-w-[570px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin moves the account from disconnected source files to a controlled path from discovery through reconciliation.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="min-w-0">
-            <FinalDelegationPreview compactMobile tallMobile src="/document-ingestion" title="Document Ingestion page preview" />
+            <FinalDelegationPreview compactMobile mobileHeight="h-[390px]" src="/document-ingestion" title="Document Ingestion page preview" />
           </motion.div>
         </div>
       </div>
