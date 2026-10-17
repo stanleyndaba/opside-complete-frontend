@@ -46,19 +46,17 @@ export default function AmazonAuditIntro() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#EAF1F5] font-sans text-[#182026]">
+    <div className="min-h-screen overflow-x-hidden bg-white font-sans text-[#182026]">
       <main className="relative mx-auto flex min-h-screen max-w-[860px] items-center px-3 py-4 sm:items-center sm:px-6 sm:py-8 lg:px-8">
-        <div className="pointer-events-none absolute -right-36 -top-40 h-[520px] w-[520px] rounded-full border-[74px] border-white/45" />
-        <div className="pointer-events-none absolute -bottom-56 -left-40 h-[500px] w-[500px] rounded-full border-[64px] border-[#C7DCE8]/55" />
         <div className="relative z-10 w-full">
         <div className="mb-5 flex items-center gap-2.5 px-1 sm:mb-6">
           <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
           <span className="font-merriweather text-[15px] font-semibold tracking-[-0.02em] text-[#30343B]">Margin</span>
         </div>
 
-        <section className="mx-auto max-w-2xl rounded-[12px] bg-white/90 font-google-sans px-3.5 py-4 shadow-[0_16px_48px_rgba(50,78,96,0.1)] backdrop-blur-sm md:hidden" aria-labelledby="mobile-audit-title">
+        <section className="mx-auto max-w-2xl bg-white px-3.5 py-4 font-google-sans md:hidden" aria-labelledby="mobile-audit-title">
           <div className="border-b border-[#E4E6E8] pb-4">
-            <h1 id="mobile-audit-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-[-0.035em] text-[#30343B]">
+            <h1 id="mobile-audit-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-tight text-[#30343B]">
               {mobileStep === 1 ? 'Get your Amazon Audit started.' : mobileStep === 2 ? 'Almost there.' : 'A few things to keep in mind.'}
             </h1>
           </div>
@@ -73,7 +71,7 @@ export default function AmazonAuditIntro() {
 
           {mobileStep === 2 ? (
             <div className="pt-4">
-              <h2 className="font-google-sans text-[20px] font-normal tracking-[-0.015em] text-[#30343B]">Send what you have</h2>
+              <h2 className="font-google-sans text-[20px] font-normal tracking-tight text-[#30343B]">Send what you have</h2>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon reports, settlement or payment reports, inventory, FBA, returns, and refund records can all help. CSV, XLSX, PDF, and ZIP files are fine.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You do not need to organize the files perfectly or connect Amazon at this stage. Margin will tell you if anything else is needed.</p>
               <Button type="button" onClick={() => setMobileStep(3)} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE]">Continue <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
@@ -82,7 +80,7 @@ export default function AmazonAuditIntro() {
 
           {mobileStep === 3 ? (
             <div className="pt-4">
-              <h2 className="font-google-sans text-[20px] font-normal tracking-[-0.015em] text-[#30343B]">What happens next?</h2>
+              <h2 className="font-google-sans text-[20px] font-normal tracking-tight text-[#30343B]">What happens next?</h2>
               <div className="mt-4 divide-y divide-[#E4E6E8] border-y border-[#E4E6E8]">
                 {auditSteps.map(({ title }) => (
                   <div key={title} className="flex gap-3 py-3 text-[14px]">
@@ -96,21 +94,21 @@ export default function AmazonAuditIntro() {
           ) : null}
         </section>
 
-        <section className="mx-auto hidden max-w-2xl rounded-[14px] bg-white/90 px-4 py-5 shadow-[0_20px_70px_rgba(50,78,96,0.12)] backdrop-blur-sm sm:px-8 sm:py-8 md:block" aria-labelledby="audit-intro-title">
+        <section className="mx-auto hidden max-w-2xl bg-white px-4 py-5 sm:px-8 sm:py-8 md:block" aria-labelledby="audit-intro-title">
           <div className="border-b border-[#E4E6E8] pb-6 sm:pb-8">
-            <h1 id="audit-intro-title" className="font-lora text-[28px] font-normal leading-[1.06] tracking-[-0.035em] text-[#30343B] sm:text-[40px]">Get your Amazon Audit started.</h1>
+            <h1 id="audit-intro-title" className="font-google-sans text-[28px] font-normal leading-[1.06] tracking-tight text-[#30343B] sm:text-[40px]">Get your Amazon Audit started.</h1>
             <p className="mt-4 max-w-xl text-[14px] leading-6 text-[#595E68]">Start by sending the Amazon files you already have available.</p>
             <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">You do not need to know which discrepancy to look for or prepare a perfect package. The records give Margin the material to investigate what may have been missed.</p>
           </div>
 
           <div className="mt-5 border-b border-[#E4E6E8] pb-5 sm:mt-6 sm:pb-6">
-            <h2 className="font-lora text-[21px] font-normal tracking-[-0.015em] text-[#30343B] sm:text-[23px]">Send what you have</h2>
+            <h2 className="font-google-sans text-[21px] font-normal tracking-tight text-[#30343B] sm:text-[23px]">Send what you have</h2>
             <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon reports, settlement or payment reports, inventory, FBA, returns, and refund records can all help. CSV, XLSX, PDF, and ZIP files are fine.</p>
             <p className="mt-4 text-[14px] leading-6 text-[#595E68]">You do not need to organize the files perfectly or connect Amazon at this stage. Margin will tell you if anything else is needed.</p>
           </div>
 
           <div className="mt-6 sm:mt-7" aria-labelledby="audit-next-title">
-            <h2 id="audit-next-title" className="font-lora text-[21px] font-normal tracking-[-0.015em] text-[#30343B] sm:text-[23px]">What happens next?</h2>
+            <h2 id="audit-next-title" className="font-google-sans text-[21px] font-normal tracking-tight text-[#30343B] sm:text-[23px]">What happens next?</h2>
             <div className="mt-4 divide-y divide-[#E4E6E8] border-y border-[#E4E6E8]">
               {auditSteps.map(({ title, description }) => (
                 <details key={title} className="group py-3">
