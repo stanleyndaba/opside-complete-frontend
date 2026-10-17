@@ -75,8 +75,8 @@ export default function AmazonAuditIntro() {
             <div className="pt-4">
               <p className="text-[14px] leading-6 text-[#595E68]">Send the Amazon records you already have available.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You don’t need to know what went wrong or prepare a perfect package. Margin examines the records to establish what has been accounted for, identify material discrepancies, and determine what may require further investigation.</p>
-              <p className="mt-3 text-[14px] font-medium leading-6 text-[#30343B]">You provide the records. Margin establishes what they show.</p>
               <Button type="button" onClick={() => setMobileStep(2)} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE]">Continue to records submission <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+              <p className="mt-3 text-[14px] font-medium leading-6 text-[#30343B]">You provide the records. Margin establishes what they show.</p>
             </div>
           ) : null}
 
@@ -101,8 +101,8 @@ export default function AmazonAuditIntro() {
                   </div>
                 ))}
               </div>
-              <p className="mt-2 text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to know what to look for. Establishing what happened is Margin’s job.</p>
               <Button type="button" onClick={() => navigate('/seller-audit')} className="mt-5 h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE]">Continue to upload records <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+              <p className="mt-3 text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to know what to look for. Establishing what happened is Margin’s job.</p>
             </div>
           ) : null}
         </section>
@@ -112,7 +112,6 @@ export default function AmazonAuditIntro() {
             <h1 id="audit-intro-title" className="font-google-sans text-[28px] font-normal leading-[1.06] tracking-tight text-[#30343B] sm:text-[40px]">Get your Amazon financial review started.</h1>
             <p className="mt-4 max-w-xl text-[14px] leading-6 text-[#595E68]">Send the Amazon records you already have available.</p>
             <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">You don’t need to know what went wrong or prepare a perfect package. Margin examines the records to establish what has been accounted for, identify material discrepancies, and determine what may require further investigation.</p>
-            <p className="mt-3 max-w-xl text-[14px] font-medium leading-6 text-[#30343B]">You provide the records. Margin establishes what they show.</p>
           </div>
 
           <div className="mt-4 pb-2 sm:mt-5 sm:pb-3">
@@ -141,6 +140,7 @@ export default function AmazonAuditIntro() {
 
           <div className="mt-5 flex flex-col items-stretch gap-3 pt-2 sm:mt-6 sm:items-start sm:gap-4">
             <Button type="button" onClick={() => navigate('/seller-audit')} className="h-11 w-full rounded-[10px] bg-[#3F51A8] px-5 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] sm:w-auto">Continue to upload records <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+            <p className="max-w-xl text-[13px] font-medium leading-5 text-[#30343B]">You provide the records. Margin establishes what they show.</p>
             <p className="max-w-xl text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to know what to look for. Establishing what happened is Margin’s job.</p>
           </div>
         </section>
