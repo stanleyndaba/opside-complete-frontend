@@ -1620,7 +1620,7 @@ const Login = () => {
                       onClick={() => void handleClearBrowserSession()}
                       disabled={loading}
                       variant="outline"
-                      className="mt-3 h-11 rounded-[5px] border-[#E8B6B6] bg-white px-4 text-[13px] font-semibold text-[#A33A3A] hover:bg-[#FFF5F5]"
+                      className="mt-3 h-11 border-0 bg-transparent px-0 text-[13px] font-semibold text-[#A33A3A] shadow-none hover:bg-transparent hover:text-[#7F2D2D]"
                     >
                       Clear browser session
                     </Button>
