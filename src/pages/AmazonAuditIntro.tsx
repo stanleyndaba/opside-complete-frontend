@@ -1,4 +1,4 @@
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -14,20 +14,20 @@ import { trackEvent } from '@/lib/analytics';
  */
 const auditSteps = [
   {
-    title: 'Add your details',
-    description: 'Give us your email and seller or business name so we know whose records we are reviewing.',
+    title: 'Establish your business profile',
+    description: 'Provide the business and account details required to scope the review.',
   },
   {
-    title: 'Submit your records',
-    description: 'Send the Amazon files you already have available.',
+    title: 'Provide financial records',
+    description: 'Submit the relevant Amazon financial and operational records.',
   },
   {
-    title: 'Margin examines the records',
-    description: 'We analyze the available financial activity, establish what can be accounted for, and identify anything that may need further investigation.',
+    title: 'Financial examination',
+    description: 'Margin analyzes the records to establish the financial position, investigate material variances, and assess unresolved exposure.',
   },
   {
-    title: 'Receive your findings',
-    description: 'We explain what the records establish, what remains unresolved, and whether the evidence supports further action.',
+    title: 'Findings and recommended actions',
+    description: 'Receive a documented assessment of what has been established, what remains unresolved, and where the evidence supports further action.',
   },
 ];
 
@@ -92,17 +92,17 @@ export default function AmazonAuditIntro() {
 
           {mobileStep === 3 ? (
             <div className="pt-4">
-              <h2 className="font-google-sans text-[20px] font-normal tracking-tight text-[#30343B]">Here&apos;s what happens next.</h2>
-              <p className="mt-3 text-[14px] font-medium leading-6 text-[#30343B]">From records to financial clarity.</p>
-              <div className="mt-3">
-                {auditSteps.map(({ title }, index) => (
-                  <div key={title} className="flex gap-3 py-3 text-[14px]">
-                    <span className="font-semibold text-[#30343B]">{index + 1}. {title}</span>
+              <h2 className="font-google-sans text-[20px] font-normal tracking-tight text-[#30343B]">From financial records to resolution.</h2>
+              <div className="mt-2">
+                {auditSteps.map(({ title, description }) => (
+                  <div key={title} className="py-2.5 text-[14px]">
+                    <p className="font-semibold text-[#30343B]">{title}</p>
+                    <p className="mt-1 leading-5 text-[#777A82]">{description}</p>
                   </div>
                 ))}
               </div>
-              <p className="mt-3 text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to know what to look for. Establishing what happened is Margin’s job.</p>
-              <Button type="button" onClick={() => navigate('/seller-audit')} className="mt-5 h-10 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-4 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1]">Continue to upload records <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+              <p className="mt-2 text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to identify the discrepancy. Margin leads the examination.</p>
+              <Button type="button" onClick={() => navigate('/seller-audit')} className="mt-4 h-10 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-4 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1]">Proceed to records submission <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             </div>
           ) : null}
         </section>
@@ -122,26 +122,23 @@ export default function AmazonAuditIntro() {
             <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You don’t need to organize everything perfectly or identify a discrepancy yourself. Send the records you already have available. Margin will examine them and let you know if anything else is needed.</p>
           </div>
 
-          <div className="mt-6 sm:mt-7" aria-labelledby="audit-next-title">
-            <h2 id="audit-next-title" className="font-google-sans text-[21px] font-normal tracking-tight text-[#30343B] sm:text-[23px]">Here&apos;s what happens next.</h2>
-            <p className="mt-2 text-[14px] font-medium leading-6 text-[#30343B]">From records to financial clarity.</p>
-            <div className="mt-4">
-              {auditSteps.map(({ title, description }, index) => (
-                <details key={title} className="group py-3">
-                  <summary className="flex cursor-pointer list-none items-center gap-3 text-[14px] font-semibold text-[#30343B] outline-none marker:hidden focus-visible:text-[#3F51A8]">
-                    <span className="flex-1">{index + 1}. {title}</span>
-                    <ChevronDown className="h-4 w-4 shrink-0 text-[#8C969E] transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
-                  </summary>
-                  <p className="pr-6 pt-2 text-[13px] leading-5 text-[#777A82]">{description}</p>
-                </details>
+          <div className="mt-4 sm:mt-5" aria-labelledby="audit-next-title">
+            <h2 id="audit-next-title" className="font-google-sans text-[21px] font-normal tracking-tight text-[#30343B] sm:text-[23px]">From financial records to resolution.</h2>
+            <div className="mt-2">
+              {auditSteps.map(({ title, description }) => (
+                <div key={title} className="py-2.5">
+                  <p className="text-[14px] font-semibold text-[#30343B]">{title}</p>
+                  <p className="mt-1 max-w-xl text-[13px] leading-5 text-[#777A82]">{description}</p>
+                </div>
               ))}
             </div>
+            <p className="mt-2 max-w-xl text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to identify the discrepancy. Margin leads the examination.</p>
           </div>
 
           <div className="mt-5 flex flex-col items-stretch gap-3 pt-2 sm:mt-6 sm:items-start sm:gap-4">
             <p className="max-w-xl text-[13px] font-medium leading-5 text-[#30343B]">You provide the records. Margin establishes what they show.</p>
             <p className="max-w-xl text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to know what to look for. Establishing what happened is Margin’s job.</p>
-            <Button type="button" onClick={() => navigate('/seller-audit')} className="h-11 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-5 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1] sm:w-auto">Continue to upload records <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+            <Button type="button" onClick={() => navigate('/seller-audit')} className="h-11 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-5 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1] sm:w-auto">Proceed to records submission <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
           </div>
         </section>
         </div>
