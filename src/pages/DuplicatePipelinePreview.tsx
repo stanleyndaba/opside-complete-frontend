@@ -259,13 +259,12 @@ function AuditFindingsStage({ onComplete }: { onComplete: () => void }) {
   };
 
   return <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="px-5 pb-5 sm:px-6">
-    <div className="rounded-[10px] border border-[#D8E3E8] bg-white p-4 sm:p-5">
-      <div className="border-b border-[#E3ECEF] pb-3">
-        <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Audit findings · 12 verified discrepancies</p>
-        <h2 className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[22px]">What the Audit establishes</h2>
+    <div className="bg-white p-4 sm:p-5">
+      <div className="pb-3">
+        <h2 className="font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[22px]">What the Audit establishes</h2>
         <p className="mt-1 max-w-[840px] text-[11px] leading-5 tracking-tight text-[#66737F]">Margin found, quantified, and separated the positions that require recovery work from activity already accounted for or still unresolved.</p>
       </div>
-      <div className="mt-2 divide-y divide-[#E8EFF1]" aria-live="polite" aria-atomic="false">
+      <div className="mt-2" aria-live="polite" aria-atomic="false">
         {auditFindings.map(([title, description, highlights], index) => {
           const visible = reduceMotion || index <= activeFinding;
           const active = !reduceMotion && index === activeFinding;
