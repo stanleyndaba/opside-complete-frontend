@@ -152,23 +152,22 @@ cards.resolved.push(...makeAdditionalCards("RFD-164", "resolved", "Recovered", [
     { kind: 'paragraph', text: 'Coverage established across 124,860 orders, 1,842 shipments, 7,630 returns, 31,940 fee records, and 28,600 inventory movements across 8 settlement periods.', highlight: 'yellow' },
     { kind: 'paragraph', text: 'The operating population spans 4 marketplaces and 3 legal entities, with 1,126 affected records across 318 SKUs.', highlight: 'blue' },
     { kind: 'paragraph', text: 'This is not one bounded event. The records establish a portfolio-level control position.', highlight: 'green' },
-    { kind: 'heading', text: 'Financial pattern' },
-    { kind: 'heading', text: 'Portfolio-level finding' },
-    { kind: 'paragraph', text: 'Inbound receiving variances recur across multiple settlement periods and marketplaces. The population requires event-level entitlement, evidence testing, settlement reconciliation, and entity attribution before recovery treatment is determined.', highlight: 'purple' },
-    { kind: 'list', text: '10 March 2026 — 17 affected units across two related shipments; the receiving and inventory records diverge after the same supplier delivery', highlight: 'blue' },
-    { kind: 'list', text: '24 March 2026 — 9 affected units across one shipment; the settlement record does not reconcile to the receiving quantity', highlight: 'green' },
-    { kind: 'list', text: '9 April and 22 April 2026 — 11 affected units across two shipments; settlement attribution remains unresolved', highlight: 'purple' },
-    { kind: 'paragraph', text: 'The Audit separates independent financial events from duplicate records, recurring control failures, and already-accounted-for activity.' },
-    { kind: 'heading', text: 'What this means for the operation' },
-    { kind: 'paragraph', text: 'A single recovery workflow can address one supported event. It does not establish whether the same control failure is recurring across the account.' },
-    { kind: 'paragraph', text: 'Margin distinguishes an isolated event from a repeated exposure pattern, then connects the pattern to the relevant marketplace, entity, settlement period, and evidence population.' },
-    { kind: 'final', text: 'The Audit determines whether the business needs a defined recovery, recurring examination, or an enterprise control boundary.', highlight: 'blue' },
-    { kind: 'heading', text: 'Evidence and control position' },
-    { kind: 'paragraph', text: 'Margin has separated the reviewed population into supported, partially supported, settlement-pending, and unresolved positions. Supported records can move to controlled preparation; positions without sufficient evidence remain visible but are not counted as recoverable.' },
-    { kind: 'paragraph', text: 'Current control population:', highlight: 'green' },
-    { kind: 'paragraph', text: '$184,200 indicated exposure · $88,200 evidence-ready · $96,000 requiring evidence or settlement review · 14 source gaps requiring additional documentation.' },
-    { kind: 'paragraph', text: 'Unverified conditions remain unresolved — they are not counted as recovered, recoverable, or cleared.' },
   ];
+
+  const auditFindings = [
+    ['Inbound receiving variance', 'Amazon recorded 2,352 units received against 2,416 expected on 10 March 2026, leaving a 64-unit variance valued at $4,144.00.', ['2,352 units received', '2,416 expected', '10 March 2026', '$4,144.00']],
+    ['Underpaid reimbursement', 'Settlement 205-114 credited $742.00 against a verified $963.10 entitlement for 7 units, leaving $221.10 unresolved.', ['Settlement 205-114', '$742.00', '$963.10', '$221.10 unresolved']],
+    ['Storage fee rate discrepancy', 'February 2026 storage charges exceeded the documented cubic-foot rate for 186 units, creating a supported variance of $329.84.', ['February 2026', '186 units', '$329.84']],
+    ['Referral fee overcharge', 'Settlement 205-083 applied a higher referral rate than the category record supports across 24 units, producing a $214.70 variance.', ['Settlement 205-083', '24 units', '$214.70 variance']],
+    ['Return inventory not credited', 'Order 114-4281902-663 shows 3 returned units with no corresponding inventory credit in the settlement record, representing $268.50.', ['Order 114-4281902-663', '3 returned units', '$268.50']],
+    ['Removal shipment shortage', 'Removal R-89114 closed with 12 fewer delivered units than the carrier manifest and warehouse release, exposing $716.40.', ['Removal R-89114', '12 fewer delivered units', '$716.40']],
+    ['Warehouse damage not reimbursed', 'The WHS-07 receiving record documents damage to 10 units, but no matching reimbursement appears in account activity; exposure is $1,084.00.', ['WHS-07', '10 units', '$1,084.00']],
+    ['Late delivery compensation', 'The 18 April 2026 delivery breached the service-level window and the carrier timeline supports a $391.22 compensation position.', ['18 April 2026', 'service-level window', '$391.22']],
+    ['Unmatched inventory adjustment', 'Adjustment ADJ-77419 reduced available inventory by 9 units without a corresponding operational event, creating $633.15 of unresolved exposure.', ['ADJ-77419', '9 units', '$633.15']],
+    ['Settlement residual remains open', 'Approved recovery activity totals $46,280, but payout timing, partial credits, and reversal risk still require settlement reconciliation before closure.', ['$46,280', 'partial credits', 'reversal risk']],
+    ['Recurring exposure pattern', 'Receiving variances recur across 4 marketplaces, 3 entities, and 8 settlement periods rather than appearing as one isolated case.', ['4 marketplaces', '3 entities', '8 settlement periods']],
+    ['Evidence and ownership gaps isolated', 'The reviewed population contains $184,200 indicated exposure, with $88,200 evidence-ready and 14 source gaps assigned for follow-up.', ['$184,200 indicated exposure', '$88,200 evidence-ready', '14 source gaps']],
+  ] as const;
 
 function FastDuplicateTypewriter({ text, onComplete }: { text: string; onComplete?: () => void }) {
   const reduceMotion = useReducedMotion();
@@ -216,7 +215,7 @@ function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
     if (reduceMotion) return;
     window.setTimeout(() => setActiveItem((current) => current + 1), 80);
   };
-  const analysisColumns = [analysisItems.slice(0, 9), analysisItems.slice(9)];
+  const analysisColumns = [analysisItems];
   const renderAnalysisItem = (item: typeof analysisItems[number], index: number) => {
     const visible = reduceMotion || index <= activeItem;
     const active = reduceMotion || index === activeItem;
@@ -239,6 +238,49 @@ function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
     <header className="pb-2.5"><p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]"><mark className="rounded-[2px] bg-[#F1F2F2] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone]">Illustrative audit population · decision-grade account position</mark></p><h2 className="mt-1.5 max-w-2xl font-google-sans text-[15px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[18px]">The analysis establishes the account&apos;s operating position</h2></header>
     <section className="py-1" aria-live="polite"><div className="grid grid-cols-1 gap-x-8 gap-y-5 lg:grid-cols-2">{analysisColumns.map((column, columnIndex) => <div key={columnIndex} className="min-w-0 space-y-1">{column.map((item, itemIndex) => renderAnalysisItem(item, columnIndex === 0 ? itemIndex : itemIndex + 9))}</div>)}</div></section>
     <p className="mt-2 text-[8px] leading-3 font-medium tracking-tight text-[#8A99A5]">{analysisComplete ? 'Analysis complete · loading the governed case positions next.' : 'Margin is reading the supplied account position and separating supported evidence from unresolved signal.'}</p>
+  </motion.div>;
+}
+
+
+function AuditFindingsStage({ onComplete }: { onComplete: () => void }) {
+  const reduceMotion = useReducedMotion();
+  const [activeFinding, setActiveFinding] = useState(0);
+  const findingsComplete = reduceMotion || activeFinding >= auditFindings.length;
+
+  useEffect(() => {
+    if (!findingsComplete) return;
+    const timer = window.setTimeout(onComplete, reduceMotion ? 2600 : 1800);
+    return () => window.clearTimeout(timer);
+  }, [findingsComplete, onComplete, reduceMotion]);
+
+  const advance = () => {
+    if (reduceMotion) return;
+    window.setTimeout(() => setActiveFinding((current) => Math.min(current + 1, auditFindings.length)), 100);
+  };
+
+  return <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="px-5 pb-5 sm:px-6">
+    <div className="rounded-[10px] border border-[#D8E3E8] bg-white p-4 sm:p-5">
+      <div className="border-b border-[#E3ECEF] pb-3">
+        <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Audit findings · 12 verified discrepancies</p>
+        <h2 className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[22px]">What the Audit establishes</h2>
+        <p className="mt-1 max-w-[840px] text-[11px] leading-5 tracking-tight text-[#66737F]">Margin found, quantified, and separated the positions that require recovery work from activity already accounted for or still unresolved.</p>
+      </div>
+      <div className="mt-2 divide-y divide-[#E8EFF1]" aria-live="polite" aria-atomic="false">
+        {auditFindings.map(([title, description, highlights], index) => {
+          const visible = reduceMotion || index <= activeFinding;
+          const active = !reduceMotion && index === activeFinding;
+          const content = reduceMotion || index < activeFinding ? description : active ? <FastDuplicateTypewriter text={description} onComplete={advance} /> : null;
+          return <motion.div key={title} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8, height: visible ? 'auto' : 0 }} transition={{ duration: reduceMotion ? 0 : 0.2 }} className="flex items-start gap-2.5 overflow-hidden py-3 first:pt-3 last:pb-1">
+            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#0B74DE] text-white" aria-hidden="true"><Check className="h-2.5 w-2.5" strokeWidth={3} /></span>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold leading-4 tracking-tight text-[#182026]">{title}</p>
+              <p className="mt-0.5 text-[10px] leading-5 tracking-tight text-[#595E68]"><HighlightedDescription description={typeof content === 'string' ? content : ''} highlight={highlights} highlightComplete={reduceMotion || index < activeFinding} />{typeof content === 'string' ? null : content}</p>
+            </div>
+          </motion.div>;
+        })}
+      </div>
+      <p className="mt-3 text-[10px] font-medium tracking-tight text-[#8A99A5]">{findingsComplete ? 'Findings established · moving to supporting record intake.' : `Margin is establishing finding ${Math.min(activeFinding + 1, auditFindings.length)} of ${auditFindings.length}.`}</p>
+    </div>
   </motion.div>;
 }
 
@@ -319,7 +361,7 @@ const evidenceRegister = [
   { name: 'Supplier and commercial invoice pack', type: 'PDF', highlight: ['ownership', 'recoverable basis'], description: 'Source documentation supporting ownership, unit value, supplier relationship, and recoverable basis.' },
 ];
 
-function HighlightedDescription({ description, highlight, highlightComplete = true }: { description: string; highlight: string | string[]; highlightComplete?: boolean }) {
+function HighlightedDescription({ description, highlight, highlightComplete = true }: { description: string; highlight: string | readonly string[]; highlightComplete?: boolean }) {
   const highlights = (Array.isArray(highlight) ? highlight : [highlight])
     .map((value) => ({ value, start: description.indexOf(value) }))
     .filter(({ start }) => start >= 0)
@@ -672,7 +714,7 @@ export default function FilingPipelinePreview() {
   const [queueMode, setQueueMode] = useState<"all" | "priority" | "recent">("all");
   const [toast, setToast] = useState<string | null>(null);
   const [analysisComplete, setAnalysisComplete] = useState(false);
-  const [intakeStage, setIntakeStage] = useState<'analysis' | 'dropzone' | 'documents' | 'handoff' | 'register' | 'artifact-analysis' | 'claims' | 'claim-summary' | 'correspondence'>('analysis');
+  const [intakeStage, setIntakeStage] = useState<'analysis' | 'findings' | 'dropzone' | 'documents' | 'handoff' | 'register' | 'artifact-analysis' | 'claims' | 'claim-summary' | 'correspondence'>('analysis');
   const [intakeCycle, setIntakeCycle] = useState(0);
 
   useEffect(() => {
@@ -707,7 +749,7 @@ export default function FilingPipelinePreview() {
     setToast("Filing control recorded. Submission is now in progress.");
     window.setTimeout(() => setToast(null), 3200);
   };
-  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6"><aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside><section className="min-w-0 flex-1 bg-white">{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setAnalysisComplete(true)} /></div> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "handoff" ? <TeamHandoffStage /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => {
+  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6"><aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside><section className="min-w-0 flex-1 bg-white">{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setIntakeStage('findings')} /></div> : intakeStage === "findings" ? <AuditFindingsStage onComplete={() => setAnalysisComplete(true)} /> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "handoff" ? <TeamHandoffStage /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => {
           setIntakeStage('correspondence');
           window.setTimeout(() => setIntakeStage('claims'), CORRESPONDENCE_DWELL_MS);
           window.setTimeout(() => setIntakeStage('claim-summary'), CORRESPONDENCE_DWELL_MS + CLAIMS_DWELL_MS);
