@@ -608,31 +608,8 @@ function TeamHandoffStage() {
   </motion.div>;
 }
 function AmazonCorrespondenceStage() {
-  const reduceMotion = useReducedMotion();
-  const messages = [
-    { direction: 'Inbound', state: 'Evidence request · Residual position only', subject: '[Case 19822888381] Additional evidence required for residual $12,850', sender: 'Amazon Selling Partner Support', body: 'Amazon requested proof connecting the shipment variance, unit value, and settlement detail to the governed recovery record.', attachments: ['Carrier delivery record', 'Valuation basis', 'Settlement detail'], tone: 'bg-[#F5F8FC]' },
-    { direction: 'Outbound', state: 'Targeted residual response · Approval required', subject: '[Case 19822888381] Residual evidence response prepared', sender: 'Margin · evidence response owner', body: 'Margin mapped the request to the existing event record instead of restarting the investigation. The accepted evidence remains attached.', attachments: ['Residual evidence map', 'Approval record', 'Response draft'], tone: 'bg-[#F4FAF6]' },
-  ];
-
-  return <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} aria-labelledby="amazon-correspondence-title" className="mt-8 bg-[#FBFAF7] px-5 py-6 sm:px-6 sm:py-8">
-    <div className="flex items-start gap-3">
-      <img src="/gmailicon.png" alt="Gmail" className="mt-0.5 h-6 w-6 shrink-0 object-contain" />
-      <div className="min-w-0">
-        <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Amazon correspondence · illustrative</p>
-        <h2 id="amazon-correspondence-title" className="mt-1 font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[21px]">The response updates the recovery record</h2>
-        <p className="mt-1 max-w-[720px] text-[11px] leading-5 tracking-tight text-[#66737F]">The thread is not the record. It updates the record.</p>
-      </div>
-    </div>
-    <div className="mt-6 max-w-[860px] space-y-6" aria-live="polite">
-      {messages.map((message, index) => <motion.article key={message.subject} initial={{ opacity: 0, x: index === 0 ? -8 : 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: reduceMotion ? 0 : 0.18 + index * 0.24, duration: 0.38 }} className={`px-3 py-3 sm:px-4 ${message.tone}`}>
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[9px] font-semibold uppercase tracking-tight text-[#6B7C88]"><img src="/gmailicon.png" alt="Gmail correspondence" className="h-3.5 w-3.5 shrink-0 object-contain" /><span className="rounded-full bg-white/80 px-2 py-0.5">{message.direction}</span><span>{message.state}</span></div>
-        <h3 className="mt-2 text-[12px] font-semibold leading-5 tracking-tight text-[#182026]"><mark className={index === 0 ? 'rounded-[3px] bg-[#F7E7CF] px-1 py-0.5 font-semibold text-[#6A4B22]' : 'rounded-[3px] bg-[#DDF4E5] px-1 py-0.5 font-semibold text-[#276247]'}>{message.subject}</mark></h3>
-        <p className="mt-1 text-[10px] font-medium tracking-tight text-[#7B8A97]">From {message.sender}</p>
-        <p className="mt-2 max-w-[760px] text-[11px] leading-5 tracking-tight text-[#4D5B66]">{message.body}</p>
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[9px] font-medium tracking-tight text-[#66737F]"><span className="text-[#8A99A5]">Attached evidence</span>{message.attachments.map((attachment) => <span key={attachment} className="text-[#4D5B66]">{attachment}</span>)}</div>
-      </motion.article>)}
-    </div>
-    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduceMotion ? 0 : 0.78, duration: 0.3 }} className="mt-6 text-[10px] font-medium tracking-tight text-[#536B79]">Current position · Supported exposure $38,850 · Amazon approved $26,000 · Residual position remains open until response and settlement are reconciled.</motion.p>
+  return <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} aria-label="Amazon Thread Review" className="mt-8 overflow-hidden bg-[#F6F8F9]">
+    <iframe title="Amazon Thread Review" src="/amazon-thread-review" className="block h-[600px] w-full border-0 bg-[#F6F8F9]" loading="lazy" />
   </motion.section>;
 }
 
