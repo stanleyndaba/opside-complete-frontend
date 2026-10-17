@@ -465,7 +465,7 @@ const Login = () => {
   }, []);
 
   const heading = mode === 'signup'
-    ? 'Your Amazon Margins. Established'
+    ? 'your Amazon financial position. Established.'
     : mode === 'recovery'
       ? 'Reset your password'
     : "Let's pick up where you left off";
@@ -1415,19 +1415,12 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-y-auto bg-white text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide [&_button]:rounded-[5px]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', fontFamily: 'var(--font-google-sans)' }}>
+    <div className="relative min-h-screen overflow-y-auto bg-white text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide [&_button]:rounded-[5px]" style={{ backgroundColor: '#FFFFFF', scrollbarWidth: 'none', msOverflowStyle: 'none', fontFamily: 'var(--font-google-sans)' }}>
       <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Left Side: Form */}
         <div className="flex flex-1 items-center justify-center bg-white px-5 py-7 sm:px-8 lg:py-12">
           <div className="w-full max-w-[420px] lg:max-w-[380px]">
-            <div className="mb-7 flex items-center justify-between sm:mb-10">
-              <button
-                type="button"
-                onClick={handleBack}
-                className="inline-flex h-8 items-center justify-center bg-black/70 px-3 text-[12px] font-semibold text-white shadow-[0_4px_14px_rgba(24,32,38,0.12)] backdrop-blur-md transition-colors hover:bg-black/80"
-              >
-                Back
-              </button>
+            <div className="mb-7 flex justify-center sm:mb-10 sm:justify-start">
               <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
                 <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
                 <span className="brand-wordmark font-merriweather text-[22px] font-semibold tracking-tight text-[#182026]">Margin</span>
@@ -1436,7 +1429,7 @@ const Login = () => {
 
             <section>
               <div className="mb-6 lg:hidden">
-                <h1 className="text-center text-[28px] font-bold leading-[1.12] tracking-[-0.035em] text-[#182026] sm:text-left sm:text-[30px] font-lora">
+                <h1 className="font-google-sans text-center text-[28px] font-bold leading-[1.12] tracking-[-0.035em] text-[#182026] sm:text-left sm:text-[30px]">
                   {heading}
                 </h1>
                 {mode === 'signup' && (
@@ -1468,7 +1461,7 @@ const Login = () => {
                           resetLocalAuthError();
                         }}
                         placeholder="you@example.com"
-                        className="h-12 rounded-[5px] border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
+                        className="h-12 rounded-[5px] border-[#C8D6DF] bg-white px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
                       />
                     </div>
                   </div>
@@ -1489,7 +1482,7 @@ const Login = () => {
                           resetLocalAuthError();
                         }}
                         placeholder={mode === 'recovery' ? 'Enter new password' : mode === 'signup' ? 'Create a password' : 'Enter your password'}
-                        className="h-12 rounded-[5px] border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                        className="h-12 rounded-[5px] border-[#C8D6DF] bg-white px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                       />
                       <button
                         type="button"
@@ -1520,7 +1513,7 @@ const Login = () => {
                             setError('');
                           }}
                           placeholder="Enter verification code"
-                          className="h-12 rounded-[5px] border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                          className="h-12 rounded-[5px] border-[#C8D6DF] bg-white px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                         />
                       </div>
                       {clerkVerificationMessage ? (
@@ -1545,7 +1538,7 @@ const Login = () => {
                             resetLocalAuthError();
                           }}
                           placeholder="Confirm your new password"
-                          className="h-12 rounded-[5px] border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                          className="h-12 rounded-[5px] border-[#C8D6DF] bg-white px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                         />
                         <button
                           type="button"
@@ -1592,7 +1585,7 @@ const Login = () => {
                     </div>
                   )}
                   {error === '__SERVICE_PREPARING__' ? (
-                    <div className="border border-[#D8E3EA] bg-[#FAFAF7] p-6 text-center sm:p-8">
+                    <div className="border border-[#D8E3EA] bg-white p-6 text-center sm:p-8">
                       <h3 className="text-[22px] font-bold tracking-[-0.025em] text-[#182026]">
                         Preparing Account
                       </h3>
@@ -1627,7 +1620,7 @@ const Login = () => {
                       onClick={() => void handleClearBrowserSession()}
                       disabled={loading}
                       variant="outline"
-                      className="mt-3 h-11 rounded-[5px] border-[#E8B6B6] bg-[#FAFAF7] px-4 text-[13px] font-semibold text-[#A33A3A] hover:bg-[#FFF5F5]"
+                      className="mt-3 h-11 rounded-[5px] border-[#E8B6B6] bg-white px-4 text-[13px] font-semibold text-[#A33A3A] hover:bg-[#FFF5F5]"
                     >
                       Clear browser session
                     </Button>
@@ -1765,26 +1758,18 @@ const Login = () => {
                           New to Margin? Create account
                         </button>
                       </>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMode('login');
-                          setEmailStepComplete(false);
-                          setPassword('');
-                          setConfirmPassword('');
-                          setError('');
-                          setClerkVerificationStep(null);
-                          setClerkVerificationCode('');
-                          setClerkVerificationMessage('');
-                        }}
-                        className="text-left transition-colors hover:text-[#182026]"
-                      >
-                        Back
-                      </button>
-                    )}
+                    ) : null}
                   </div>
                 </form>
+                <div className="mt-6 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="inline-flex h-9 items-center justify-center bg-[#0B74DE] px-4 text-[12px] font-semibold text-white shadow-[0_4px_14px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]"
+                  >
+                    Back
+                  </button>
+                </div>
               </div>
             </section>
           </div>
@@ -1799,7 +1784,7 @@ const Login = () => {
               </p>
             )}
             
-            <h1 className="text-left text-[36px] font-bold leading-[1.08] tracking-[-0.02em] text-[#182026] font-lora">
+            <h1 className="font-google-sans text-left text-[36px] font-bold leading-[1.08] tracking-[-0.02em] text-[#182026]">
               {heading}
             </h1>
 
