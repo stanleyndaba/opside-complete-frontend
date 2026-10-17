@@ -77,7 +77,7 @@ export default function ReviewConsent() {
             type="button"
             disabled={!understood}
             onClick={() => navigate('/audit-start')}
-            className="mt-6 h-11 w-full bg-[#0B74DE] px-5 text-[14px] font-semibold text-white transition-colors hover:bg-[#075EBA] disabled:cursor-not-allowed disabled:bg-[#C8D6DF] sm:w-auto"
+            className="mt-6 h-11 w-full rounded-[5px] bg-[#0B74DE] px-5 text-[14px] font-semibold text-white transition-colors hover:bg-[#075EBA] disabled:cursor-not-allowed disabled:bg-[#C8D6DF] sm:w-auto"
           >
             Agree and continue
           </button>
