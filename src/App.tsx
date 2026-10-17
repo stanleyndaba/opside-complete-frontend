@@ -39,6 +39,7 @@ const ResolveCase = lazy(() => import("./pages/ResolveCase"));
 const DataUpload = lazy(() => import("./pages/DataUpload"));
 const SellerAuditHandoff = lazy(() => import("./pages/SellerAuditHandoff"));
 const AmazonAuditIntro = lazy(() => import("./pages/AmazonAuditIntro"));
+const ReviewConsent = lazy(() => import("./pages/ReviewConsent"));
 const EvidenceLocker = lazy(() => import("./pages/EvidenceLocker"));
 const DocumentDetail = lazy(() => import("./pages/DocumentDetail"));
 const Billing = lazy(() => import("./pages/Billing"));
@@ -424,6 +425,7 @@ const App = () => (
                         <Route path="/data-upload" element={<DataUpload />} />
                         <Route path="/seller-audit" element={<SellerAuditHandoff />} />
                         <Route path="/audit-intake" element={<SellerAuditHandoff />} />
+                        <Route path="/review-consent" element={<ReviewConsent />} />
                         <Route path="/audit-start" element={<AmazonAuditIntro />} />
                         <Route path="/amazon-audit" element={<AmazonAuditIntro />} />
                         <Route path="/issues-found" element={<Discrepancies />} />

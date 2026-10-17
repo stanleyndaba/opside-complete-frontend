@@ -2626,7 +2626,7 @@ export default function Index() {
 
       <main>
         {/* Recognition — Is this my problem? */}
-        <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/audit-start"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
         <DuplicatePipelineDemoSection />
         <RealityCheckSection />
         <ReconstructionGapSection />
