@@ -349,9 +349,38 @@ function EvidenceRegisterStage({ workspaceMode = false }: { workspaceMode?: bool
   </motion.div>;
 }
 
+type InlineDocumentReferenceProps = { name: string; source: string; icon: string };
+function InlineDocumentReference({ name, source, icon }: InlineDocumentReferenceProps) {
+  return <span className="mx-1 inline-flex max-w-full translate-y-[0.12em] items-center gap-1.5 rounded-[4px] bg-[#F1F3F4] px-2 py-1 align-baseline text-[10px] leading-4 tracking-[-0.01em] text-[#3B4650]" title={`${source}: ${name}`}><img src={icon} alt={source} className="h-4 w-4 shrink-0 object-contain" /><span className="font-semibold">{name}</span></span>;
+}
+
 const artifactAnalysisItems = [
   {
     highlight: ['separates independent financial events', 'duplicate records', 'recurring control failures'],
+    references: [
+      { source: 'Amazon', name: 'FBA Receiving and Settlement Event Register', icon: '/amazon-logo-transparent-circle.png' },
+      { source: 'Dropbox', name: 'Shipment Support and Custody Evidence Folder', icon: '/Dropbox_Icon.svg.png' },
+      { source: 'OneDrive', name: 'Inventory Ledger and Reconciliation Workbook', icon: '/onedrive-icon.png' },
+    ],
+    references: [
+      { source: 'Excel', name: 'Inbound Variance Reconciliation Schedule', icon: '/excel-icon-margin.png' },
+      { source: 'Dropbox', name: 'Returns and Reimbursement Exception Register', icon: '/Dropbox_Icon.svg.png' },
+      { source: 'OneDrive', name: 'Settlement Period Clearing Workbook', icon: '/onedrive-icon.png' },
+    ],
+    references: [
+      { source: 'Google Drive', name: 'Amazon Settlement Transaction Detail Extract', icon: '/gd.png' },
+      { source: 'Dropbox', name: 'Recovery Cohort Evidence Register', icon: '/Dropbox_Icon.svg.png' },
+      { source: 'OneDrive', name: 'Duplicate Credit Review Workbook', icon: '/onedrive-icon.png' },
+    ],
+    references: [
+      { source: 'Outlook', name: 'Amazon Case and Evidence Correspondence', icon: '/outlookicon.webp' },
+      { source: 'Gmail', name: 'Seller Approval and Recovery Response Register', icon: '/gmailicon.png' },
+      { source: 'Amazon', name: 'Account-Level Recovery Position Record', icon: '/amazon-logo-transparent-circle.png' },
+    ],
+    references: [
+      { source: 'Dropbox', name: 'Controlled Action Evidence Pack', icon: '/Dropbox_Icon.svg.png' },
+      { source: 'OneDrive', name: 'Decision and Settlement Control Workbook', icon: '/onedrive-icon.png' },
+    ],
     text: 'The Audit separates independent financial events from duplicate records, recurring control failures, and activity already accounted for. Margin connected the inbound shipment plan, carrier proof of delivery, Amazon receiving records, settlement schedule, inventory ledger, and reimbursement correspondence so the reviewed population can be assessed as a governed operating position rather than a loose collection of files.',
   },
   {
@@ -374,11 +403,17 @@ const artifactAnalysisItems = [
 
 const artifactAnalysisChecks = [
   ['Event identity resolved', 'Shipment, SKU, ASIN, receiving node, carrier movement, and settlement period resolve to one canonical financial event.'],
+  ['Evidence coverage established', 'The connected source population establishes the operating boundary reviewed for this position.'],
   ['Expected versus received reconciled', '2,416 units were expected; 2,352 were received. The 64-unit variance remains open after the receiving window closed.'],
-  ['Cross-system evidence agrees', 'Carrier delivery, 3PL intake, and Amazon receiving records support the same delivery window and custody trail.'],
-  ['Offsets and timing noise excluded', 'Inventory adjustments, duplicate lines, and subsequent settlement activity do not clear or duplicate the variance.'],
-  ['Materiality and ownership assessed', 'Supported exposure is $4,144.00 at a verified $64.75 unit cost; Finance Operations owns the decision.'],
-  ['Decision package ready', 'The supported exposure is separated from unresolved items and ready for the next controlled action.'],
+  ['Shipment and custody trail confirmed', 'Carrier delivery, 3PL intake, and Amazon receiving records support the same delivery window and custody path.'],
+  ['Settlement period connected', 'The variance is tied to the relevant settlement period rather than treated as an isolated operational signal.'],
+  ['Inventory movement reconciled', 'Inventory adjustments and ledger movement do not clear or duplicate the reviewed variance.'],
+  ['Duplicate credit excluded', 'Subsequent credits, reimbursements, and overlapping recovery records were checked before exposure was supported.'],
+  ['Recurring exposure assessed', 'The record distinguishes an isolated event from a repeated control failure across the reviewed population.'],
+  ['Materiality assessed', 'Supported exposure is $4,144.00 at a verified $64.75 unit cost.'],
+  ['Ownership assigned', 'Finance Operations owns the decision and the next controlled action.'],
+  ['Unresolved positions preserved', 'Evidence gaps and positions requiring confirmation remain visible instead of being absorbed into supported exposure.'],
+  ['Decision package ready', 'The supported exposure is separated from unresolved items and ready for governed review.'],
 ] as const;
 
 function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
@@ -409,7 +444,7 @@ function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
           const visible = reduceMotion || index <= activeItem;
           const active = !reduceMotion && index === activeItem;
           const content = reduceMotion || index < activeItem ? item.text : active ? <FastDuplicateTypewriter text={item.text} onComplete={advance} /> : null;
-          return <motion.p key={item.text} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8, height: visible ? 'auto' : 0 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden text-[12px] leading-6 tracking-tight text-[#595E68] sm:text-[13px] sm:leading-7"><HighlightedDescription description={typeof content === 'string' ? content : item.text.slice(0, 0)} highlight={item.highlight} highlightComplete={reduceMotion || index < activeItem} />{typeof content === 'string' ? null : content}</motion.p>;
+          return <motion.p key={item.text} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8, height: visible ? 'auto' : 0 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden text-[12px] leading-6 tracking-tight text-[#595E68] sm:text-[13px] sm:leading-7"><HighlightedDescription description={typeof content === 'string' ? content : item.text.slice(0, 0)} highlight={item.highlight} highlightComplete={reduceMotion || index < activeItem} />{typeof content === 'string' ? null : content}{(reduceMotion || index < activeItem) ? item.references.map((reference) => <InlineDocumentReference key={`${item.text}-${reference.name}`} {...reference} />) : null}</motion.p>;
         })}
       </div>
       <motion.div initial={false} animate={analysisComplete ? { opacity: 1, y: 0, height: 'auto' } : { opacity: 0, y: 8, height: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="mt-7 max-w-[980px] overflow-hidden" aria-live="polite">
