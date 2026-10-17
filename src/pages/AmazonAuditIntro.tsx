@@ -75,8 +75,8 @@ export default function AmazonAuditIntro() {
             <div className="pt-4">
               <p className="text-[14px] leading-6 text-[#595E68]">Send the Amazon records you already have available.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You don’t need to know what went wrong or prepare a perfect package. Margin examines the records to establish what has been accounted for, identify material discrepancies, and determine what may require further investigation.</p>
-              <Button type="button" onClick={() => setMobileStep(2)} className="mt-5 h-10 w-full rounded-[3px] border border-[#D9E1E6] bg-[#F4F6F7] px-4 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#E9EEF1]">Continue to records submission <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
               <p className="mt-3 text-[14px] font-medium leading-6 text-[#30343B]">You provide the records. Margin establishes what they show.</p>
+              <Button type="button" onClick={() => setMobileStep(2)} className="mt-5 h-10 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-4 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1]">Continue to records submission <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             </div>
           ) : null}
 
@@ -86,7 +86,7 @@ export default function AmazonAuditIntro() {
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon settlement and payment reports, transaction reports, inventory records, FBA records, returns, and refunds can all help establish what happened to your money.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">CSV, XLSX, PDF, and ZIP files are accepted.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You don’t need to organize everything perfectly or identify a discrepancy yourself. Send the records you already have available. Margin will examine them and let you know if anything else is needed.</p>
-              <Button type="button" onClick={() => setMobileStep(3)} className="mt-5 h-10 w-full rounded-[3px] border border-[#D9E1E6] bg-[#F4F6F7] px-4 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#E9EEF1]">Continue to upload records <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+              <Button type="button" onClick={() => setMobileStep(3)} className="mt-5 h-10 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-4 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1]">Continue to upload records <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             </div>
           ) : null}
 
@@ -101,8 +101,8 @@ export default function AmazonAuditIntro() {
                   </div>
                 ))}
               </div>
-              <Button type="button" onClick={() => navigate('/seller-audit')} className="mt-5 h-10 w-full rounded-[3px] border border-[#D9E1E6] bg-[#F4F6F7] px-4 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#E9EEF1]">Continue to upload records <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
               <p className="mt-3 text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to know what to look for. Establishing what happened is Margin’s job.</p>
+              <Button type="button" onClick={() => navigate('/seller-audit')} className="mt-5 h-10 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-4 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1]">Continue to upload records <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             </div>
           ) : null}
         </section>
@@ -139,9 +139,9 @@ export default function AmazonAuditIntro() {
           </div>
 
           <div className="mt-5 flex flex-col items-stretch gap-3 pt-2 sm:mt-6 sm:items-start sm:gap-4">
-            <Button type="button" onClick={() => navigate('/seller-audit')} className="h-11 w-full rounded-[3px] border border-[#D9E1E6] bg-[#F4F6F7] px-5 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#E9EEF1] sm:w-auto">Continue to upload records <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
             <p className="max-w-xl text-[13px] font-medium leading-5 text-[#30343B]">You provide the records. Margin establishes what they show.</p>
             <p className="max-w-xl text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to know what to look for. Establishing what happened is Margin’s job.</p>
+            <Button type="button" onClick={() => navigate('/seller-audit')} className="h-11 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-5 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1] sm:w-auto">Continue to upload records <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
           </div>
         </section>
         </div>
