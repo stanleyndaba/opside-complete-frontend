@@ -43,8 +43,8 @@ export default function ReviewConsent() {
     <div className="min-h-screen overflow-x-hidden bg-white font-google-sans text-[#182026]">
       <main className="mx-auto min-h-screen w-full max-w-[860px] px-5 py-5 sm:px-8 sm:py-7 lg:px-10">
         <header className="flex items-center justify-between pb-2">
-          <Link to="/" className="font-merriweather text-[17px] font-semibold tracking-tight text-[#30343B] hover:text-[#0B74DE]">Margin</Link>
-          <Link to="/" className="inline-flex h-9 items-center justify-center bg-[#0B74DE] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#075EBA]">Back</Link>
+          <Link to="/" className="brand-wordmark font-merriweather text-[17px] font-semibold tracking-tight text-[#30343B] hover:text-[#0B74DE]">Margin</Link>
+          <Link to="/" className="inline-flex h-9 items-center justify-center rounded-[5px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#075EBA]">Back</Link>
         </header>
 
         <section className="max-w-[700px] pb-6 pt-7 sm:pt-9" aria-labelledby="review-consent-title">
