@@ -41,29 +41,29 @@ export default function ReviewConsent() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white font-google-sans text-[#182026]">
-      <main className="mx-auto min-h-screen w-full max-w-[860px] px-5 py-7 sm:px-8 sm:py-10 lg:px-10">
-        <header className="flex items-center justify-between border-b border-[#E4E6E8] pb-5 sm:pb-6">
-          <Link to="/" className="font-merriweather text-[15px] font-semibold tracking-tight text-[#30343B] hover:text-[#0B74DE]">Margin</Link>
-          <Link to="/" className="text-[13px] font-medium text-[#0B74DE] underline underline-offset-2 hover:text-[#075EBA]">Back to Margin</Link>
+      <main className="mx-auto min-h-screen w-full max-w-[860px] px-5 py-5 sm:px-8 sm:py-7 lg:px-10">
+        <header className="flex items-center justify-between pb-2">
+          <Link to="/" className="font-merriweather text-[17px] font-semibold tracking-tight text-[#30343B] hover:text-[#0B74DE]">Margin</Link>
+          <Link to="/" className="inline-flex h-9 items-center justify-center bg-[#0B74DE] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#075EBA]">Back</Link>
         </header>
 
-        <section className="max-w-[700px] pb-8 pt-10 sm:pt-14" aria-labelledby="review-consent-title">
+        <section className="max-w-[700px] pb-6 pt-7 sm:pt-9" aria-labelledby="review-consent-title">
           <p className="text-[13px] font-medium tracking-tight text-[#0B74DE]">Financial Review · Before you begin</p>
-          <h1 id="review-consent-title" className="mt-5 max-w-[680px] text-[34px] font-normal leading-[1.08] tracking-tight text-[#30343B] sm:text-[52px]">Before we examine your records</h1>
-          <p className="mt-6 max-w-[650px] text-[15px] leading-7 text-[#595E68] sm:text-[17px] sm:leading-8">Margin reviews your Amazon financial records to establish what has been accounted for, identify material discrepancies, and determine whether further investigation or recovery action is justified.</p>
-          <p className="mt-4 max-w-[650px] text-[15px] leading-7 text-[#595E68] sm:text-[17px] sm:leading-8">Before continuing, please understand how your information will be used and what this review authorizes.</p>
+          <h1 id="review-consent-title" className="mt-4 max-w-[680px] text-[34px] font-normal leading-[1.08] tracking-tight text-[#30343B] sm:text-[50px]">Before we examine your records</h1>
+          <p className="mt-4 max-w-[650px] text-[15px] leading-6.5 text-[#595E68] sm:text-[16px] sm:leading-7">Margin reviews your Amazon financial records to establish what has been accounted for, identify material discrepancies, and determine whether further investigation or recovery action is justified.</p>
+          <p className="mt-3 max-w-[650px] text-[15px] leading-6.5 text-[#595E68] sm:text-[16px] sm:leading-7">Before continuing, please understand how your information will be used and what this review authorizes.</p>
         </section>
 
-        <section className="max-w-[700px] border-y border-[#E4E6E8]" aria-label="Review terms">
+        <section className="max-w-[700px]" aria-label="Review terms">
           {reviewSections.map((section) => (
-            <div key={section.title} className="border-b border-[#E4E6E8] py-6 last:border-b-0 sm:py-7">
+            <div key={section.title} className="py-3.5 sm:py-4">
               <h2 className="text-[16px] font-semibold tracking-tight text-[#30343B] sm:text-[18px]">{section.title}</h2>
-              <p className="mt-2.5 text-[14px] leading-6 text-[#595E68] sm:text-[15px] sm:leading-7">{section.body}</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68] sm:text-[15px] sm:leading-6.5">{section.body}</p>
             </div>
           ))}
         </section>
 
-        <section className="max-w-[700px] pb-10 pt-7 sm:pt-8" aria-label="Consent">
+        <section className="max-w-[700px] pb-6 pt-4 sm:pt-5" aria-label="Consent">
           <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-6 text-[#30343B]">
             <input
               type="checkbox"
