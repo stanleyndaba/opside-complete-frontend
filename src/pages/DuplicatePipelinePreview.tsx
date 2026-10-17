@@ -357,50 +357,49 @@ function InlineDocumentReference({ name, source, icon }: InlineDocumentReference
 const artifactAnalysisItems = [
   {
     highlight: ['separates independent financial events', 'duplicate records', 'recurring control failures'],
+    text: 'The Audit separates independent financial events from duplicate records, recurring control failures, and activity already accounted for. Margin connected the inbound shipment plan, carrier proof of delivery, Amazon receiving records, settlement schedule, inventory ledger, and reimbursement correspondence so the reviewed population can be assessed as a governed operating position rather than a loose collection of files, with each relationship tied to the receiving, shipment, inventory, and settlement records represented in the attached evidence references.',
     references: [
       { source: 'Amazon', name: 'FBA Receiving and Settlement Event Register', icon: '/amazon-logo-transparent-circle.png' },
       { source: 'Dropbox', name: 'Shipment Support and Custody Evidence Folder', icon: '/Dropbox_Icon.svg.png' },
       { source: 'OneDrive', name: 'Inventory Ledger and Reconciliation Workbook', icon: '/onedrive-icon.png' },
-    ],
-    references: [
       { source: 'Excel', name: 'Inbound Variance Reconciliation Schedule', icon: '/excel-icon-margin.png' },
+    ],
+  },
+  {
+    highlight: ['single recovery workflow', 'recurring exposure pattern', 'event-level entitlement'],
+    text: 'A single recovery workflow can address one supported event, but it does not establish whether the same control failure is recurring across the account. Margin distinguishes an isolated event from a repeated exposure pattern, then connects that pattern to the relevant marketplace, legal entity, settlement period, and evidence population before any recovery position is treated as supportable, using the returns, reimbursement, settlement, and marketplace evidence represented in the attached records.',
+    references: [
       { source: 'Dropbox', name: 'Returns and Reimbursement Exception Register', icon: '/Dropbox_Icon.svg.png' },
       { source: 'OneDrive', name: 'Settlement Period Clearing Workbook', icon: '/onedrive-icon.png' },
-    ],
-    references: [
       { source: 'Google Drive', name: 'Amazon Settlement Transaction Detail Extract', icon: '/gd.png' },
+    ],
+  },
+  {
+    highlight: ['governed recovery cohort', 'duplicate credit', 'controlled preparation'],
+    text: 'The evidence is sufficient to form a governed recovery cohort. Margin linked the cohort source records, tested the receiving variance against the related financial events, checked the duplicate-credit and settlement records, and separated supported exposure from positions that still require confirmation. The resulting position is ready for controlled preparation and review before any filing or seller action.',
+    references: [
       { source: 'Dropbox', name: 'Recovery Cohort Evidence Register', icon: '/Dropbox_Icon.svg.png' },
       { source: 'OneDrive', name: 'Duplicate Credit Review Workbook', icon: '/onedrive-icon.png' },
-    ],
-    references: [
       { source: 'Outlook', name: 'Amazon Case and Evidence Correspondence', icon: '/outlookicon.webp' },
+    ],
+  },
+  {
+    highlight: ['account-level control position', 'supported exposure', 'unresolved positions'],
+    text: 'The resulting record is an account-level control position, not a one-off answer to a single discrepancy. Supported exposure can move into a governed review queue, while the correspondence, approval, and account-level records keep unresolved positions visible with their evidence gaps, ownership, and next required action clearly separated from recoverable value.',
+    references: [
       { source: 'Gmail', name: 'Seller Approval and Recovery Response Register', icon: '/gmailicon.png' },
       { source: 'Amazon', name: 'Account-Level Recovery Position Record', icon: '/amazon-logo-transparent-circle.png' },
     ],
+  },
+  {
+    highlight: ['decision-grade record', 'nothing submits until approved', 'next controlled action'],
+    text: 'The final position is a decision-grade record: the evidence is connected, the financial exposure is bounded, and the remaining uncertainty is named rather than hidden. Nothing submits until approved; the controlled action pack and decision workbook keep the operation ready to move from reconstruction to the next controlled action with the record intact.',
     references: [
       { source: 'Dropbox', name: 'Controlled Action Evidence Pack', icon: '/Dropbox_Icon.svg.png' },
       { source: 'OneDrive', name: 'Decision and Settlement Control Workbook', icon: '/onedrive-icon.png' },
     ],
-    text: 'The Audit separates independent financial events from duplicate records, recurring control failures, and activity already accounted for. Margin connected the inbound shipment plan, carrier proof of delivery, Amazon receiving records, settlement schedule, inventory ledger, and reimbursement correspondence so the reviewed population can be assessed as a governed operating position rather than a loose collection of files.',
-  },
-  {
-    highlight: ['single recovery workflow', 'recurring exposure pattern', 'event-level entitlement'],
-    text: 'A single recovery workflow can address one supported event, but it does not establish whether the same control failure is recurring across the account. Margin distinguishes an isolated event from a repeated exposure pattern, then connects that pattern to the relevant marketplace, legal entity, settlement period, and evidence population before any recovery position is treated as supportable.',
-  },
-  {
-    highlight: ['governed recovery cohort', 'duplicate credit', 'controlled preparation'],
-    text: 'The evidence is sufficient to form a governed recovery cohort. Margin linked the source records, tested the receiving variance against the related financial events, checked for duplicate credit, and separated supported exposure from positions that still require confirmation. The resulting position is ready for controlled preparation and review before any filing or seller action.',
-  },
-  {
-    highlight: ['account-level control position', 'supported exposure', 'unresolved positions'],
-    text: 'The resulting record is an account-level control position, not a one-off answer to a single discrepancy. Supported exposure can move into a governed review queue, while unresolved positions remain visible with their evidence gaps, ownership, and next required action clearly separated from recoverable value.',
-  },
-  {
-    highlight: ['decision-grade record', 'nothing submits until approved', 'next controlled action'],
-    text: 'The final position is a decision-grade record: the evidence is connected, the financial exposure is bounded, and the remaining uncertainty is named rather than hidden. Nothing submits until approved; the operation can now move from reconstruction to the next controlled action with the record intact.',
   },
 ] as const;
-
 const artifactAnalysisChecks = [
   ['Event identity resolved', 'Shipment, SKU, ASIN, receiving node, carrier movement, and settlement period resolve to one canonical financial event.'],
   ['Evidence coverage established', 'The connected source population establishes the operating boundary reviewed for this position.'],
@@ -444,7 +443,7 @@ function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
           const visible = reduceMotion || index <= activeItem;
           const active = !reduceMotion && index === activeItem;
           const content = reduceMotion || index < activeItem ? item.text : active ? <FastDuplicateTypewriter text={item.text} onComplete={advance} /> : null;
-          return <motion.p key={item.text} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8, height: visible ? 'auto' : 0 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden text-[12px] leading-6 tracking-tight text-[#595E68] sm:text-[13px] sm:leading-7"><HighlightedDescription description={typeof content === 'string' ? content : item.text.slice(0, 0)} highlight={item.highlight} highlightComplete={reduceMotion || index < activeItem} />{typeof content === 'string' ? null : content}{(reduceMotion || index < activeItem) ? item.references.map((reference) => <InlineDocumentReference key={`${item.text}-${reference.name}`} {...reference} />) : null}</motion.p>;
+          return <motion.p key={item.text} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8, height: visible ? 'auto' : 0 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden text-[12px] leading-6 tracking-tight text-[#595E68] sm:text-[13px] sm:leading-7"><HighlightedDescription description={typeof content === 'string' ? content : item.text.slice(0, 0)} highlight={item.highlight} highlightComplete={reduceMotion || index < activeItem} />{typeof content === 'string' ? null : content}{(reduceMotion || index < activeItem) ? <motion.span initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.12 }} className="inline-flex flex-wrap items-baseline"><span className="sr-only">Supporting documents: </span>{item.references.map((reference, referenceIndex) => <motion.span key={`${item.text}-${reference.name}`} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28, delay: referenceIndex * 0.12 }}><InlineDocumentReference {...reference} /></motion.span>)}</motion.span> : null}</motion.p>;
         })}
       </div>
       <motion.div initial={false} animate={analysisComplete ? { opacity: 1, y: 0, height: 'auto' } : { opacity: 0, y: 8, height: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="mt-7 max-w-[980px] overflow-hidden" aria-live="polite">
