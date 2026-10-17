@@ -465,10 +465,10 @@ const Login = () => {
   }, []);
 
   const heading = mode === 'signup'
-    ? 'Find out what your Amazon records actually support.'
+    ? 'Your Amazon Margins. Established'
     : mode === 'recovery'
       ? 'Reset your password'
-    : 'Welcome back to Margin.';
+    : "Let's pick up where you left off";
 
   const resetLocalAuthError = () => {
     setError('');
@@ -477,6 +477,15 @@ const Login = () => {
     setClerkVerificationStep(null);
     setClerkVerificationCode('');
     setClerkVerificationMessage('');
+  };
+
+  const handleBack = () => {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate(getSafeInternalNavigationPath(next) || '/', { replace: true });
   };
 
   const persistSession = (accessToken?: string | null, userId?: string | null, userEmail?: string | null) => {
@@ -1406,21 +1415,19 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-y-auto bg-[#C1CED9] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', fontFamily: 'var(--font-google-sans)' }}>
-      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_48%_42%,#F1F5F7_0%,#D8E3EB_48%,#B6C5D2_100%)]" />
-        <div className="absolute -bottom-[34vw] -left-[16vw] h-[76vw] w-[76vw] rounded-full border-[clamp(48px,7vw,150px)] border-[#E2EEF6] bg-[#AEC4D5]/45 shadow-[inset_18px_22px_42px_rgba(255,255,255,0.7),inset_-28px_-35px_58px_rgba(73,101,124,0.26),0_18px_60px_rgba(75,103,124,0.2)]" />
-        <div className="absolute -right-[8vw] top-[7vh] h-[33vw] w-[33vw] rounded-full border-[clamp(28px,4.4vw,84px)] border-[#F1EEDC] bg-[#B2C7D8]/45 shadow-[inset_15px_18px_30px_rgba(255,255,255,0.76),inset_-18px_-20px_34px_rgba(79,104,124,0.25),0_25px_48px_rgba(76,101,120,0.2)] rotate-[18deg]" />
-        <div className="absolute right-[17vw] top-[30vh] h-[8vw] w-[8vw] rounded-full bg-[radial-gradient(circle_at_30%_25%,#FFFFFF_0%,#DFEAF1_42%,#9FB7C9_100%)] shadow-[inset_-12px_-14px_22px_rgba(66,94,117,0.26),0_18px_24px_rgba(74,101,122,0.2)]" />
-        <div className="absolute left-[28vw] top-[19vh] h-[4vw] w-[4vw] rounded-full bg-[radial-gradient(circle_at_28%_24%,#FFFFFF_0%,#D4E3ED_52%,#93AEC2_100%)] shadow-[0_14px_22px_rgba(75,101,122,0.2)]" />
-        <div className="absolute left-[31vw] top-[57vh] h-[1.6vw] w-[1.6vw] rounded-full bg-[#F7F1D8] shadow-[0_6px_10px_rgba(75,101,122,0.18)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(118deg,rgba(255,255,255,0.48),transparent_38%,rgba(255,255,255,0.2)_68%,transparent)]" />
-      </div>
+    <div className="relative min-h-screen overflow-y-auto bg-white text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide [&_button]:rounded-[5px]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', fontFamily: 'var(--font-google-sans)' }}>
       <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Left Side: Form */}
-        <div className="flex flex-1 items-center justify-center bg-white/55 px-5 py-7 backdrop-blur-[2px] sm:px-8 lg:py-12">
+        <div className="flex flex-1 items-center justify-center bg-white px-5 py-7 sm:px-8 lg:py-12">
           <div className="w-full max-w-[420px] lg:max-w-[380px]">
-            <div className="mb-7 flex flex-col items-center sm:mb-10 sm:items-start">
+            <div className="mb-7 flex items-center justify-between sm:mb-10">
+              <button
+                type="button"
+                onClick={handleBack}
+                className="inline-flex h-8 items-center justify-center bg-black/70 px-3 text-[12px] font-semibold text-white shadow-[0_4px_14px_rgba(24,32,38,0.12)] backdrop-blur-md transition-colors hover:bg-black/80"
+              >
+                Back
+              </button>
               <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
                 <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
                 <span className="brand-wordmark font-merriweather text-[22px] font-semibold tracking-tight text-[#182026]">Margin</span>
@@ -1435,7 +1442,7 @@ const Login = () => {
                 {mode === 'signup' && (
                   <div className="mt-4 hidden lg:block">
                     <p className="text-center text-[15px] leading-relaxed text-[#4D5B66] sm:text-left">
-                      Create your free Margin account, run a read-only Recovery Audit, and see what your Amazon records support. Margin will show you what it finds and help you understand what—if anything—makes sense to do next.
+                      Create your free Margin account, run a read-only Recovery Audit, and see what the evidence supports. Margin will show you what it finds and help you understand what—if anything—makes sense to do next.
                     </p>
                   </div>
                 )}
@@ -1461,7 +1468,7 @@ const Login = () => {
                           resetLocalAuthError();
                         }}
                         placeholder="you@example.com"
-                        className="h-12 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
+                        className="h-12 rounded-[5px] border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
                       />
                     </div>
                   </div>
@@ -1482,7 +1489,7 @@ const Login = () => {
                           resetLocalAuthError();
                         }}
                         placeholder={mode === 'recovery' ? 'Enter new password' : mode === 'signup' ? 'Create a password' : 'Enter your password'}
-                        className="h-12 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                        className="h-12 rounded-[5px] border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                       />
                       <button
                         type="button"
@@ -1513,7 +1520,7 @@ const Login = () => {
                             setError('');
                           }}
                           placeholder="Enter verification code"
-                          className="h-12 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                          className="h-12 rounded-[5px] border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                         />
                       </div>
                       {clerkVerificationMessage ? (
@@ -1538,7 +1545,7 @@ const Login = () => {
                             resetLocalAuthError();
                           }}
                           placeholder="Confirm your new password"
-                          className="h-12 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                          className="h-12 rounded-[5px] border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                         />
                         <button
                           type="button"
@@ -1560,7 +1567,7 @@ const Login = () => {
                         variant="outline"
                         onClick={() => void startSocialOAuth('google')}
                         disabled={loading || !clerkAuthLoaded}
-                        className="h-14 w-full rounded-full border-[#0B74DE] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] hover:bg-[#075EBA] lg:h-11 lg:rounded-md lg:border-[#C8D6DF] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-[0_1px_2px_rgba(37,49,58,0.04)] lg:hover:bg-[#F3F6F8]"
+                        className="h-14 w-full rounded-[5px] border-[#0B74DE] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] hover:bg-[#075EBA] lg:h-11 lg:rounded-[5px] lg:border-[#C8D6DF] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-[0_1px_2px_rgba(37,49,58,0.04)] lg:hover:bg-[#F3F6F8]"
                       >
                         <GoogleMark className="mr-2 h-7 w-7 shrink-0 rounded-full bg-white p-0.5 lg:h-4 lg:w-4 lg:bg-transparent lg:p-0" />
                         Continue with Google
@@ -1572,7 +1579,7 @@ const Login = () => {
                           setError('');
                         }}
                         disabled={loading || !clerkAuthLoaded}
-                        className="h-14 w-full rounded-full border border-[#AEBBC4] bg-white px-5 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE]"
+                        className="h-14 w-full rounded-[5px] border border-[#AEBBC4] bg-white px-5 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE]"
                       >
                         <Mail aria-hidden="true" className="mr-3 h-5 w-5 text-[#52616C]" />
                         Sign in with Email
@@ -1594,7 +1601,7 @@ const Login = () => {
                       </p>
                       <Button
                         asChild
-                        className="mt-6 h-12 rounded-md bg-[#0B74DE] px-6 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
+                        className="mt-6 h-12 rounded-[5px] bg-[#0B74DE] px-6 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
                       >
                         <Link to="/audit">
                           Start Free Audit
@@ -1608,7 +1615,7 @@ const Login = () => {
                       type="button"
                       onClick={() => void handleRetryWorkspaceRouting()}
                       disabled={loading}
-                      className="mt-3 h-12 w-full rounded-md bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
+                      className="mt-3 h-12 w-full rounded-[5px] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
                     >
                       Retry Access Setup
                     </Button>
@@ -1620,7 +1627,7 @@ const Login = () => {
                       onClick={() => void handleClearBrowserSession()}
                       disabled={loading}
                       variant="outline"
-                      className="mt-3 h-11 rounded-md border-[#E8B6B6] bg-[#FAFAF7] px-4 text-[13px] font-semibold text-[#A33A3A] hover:bg-[#FFF5F5]"
+                      className="mt-3 h-11 rounded-[5px] border-[#E8B6B6] bg-[#FAFAF7] px-4 text-[13px] font-semibold text-[#A33A3A] hover:bg-[#FFF5F5]"
                     >
                       Clear browser session
                     </Button>
@@ -1633,7 +1640,7 @@ const Login = () => {
                           <Button
                             type="submit"
                             disabled={loading || !clerkAuthLoaded}
-                            className="h-12 w-full rounded-full bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50 lg:h-11 lg:rounded-md lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)]"
+                            className="h-12 w-full rounded-[5px] bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50 lg:h-11 lg:rounded-[5px] lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)]"
                           >
                             {loading ? (
                               mode === 'signup'
@@ -1661,7 +1668,7 @@ const Login = () => {
                           type="button"
                           onClick={handleEmailContinue}
                           disabled={loading || !clerkAuthLoaded}
-                          className="h-12 w-full rounded-full border border-[#AEBBC4] bg-white px-8 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE] disabled:opacity-50 lg:h-11 lg:rounded-md lg:border-transparent lg:bg-[#0B74DE] lg:text-white lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)] lg:hover:border-transparent lg:hover:bg-[#075EBA]"
+                          className="h-12 w-full rounded-[5px] border border-[#AEBBC4] bg-white px-8 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE] disabled:opacity-50 lg:h-11 lg:rounded-[5px] lg:border-transparent lg:bg-[#0B74DE] lg:text-white lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)] lg:hover:border-transparent lg:hover:bg-[#075EBA]"
                         >
                           Continue
                         </Button>
@@ -1681,7 +1688,7 @@ const Login = () => {
                         variant="outline"
                         onClick={() => void startSocialOAuth('google')}
                         disabled={loading || !clerkAuthLoaded}
-                        className="h-14 w-full rounded-full border-[#0B74DE] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] hover:bg-[#075EBA] lg:h-11 lg:rounded-md lg:border-[#C8D6DF] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-[0_1px_2px_rgba(37,49,58,0.04)] lg:hover:bg-[#F3F6F8]"
+                        className="h-14 w-full rounded-[5px] border-[#0B74DE] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] hover:bg-[#075EBA] lg:h-11 lg:rounded-[5px] lg:border-[#C8D6DF] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-[0_1px_2px_rgba(37,49,58,0.04)] lg:hover:bg-[#F3F6F8]"
                       >
                         <GoogleMark className="mr-2 h-7 w-7 shrink-0 rounded-full bg-white p-0.5 lg:h-4 lg:w-4 lg:bg-transparent lg:p-0" />
                         Continue with Google
@@ -1784,7 +1791,7 @@ const Login = () => {
         </div>
 
         {/* Right Side: Information */}
-        <div className="hidden flex-1 items-center justify-center bg-white/55 px-12 py-16 backdrop-blur-[2px] lg:flex">
+        <div className="hidden flex-1 items-center justify-center bg-white px-12 py-16 lg:flex">
           <div className="w-full max-w-[520px]">
             {isAuditIntent && (
               <p className="mb-6 text-[12px] font-bold uppercase tracking-widest text-[#0B74DE]">
@@ -1807,19 +1814,19 @@ const Login = () => {
                 
                 <div className="flex flex-col gap-2.5 border-t border-[#D8E3EA] pt-5">
                   <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
-                    <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                    <div className="h-1.5 w-1.5 rounded-[5px] bg-[#0B74DE]" />
                     <span>Free Margin account</span>
                   </div>
                   <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
-                    <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                    <div className="h-1.5 w-1.5 rounded-[5px] bg-[#0B74DE]" />
                     <span>Read-only Recovery Audit</span>
                   </div>
                   <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
-                    <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                    <div className="h-1.5 w-1.5 rounded-[5px] bg-[#0B74DE]" />
                     <span>See the result before deciding</span>
                   </div>
                   <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
-                    <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                    <div className="h-1.5 w-1.5 rounded-[5px] bg-[#0B74DE]" />
                     <span>Nothing is submitted without your approval</span>
                   </div>
                 </div>
@@ -1864,7 +1871,7 @@ const Login = () => {
                 void handleContinueExistingSession();
               }}
               disabled={loading}
-              className="h-11 w-full rounded-md bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
+              className="h-11 w-full rounded-[5px] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
             >
               Continue to Margin
             </Button>
@@ -1876,7 +1883,7 @@ const Login = () => {
                 void handleUseDifferentAccount();
               }}
               disabled={loading}
-              className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#4B5A64] hover:bg-[#F3F6F8]"
+              className="h-11 w-full rounded-[5px] border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#4B5A64] hover:bg-[#F3F6F8]"
             >
               Use a different account
             </Button>
