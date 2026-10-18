@@ -18,6 +18,17 @@ const METADATA = [
   { label: 'Position: $14,832 supported exposure' },
 ];
 
+const COMPILING_DOCUMENT_ICONS = [
+  '/amazon-logo-transparent-circle.png',
+  '/evidence-pdf-mark.png',
+  '/excel-icon-margin.png',
+  '/gmailicon.png',
+  '/onedrive-icon.png',
+  '/Dropbox_Icon.svg.png',
+  '/outlookicon.webp',
+  '/pdf-file-icon.webp',
+];
+
 const EVIDENCE_MATCH_SEQUENCE = [
   ['gap', 300],
   ['inbound-record', 520],
@@ -309,7 +320,7 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                           initial={{ opacity: 0, x: 56, scale: 0.92 }}
                           animate={{ opacity: 1, x: 0, scale: 1 }}
                           transition={spring}
-                          className="flex items-center gap-2.5 bg-transparent px-1 py-2.5 text-[#4F46E5]"
+                          className="flex items-center gap-2.5 bg-transparent px-1 py-2.5 text-[#182026]"
                         >
                           <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#4F46E5] text-white">
                             <Check className="h-2.5 w-2.5" strokeWidth={3} />
@@ -332,14 +343,15 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                 className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden p-6 text-center sm:p-8"
               >
                 <div className="relative flex h-56 w-full max-w-2xl items-center justify-center">
-                  {METADATA.map((item, index) => (
+                  {METADATA.flatMap((item) => [item, item]).map((item, index) => (
                     <motion.div
-                      key={item.label}
-                      initial={{ opacity: 1, x: index % 2 === 0 ? -250 : 250, y: (index - (METADATA.length - 1) / 2) * 28, scale: 1 }}
+                      key={`${item.label}-${index}`}
+                      initial={{ opacity: 1, x: index % 2 === 0 ? -250 : 250, y: (index - (METADATA.length * 2 - 1) / 2) * 16, scale: 1 }}
                       animate={{ opacity: [1, 1, 0], x: 0, y: 0, scale: 0.7 }}
                       transition={{ duration: 1.4, delay: index * 0.12, ease: 'easeInOut' }}
-                    className="absolute border border-[#DCE8EE] bg-white px-4 py-2.5 text-xs font-medium text-[#33404A]"
+                      className="absolute flex items-center gap-1.5 text-xs font-medium text-[#33404A]"
                     >
+                      <img src={COMPILING_DOCUMENT_ICONS[index % COMPILING_DOCUMENT_ICONS.length]} alt="" className="h-4 w-4 shrink-0 object-contain" />
                       {item.label}
                     </motion.div>
                   ))}
@@ -371,7 +383,7 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-3">
                     <motion.h2 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.12 }} className="flex items-center gap-2 text-sm font-medium tracking-tight text-[#182026]">
-                      Recovery case built
+                      Investigation Dispute Report Complete
                       <motion.span initial={{ opacity: 0, scale: 0.45 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', stiffness: 480, damping: 20, delay: 0.42 }} className="flex h-4 w-4 items-center justify-center rounded-full bg-[#32B768] text-white shadow-[0_2px_6px_rgba(50,183,104,0.28)]" aria-label="Recovery case built and verified">
                         <Check className="h-2.5 w-2.5" strokeWidth={3.2} />
                       </motion.span>
@@ -380,36 +392,6 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                   </div>
 
                   <motion.article initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: 'easeOut', delay: 0.48 }} className="mt-6 flex flex-col items-center gap-5 sm:mt-0 sm:flex-row sm:items-center">
-                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45, ease: 'easeOut', delay: 0.58 }} className="relative hidden h-[116px] w-[86px] shrink-0 sm:block">
-                      <div className="absolute inset-0 translate-x-2.5 -rotate-2 border border-[#DCE8EE] bg-white/45" />
-                      <div className="absolute inset-0 translate-x-1 rotate-1 border border-[#DCE8EE] bg-white/70" />
-                      <div className="absolute inset-0 border border-[#DCE8EE] bg-white p-2.5">
-                        <div className="flex items-center justify-between border-b border-[#E3E8ED] pb-1.5">
-                          <span className="text-[7px] font-semibold uppercase tracking-tight text-[#182026]">Margin</span>
-                          <span className="font-google-sans text-[5.5px] uppercase tracking-tight text-[#A0A6AE]">Verified</span>
-                        </div>
-                        <div className="mt-2.5 space-y-1.5">
-                          <div className="h-1.5 w-16 bg-[#182026]/80" />
-                          <div className="h-1 w-20 bg-[#C9D0D7]" />
-                          <div className="h-1 w-14 bg-[#E4E8EC]" />
-                        </div>
-                        <div className="mt-3 border-t border-[#E6E9EE] pt-2">
-                          <div className="grid grid-cols-[1fr_auto] gap-x-2 gap-y-1 font-google-sans text-[5.5px] uppercase tracking-tight">
-                            <span className="text-[#A0A6AE]">Case</span>
-                            <span className="text-[#182026]">175207</span>
-                            <span className="text-[#A0A6AE]">Ship</span>
-                            <span className="text-[#182026]">FBA15J</span>
-                            <span className="text-[#A0A6AE]">Match</span>
-                            <span className="text-[#182026]">14/14</span>
-                          </div>
-                        </div>
-                        <div className="absolute bottom-2.5 left-2.5 right-2.5 h-3 bg-[#F3F6F8]">
-                          <div className="mt-1 h-1 w-10 bg-[#B8C0C8]" />
-                        </div>
-                        <span className="absolute bottom-1.5 right-2 text-[6px] text-[#B7C0C9]">1/14</span>
-                      </div>
-                    </motion.div>
-
                     <div className="min-w-0 flex-1 text-center sm:text-left">
                       <motion.h3 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.62 }} className="text-[15px] font-bold tracking-tight text-[#182026] sm:text-base">Inbound receiving variance case file</motion.h3>
                       <motion.p initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut', delay: 0.72 }} className="mt-1.5 font-google-sans text-[10px] uppercase tracking-tight text-[#8A8F98] sm:text-[11px]">
@@ -423,8 +405,9 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                           'ASIN/FNSKU mapping', 'Quantity variance', 'Cost basis',
                           'Case rationale', 'Evidence index', 'Filing deadline', 'Seller approval status'
                         ].map((item, index) => (
-                          <motion.span key={item} initial={{ opacity: 0, y: 7, scale: 0.94 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.28, ease: 'easeOut', delay: 0.84 + index * 0.055 }} className="inline-flex items-center gap-1 rounded-[2px] border-0 bg-[#EEF1F3] px-2 py-0.5 text-[9px] font-medium text-[#30373C]">
-                            <Check className="h-2.5 w-2.5 text-emerald-500" />
+                          <motion.span key={item} initial={{ opacity: 0, y: 7, scale: 0.94 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.28, ease: 'easeOut', delay: 0.84 + index * 0.055 }} className="inline-flex items-center gap-1.5 rounded-[3px] bg-[#EEF1F3] px-2.5 py-1 text-[9px] font-medium text-[#30373C]">
+                            <img src={COMPILING_DOCUMENT_ICONS[index % COMPILING_DOCUMENT_ICONS.length]} alt="" className="h-4 w-4 shrink-0 object-contain" />
+                            <Check className="h-2.5 w-2.5 text-[#4F46E5]" />
                             {item}
                           </motion.span>
                         ))}
