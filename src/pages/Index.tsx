@@ -1850,7 +1850,6 @@ function FooterNestedRecoveryVisual() {
     if (email && typeof window !== 'undefined') window.sessionStorage.setItem('margin:prefill-email', email);
     navigate('/login?mode=signup&next=%2Faudit-start');
   };
-  const continueWithGoogle = () => navigate('/login?mode=signup&start=google&next=%2Faudit-start');
 
   return (
     <section className="relative overflow-hidden bg-white py-10 sm:py-14 md:py-16" aria-label="Connected operational view visual">
@@ -1861,13 +1860,26 @@ function FooterNestedRecoveryVisual() {
           <p className="mb-3 font-google-sans text-[15px] font-semibold tracking-tight text-[#182026]">Start with the financial position</p>
           <label htmlFor="delegation-email-mobile" className="mb-1.5 block font-google-sans text-[11px] font-semibold text-[#66737F]">Email address</label>
           <input id="delegation-email-mobile" type="email" autoComplete="email" placeholder="you@example.com" value={delegationEmail} onChange={(event) => setDelegationEmail(event.target.value)} className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
-          <Button onClick={beginSellerSignup} className="mt-3 h-10 w-full rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[#075EBA]">Start the free Audit</Button>
+          <Button onClick={beginSellerSignup} className="mt-3 h-10 w-full rounded-[6px] bg-[var(--margin-blue)] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[var(--margin-blue-hover)]">Send records for review</Button>
           <div className="my-3 flex items-center gap-2 font-google-sans text-[9px] font-medium tracking-tight text-[#A1AEB7]">
             <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
           </div>
-          <Button type="button" variant="outline" onClick={continueWithGoogle} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-3 text-[12px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">
-            <GoogleMark className="mr-2 h-4 w-4" />Continue with Google
+          <Button type="button" variant="outline" onClick={() => navigate('/contact')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-3 text-[12px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">
+            Contact Sales
           </Button>
+          <div className="mt-6 space-y-5 border-t border-[#E6EDF1] pt-5">
+            <div>
+              <p className="text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
+              <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
+              <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--margin-blue)] no-underline transition-colors hover:text-[var(--margin-blue-hover)]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
+            </div>
+            <div>
+              <p className="text-[13px] font-semibold leading-5 text-[var(--margin-blue)]">Get Started</p>
+              <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
+              <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
+              <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--margin-blue)] no-underline transition-colors hover:text-[var(--margin-blue-hover)]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
+            </div>
+          </div>
           <p className="mt-3 max-w-[360px] text-center font-google-sans text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
           <p className="mt-3 max-w-[360px] text-center font-google-sans text-[11px] leading-5 text-[#52616A]">Read-only start. No recovery is submitted without your approval. Margin reviews the records first, then you decide.</p>
         </div>
