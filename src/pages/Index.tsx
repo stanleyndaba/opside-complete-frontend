@@ -1844,12 +1844,6 @@ function AutoSubmitSection() {
 function FooterNestedRecoveryVisual() {
   const navigate = useNavigate();
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof nestedRecoveryBrowsers>('progress');
-  const [delegationEmail, setDelegationEmail] = useState('');
-  const beginSellerSignup = () => {
-    const email = delegationEmail.trim();
-    if (email && typeof window !== 'undefined') window.sessionStorage.setItem('margin:prefill-email', email);
-    navigate('/login?mode=signup&next=%2Faudit-start');
-  };
 
   return (
     <section className="relative overflow-hidden bg-white py-10 sm:py-14 md:py-16" aria-label="Connected operational view visual">
@@ -1857,29 +1851,11 @@ function FooterNestedRecoveryVisual() {
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Take responsibility for one financial process.</span> <span className="heading-tone-muted">Then the next.</span></h2>
         <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} />
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
-          <p className="mb-3 font-google-sans text-[15px] font-semibold tracking-tight text-[#182026]">Start with the financial position</p>
-          <label htmlFor="delegation-email-mobile" className="mb-1.5 block font-google-sans text-[11px] font-semibold text-[#66737F]">Email address</label>
-          <input id="delegation-email-mobile" type="email" autoComplete="email" placeholder="you@example.com" value={delegationEmail} onChange={(event) => setDelegationEmail(event.target.value)} className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
-          <Button onClick={beginSellerSignup} className="mt-3 h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Send records for review</Button>
-          <div className="my-3 flex items-center gap-2 font-google-sans text-[9px] font-medium tracking-tight text-[#A1AEB7]">
-            <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
-          </div>
-          <Button type="button" variant="outline" onClick={() => navigate('/contact')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-3 text-[12px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">
-            Contact Sales
-          </Button>
-          <div className="mt-6 space-y-5 border-t border-[#E6EDF1] pt-5">
-            <div>
-              <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
-              <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
-              <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
-              <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
-            </div>
-            <div>
-              <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p>
-              <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
-              <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
-              <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
-            </div>
+          <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Ready to establish financial control?</p>
+          <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a financial review of your Amazon business, or work with Margin to design a reconciliation and recovery engagement around your operational requirements.</p>
+          <div className="mt-5 flex flex-col gap-3">
+            <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start a Financial Review</Button>
+            <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Design an Enterprise Engagement</Button>
           </div>
         </div>
       </div>
@@ -2613,19 +2589,12 @@ export default function Index() {
   const { isFull, nextBatchHours } = useOnboardingCapacity();
 
   const [isBusy, setIsBusy] = useState(false);
-  const [delegationEmail, setDelegationEmail] = useState('');
   const reduceMotion = useReducedMotion();
 
   const handleClaimAccessClick = (location: string) => {
     trackEarlyAccessCtaClicked(location);
     navigate('/audit-start');
   };
-  const startAuditFromClosingForm = () => {
-    const email = delegationEmail.trim();
-    if (email && typeof window !== 'undefined') window.sessionStorage.setItem('margin:prefill-email', email);
-    navigate('/login?mode=signup&next=%2Faudit-start');
-  };
-
   return (
     <div className="landing-google-sans min-h-screen bg-[var(--margin-canvas)] selection:bg-[var(--margin-blue)]/16 selection:text-[var(--margin-text-primary)]">
       <PublicNavbar variant="light" wide />
@@ -2726,28 +2695,11 @@ export default function Index() {
                   <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>When the next shipment moves tomorrow, you should know who is responsible for what happens to the money.</p>
                   <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You approve submissions and material decisions. Margin carries the investigation, evidence, follow-through, response handling, and settlement verification — with the financial record kept visible.</p>
                   <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block">
-                    <label htmlFor="delegation-email" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
-                    <input id="delegation-email" type="email" autoComplete="email" placeholder="you@example.com" value={delegationEmail} onChange={(event) => setDelegationEmail(event.target.value)} className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
-                    <Button onClick={startAuditFromClosingForm} className="mt-3 h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Send records for review</Button>
-                    <div className="my-3 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.18em] text-[#A1AEB7]">
-                      <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
-                    </div>
-                    <Button type="button" variant="outline" onClick={() => navigate('/contact')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-3 text-[12px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">
-                      Contact Sales
-                    </Button>
-                    <div className="mt-6 space-y-5 border-t border-[#E6EDF1] pt-5">
-                      <div>
-                        <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
-                        <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
-                        <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
-                        <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
-                      </div>
-                      <div>
-                        <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p>
-                        <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
-                        <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
-                        <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
-                      </div>
+                    <p className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">Ready to establish financial control?</p>
+                    <p className="mt-3 text-[14px] leading-6 text-[#66737F]">Start with a financial review of your Amazon business, or work with Margin to design a reconciliation and recovery engagement around your operational requirements.</p>
+                    <div className="mt-5 flex flex-col gap-3">
+                      <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start a Financial Review</Button>
+                      <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Design an Enterprise Engagement</Button>
                     </div>
                   </div>
                 </motion.div>
