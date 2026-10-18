@@ -1869,7 +1869,8 @@ function FooterNestedRecoveryVisual() {
           </Button>
           <div className="mt-6 space-y-5 border-t border-[#E6EDF1] pt-5">
             <div>
-              <p className="text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
+              <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
+              <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
               <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
               <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
             </div>
@@ -1880,8 +1881,6 @@ function FooterNestedRecoveryVisual() {
               <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
             </div>
           </div>
-          <p className="mt-3 max-w-[360px] text-center font-google-sans text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
-          <p className="mt-3 max-w-[360px] text-center font-google-sans text-[11px] leading-5 text-[#52616A]">Read-only start. No recovery is submitted without your approval. Margin reviews the records first, then you decide.</p>
         </div>
       </div>
     </section>
@@ -2738,7 +2737,8 @@ export default function Index() {
                     </Button>
                     <div className="mt-6 space-y-5 border-t border-[#E6EDF1] pt-5">
                       <div>
-                        <p className="text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
+                        <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
+                        <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
                         <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
                         <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
                       </div>
@@ -2749,8 +2749,6 @@ export default function Index() {
                         <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
                       </div>
                     </div>
-                    <p className="mt-3 max-w-[360px] text-center text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
-                    <p className="mt-3 max-w-[360px] text-center text-[11px] leading-5 text-[#52616A]">Read-only start. No recovery is submitted without your approval. Margin reviews the records first, then you decide.</p>
                   </div>
                 </motion.div>
 
