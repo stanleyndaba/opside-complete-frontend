@@ -1860,7 +1860,7 @@ function FooterNestedRecoveryVisual() {
           <p className="mb-3 font-google-sans text-[15px] font-semibold tracking-tight text-[#182026]">Start with the financial position</p>
           <label htmlFor="delegation-email-mobile" className="mb-1.5 block font-google-sans text-[11px] font-semibold text-[#66737F]">Email address</label>
           <input id="delegation-email-mobile" type="email" autoComplete="email" placeholder="you@example.com" value={delegationEmail} onChange={(event) => setDelegationEmail(event.target.value)} className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
-          <Button onClick={beginSellerSignup} className="mt-3 h-10 w-full rounded-[6px] bg-[var(--margin-blue)] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[var(--margin-blue-hover)]">Send records for review</Button>
+          <Button onClick={beginSellerSignup} className="mt-3 h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Send records for review</Button>
           <div className="my-3 flex items-center gap-2 font-google-sans text-[9px] font-medium tracking-tight text-[#A1AEB7]">
             <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
           </div>
@@ -1871,13 +1871,13 @@ function FooterNestedRecoveryVisual() {
             <div>
               <p className="text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
               <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
-              <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--margin-blue)] no-underline transition-colors hover:text-[var(--margin-blue-hover)]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
+              <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
             </div>
             <div>
-              <p className="text-[13px] font-semibold leading-5 text-[var(--margin-blue)]">Get Started</p>
+              <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p>
               <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
               <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
-              <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--margin-blue)] no-underline transition-colors hover:text-[var(--margin-blue-hover)]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
+              <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
             </div>
           </div>
           <p className="mt-3 max-w-[360px] text-center font-google-sans text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
@@ -2729,7 +2729,7 @@ export default function Index() {
                   <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block">
                     <label htmlFor="delegation-email" className="mb-1.5 block text-[11px] font-semibold text-[#66737F]">Email address</label>
                     <input id="delegation-email" type="email" autoComplete="email" placeholder="you@example.com" value={delegationEmail} onChange={(event) => setDelegationEmail(event.target.value)} className="h-10 w-full rounded-[6px] border border-[#C8D6DF] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#A1AEB7] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15" />
-                    <Button onClick={startAuditFromClosingForm} className="mt-3 h-10 w-full rounded-[6px] bg-[var(--margin-blue)] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] hover:bg-[var(--margin-blue-hover)]">Send records for review</Button>
+                    <Button onClick={startAuditFromClosingForm} className="mt-3 h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Send records for review</Button>
                     <div className="my-3 flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.18em] text-[#A1AEB7]">
                       <span className="h-px flex-1 bg-[#D8E3EA]" /><span>or</span><span className="h-px flex-1 bg-[#D8E3EA]" />
                     </div>
@@ -2740,13 +2740,13 @@ export default function Index() {
                       <div>
                         <p className="text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
                         <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
-                        <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--margin-blue)] no-underline transition-colors hover:text-[var(--margin-blue-hover)]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
+                        <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
                       </div>
                       <div>
-                        <p className="text-[13px] font-semibold leading-5 text-[var(--margin-blue)]">Get Started</p>
+                        <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p>
                         <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
                         <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
-                        <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--margin-blue)] no-underline transition-colors hover:text-[var(--margin-blue-hover)]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
+                        <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
                       </div>
                     </div>
                     <p className="mt-3 max-w-[360px] text-center text-[10px] leading-4 text-[#7B8790]">By signing up, I agree to Margin&apos;s Terms of Service and Privacy Policy.</p>
