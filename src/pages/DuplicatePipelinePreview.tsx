@@ -372,7 +372,7 @@ const evidenceRegister = [
   { name: 'Supplier and commercial invoice pack', type: 'PDF', highlight: ['ownership', 'recoverable basis'], description: 'Source documentation supporting ownership, unit value, supplier relationship, and recoverable basis.' },
 ];
 
-function HighlightedDescription({ description, highlight, highlightComplete = true }: { description: string; highlight: string | readonly string[]; highlightComplete?: boolean }) {
+function HighlightedDescription({ description, highlight, highlightComplete = true, tone = 'purple' }: { description: string; highlight: string | readonly string[]; highlightComplete?: boolean; tone?: 'purple' | 'green' }) {
   const highlights = (Array.isArray(highlight) ? highlight : [highlight])
     .map((value) => ({ value, start: description.indexOf(value) }))
     .filter(({ start }) => start >= 0)
@@ -384,7 +384,7 @@ function HighlightedDescription({ description, highlight, highlightComplete = tr
   highlights.forEach(({ value, start }, index) => {
     if (start < cursor) return;
     if (start > cursor) parts.push(description.slice(cursor, start));
-    parts.push(<mark key={`${value}-${index}`} data-evidence-highlight="true" style={{ backgroundColor: highlightComplete ? '#DDEEFF' : 'transparent', color: '#1E5878', textDecorationColor: '#7DB6D2' }} className="rounded-[2px] px-0.5 font-bold underline decoration-1 underline-offset-2">{value}</mark>);
+    parts.push(<mark key={`${value}-${index}`} data-evidence-highlight="true" style={{ backgroundColor: highlightComplete ? tone === 'green' ? '#DDF4E5' : '#EDE5FF' : 'transparent', color: '#30343B', textDecorationColor: tone === 'green' ? '#77B894' : '#A58BD2' }} className="rounded-[2px] px-0.5 font-bold underline decoration-1 underline-offset-2">{value}</mark>);
     cursor = start + value.length;
   });
   if (cursor < description.length) parts.push(description.slice(cursor));
@@ -409,52 +409,45 @@ function InlineDocumentReference({ name, source, icon }: InlineDocumentReference
 
 const artifactAnalysisItems = [
   {
-    highlight: ['separates independent financial events', 'duplicate records', 'recurring control failures'],
-    leadingReferences: [
-      { source: 'Amazon', name: 'Inbound Receiving and Custody Record', icon: '/amazon-logo-transparent-circle.png' },
-      { source: 'Dropbox', name: 'Shipment Population Evidence Folder', icon: '/Dropbox_Icon.svg.png' },
-    ],
-    text: 'The Audit separates independent financial events from duplicate records, recurring control failures, and activity already accounted for. Margin connected the inbound shipment plan, carrier proof of delivery, Amazon receiving records, settlement schedule, inventory ledger, and reimbursement correspondence so the reviewed population can be assessed as a governed operating position rather than a loose collection of files, with each relationship tied to the receiving, shipment, inventory, and settlement records represented in the attached evidence references.',
+    highlight: ['separates independent financial events', 'duplicate postings', 'recurring control failures'],
+    text: 'The review separates independent financial events from duplicate postings, recurring control failures, and activity already recognized in the ledger. Margin reconciled Amazon receiving, carrier custody, settlement, inventory, reimbursement, and general-ledger records so the population can be governed as one operating position rather than a loose file set, with every relationship tied to an accountable financial event and control owner across the enterprise control environment for quarterly close governance, executive decision review, and board reporting.',
     references: [
-      { source: 'Amazon', name: 'FBA Receiving and Settlement Event Register', icon: '/amazon-logo-transparent-circle.png' },
-      { source: 'Dropbox', name: 'Shipment Support and Custody Evidence Folder', icon: '/Dropbox_Icon.svg.png' },
-      { source: 'OneDrive', name: 'Inventory Ledger and Reconciliation Workbook', icon: '/onedrive-icon.png' },
-      { source: 'Excel', name: 'Inbound Variance Reconciliation Schedule', icon: '/excel-icon-margin.png' },
+      { source: 'Amazon', name: 'Inbound Custody and Receiving Record', icon: '/amazon-logo-transparent-circle.png' },
+      { source: 'Excel', name: 'Settlement Reconciliation Workbook', icon: '/excel-icon-margin.png' },
+      { source: 'QuickBooks', name: 'General Ledger Control Export', icon: '/quickbooks.png' },
     ],
   },
   {
-    highlight: ['single recovery workflow', 'recurring exposure pattern', 'event-level entitlement'],
-    text: 'A single recovery workflow can address one supported event, but it does not establish whether the same control failure is recurring across the account. Margin distinguishes an isolated event from a repeated exposure pattern, then connects that pattern to the relevant marketplace, legal entity, settlement period, and evidence population before any recovery position is treated as supportable, using the returns, reimbursement, settlement, and marketplace evidence represented in the attached records.',
+    highlight: ['single recovery workflow', 'control deficiency', 'enterprise'],
+    text: 'A single recovery workflow addresses one supported event; it does not establish whether the same control deficiency is recurring across the enterprise. Margin tests the exposure pattern across marketplaces, legal entities, settlement periods, and evidence populations before any entitlement is treated as supportable, separating repeatable control risk from isolated operational variance and preserving the audit trail for executive review by the accountable finance function within group close and risk governance.',
     references: [
-      { source: 'Dropbox', name: 'Returns and Reimbursement Exception Register', icon: '/Dropbox_Icon.svg.png' },
-      { source: 'OneDrive', name: 'Settlement Period Clearing Workbook', icon: '/onedrive-icon.png' },
-      { source: 'Google Drive', name: 'Amazon Settlement Transaction Detail Extract', icon: '/gd.png' },
+      { source: 'Outlook', name: 'Executive Evidence Correspondence', icon: '/outlookicon.webp' },
+      { source: 'Gmail', name: 'Amazon Case Response Register', icon: '/gmailicon.png' },
+      { source: 'Google Drive', name: 'Marketplace Exposure Population', icon: '/gd.png' },
     ],
   },
   {
-    highlight: ['governed recovery cohort', 'duplicate credit', 'controlled preparation'],
-    text: 'The evidence is sufficient to form a governed recovery cohort. Margin linked the cohort source records, tested the receiving variance against the related financial events, checked the duplicate-credit and settlement records, and separated supported exposure from positions that still require confirmation. The resulting position is ready for controlled preparation and review before any filing or seller action.',
+    highlight: ['governed recovery cohort', 'duplicate-credit', 'controlled approval'],
+    text: 'The connected evidence supports a governed recovery cohort. Margin linked source populations, tested receiving variance against related financial events, verified duplicate-credit and settlement controls, and separated supported exposure from positions requiring confirmation. The resulting position is prepared for controlled approval, documented accountability, and execution under policy before any filing or seller action across the operating population controls.',
     references: [
-      { source: 'Dropbox', name: 'Recovery Cohort Evidence Register', icon: '/Dropbox_Icon.svg.png' },
-      { source: 'OneDrive', name: 'Duplicate Credit Review Workbook', icon: '/onedrive-icon.png' },
-      { source: 'Outlook', name: 'Amazon Case and Evidence Correspondence', icon: '/outlookicon.webp' },
+      { source: 'Amazon', name: 'Account Event and Settlement Register', icon: '/Amazon-logo.png' },
+      { source: 'Zero', name: 'Reconciliation and Close Schedule', icon: '/quickbooks.png' },
+      { source: 'OneDrive', name: 'Controlled Recovery Cohort File', icon: '/onedrive-icon.png' },
     ],
   },
   {
-    highlight: ['account-level control position', 'supported exposure', 'unresolved positions'],
-    text: 'The resulting record is an account-level control position, not a one-off answer to a single discrepancy. Supported exposure can move into a governed review queue, while the correspondence, approval, and account-level records keep unresolved positions visible with their evidence gaps, ownership, and next required action clearly separated from recoverable value.',
+    highlight: ['account-level control position', 'Supported exposure', 'unresolved positions'],
+    text: 'The resulting record is an account-level control position, not an answer to one discrepancy. Supported exposure enters a governed review queue while correspondence, approval, settlement, and ledger records keep unresolved positions visible with evidence gaps, accountable owners, materiality, and next action clearly separated from recoverable value across the reporting perimeter.',
     references: [
-      { source: 'Gmail', name: 'Seller Approval and Recovery Response Register', icon: '/gmailicon.png' },
-      { source: 'Amazon', name: 'Account-Level Recovery Position Record', icon: '/amazon-logo-transparent-circle.png' },
+      { source: 'Excel', name: 'Materiality and Ownership Schedule', icon: '/excel-icon-margin.png' },
+      { source: 'Gmail', name: 'Seller Approval Decision Log', icon: '/gmailicon.png' },
+      { source: 'Google Drive', name: 'Financial Position Evidence Pack', icon: '/gd.png' },
     ],
   },
   {
-    highlight: ['decision-grade record', 'nothing submits until approved', 'next controlled action'],
-    text: 'The final position is a decision-grade record: the evidence is connected, the financial exposure is bounded, and the remaining uncertainty is named rather than hidden. Nothing submits until approved; the controlled action pack and decision workbook keep the operation ready to move from reconstruction to the next controlled action with the record intact.',
-    references: [
-      { source: 'Dropbox', name: 'Controlled Action Evidence Pack', icon: '/Dropbox_Icon.svg.png' },
-      { source: 'OneDrive', name: 'Decision and Settlement Control Workbook', icon: '/onedrive-icon.png' },
-    ],
+    highlight: ['decision-grade record', 'Nothing submits until approved', 'next accountable action'],
+    text: 'The final position is a decision-grade record: evidence is connected, financial exposure is bounded, and remaining uncertainty is named rather than hidden. Nothing submits until approved; the controlled action pack and decision workbook keep the operation ready to move from reconstruction to the next accountable action with the record intact at enterprise scale.',
+    references: [],
   },
 ] as const;
 const artifactAnalysisChecks = [
@@ -492,16 +485,19 @@ function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
     <div className="bg-white py-1 sm:py-2">
       <div className="max-w-[980px]">
         <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Artifact analysis</p>
-        <h2 className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[22px]">What the assembled record establishes</h2>
-        <p className="mt-1 text-[11px] leading-5 tracking-tight text-[#66737F]">Margin is reading the connected artifacts before presenting a governed position for review.</p>
+        <h2 className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[22px]">Enterprise evidence analysis</h2>
+        <p className="mt-1 text-[11px] leading-5 tracking-tight text-[#66737F]">Margin is testing the connected operating record against financial control, settlement integrity, ownership, and executive review requirements.</p>
       </div>
-      <div className="mt-5 max-w-[980px] space-y-5" aria-live="polite" aria-atomic="false">
-        {artifactAnalysisItems.map((item, index) => {
+      <div className="mt-5 max-w-[980px] grid grid-cols-1 gap-y-6 lg:grid-cols-2 lg:divide-x lg:divide-[#DDE3E8]" aria-live="polite" aria-atomic="false">
+        {[artifactAnalysisItems.slice(0, 2), artifactAnalysisItems.slice(2)].map((column, columnIndex) => <div key={columnIndex} className={`min-w-0 space-y-5 ${columnIndex === 1 ? 'lg:pl-7' : 'lg:pr-7'}`}>
+        {column.map((item, columnOffset) => {
+          const index = columnIndex === 0 ? columnOffset : columnOffset + 2;
           const visible = reduceMotion || index <= activeItem;
           const active = !reduceMotion && index === activeItem;
           const content = reduceMotion || index < activeItem ? item.text : active ? <FastDuplicateTypewriter text={item.text} onComplete={advance} /> : null;
-          return <motion.p key={item.text} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8, height: visible ? 'auto' : 0 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden text-[12px] leading-6 tracking-tight text-[#595E68] sm:text-[13px] sm:leading-7">{item.leadingReferences ? <motion.span initial={{ opacity: 0, y: 5 }} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 5 }} transition={{ duration: 0.35 }} className="inline-flex flex-wrap items-baseline"><span className="sr-only">Primary supporting documents: </span>{item.leadingReferences.map((reference, leadingReferenceIndex) => <motion.span key={`${item.text}-leading-${reference.name}`} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28, delay: leadingReferenceIndex * 0.12 }}><InlineDocumentReference {...reference} /></motion.span>)}</motion.span> : null}<HighlightedDescription description={typeof content === 'string' ? content : item.text.slice(0, 0)} highlight={item.highlight} highlightComplete={reduceMotion || index < activeItem} />{typeof content === 'string' ? null : content}{(reduceMotion || index < activeItem) ? <motion.span initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.12 }} className="inline-flex flex-wrap items-baseline"><span className="sr-only">Supporting documents: </span>{item.references.map((reference, referenceIndex) => <motion.span key={`${item.text}-${reference.name}`} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28, delay: referenceIndex * 0.12 }}><InlineDocumentReference {...reference} /></motion.span>)}</motion.span> : null}</motion.p>;
+          return <motion.p key={item.text} initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 8, height: visible ? 'auto' : 0 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden text-[12px] leading-6 tracking-tight text-[#595E68] sm:text-[13px] sm:leading-7"><HighlightedDescription description={typeof content === 'string' ? content : item.text.slice(0, 0)} highlight={item.highlight} highlightComplete={reduceMotion || index < activeItem} tone={columnIndex === 0 ? 'purple' : 'green'} />{typeof content === 'string' ? null : content}{(reduceMotion || index < activeItem) && item.references.length ? <motion.span initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.12 }} className="inline-flex flex-wrap items-baseline"><span className="sr-only">Supporting documents: </span>{item.references.map((reference, referenceIndex) => <motion.span key={`${item.text}-${reference.name}`} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28, delay: referenceIndex * 0.12 }}><InlineDocumentReference {...reference} /></motion.span>)}</motion.span> : null}</motion.p>;
         })}
+        </div>)}
       </div>
       <motion.div initial={false} animate={analysisComplete ? { opacity: 1, y: 0, height: 'auto' } : { opacity: 0, y: 8, height: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="mt-7 max-w-[980px] overflow-hidden" aria-live="polite">
         <p className="mb-3 text-[11px] font-medium tracking-tight text-[#182026]">What the reconciliation establishes</p>
