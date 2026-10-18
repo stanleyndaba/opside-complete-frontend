@@ -108,7 +108,7 @@ function CompilingCheck() {
   );
 }
 
-export default function ReportGeneration() {
+export function ReportGenerationStage({ onComplete }: { onComplete?: () => void } = {}) {
   const [phase, setPhase] = useState<Phase>('extracting');
   const [extractedCount, setExtractedCount] = useState(0);
   const [evidenceMatches, setEvidenceMatches] = useState<Set<string>>(new Set());
@@ -135,6 +135,10 @@ export default function ReportGeneration() {
 
     if (phase === 'output') {
       const timer = window.setTimeout(() => {
+        if (onComplete) {
+          onComplete();
+          return;
+        }
         setShowPreview(false);
         setExtractedCount(0);
         setEvidenceMatches(new Set());
@@ -143,7 +147,7 @@ export default function ReportGeneration() {
       }, 3500);
       return () => window.clearTimeout(timer);
     }
-  }, [phase]);
+  }, [onComplete, phase]);
 
   useEffect(() => {
     evidenceScrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
@@ -487,4 +491,8 @@ export default function ReportGeneration() {
       </AnimatePresence>
     </main>
   );
+}
+
+export default function ReportGeneration() {
+  return <ReportGenerationStage />;
 }
