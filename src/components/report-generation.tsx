@@ -49,9 +49,9 @@ const spring = { type: 'spring' as const, stiffness: 260, damping: 24 };
 type HighlightTone = 'blue' | 'amber' | 'emerald';
 
 const highlightColors: Record<HighlightTone, string> = {
-  blue: 'bg-blue-200/70',
-  amber: 'bg-amber-200/70',
-  emerald: 'bg-emerald-200/70',
+  blue: 'bg-[#BFE5FF]/80',
+  amber: 'bg-[#BFE5FF]/80',
+  emerald: 'bg-[#BFE5FF]/80',
 };
 
 function MetadataHighlight({
@@ -71,7 +71,16 @@ function MetadataHighlight({
         transition={{ duration: 0.45, ease: 'easeOut' }}
         className={`absolute inset-0 origin-left ${highlightColors[tone]}`}
       />
-      <span className="relative z-10">{children}</span>
+      <span className="relative z-10 underline decoration-[#79BFEA] decoration-2 underline-offset-2">{children}</span>
+    </span>
+  );
+}
+
+function EvidenceReference({ icon, children }: { icon: string; children: ReactNode }) {
+  return (
+    <span className="ml-1.5 inline-flex items-center gap-1 rounded-[3px] bg-[#F0F3F5] px-1.5 py-0.5 align-middle text-[9px] font-medium leading-none text-[#596771] no-underline">
+      <img src={icon} alt="" className="h-3.5 w-3.5 shrink-0 rounded-[2px] object-contain" />
+      <span>{children}</span>
     </span>
   );
 }
@@ -205,7 +214,7 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                 <div className="relative h-[360px] overflow-hidden border border-[#DCE8EE] bg-white p-4 sm:h-[390px] sm:p-7">
                   <div className="flex items-start justify-between border-b border-[#DCE8EE] pb-4">
                     <div>
-                      <h2 className="text-base font-semibold tracking-tight text-[#182026]">Recovery case assembly</h2>
+                      <h2 className="text-base font-semibold tracking-tight text-[#182026]">Assembling Dispute Report</h2>
                       <p className="mt-1 text-[11px] text-[#8A99A4]">Northstar Commerce LLC · Amazon US · 12-month control population</p>
                     </div>
                   </div>
@@ -219,12 +228,18 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                       <MetadataHighlight active={isEvidenceMatchActive('units')} tone="amber">1,240 expected, 1,168 received</MetadataHighlight>{' '}
                       with a{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('gap')} tone="amber">72-unit receiving variance across ONT8, LGB8, and PHX7</MetadataHighlight>.
+                      <EvidenceReference icon="/amazon-logo-transparent-circle.png">Amazon receiving</EvidenceReference>
+                      <EvidenceReference icon="/evidence-pdf-mark.png">Receiving report</EvidenceReference>
+                      <EvidenceReference icon="/excel-icon-margin.png">Shipment ledger</EvidenceReference>
                     </p>
                     <p>
                       The material cohort is being reconstructed against the{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('evidence-trail')} tone="amber">evidence chain</MetadataHighlight>.{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('case')} tone="amber">Reconstructed event</MetadataHighlight>{' '}
                       confirms the <MetadataHighlight active={isEvidenceMatchActive('claim-path')} tone="emerald">controlled case path</MetadataHighlight>.
+                      <EvidenceReference icon="/gmailicon.png">Case correspondence</EvidenceReference>
+                      <EvidenceReference icon="/onedrive-icon.png">Evidence index</EvidenceReference>
+                      <EvidenceReference icon="/Dropbox_Icon.svg.png">Control pack</EvidenceReference>
                     </p>
                     <p>
                       Case eligibility is ready for review when{' '}
@@ -293,9 +308,9 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                           initial={{ opacity: 0, x: 56, scale: 0.92 }}
                           animate={{ opacity: 1, x: 0, scale: 1 }}
                           transition={spring}
-                          className="flex items-center gap-2.5 rounded-[5px] border border-[#DCE8EE] bg-white px-3 py-2.5 text-[#33404A] shadow-[0_8px_18px_rgba(24,32,38,0.12)]"
+                          className="flex items-center gap-2.5 bg-transparent px-1 py-2.5 text-[#4F46E5]"
                         >
-                          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#182026] text-white">
+                          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#4F46E5] text-white">
                             <Check className="h-2.5 w-2.5" strokeWidth={3} />
                           </span>
                           <span className="text-[11px] font-medium">{item.label}</span>
