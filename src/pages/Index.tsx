@@ -592,12 +592,10 @@ function DuplicatePipelineDemoSection() {
           className="overflow-hidden rounded-[5px] bg-[#E5F0F3] p-2 sm:p-4"
           style={{ background: 'radial-gradient(circle at 18% 12%, rgba(255,255,255,0.95), transparent 34%), linear-gradient(135deg, #EAF5F9 0%, #DCECF2 52%, #F6FAFB 100%)' }}
         >
-          <div className="flex h-10 items-center justify-between bg-white px-3 text-[#66737F] sm:h-11 sm:px-4" aria-label="Mac browser preview chrome">
-            <div className="flex items-center gap-1.5" aria-hidden="true">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
-              <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
-              <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
-            </div>
+          <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md" aria-label="Mac browser preview chrome">
+              <span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
           </div>
           <iframe
             title="Margin recovery operations demo"
