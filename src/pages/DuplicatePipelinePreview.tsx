@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ArrowUpRight, Check, ChevronDown, Files, Layers3, ListChecks, Search, SlidersHorizontal } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { AccuracyGraphContent } from "./AccuracyGraph";
+import { EvidenceMatchContent } from "../components/evidence-match";
 
 type TabId = "approval" | "filing" | "filed" | "attention" | "payout" | "resolved";
 type Tone = "ready" | "moving" | "filed" | "attention" | "payout" | "resolved";
@@ -619,17 +620,7 @@ function TeamHandoffStage() {
 }
 
 function EvidenceMatchStage() {
-  const reduceMotion = useReducedMotion();
-  const matchedCases = cards.approval;
-
-  return <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.5 }} className="px-5 py-5 sm:px-6">
-    <div className="space-y-1.5 pb-4">
-      <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Evidence match</p>
-      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1"><h2 className="font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[22px]">Source records matched to recovery positions</h2><span className="text-[11px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">{matchedCases.length} governed position{matchedCases.length === 1 ? '' : 's'}</span></div>
-      <p className="max-w-3xl text-[12px] leading-5 tracking-tight text-[#4D5B66]">Each supported event is connected to its source records, financial position, evidence posture, and next controlled action. Nothing submits until the position is reviewed and approved.</p>
-    </div>
-    <div className="space-y-3" aria-label="Evidence-matched recovery positions">{matchedCases.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={() => undefined} workspaceMode />)}</div>
-  </motion.div>;
+  return <EvidenceMatchContent embedded />;
 }
 
 function AmazonCorrespondenceStage() {

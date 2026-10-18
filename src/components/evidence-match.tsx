@@ -68,6 +68,10 @@ function MetadataHighlight({
   );
 }
 
+function DocumentReference({ name, source }: { name: string; source: string }) {
+  return <span className="mx-1 inline-flex max-w-full translate-y-[0.12em] items-center rounded-[3px] bg-[#F1F3F4] px-1.5 py-0.5 align-baseline text-[10px] font-semibold leading-4 text-[#3B4650]" title={`${source}: ${name}`}>{name}</span>;
+}
+
 function MatchAnalysisViz() {
   const [activeMatches, setActiveMatches] = useState<Set<string>>(new Set());
   const [buttonReady, setButtonReady] = useState(false);
@@ -153,6 +157,13 @@ function MatchAnalysisViz() {
 
           <div className="border-t border-[#E8EFF3] pt-2 font-google-sans text-[11px] leading-5 text-[#25313A]">
             <p>
+              <span className="font-medium uppercase tracking-tight text-[#66737F]">Control scope</span>{' '}
+              Amazon US · merchant account NTH-US-01 · settlement period FY2026 Q1 · entity ACME Trading LLC ·{' '}
+              <DocumentReference source="Amazon" name="FBA Receiving and Inventory Adjustment Ledger" />
+              <DocumentReference source="Dropbox" name="Shipment Population and Custody Evidence Pack" />
+              <DocumentReference source="OneDrive" name="Settlement Clearing and Valuation Workbook" />
+            </p>
+            <p>
               <span className="font-medium uppercase tracking-tight text-[#66737F]">Case readiness</span>{' '}
               <MetadataHighlight active={isActive('r-candidate')} tone="emerald">Claim candidate</MetadataHighlight> · Deadline{' '}
               <MetadataHighlight active={isActive('r-deadline')} tone="emerald">Apr 2, 2026</MetadataHighlight> · Case link{' '}
@@ -179,7 +190,9 @@ function MatchAnalysisViz() {
     </div>
   );
 }
-export default function EvidenceMatch() {
+type EvidenceMatchContentProps = { embedded?: boolean };
+
+export function EvidenceMatchContent({ embedded = false }: EvidenceMatchContentProps) {
   const [scanProgress, setScanProgress] = useState(0);
   const [documentMatches, setDocumentMatches] = useState<Set<string>>(new Set());
   const activeHighlights = MATCH_HIGHLIGHTS.filter((card) => scanProgress >= card.triggerLine);
@@ -227,8 +240,8 @@ export default function EvidenceMatch() {
   const isDocumentMatch = (id: string) => documentMatches.has(id);
 
   return (
-    <main className="min-h-screen overflow-x-auto bg-[#FAFAF7] p-4 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:overflow-x-hidden lg:p-8">
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] min-w-[760px] max-w-[1180px] items-center lg:min-w-0">
+    <main className={`${embedded ? 'w-full bg-white p-0' : 'min-h-screen overflow-x-auto bg-[#FAFAF7] p-4 sm:p-6 lg:overflow-x-hidden lg:p-8'} font-google-sans text-[#182026] selection:bg-[#0B74DE]/16`}>
+      <div className={`mx-auto flex ${embedded ? 'min-h-0 w-full' : 'min-h-[calc(100vh-4rem)] min-w-[760px]'} max-w-[1180px] items-center lg:min-w-0`}>
       <section className="grid min-h-[620px] w-full grid-cols-2 gap-0 overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
         <div className="relative flex min-h-0 flex-col overflow-hidden border-b border-[#DCE8EE] bg-white lg:border-b-0 lg:border-r">
           <div className="z-10 flex items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
@@ -319,6 +332,10 @@ export default function EvidenceMatch() {
       </div>
     </main>
   );
+}
+
+export default function EvidenceMatch() {
+  return <EvidenceMatchContent />;
 }
 
 const styleTag = typeof document !== 'undefined' ? document.createElement('style') : null;
