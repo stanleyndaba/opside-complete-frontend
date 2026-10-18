@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ArrowUpRight, Check, ChevronDown, Files, Layers3, ListChecks, Search, SlidersHorizontal } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import AccuracyGraph from "./AccuracyGraph";
+import { AccuracyGraphContent } from "./AccuracyGraph";
 
 type TabId = "approval" | "filing" | "filed" | "attention" | "payout" | "resolved";
 type Tone = "ready" | "moving" | "filed" | "attention" | "payout" | "resolved";
@@ -665,7 +665,7 @@ function AmazonCorrespondenceStage() {
 
 function AccuracyLearningStage() {
   return <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} aria-label="Recovery learning and benchmark evaluation" className="bg-white">
-    <AccuracyGraph />
+    <AccuracyGraphContent />
   </motion.section>;
 }
 

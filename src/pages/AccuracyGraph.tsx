@@ -12,7 +12,7 @@ function DocumentReference({ name, source, icon }: DocumentReferenceProps) {
   );
 }
 
-const AccuracyGraph = () => {
+export const AccuracyGraphContent = () => {
   const dataPoints = [
     { cases: 0, accuracy: 0.58 },
     { cases: 100, accuracy: 0.67 },
@@ -33,7 +33,7 @@ const AccuracyGraph = () => {
   const pointColors = ['#7C3AED', '#2563EB', '#0891B2', '#059669', '#CA8A04', '#EA580C', '#DC2626'];
 
   return (
-    <main className="min-h-screen w-full overflow-auto bg-white p-2 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
+    <>
       <section className="mx-auto w-full max-w-5xl overflow-visible border-0 bg-white">
 
         <div className="grid grid-cols-1">
@@ -162,8 +162,14 @@ const AccuracyGraph = () => {
           </div>
         </section>
       </section>
-    </main>
+    </>
   );
 };
+
+const AccuracyGraph = () => (
+  <main className="min-h-screen w-full overflow-auto bg-white p-2 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
+    <AccuracyGraphContent />
+  </main>
+);
 
 export default AccuracyGraph;
