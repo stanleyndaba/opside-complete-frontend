@@ -229,8 +229,6 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                       with a{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('gap')} tone="amber">72-unit receiving variance across ONT8, LGB8, and PHX7</MetadataHighlight>.
                       <EvidenceReference icon="/amazon-logo-transparent-circle.png">Amazon receiving</EvidenceReference>
-                      <EvidenceReference icon="/evidence-pdf-mark.png">Receiving report</EvidenceReference>
-                      <EvidenceReference icon="/excel-icon-margin.png">Shipment ledger</EvidenceReference>
                     </p>
                     <p>
                       The material cohort is being reconstructed against the{' '}
@@ -238,19 +236,20 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                       <MetadataHighlight active={isEvidenceMatchActive('case')} tone="amber">Reconstructed event</MetadataHighlight>{' '}
                       confirms the <MetadataHighlight active={isEvidenceMatchActive('claim-path')} tone="emerald">controlled case path</MetadataHighlight>.
                       <EvidenceReference icon="/gmailicon.png">Case correspondence</EvidenceReference>
-                      <EvidenceReference icon="/onedrive-icon.png">Evidence index</EvidenceReference>
-                      <EvidenceReference icon="/Dropbox_Icon.svg.png">Control pack</EvidenceReference>
                     </p>
                     <p>
                       Case eligibility is ready for review when{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('filing-gates')} tone="emerald">source, materiality, and clearing controls pass</MetadataHighlight>.{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('candidate')} tone="emerald">Next action: Seller approval required.</MetadataHighlight>
+                      <EvidenceReference icon="/evidence-pdf-mark.png">Receiving report</EvidenceReference>
+                      <EvidenceReference icon="/excel-icon-margin.png">Shipment ledger</EvidenceReference>
                     </p>
                     <p>
                       Margin is normalizing <MetadataHighlight active={isEvidenceMatchActive('shipment')} tone="amber">shipment</MetadataHighlight>,{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('received')} tone="amber">receiving outcomes</MetadataHighlight>, and{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('reimbursement-records')} tone="emerald">settlement, reimbursement, and ledger records</MetadataHighlight>{' '}
                       to determine whether the retained cohort is supported, attributable, and not already credited.
+                      <EvidenceReference icon="/onedrive-icon.png">Evidence index</EvidenceReference>
                     </p>
                     <p>
                       <MetadataHighlight active={isEvidenceMatchActive('policy')} tone="emerald">Enterprise recovery control review</MetadataHighlight>{' '}
@@ -260,6 +259,8 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                       against Case cohort <MetadataHighlight active={isEvidenceMatchActive('order')} tone="amber">REC-2026-004817</MetadataHighlight>, SKU{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('sku')} tone="amber">NS-AIR-PURIFIER-3PK</MetadataHighlight>, and a{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('shortage')} tone="amber">72-unit receiving variance</MetadataHighlight>.
+                      <EvidenceReference icon="/Dropbox_Icon.svg.png">Control pack</EvidenceReference>
+                      <EvidenceReference icon="/outlookicon.webp">Approval thread</EvidenceReference>
                     </p>
                   </div>
 
