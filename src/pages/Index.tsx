@@ -1857,6 +1857,20 @@ function FooterNestedRecoveryVisual() {
             <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start a Financial Review</Button>
             <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Design an Enterprise Engagement</Button>
           </div>
+          <div className="mt-6 space-y-5 border-t border-[#E6EDF1] pt-5">
+            <div>
+              <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
+              <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
+              <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
+              <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
+            </div>
+            <div>
+              <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p>
+              <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
+              <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
+              <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -2700,6 +2714,20 @@ export default function Index() {
                     <div className="mt-5 flex flex-col gap-3">
                       <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start a Financial Review</Button>
                       <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Design an Enterprise Engagement</Button>
+                    </div>
+                    <div className="mt-6 space-y-5 border-t border-[#E6EDF1] pt-5">
+                      <div>
+                        <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
+                        <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
+                        <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
+                        <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
+                      </div>
+                      <div>
+                        <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p>
+                        <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
+                        <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
+                        <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
