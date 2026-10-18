@@ -33,8 +33,6 @@ import {
   Truck,
   UserCheck,
   Square,
-  BatteryFull,
-  Wifi,
 } from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
@@ -596,11 +594,10 @@ function DuplicatePipelineDemoSection() {
         >
           <div className="flex h-10 items-center justify-between bg-white px-3 text-[#66737F] sm:h-11 sm:px-4" aria-label="Mac browser preview chrome">
             <div className="flex items-center gap-1.5" aria-hidden="true">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
-            <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
-            <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#C3CCD1]" aria-hidden="true" />
             </div>
-            <div className="flex items-center gap-2.5" aria-hidden="true"><Wifi className="h-3.5 w-3.5" strokeWidth={2} /><BatteryFull className="h-4 w-4" strokeWidth={2} /><span className="flex items-center gap-1 rounded-full bg-[#F1F3F4] px-2 py-1 text-[9px] font-semibold tracking-tight text-[#26333A]"><span className="relative flex h-3.5 w-5 items-center" aria-hidden="true"><span className="absolute left-0 top-[5px] h-1 w-3 rounded-sm bg-[#182026]" /><span className="absolute left-1 top-[2px] h-1 w-3 rounded-sm bg-[#182026]" /></span>Margin<span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" /></span></div>
           </div>
           <iframe
             title="Margin recovery operations demo"
