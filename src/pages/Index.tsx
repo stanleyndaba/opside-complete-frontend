@@ -212,41 +212,67 @@ const accountingRows = [
   getAccountingRow(["settlements", "quickbooks", "sftp", "gmail", "xero"]),
 ];
 
-function AccountingEvidenceSection() {
-  const reduceMotion = useReducedMotion();
+const accountingConsoleLines = [
+  { prompt: '$ margin connect --scope account', text: 'loading connected financial records', tone: 'text-[#A8B3BC]' },
+  { prompt: 'source.amazon.orders', text: '124,860 records · 4 marketplaces', tone: 'text-[#D9E7EF]' },
+  { prompt: 'source.warehouse.receiving', text: '1,842 events · 72-unit variance detected', tone: 'text-[#F0C987]' },
+  { prompt: 'source.inventory.ledger', text: '7,630 movements · 318 SKUs matched', tone: 'text-[#B8E1C8]' },
+  { prompt: 'source.settlements', text: '8 periods · $88,200 evidence-ready', tone: 'text-[#B8E1C8]' },
+  { prompt: 'source.finance.reimbursements', text: '31,940 fee records · 14 source gaps', tone: 'text-[#F0C987]' },
+  { prompt: 'margin.reconcile()', text: 'linking event identity → settlement → account', tone: 'text-[#BFD8F2]' },
+  { prompt: 'position.status', text: 'ESTABLISHED · supported / unresolved separated', tone: 'text-[#8FE0B1]' },
+] as const;
 
+function AccountingCodeConsole() {
+  const reduceMotion = useReducedMotion();
+  const consoleSources = [...accountingSources, ...accountingSources.slice(0, 5)];
+  return (
+    <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
+      <div className="relative overflow-hidden rounded-[14px] border border-[#27333B] bg-[#151B1F] shadow-[0_24px_60px_rgba(24,32,38,0.18)] sm:rounded-[18px]">
+        <div className="flex h-11 items-center gap-2 border-b border-white/[0.08] bg-[#20282D] px-4 sm:h-12 sm:px-5">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#E27B72]" aria-hidden="true" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#E6BC70]" aria-hidden="true" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#78C694]" aria-hidden="true" />
+          <span className="ml-3 truncate font-mono text-[9px] tracking-tight text-[#93A1AA] sm:text-[10px]">margin / financial-control / connected-position</span>
+        </div>
+        <div className="relative min-h-[380px] overflow-hidden px-4 py-5 font-mono text-[9px] leading-5 sm:min-h-[430px] sm:px-6 sm:py-6 sm:text-[10px] sm:leading-6">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(74,111,126,0.16),transparent_52%)]" />
+          <div className="relative">
+            <div className="mb-4 flex items-center justify-between border-b border-white/[0.08] pb-3 text-[8px] uppercase tracking-[0.14em] text-[#70808A] sm:text-[9px]">
+              <span>read-only reconciliation preview</span><span className="text-[#78C694]">● live simulation</span>
+            </div>
+            <div className="space-y-0.5">
+              {accountingConsoleLines.map((line, index) => (
+                <motion.div key={line.prompt} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.35 + index * 0.16, duration: 0.35 }} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] gap-3 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] sm:gap-5">
+                  <span className="truncate text-[#6F9DB2]">{line.prompt}</span><span className={`truncate ${line.tone}`}>{line.text}</span>
+                </motion.div>
+              ))}
+            </div>
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.8, duration: 0.4 }} className="mt-5 border-l-2 border-[#78C694] bg-[#78C694]/[0.07] px-3 py-2 text-[#B8E1C8]">
+              <span className="text-[#78C694]">✓ position://account/NTH-US-01</span><br />
+              <span className="text-[#A8B3BC]">  financial truth connected; action boundary preserved</span>
+            </motion.div>
+          </div>
+        </div>
+        <div className="border-t border-white/[0.08] bg-[#111619] py-3" aria-label="Connected systems">
+          <div className="mb-2 px-4 font-mono text-[7px] uppercase tracking-[0.16em] text-[#687780] sm:px-5 sm:text-[8px]">connected sources</div>
+          <div className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%)' }}>
+            <motion.div animate={reduceMotion ? { x: 0 } : { x: ['0%', '-38%'] }} transition={reduceMotion ? { duration: 0 } : { duration: 24, repeat: Infinity, ease: 'linear' }} className="flex w-max items-center gap-5 px-4 sm:gap-7 sm:px-5">
+              {consoleSources.map((source, index) => <div key={`${source.id}-${index}`} className="flex shrink-0 items-center gap-1.5 font-mono text-[8px] text-[#9BAAB2] sm:text-[9px]">{source.src ? <img src={source.src} alt="" className="h-4 w-4 object-contain opacity-80 grayscale" /> : <span className={`flex h-4 w-4 items-center justify-center rounded-[3px] ${source.icon === 'edi' ? 'bg-[#7C3AED]' : source.icon === 'carrier' ? 'bg-[#F59E0B]' : 'bg-[#5D707A]'}`}>{source.icon === 'edi' ? <FileInput className="h-2.5 w-2.5 text-white" /> : source.icon === 'carrier' ? <Truck className="h-2.5 w-2.5 text-white" /> : <Database className="h-2.5 w-2.5 text-white" />}</span>}<span>{source.name}</span></div>)}
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function AccountingEvidenceSection() {
   return (
     <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F6F8F9] py-10 md:py-16" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
-              <div className="relative h-[380px] overflow-hidden py-5 sm:h-[430px] sm:py-10">
-                <div
-                  className="relative h-full"
-                  style={{
-                    maskImage: "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
-                    WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
-                  }}
-                >
-                  {[0, 1].map((rowIndex) => (
-                    <motion.div
-                      key={rowIndex}
-                      className={`absolute inset-x-0 flex w-max gap-3 sm:gap-6 ${rowIndex === 0 ? "top-0" : "bottom-0"}`}
-                      animate={reduceMotion ? { x: 0 } : { x: rowIndex === 0 ? ["0%", "-50%"] : ["-50%", "0%"] }}
-                      transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 30 : 34, repeat: Infinity, ease: "linear" }}
-                    >
-                      {[...accountingRows[rowIndex], ...accountingRows[rowIndex]].map((source, index) => (
-                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[108px] w-[116px] shrink-0 flex-col items-center justify-center gap-1.5 px-1 text-center sm:h-[150px] sm:w-[150px] sm:gap-2 sm:px-3">
-                          {source.src ? <img src={source.src} alt={`${source.name} logo`} className="h-14 w-24 object-contain mix-blend-multiply sm:h-16 sm:w-28" /> : <span className={`flex h-10 w-10 items-center justify-center rounded-[9px] shadow-[0_6px_18px_rgba(35,54,65,0.08)] sm:h-14 sm:w-14 ${source.icon === "edi" ? "bg-[#7C3AED] text-white" : source.icon === "carrier" ? "bg-[#F59E0B] text-white" : "bg-white/90 text-[#52616A] ring-1 ring-[#DCE4E7]"}`}>{source.icon === "edi" ? <FileInput className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} aria-label="Electronic data interchange" /> : source.icon === "carrier" ? <Truck className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} aria-label="Carrier events" /> : <Database className="h-6 w-6 sm:h-8 sm:w-8" strokeWidth={1.7} />}</span>}
-                          <span className="max-w-[104px] text-[8px] font-semibold leading-3 tracking-tight text-[#52616A] sm:max-w-[112px] sm:text-[9px]">{source.context}</span>
-                        </div>
-                      ))}
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-          </motion.div>
-
+          <AccountingCodeConsole />
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:order-2 lg:pt-2">
             <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
               <span className="heading-tone-dark">The records stay in their systems.</span> <span className="heading-tone-muted">The financial truth becomes connected.</span>
