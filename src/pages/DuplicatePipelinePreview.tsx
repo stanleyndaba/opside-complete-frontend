@@ -298,7 +298,7 @@ function AuditFindingsStage({ onComplete }: { onComplete: () => void }) {
 const intakeDocuments = [
   { type: 'PDF', name: 'Settlement reconciliation schedule · Apr 2026', source: 'Settlement file · payout activity', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
   { type: 'CSV', name: 'Inbound receiving variance population · ONT8', source: 'Amazon SP-API · 60 dispatched / 46 received', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
-  { type: 'MAIL', name: 'Reimbursement case correspondence · REC-2026-004817', source: 'Gmail thread · case response and evidence request', iconSrc: '/gmailicon.png', iconAlt: 'Gmail' },
+  { type: 'MAIL', name: 'Reimbursement case correspondence · REC-2026-004817', source: 'Gmail case correspondence · response and evidence request', iconSrc: '/gmailicon.png', iconAlt: 'Gmail' },
   { type: 'XLS', name: 'Inventory valuation and movement schedule · FY2026 Q1', source: 'NetSuite export · SKU and unit-level activity', iconSrc: '/gd.png', iconAlt: 'Google Drive' },
 ];
 
@@ -637,11 +637,11 @@ function AmazonCorrespondenceStage() {
     setToast(`${name} is available in the governed evidence record`);
     window.setTimeout(() => setToast(null), 2600);
   };
-  return <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} aria-label="Amazon Thread Review" className="mt-8 bg-white px-1.5 py-2 sm:px-6 sm:py-6">
+  return <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} aria-label="Amazon Case Correspondence" className="mt-8 bg-white px-1.5 py-2 sm:px-6 sm:py-6">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
     <section className="mx-auto max-w-[1280px] bg-white p-2 sm:p-4">
       <div className="space-y-2">
-        <div className="flex flex-wrap items-center gap-2"><img src="/gmailicon.png" alt="Amazon thread" className="h-4 w-4 shrink-0 object-contain" /><h3 className="text-[13px] font-semibold tracking-tight text-[#07111A]">Amazon Thread</h3></div>
+        <div className="flex flex-wrap items-center gap-2"><img src="/gmailicon.png" alt="Amazon case correspondence" className="h-4 w-4 shrink-0 object-contain" /><h3 className="text-[13px] font-semibold tracking-tight text-[#07111A]">Amazon Case Correspondence</h3></div>
         <p className="text-[9px] leading-3.5 text-[#6B7C88]">Q1 2026 recovery control population: 1,842 positions reviewed · $2.84M supported exposure · 126 residual positions under watch.</p>
         <p className="text-[9px] leading-3.5 text-[#6B7C88]">Current position · Supported exposure $38,850 · Amazon approved $26,000 · Settlement state pending verification · Residual position $12,850 · Response deadline 14 days · Action owner Margin · Close state open.</p>
         <div className="space-y-1.5">{messages.map((message) => <article key={message.subject} className="space-y-1.5 rounded-[5px] border border-[#DCE8EE] bg-white px-2 py-2">
