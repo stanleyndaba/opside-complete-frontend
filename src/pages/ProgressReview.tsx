@@ -35,12 +35,25 @@ const events: ProgressEvent[] = [
   { type: "financial close", status: "position classified", date: "09/08/2026, 07:46:11 AM", message: "The financial position is closed as a partial outcome: $150.00 approved and reconciled to settlement, $44.25 residual classified for follow-up, and no unowned or unaccounted balance remains in the governed record.", amount: "$150.00", docs: ["FinancialClose-EVT-FBA-2026-0001847.pdf", "OutcomeClassification-Partial.csv"] },
 ];
 
+const documentSourceIcons = [
+  { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
+  { src: "/outlookicon.webp", alt: "Outlook" },
+  { src: "/onedriive.png", alt: "OneDrive" },
+  { src: "/gmailicon.png", alt: "Gmail" },
+  { src: "/quickbooks.png", alt: "QuickBooks" },
+  { src: "/Driveboy.png", alt: "Google Drive" },
+  { src: "/Dropbox_Icon.svg.png", alt: "Dropbox" },
+  { src: "/xero.png", alt: "Xero" },
+  { src: "/integration-icons/netsuite.png", alt: "NetSuite" },
+  { src: "/integration-icons/sap-s4hana.png", alt: "SAP" },
+  { src: "/gmailicon.png", alt: "Gmail" },
+  { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
+] as const;
+
 export default function ProgressReview() {
   const [toast, setToast] = useState<string | null>(null);
-  const getDocumentIcon = (event: ProgressEvent, doc: string) => {
-    if (event.status === "partial reimbursement identified") return { src: "/gmailicon.png", alt: "Amazon response" };
-    if (doc.toLowerCase().endsWith(".csv")) return { src: "/excel-icon-margin.png", alt: "CSV" };
-    return { src: "/pdf-file-icon.webp", alt: "PDF" };
+  const getDocumentIcon = (eventIndex: number, docIndex: number) => {
+    return documentSourceIcons[(eventIndex * 3 + docIndex) % documentSourceIcons.length];
   };
   const openDoc = (doc: string) => {
     setToast(`${doc} opened from the governed progress record`);
@@ -65,7 +78,7 @@ export default function ProgressReview() {
           {events.map((event, index) => <article key={`${event.date}-${event.status}`} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
             {index < events.length - 1 ? <span className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
             <span className="relative z-10 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded event"><Check className="h-3 w-3 text-white" strokeWidth={3} /></span>
-            <div className="min-w-0"><p className="font-medium tracking-tight text-[#182026]">{event.type} · {event.status}</p><p className="mt-1 leading-5 text-[#4D5B66]">{event.message}</p><time className="mt-2 block text-[10px] font-medium tabular-nums tracking-tight text-[#66737F]">{event.date}</time>{event.amount ? <p className="mt-1 font-medium tabular-nums text-[#0B74DE]">Supported amount: {event.amount}</p> : null}<div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[#4B5563]"><span className="text-[11px] font-medium tracking-tight text-[#66737F]">Docs</span>{event.docs.map((doc) => <button type="button" key={doc} onClick={() => openDoc(doc)} className="inline-flex items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] hover:text-[#0B74DE]">{(() => { const icon = getDocumentIcon(event, doc); return <><img src={icon.src} alt={icon.alt} className="h-4 w-4 object-contain" />{doc}</>; })()}<ArrowRight className="h-3 w-3" /></button>)}</div></div>
+            <div className="min-w-0"><p className="font-medium tracking-tight text-[#182026]">{event.type} · {event.status}</p><p className="mt-1 leading-5 text-[#4D5B66]">{event.message}</p><time className="mt-2 block text-[10px] font-medium tabular-nums tracking-tight text-[#66737F]">{event.date}</time>{event.amount ? <p className="mt-1 font-medium tabular-nums text-[#0B74DE]">Supported amount: {event.amount}</p> : null}<div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[#4B5563]"><span className="text-[11px] font-medium tracking-tight text-[#66737F]">Docs</span>{event.docs.map((doc, docIndex) => <button type="button" key={doc} onClick={() => openDoc(doc)} className="inline-flex items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] hover:text-[#0B74DE]">{(() => { const icon = getDocumentIcon(index, docIndex); return <><img src={icon.src} alt={icon.alt} className="h-4 w-4 object-contain" />{doc}</>; })()}<ArrowRight className="h-3 w-3" /></button>)}</div></div>
           </article>)}
           </div>
         </div>

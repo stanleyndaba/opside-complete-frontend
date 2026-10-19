@@ -125,6 +125,21 @@ const evidenceLog = [
   { time: "09:20:14", label: "Control sufficiency assessed", detail: "Evidence supports Finance review and controlled action. Financial conclusion: permitted for approval, not automatic certainty. Outstanding source classes remain visible in the exception register and excluded from the approved position.", file: "ControlSufficiency-EVT-FBA-2026-0001847.pdf" },
 ];
 
+const documentSourceIcons = [
+  { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
+  { src: "/outlookicon.webp", alt: "Outlook" },
+  { src: "/onedriive.png", alt: "OneDrive" },
+  { src: "/gmailicon.png", alt: "Gmail" },
+  { src: "/quickbooks.png", alt: "QuickBooks" },
+  { src: "/Driveboy.png", alt: "Google Drive" },
+  { src: "/Dropbox_Icon.svg.png", alt: "Dropbox" },
+  { src: "/xero.png", alt: "Xero" },
+  { src: "/integration-icons/netsuite.png", alt: "NetSuite" },
+  { src: "/integration-icons/sap-s4hana.png", alt: "SAP" },
+  { src: "/gmailicon.png", alt: "Gmail" },
+  { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
+] as const;
+
 export default function EvidenceRequired() {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -132,6 +147,7 @@ export default function EvidenceRequired() {
     setToast(`${item.file} opened for review`);
     window.setTimeout(() => setToast(null), 2600);
   };
+  const getDocumentIcon = (index: number) => documentSourceIcons[index % documentSourceIcons.length];
   return <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] text-[#182026]">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
     <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
@@ -171,7 +187,7 @@ export default function EvidenceRequired() {
               <p className="pb-2 pt-1 text-[10px] leading-4 tracking-tight text-[#66737F]">{item.connection}</p>
               <div className="flex items-center gap-3 px-3 py-3 sm:px-4">
                 <div className="flex min-w-0 flex-1 items-center gap-2.5">
-                  <img src={item.file.endsWith('.csv') ? '/excel-icon-margin.png' : '/pdf-file-icon.webp'} alt={item.file.endsWith('.csv') ? 'CSV' : 'PDF'} className="h-6 w-6 shrink-0 object-contain" />
+                  <img src={getDocumentIcon(index).src} alt={getDocumentIcon(index).alt} className="h-6 w-6 shrink-0 object-contain" />
                   <div className="min-w-0 flex-1"><div className="flex min-w-0 items-center gap-3"><p className="min-w-0 truncate text-[11px] font-semibold tracking-tight text-[#36404A]">{item.file}</p><span className="shrink-0 text-[11px] font-semibold tracking-tight text-[#4D5B66]">{item.confidence}</span><button type="button" onClick={() => showDocument(item)} className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] hover:text-[#0B74DE]">Open<ArrowRight className="h-3.5 w-3.5" /></button></div><p className="mt-0.5 truncate text-[10px] tracking-tight text-[#66737F]">{item.title}</p></div>
                 </div>
               </div>
