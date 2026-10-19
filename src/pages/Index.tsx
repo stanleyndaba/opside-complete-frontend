@@ -23,16 +23,14 @@ import {
   Check,
   ChevronRight,
   Landmark,
-  Database,
-  FileInput,
   MessagesSquare,
   Monitor,
   PlayCircle,
   ReceiptText,
   SearchCheck,
-  Truck,
   UserCheck,
   Square,
+  X,
 } from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
@@ -193,75 +191,28 @@ function TypewriterPrompt({ text }: { text: string }) {
   );
 }
 
-const accountingSources = [
-  { id: "gmail", name: "Gmail", context: "source correspondence", src: "/gmailicon.png", icon: null },
-  { id: "outlook", name: "Outlook", context: "finance correspondence", src: "/outlookicon.webp", icon: null },
-  { id: "onedrive", name: "OneDrive", context: "evidence files", src: "/onedrive-icon.png", icon: null },
-  { id: "googledrive", name: "Google Drive", context: "shared records", src: "/Driveboy.png", icon: null },
-  { id: "dropbox", name: "Dropbox", context: "recovery records", src: "/Dropbox_Icon.svg.png", icon: null },
-  { id: "quickbooks", name: "QuickBooks", context: "accounting records", src: "/quickbooks.png", icon: null },
-  { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png", icon: null },
-  { id: "sap", name: "SAP", context: "enterprise records", src: "/integration-icons/sap-s4hana.png", icon: null },
-  { id: "netsuite", name: "NetSuite", context: "finance systems", src: "/integration-icons/netsuite.png", icon: null },
-  { id: "sftp", name: "S3 / SFTP", context: "controlled files", src: "/integration-icons/amazons3.jpg", icon: null },
-];
-const getAccountingRow = (order: string[]) => order.map((id) => accountingSources.find((source) => source.id === id)!).filter(Boolean);
-const accountingRows = [
-  getAccountingRow(["gmail", "outlook", "onedrive", "googledrive", "dropbox"]),
-  getAccountingRow(["quickbooks", "xero", "sap", "netsuite", "sftp"]),
-];
 const accountingCodeLines = [
-  { number: '01', parts: [['import', 'keyword'], [' { connect } from ', 'plain'], ['"@margin/integrations"', 'string'], [';', 'plain']] },
-  { number: '02', parts: [['import', 'keyword'], [' { ingest, linkRecords } from ', 'plain'], ['"@margin/evidence"', 'string'], [';', 'plain']] },
-  { number: '03', parts: [] },
-  { number: '04', parts: [['const', 'keyword'], [' integrations = await ', 'plain'], ['connect', 'function'], ['([', 'plain']] },
-  { number: '05', parts: [['  ', 'plain'], ['gmail', 'provider'], [': { folders: ', 'plain'], ['["recovery", "settlements"]', 'string'], [' },', 'plain']] },
-  { number: '06', parts: [['  ', 'plain'], ['outlook', 'provider'], [': { folders: ', 'plain'], ['["finance", "correspondence"]', 'string'], [' },', 'plain']] },
-  { number: '07', parts: [['  ', 'plain'], ['oneDrive', 'provider'], [': { paths: ', 'plain'], ['["/evidence", "/ledgers"]', 'string'], [' },', 'plain']] },
-  { number: '08', parts: [['  ', 'plain'], ['googleDrive', 'provider'], [': { shared: ', 'plain'], ['"finance-control"', 'string'], [' },', 'plain']] },
-  { number: '09', parts: [['  ', 'plain'], ['dropbox', 'provider'], [': { teamSpace: ', 'plain'], ['"recovery-records"', 'string'], [' }', 'plain']] },
-  { number: '10', parts: [[']);', 'plain']] },
-  { number: '11', parts: [] },
-  { number: '12', parts: [['const', 'keyword'], [' records = await ', 'plain'], ['ingest', 'function'], ['(integrations);', 'plain']] },
-  { number: '13', parts: [['const', 'keyword'], [' position = ', 'plain'], ['linkRecords', 'function'], ['(records, { lineage: ', 'plain'], ['true', 'boolean'], [' });', 'plain']] },
-  { number: '14', parts: [['// Gmail + Outlook + Drive records → one accountable position', 'comment']] },
+  { number: '1', parts: [['import', 'keyword'], [' { SettlementEvent, EvidenceLink } from ', 'plain'], ['"@/domain/financial"', 'string'], [';', 'plain']] },
+  { number: '2', parts: [['import', 'keyword'], [' { normalizeAmount, assertCurrency } from ', 'plain'], ['"@/controls/normalization"', 'string'], [';', 'plain']] },
+  { number: '3', parts: [['import', 'keyword'], [' { buildEvidenceGraph } from ', 'plain'], ['"@/evidence/lineage"', 'string'], [';', 'plain']] },
+  { number: '4', parts: [['import', 'keyword'], [' { classifyPosition, type ControlState } from ', 'plain'], ['"@/controls/position"', 'string'], [';', 'plain']] },
+  { number: '5', parts: [['const', 'keyword'], [' event: SettlementEvent = ', 'plain'], ['await', 'keyword'], [' loadSettlementEvent(reviewWindow);', 'function']] },
+  { number: '6', parts: [['const', 'keyword'], [' position = await ', 'plain'], ['buildEvidenceGraph', 'function'], ['({ source: "amazon", event, requiredLinks });', 'plain']] },
+  { number: '7', parts: [['const', 'keyword'], [' normalized = ', 'plain'], ['normalizeAmount', 'function'], ['(position.amount, assertCurrency("USD"));', 'plain']] },
+  { number: '8', parts: [['const', 'keyword'], [' state: ControlState = ', 'plain'], ['classifyPosition', 'function'], ['({ ...position, amount: normalized });', 'plain']] },
+  { number: '9', parts: [['return', 'keyword'], [' { state, lineage: position.lineage, ', 'plain'], ['approved: false', 'boolean'], [' };', 'plain']] },
 ] as const;
+const accountingFiles = ["reconcile.ts", "evidence-match.ts", "settlement-ledger.ts", "amazon-events.ndjson", "fba-receiving.csv", "payout-reconciliation.sql", "control-policy.json"] as const;
 function AccountingCodeConsole() {
   const reduceMotion = useReducedMotion();
   return (
     <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="accounting-code-editor relative order-2 min-w-0 overflow-hidden lg:order-1">
-      <div className="relative overflow-hidden rounded-[5px] border-0 bg-white p-0 shadow-[0_18px_48px_rgba(37,73,91,0.12)] sm:rounded-[6px]">
-        <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
+      <div className="overflow-hidden rounded-[12px] border border-[#D7E0E6] bg-[#0F1720] shadow-[0_24px_70px_rgba(24,32,38,0.16)]">
+        <div className="flex items-center justify-between border-b border-[#263541] bg-[#17232D] px-3 py-2.5 sm:px-4"><div className="flex items-center gap-2 text-[10px] font-semibold text-[#DCE8EE] sm:text-[11px]"><span className="flex h-5 w-5 items-center justify-center rounded-[4px] bg-[#3178C6] text-[9px] font-bold text-white">TS</span><span>Margin control workspace</span></div><span className="font-mono text-[9px] text-[#7F95A4]">CONNECTED / READ-ONLY</span></div>
+        <div className="flex overflow-x-auto bg-[#111B24] px-2 pt-2 scrollbar-hide">
+          {["reconcile.ts", "evidence-match.ts", "settlement-ledger.ts"].map((tab, index) => <div key={tab} className={`flex min-w-[142px] items-center gap-2 rounded-t-[9px] px-3 py-2 font-mono text-[9px] ${index === 0 ? "bg-[#F6F8F9] text-[#26333A]" : "bg-[#1A2731] text-[#8FA3AF]"}`}><span className={`flex h-4 w-4 items-center justify-center rounded-[3px] text-[7px] font-bold ${index === 0 ? "bg-[#3178C6] text-white" : "bg-[#315C80] text-[#DCE8EE]"}`}>TS</span><span className="min-w-0 flex-1 truncate">{tab}</span><X className="h-3 w-3 opacity-70" aria-label={`Close ${tab}`} /></div>)}
         </div>
-        <div className="flex min-h-[380px] bg-white sm:min-h-[430px]">
-          <aside className="hidden w-[126px] shrink-0 border-r border-[#E3EAED] bg-[#F7FAFB] px-3 py-4 sm:block">
-            <p className="mb-3 font-mono text-[8px] uppercase tracking-[0.13em] text-[#8A99A5]">Explorer</p>
-            <div className="space-y-2 font-mono text-[8px] text-[#7A8994]"><p className="text-[#36454D]">▾ margin-control</p><p className="pl-3">▾ src</p><p className="pl-6 text-[#167C80]">▣ reconcile.ts</p><p className="pl-6">□ sources.ts</p><p className="pl-6">□ position.ts</p><p className="pl-3">▸ evidence</p><p className="pl-3">▸ records</p><p className="text-[#A0ABB0]">▾ tests</p></div>
-          </aside>
-          <div className="min-w-0 flex-1 bg-white">
-            <div className="flex h-9 items-center gap-1 overflow-hidden border-b border-[#E3EAED] bg-[#F7FAFB] px-2 font-mono text-[8px] text-[#8A99A5] sm:h-10 sm:text-[9px]"><span className="border-b-2 border-[#167C80] bg-white px-3 py-2 text-[#263438]">reconcile.ts</span><span className="px-3 py-2">sources.ts</span><span className="px-3 py-2">position.ts</span><span className="px-3 py-2">account.json</span><span className="px-1 py-2 text-[#9AA7B0]">+</span></div>
-            <div className="relative overflow-hidden bg-white px-3 py-5 font-mono text-[8px] leading-5 sm:px-5 sm:py-6 sm:text-[9px] sm:leading-6">
-              <div className="relative min-w-max">
-                {accountingCodeLines.map((line, index) => <motion.div key={line.number} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22 + index * 0.12, duration: 0.25 }} className="grid grid-cols-[22px_minmax(0,1fr)] gap-3"><span className="select-none text-right text-[#A0ABB0]">{line.number}</span><span>{line.parts.map(([text, tone], partIndex) => <span key={`${line.number}-${partIndex}`} className={tone === 'keyword' ? 'text-[#7C3AED]' : tone === 'string' ? 'text-[#B45309]' : tone === 'function' ? 'text-[#0B74DE]' : tone === 'provider' ? 'text-[#0F766E]' : tone === 'comment' ? 'text-[#5D876A]' : tone === 'boolean' ? 'text-[#C2410C]' : 'text-[#43525A]'}>{text}</span>)}</span></motion.div>)}
-                <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.95 }} className="ml-[35px] inline-block h-3.5 w-[5px] translate-y-0.5 bg-[#167C80]" aria-hidden="true" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="relative bg-white pt-8" aria-label="Connected integrations">
-          <div className="pointer-events-none absolute -top-10 inset-x-0 h-16 bg-gradient-to-b from-transparent via-white/80 to-white" aria-hidden="true" />
-          <div className="relative overflow-hidden space-y-2 px-3 pb-3 sm:px-5">
-            {accountingRows.map((row, rowIndex) => {
-              const loopedRow = [...row, ...row, ...row];
-              return <div key={`integration-row-${rowIndex}`} className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)' }}>
-                <motion.div animate={reduceMotion ? { x: 0 } : { x: rowIndex === 0 ? ['0%', '-33.333%'] : ['-33.333%', '0%'] }} transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 26, repeat: Infinity, ease: 'linear' }} className="flex w-max items-center gap-2.5 px-1 sm:gap-3">
-                  {loopedRow.map((source, index) => <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-10 w-12 shrink-0 items-center justify-center rounded-[3px] bg-white shadow-[0_3px_12px_rgba(37,55,64,0.09)] ring-1 ring-[#E8EDF0] sm:h-11 sm:w-14" title={source.name} aria-label={source.name}>{source.src ? <img src={source.src} alt={source.name} className="h-6 w-6 object-contain sm:h-7 sm:w-7" /> : <Database className="h-6 w-6 text-[#5D707A]" aria-hidden="true" />}</div>)}
-                </motion.div>
-              </div>;
-            })}
-          </div>
-        </div>
+        <div className="grid min-h-[350px] grid-cols-[minmax(0,1fr)_168px] bg-[#F6F8F9] sm:min-h-[390px] sm:grid-cols-[minmax(0,1fr)_205px]"><div className="min-w-0 py-3 font-mono text-[8px] leading-5 sm:text-[9px] sm:leading-[1.7]">{accountingCodeLines.map((line, index) => { const highlighted = index === 5 || index === 6; return <div key={line.number} className={`flex min-w-max px-3 sm:px-4 ${highlighted ? "bg-[#DDEBFF]" : ""}`}><span className="w-5 shrink-0 select-none pr-2 text-right text-[#95A4AE]">{line.number}</span><span className={`${highlighted ? "text-[#1B456E]" : "text-[#344752]"} whitespace-pre`}>{line.parts.map(([text, tone], partIndex) => <span key={`${line.number}-${partIndex}`} className={tone === 'keyword' ? 'text-[#7C3AED]' : tone === 'string' ? 'text-[#B45309]' : tone === 'function' ? 'text-[#0B74DE]' : tone === 'boolean' ? 'text-[#C2410C]' : 'text-[#344752]'}>{text}</span>)}</span></div>; })}</div><div className="border-l border-[#D7E0E6] bg-white p-3 sm:p-4"><p className="font-sans text-[9px] font-semibold uppercase tracking-tight text-[#71828D]">Linked workspace files</p><div className="mt-3 space-y-1.5">{accountingFiles.map((file, index) => <div key={file} className={`flex items-center gap-1.5 rounded-[5px] px-1.5 py-1.5 font-mono text-[8px] ${index === 0 ? "bg-[#EEF2F4] text-[#26333A]" : "text-[#61737E]"}`}><span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#3178C6] text-[6px] font-bold text-white">TS</span><span className="min-w-0 truncate">{file}</span></div>)}</div><div className="mt-4 border-t border-[#E2E8EC] pt-3 font-sans text-[8px] leading-4 text-[#71828D]">7 linked artifacts · 4 source systems · 1 governed position</div></div></div>
       </div>
     </motion.div>
   );
@@ -280,11 +231,6 @@ function AccountingEvidenceSection() {
             <p className="mt-4 max-w-[650px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin connects those records around the underlying financial event, preserves source lineage, and shows where the accounts tie out, where they diverge, and what requires action.</p>
             <Link to="/contact" className="mt-7 inline-flex h-11 items-center gap-2 rounded-[7px] bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] no-underline transition-colors hover:bg-[#5148E5]">Request Custom Integrations <ChevronRight className="h-4 w-4" /></Link>
             <p className="mt-2 max-w-[430px] text-[11px] leading-5 text-[#66737F]">Tell us what needs to connect. We&apos;ll help define the right integration path for your operation.</p>
-            <div className="mt-8 border-t border-[#C9D1D6] pt-5">
-              <div className="mt-4 flex flex-nowrap items-center gap-x-2 whitespace-nowrap font-mono text-[8px] font-semibold tracking-tight text-[#66737F] sm:gap-x-3 sm:text-[9px]">
-                <span>API + file ingestion.</span><span className="text-[#B5C2CA]">·</span><span>Read-only by default.</span><span className="text-[#B5C2CA]">·</span><span>Your systems remain your systems.</span>
-              </div>
-            </div>
           </motion.div>
         </div>
       </div>
