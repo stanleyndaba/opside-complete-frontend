@@ -91,20 +91,20 @@ function MatchAnalysisViz() {
   return (
     <div className="flex h-full flex-col">
       <div className="space-y-3 text-[12px] leading-6 text-[#4D5B66] sm:text-[13px]">
-        <p>Amazon receiving control records do not reconcile to the inbound shipment population. <MetadataHighlight active={isActive('r-summary')} tone="purple">60 shipped, 46 received</MetadataHighlight> leaves a <MetadataHighlight active={isActive('r-gap')} tone="purple">14-unit variance at ONT8</MetadataHighlight> requiring financial attribution before closure. <DocumentReference source="Amazon" name="Receiving Event Register" icon="/amazon-logo-transparent-circle.png" /></p>
-        <p>The discrepancy is supported across the receiving, custody, and settlement record. <MetadataHighlight active={isActive('r-found')} tone="purple">Margin has established the control exception</MetadataHighlight> and separated supported exposure from activity already accounted for. <DocumentReference source="Excel" name="Inbound Variance Schedule" icon="/excel-icon-margin.png" /></p>
-        <p>The operating position is ready for governed filing once the evidence gate and seller approval control are satisfied. <MetadataHighlight active={isActive('r-action')} tone="green">Next action: prepare the controlled case</MetadataHighlight>. <DocumentReference source="Outlook" name="Evidence Request Correspondence" icon="/outlookicon.webp" /></p>
-        <p>Margin is reconciling shipment, receipt, inventory, reimbursement, and settlement records so the claim basis remains attributable, non-duplicative, and reviewable by Finance. <DocumentReference source="Google Drive" name="Settlement Control Workbook" icon="/gd.png" /></p>
+        <p>Within a $54M GMV account, the inbound population does not reconcile across Amazon receiving, custody, inventory, and settlement records. <MetadataHighlight active={isActive('r-summary')} tone="purple">18,420 dispatched, 17,968 received</MetadataHighlight> leaves a <MetadataHighlight active={isActive('r-gap')} tone="purple">452-unit variance at ONT8</MetadataHighlight> with an indicated exposure of $184,600 requiring financial attribution before closure. <DocumentReference source="Amazon" name="Receiving Event Register" icon="/amazon-logo-transparent-circle.png" /></p>
+        <p>This is not an isolated warehouse exception. <MetadataHighlight active={isActive('r-found')} tone="purple">Margin has established a material control position</MetadataHighlight> across the shipment cohort, legal entity, settlement period, and related reimbursement activity, separating supported exposure from credits already accounted for and unresolved positions requiring executive review. <DocumentReference source="Excel" name="Inbound Variance Schedule" icon="/excel-icon-margin.png" /></p>
+        <p>The operating position is ready for governed filing once evidence sufficiency, policy-window, materiality, and seller-approval controls are satisfied. <MetadataHighlight active={isActive('r-action')} tone="green">Next action: prepare the controlled recovery case</MetadataHighlight>. <DocumentReference source="Outlook" name="Evidence Request Correspondence" icon="/outlookicon.webp" /></p>
+        <p>Margin is reconciling shipment, receipt, inventory, reimbursement, general-ledger, and settlement records so the claim basis remains attributable, non-duplicative, and reviewable by Finance across the account population. <DocumentReference source="Google Drive" name="Settlement Control Workbook" icon="/gd.png" /></p>
       </div>
       <div className="mt-4 pt-3">
         <div className="space-y-2 font-google-sans text-[11px] leading-5 text-[#25313A]">
-          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Shipment population</span> Shipment <MetadataHighlight active={isActive('r-ship-id')} tone="purple">FBA17ACME001</MetadataHighlight> · <MetadataHighlight active={isActive('r-shipped')} tone="purple">60 dispatched units</MetadataHighlight>.</p>
-          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Receiving outcome</span> Amazon received <MetadataHighlight active={isActive('r-received')} tone="purple">46 units</MetadataHighlight> at <MetadataHighlight active={isActive('r-ont8')} tone="purple">ONT8</MetadataHighlight>; the unsupported balance is 14 units.</p>
-          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Control record</span> Record <MetadataHighlight active={isActive('r-record')} tone="purple">EVT-FBA-2026-0001847</MetadataHighlight> · Source <MetadataHighlight active={isActive('r-sp-api')} tone="purple">Amazon SP-API</MetadataHighlight> · Sync <MetadataHighlight active={isActive('r-sync')} tone="purple">NTH-US-Q1-2026-0904</MetadataHighlight></p>
+          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Shipment population</span> Shipment <MetadataHighlight active={isActive('r-ship-id')} tone="purple">FBA26ONT8-004817</MetadataHighlight> · <MetadataHighlight active={isActive('r-shipped')} tone="purple">18,420 dispatched units</MetadataHighlight> · 1,842 SKUs across the Q1 control population.</p>
+          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Receiving outcome</span> Amazon received <MetadataHighlight active={isActive('r-received')} tone="purple">17,968 units</MetadataHighlight> at <MetadataHighlight active={isActive('r-ont8')} tone="purple">ONT8</MetadataHighlight>; the unsupported balance is <MetadataHighlight active={isActive('r-gap')} tone="purple">452 units / $184,600</MetadataHighlight>.</p>
+          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Control record</span> Record <MetadataHighlight active={isActive('r-record')} tone="purple">EVT-FBA-2026-0001847</MetadataHighlight> · Source <MetadataHighlight active={isActive('r-sp-api')} tone="purple">Amazon SP-API</MetadataHighlight> · Sync <MetadataHighlight active={isActive('r-sync')} tone="purple">NTH-US-Q1-2026-0904</MetadataHighlight> · Legal entity NTH-US-01.</p>
         </div>
         <div className="pt-2 font-google-sans text-[11px] leading-5 text-[#25313A]">
-          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Control scope</span> Amazon US · merchant account NTH-US-01 · settlement period FY2026 Q1 · entity Northstar Commerce LLC · <DocumentReference source="Gmail" name="Amazon Case Decision Log" icon="/gmailicon.png" /> <DocumentReference source="OneDrive" name="Ledger and Valuation Workbook" icon="/onedrive-icon.png" /></p>
-          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Case readiness</span> <MetadataHighlight active={isActive('r-candidate')} tone="green">Supported recovery position</MetadataHighlight> · Deadline <MetadataHighlight active={isActive('r-deadline')} tone="green">02 April 2026</MetadataHighlight> · Case link <MetadataHighlight active={isActive('r-case-link')} tone="green">RFD-2026-004817</MetadataHighlight></p>
+          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Control scope</span> Amazon US · merchant account NTH-US-01 · settlement period FY2026 Q1 · entity Northstar Commerce LLC · $2.84M approved account exposure under review · <DocumentReference source="Gmail" name="Amazon Case Decision Log" icon="/gmailicon.png" /> <DocumentReference source="OneDrive" name="Ledger and Valuation Workbook" icon="/onedrive-icon.png" /></p>
+          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Case readiness</span> <MetadataHighlight active={isActive('r-candidate')} tone="green">Supported recovery position</MetadataHighlight> · Deadline <MetadataHighlight active={isActive('r-deadline')} tone="green">02 April 2026</MetadataHighlight> · Case link <MetadataHighlight active={isActive('r-case-link')} tone="green">RFD-2026-004817</MetadataHighlight> · seller approval required before submission.</p>
         </div>
         <div className="mt-2 flex flex-col gap-2 pt-3">
           {buttonReady && <motion.button initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="h-8 w-full rounded-[4px] bg-black font-google-sans text-[11px] font-medium tracking-tight text-white hover:bg-[#182026]" type="button">Evidence Match Confirmed</motion.button>}
@@ -184,53 +184,56 @@ export function EvidenceMatchContent({ embedded = false }: EvidenceMatchContentP
           <div className="relative min-h-0 flex-1 overflow-hidden p-5 sm:p-6">
             <div className="space-y-3 select-none text-[12.5px] leading-6 text-[#8A99A4]">
               <p>
-                Inbound shipment record shows{' '}
-                <MetadataHighlight active={isDocumentMatch('l-units')} tone="purple">60 units shipped</MetadataHighlight>{' '}
+                Inbound shipment record for the Q1 receiving population shows{' '}
+                <MetadataHighlight active={isDocumentMatch('l-units')} tone="purple">18,420 units dispatched</MetadataHighlight>{' '}
                 to{' '}
                 <MetadataHighlight active={isDocumentMatch('l-ont8')} tone="purple">ONT8</MetadataHighlight>
-                . Amazon receiving records show fewer units than the shipment record.{' '}
+                . Amazon receiving records show a material difference against the shipment population.{' '}
                 <DocumentReference source="Amazon" name="Shipment Receiving Register" icon="/amazon-logo-transparent-circle.png" />
               </p>
 
               <p>
-                <MetadataHighlight active={isDocumentMatch('l-received')} tone="purple">Amazon received 46 units</MetadataHighlight>
+                <MetadataHighlight active={isDocumentMatch('l-received')} tone="purple">Amazon received 17,968 units</MetadataHighlight>
                 , leaving a{' '}
-                <MetadataHighlight active={isDocumentMatch('l-gap')} tone="purple">14-unit gap</MetadataHighlight>{' '}
-                that must be matched to the evidence trail.{' '}
+                <MetadataHighlight active={isDocumentMatch('l-gap')} tone="purple">452-unit variance / $184,600 indicated exposure</MetadataHighlight>{' '}
+                that must be attributed across the evidence trail and settlement population.{' '}
                 <DocumentReference source="Excel" name="Receiving Variance Schedule" icon="/excel-icon-margin.png" />
+                <DocumentReference source="PDF" name="Carrier Custody Record" icon="/pdf-file-icon.webp" />
               </p>
 
               <p>
-                Amazon policy basis for{' '}
+                Amazon policy and reimbursement basis for{' '}
                 <MetadataHighlight active={isDocumentMatch('l-policy')} tone="green">
                   FBA inventory reimbursement review
                 </MetadataHighlight>{' '}
-                is applied when the affected product, unit movement, and reimbursement outcome reconcile.{' '}
+                is applied only when affected products, unit movement, custody, settlement, and reimbursement outcomes reconcile.{' '}
                 <DocumentReference source="Outlook" name="Policy and Case Correspondence" icon="/outlookicon.webp" />
               </p>
 
               <p>
                 Evidence fields include{' '}
-                <MetadataHighlight active={isDocumentMatch('l-shipment')} tone="green">Shipment FBA17ACME001</MetadataHighlight>
-                , Order{' '}
-                <MetadataHighlight active={isDocumentMatch('l-order')} tone="green">113-8043372-9097841</MetadataHighlight>
-                , SKU{' '}
-                <MetadataHighlight active={isDocumentMatch('l-sku')} tone="green">ACME-TRAVEL-MUG-BLK</MetadataHighlight>
+                <MetadataHighlight active={isDocumentMatch('l-shipment')} tone="green">Shipment FBA26ONT8-004817</MetadataHighlight>
+                , entity{' '}
+                <MetadataHighlight active={isDocumentMatch('l-order')} tone="green">NTH-US-01</MetadataHighlight>
+                , portfolio{' '}
+                <MetadataHighlight active={isDocumentMatch('l-sku')} tone="green">1,842 active SKUs</MetadataHighlight>
                 , and a{' '}
-                <MetadataHighlight active={isDocumentMatch('l-shortage')} tone="green">14-unit shortage</MetadataHighlight>.
+                <MetadataHighlight active={isDocumentMatch('l-shortage')} tone="green">$184,600 supported exposure</MetadataHighlight>.
                 <DocumentReference source="Google Drive" name="Shipment Evidence Pack" icon="/gd.png" />
+                <DocumentReference source="QuickBooks" name="Entity Ledger Extract" icon="/quickbooks.png" />
               </p>
 
               <p>
-                Backend detection record{' '}
-                <MetadataHighlight active={isDocumentMatch('l-record')} tone="purple">00000000-000</MetadataHighlight> from{' '}
-                <MetadataHighlight active={isDocumentMatch('l-sp-api')} tone="purple">SP API</MetadataHighlight> sync{' '}
-                <MetadataHighlight active={isDocumentMatch('l-sync')} tone="purple">acme-sync-20260420</MetadataHighlight>. Case{' '}
-                <MetadataHighlight active={isDocumentMatch('l-case')} tone="green">ACME-CASE-2001</MetadataHighlight> is a{' '}
-                <MetadataHighlight active={isDocumentMatch('l-candidate')} tone="green">claim candidate</MetadataHighlight> before{' '}
-                <MetadataHighlight active={isDocumentMatch('l-deadline')} tone="green">Apr 2, 2026</MetadataHighlight>.{' '}
+                Backend control record{' '}
+                <MetadataHighlight active={isDocumentMatch('l-record')} tone="purple">EVT-FBA-2026-0001847</MetadataHighlight> from{' '}
+                <MetadataHighlight active={isDocumentMatch('l-sp-api')} tone="purple">Amazon SP-API</MetadataHighlight> sync{' '}
+                <MetadataHighlight active={isDocumentMatch('l-sync')} tone="purple">NTH-US-Q1-2026-0904</MetadataHighlight>. Case{' '}
+                <MetadataHighlight active={isDocumentMatch('l-case')} tone="green">RFD-2026-004817</MetadataHighlight> is a{' '}
+                <MetadataHighlight active={isDocumentMatch('l-candidate')} tone="green">supported recovery position</MetadataHighlight> before{' '}
+                <MetadataHighlight active={isDocumentMatch('l-deadline')} tone="green">seller approval and controlled submission</MetadataHighlight>.{' '}
                 <DocumentReference source="Gmail" name="Amazon Reimbursement Thread" icon="/gmailicon.png" />
                 <DocumentReference source="OneDrive" name="Settlement Ledger Extract" icon="/onedrive-icon.png" />
+                <DocumentReference source="Dropbox" name="Executive Evidence Pack" icon="/Dropbox_Icon.svg.png" />
               </p>
             </div>
           </div>
