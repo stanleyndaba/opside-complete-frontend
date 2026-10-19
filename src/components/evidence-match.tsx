@@ -103,7 +103,7 @@ function MatchAnalysisViz() {
           <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Control record</span> Record <MetadataHighlight active={isActive('r-record')} tone="purple">EVT-FBA-2026-0001847</MetadataHighlight> · Source <MetadataHighlight active={isActive('r-sp-api')} tone="purple">Amazon SP-API</MetadataHighlight> · Sync <MetadataHighlight active={isActive('r-sync')} tone="purple">NTH-US-Q1-2026-0904</MetadataHighlight> · Legal entity NTH-US-01.</p>
         </div>
         <div className="pt-2 font-google-sans text-[11px] leading-5 text-[#25313A]">
-          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Control scope</span> Amazon US · merchant account NTH-US-01 · settlement period FY2026 Q1 · entity Northstar Commerce LLC · $2.84M approved account exposure under review · <DocumentReference source="Gmail" name="Amazon Case Decision Log" icon="/gmailicon.png" /> <DocumentReference source="OneDrive" name="Ledger and Valuation Workbook" icon="/onedrive-icon.png" /></p>
+          <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Control scope</span> Amazon US · merchant account NTH-US-01 · settlement period FY2026 Q1 · entity Northstar Commerce LLC · $2.84M approved account exposure under review · <DocumentReference source="Gmail" name="Amazon Case Decision Log" icon="/gmailicon.png" /> <DocumentReference source="OneDrive" name="Ledger and Valuation Workbook" icon="/onedriive.png" /></p>
           <p><span className="font-medium uppercase tracking-tight text-[#66737F]">Case readiness</span> <MetadataHighlight active={isActive('r-candidate')} tone="green">Supported recovery position</MetadataHighlight> · Deadline <MetadataHighlight active={isActive('r-deadline')} tone="green">02 April 2026</MetadataHighlight> · Case link <MetadataHighlight active={isActive('r-case-link')} tone="green">RFD-2026-004817</MetadataHighlight> · seller approval required before submission.</p>
         </div>
         <div className="mt-2 flex flex-col gap-2 pt-3">
@@ -232,7 +232,7 @@ export function EvidenceMatchContent({ embedded = false }: EvidenceMatchContentP
                 <MetadataHighlight active={isDocumentMatch('l-candidate')} tone="green">supported recovery position</MetadataHighlight> before{' '}
                 <MetadataHighlight active={isDocumentMatch('l-deadline')} tone="green">seller approval and controlled submission</MetadataHighlight>.{' '}
                 <DocumentReference source="Gmail" name="Amazon Reimbursement Thread" icon="/gmailicon.png" />
-                <DocumentReference source="OneDrive" name="Settlement Ledger Extract" icon="/onedrive-icon.png" />
+                <DocumentReference source="OneDrive" name="Settlement Ledger Extract" icon="/onedriive.png" />
                 <DocumentReference source="Dropbox" name="Executive Evidence Pack" icon="/Dropbox_Icon.svg.png" />
               </p>
             </div>

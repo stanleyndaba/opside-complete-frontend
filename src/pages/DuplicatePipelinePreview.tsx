@@ -425,7 +425,7 @@ const artifactAnalysisItems = [
     references: [
       { source: 'Amazon', name: 'FBA Receiving and Settlement Event Register', icon: '/amazon-logo-transparent-circle.png' },
       { source: 'Dropbox', name: 'Shipment Support and Custody Evidence Folder', icon: '/Dropbox_Icon.svg.png' },
-      { source: 'OneDrive', name: 'Inventory Ledger and Reconciliation Workbook', icon: '/onedrive-icon.png' },
+      { source: 'OneDrive', name: 'Inventory Ledger and Reconciliation Workbook', icon: '/onedriive.png' },
       { source: 'Excel', name: 'Inbound Variance Reconciliation Schedule', icon: '/excel-icon-margin.png' },
     ],
   },
@@ -434,7 +434,7 @@ const artifactAnalysisItems = [
     text: 'A single recovery workflow can address one supported event, but it does not establish whether the same control failure is recurring across the account. Margin distinguishes an isolated event from a repeated exposure pattern, then connects that pattern to the relevant marketplace, legal entity, settlement period, and evidence population before any recovery position is treated as supportable, using the returns, reimbursement, settlement, and marketplace evidence represented in the attached records.',
     references: [
       { source: 'Dropbox', name: 'Returns and Reimbursement Exception Register', icon: '/Dropbox_Icon.svg.png' },
-      { source: 'OneDrive', name: 'Settlement Period Clearing Workbook', icon: '/onedrive-icon.png' },
+      { source: 'OneDrive', name: 'Settlement Period Clearing Workbook', icon: '/onedriive.png' },
       { source: 'Google Drive', name: 'Amazon Settlement Transaction Detail Extract', icon: '/gd.png' },
     ],
   },
@@ -443,7 +443,7 @@ const artifactAnalysisItems = [
     text: 'The evidence is sufficient to form a governed recovery cohort. Margin linked the cohort source records, tested the receiving variance against the related financial events, checked the duplicate-credit and settlement records, and separated supported exposure from positions that still require confirmation. The resulting position is ready for controlled preparation and review before any filing or seller action.',
     references: [
       { source: 'Dropbox', name: 'Recovery Cohort Evidence Register', icon: '/Dropbox_Icon.svg.png' },
-      { source: 'OneDrive', name: 'Duplicate Credit Review Workbook', icon: '/onedrive-icon.png' },
+      { source: 'OneDrive', name: 'Duplicate Credit Review Workbook', icon: '/onedriive.png' },
       { source: 'Outlook', name: 'Amazon Case and Evidence Correspondence', icon: '/outlookicon.webp' },
     ],
   },
@@ -460,7 +460,7 @@ const artifactAnalysisItems = [
     text: 'The final position is a decision-grade record: the evidence is connected, the financial exposure is bounded, and the remaining uncertainty is named rather than hidden. Nothing submits until approved; the controlled action pack and decision workbook keep the operation ready to move from reconstruction to the next controlled action with the record intact.',
     references: [
       { source: 'Dropbox', name: 'Controlled Action Evidence Pack', icon: '/Dropbox_Icon.svg.png' },
-      { source: 'OneDrive', name: 'Decision and Settlement Control Workbook', icon: '/onedrive-icon.png' },
+      { source: 'OneDrive', name: 'Decision and Settlement Control Workbook', icon: '/onedriive.png' },
     ],
   },
 ] as const;

@@ -23,7 +23,7 @@ const COMPILING_DOCUMENT_ICONS = [
   '/evidence-pdf-mark.png',
   '/excel-icon-margin.png',
   '/gmailicon.png',
-  '/onedrive-icon.png',
+  '/onedriive.png',
   '/Dropbox_Icon.svg.png',
   '/outlookicon.webp',
   '/pdf-file-icon.webp',
@@ -260,7 +260,7 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                       <MetadataHighlight active={isEvidenceMatchActive('received')} tone="amber">receiving outcomes</MetadataHighlight>, and{' '}
                       <MetadataHighlight active={isEvidenceMatchActive('reimbursement-records')} tone="emerald">settlement, reimbursement, and ledger records</MetadataHighlight>{' '}
                       to determine whether the retained cohort is supported, attributable, and not already credited.
-                      <EvidenceReference icon="/onedrive-icon.png">Evidence index</EvidenceReference>
+                      <EvidenceReference icon="/onedriive.png">Evidence index</EvidenceReference>
                     </p>
                     <p>
                       <MetadataHighlight active={isEvidenceMatchActive('policy')} tone="emerald">Enterprise recovery control review</MetadataHighlight>{' '}
