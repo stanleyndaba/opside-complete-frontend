@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
 
 export function MarginEngineSection() {
@@ -19,7 +20,7 @@ export function MarginEngineSection() {
 
         <div className="mt-10 flex flex-col items-center gap-4">
           <p className="text-center font-lora text-[18px] leading-tight tracking-tight text-[#34414A] sm:text-[22px]" style={{ fontWeight: 400 }}>A clear position, without the operational drag.</p>
-          <button type="button" className="landing-pressable inline-flex h-11 items-center justify-center gap-2 rounded-[7px] border border-[#635BFF] bg-white px-5 text-[13px] font-semibold text-[#635BFF] transition-colors hover:bg-[#F1F0FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2" aria-label="See the recovery operating model">See the recovery operating model <span aria-hidden="true">→</span></button>
+          <button type="button" className="landing-pressable inline-flex h-11 items-center justify-center gap-2 rounded-[7px] bg-white px-5 text-[13px] font-semibold text-[#635BFF] transition-colors hover:bg-[#F1F0FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2" aria-label="See the recovery operating model">See the recovery operating model <ChevronRight className="h-4 w-4" /></button>
         </div>
       </div>
     </section>
