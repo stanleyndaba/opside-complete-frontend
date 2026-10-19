@@ -213,27 +213,27 @@ const accountingRows = [
 ];
 
 const accountingCodeLines = [
-  ['01', 'import', ' { account, source } from "@margin/financial-control";'],
-  ['02', 'import', ' { reconcile, establishPosition } from "@margin/evidence";'],
-  ['03', '', ''],
-  ['04', 'const', ' account = await account.open("NTH-US-01");'],
-  ['05', 'const', ' orders = await source("amazon.orders").read({ period: "FY2026-Q1" });'],
-  ['06', 'const', ' receiving = await source("warehouse.receiving").read();'],
-  ['07', 'const', ' ledger = await source("inventory.ledger").read();'],
-  ['08', 'const', ' settlements = await source("amazon.settlements").read();'],
-  ['09', '', ''],
-  ['10', 'const', ' events = reconcile({ orders, receiving, ledger, settlements });'],
-  ['11', '', '  // 1,842 receiving events · 72-unit delta'],
-  ['12', '', '  // 8 settlement periods · 318 SKUs matched'],
-  ['13', '', '  // supported and unresolved positions kept separate'],
-  ['14', 'return', ' establishPosition(events, { readOnly: true });'],
+  { number: '01', parts: [['import', 'keyword'], [' { connect } from ', 'plain'], ['"@margin/integrations"', 'string'], [';', 'plain']] },
+  { number: '02', parts: [['import', 'keyword'], [' { ingest, linkRecords } from ', 'plain'], ['"@margin/evidence"', 'string'], [';', 'plain']] },
+  { number: '03', parts: [] },
+  { number: '04', parts: [['const', 'keyword'], [' integrations = await ', 'plain'], ['connect', 'function'], ['([', 'plain']] },
+  { number: '05', parts: [['  ', 'plain'], ['gmail', 'provider'], [': { folders: ', 'plain'], ['["recovery", "settlements"]', 'string'], [' },', 'plain']] },
+  { number: '06', parts: [['  ', 'plain'], ['outlook', 'provider'], [': { folders: ', 'plain'], ['["finance", "correspondence"]', 'string'], [' },', 'plain']] },
+  { number: '07', parts: [['  ', 'plain'], ['oneDrive', 'provider'], [': { paths: ', 'plain'], ['["/evidence", "/ledgers"]', 'string'], [' },', 'plain']] },
+  { number: '08', parts: [['  ', 'plain'], ['googleDrive', 'provider'], [': { shared: ', 'plain'], ['"finance-control"', 'string'], [' },', 'plain']] },
+  { number: '09', parts: [['  ', 'plain'], ['dropbox', 'provider'], [': { teamSpace: ', 'plain'], ['"recovery-records"', 'string'], [' }', 'plain']] },
+  { number: '10', parts: [[']);', 'plain']] },
+  { number: '11', parts: [] },
+  { number: '12', parts: [['const', 'keyword'], [' records = await ', 'plain'], ['ingest', 'function'], ['(integrations);', 'plain']] },
+  { number: '13', parts: [['const', 'keyword'], [' position = ', 'plain'], ['linkRecords', 'function'], ['(records, { lineage: ', 'plain'], ['true', 'boolean'], [' });', 'plain']] },
+  { number: '14', parts: [['// Gmail + Outlook + Drive records → one accountable position', 'comment']] },
 ] as const;
 function AccountingCodeConsole() {
   const reduceMotion = useReducedMotion();
   const consoleSources = [...accountingSources, ...accountingSources.slice(0, 5)];
   return (
     <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="accounting-code-editor relative order-2 min-w-0 overflow-hidden lg:order-1">
-      <div className="relative overflow-hidden rounded-[5px] border-0 bg-[#E5F0F3] p-2 shadow-[0_18px_48px_rgba(37,73,91,0.12)] sm:rounded-[6px] sm:p-4">
+      <div className="relative overflow-hidden rounded-[5px] border-0 bg-white p-0 shadow-[0_18px_48px_rgba(37,73,91,0.12)] sm:rounded-[6px]">
         <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md">
           <span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
         </div>
@@ -245,9 +245,8 @@ function AccountingCodeConsole() {
           <div className="min-w-0 flex-1 bg-white">
             <div className="flex h-9 items-center gap-1 overflow-hidden border-b border-[#E3EAED] bg-[#F7FAFB] px-2 font-mono text-[8px] text-[#8A99A5] sm:h-10 sm:text-[9px]"><span className="border-b-2 border-[#167C80] bg-white px-3 py-2 text-[#263438]">reconcile.ts</span><span className="px-3 py-2">sources.ts</span><span className="px-3 py-2">position.ts</span><span className="px-3 py-2">account.json</span><span className="px-1 py-2 text-[#9AA7B0]">+</span></div>
             <div className="relative overflow-hidden bg-white px-3 py-5 font-mono text-[8px] leading-5 sm:px-5 sm:py-6 sm:text-[9px] sm:leading-6">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_56%_20%,rgba(220,238,242,0.45),transparent_52%)]" />
               <div className="relative min-w-max">
-                {accountingCodeLines.map(([number, keyword, rest], index) => <motion.div key={number} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22 + index * 0.12, duration: 0.25 }} className="grid grid-cols-[22px_minmax(0,1fr)] gap-3"><span className="select-none text-right text-[#A0ABB0]">{number}</span><span className={rest.includes('//') ? 'text-[#5D876A]' : 'text-[#43525A]'}><span className="text-[#7D3C98]">{keyword}</span>{rest}</span></motion.div>)}
+                {accountingCodeLines.map((line, index) => <motion.div key={line.number} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22 + index * 0.12, duration: 0.25 }} className="grid grid-cols-[22px_minmax(0,1fr)] gap-3"><span className="select-none text-right text-[#A0ABB0]">{line.number}</span><span>{line.parts.map(([text, tone], partIndex) => <span key={`${line.number}-${partIndex}`} className={tone === 'keyword' ? 'text-[#7C3AED]' : tone === 'string' ? 'text-[#B45309]' : tone === 'function' ? 'text-[#0B74DE]' : tone === 'provider' ? 'text-[#0F766E]' : tone === 'comment' ? 'text-[#5D876A]' : tone === 'boolean' ? 'text-[#C2410C]' : 'text-[#43525A]'}>{text}</span>)}</span></motion.div>)}
                 <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.95 }} className="ml-[35px] inline-block h-3.5 w-[5px] translate-y-0.5 bg-[#167C80]" aria-hidden="true" />
               </div>
             </div>
