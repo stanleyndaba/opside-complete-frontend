@@ -1104,8 +1104,8 @@ html, body, #root {
 }
 .landing-google-sans > main > section.recovery-routing-section .routing-card-button,
 .landing-google-sans > main > section.recovery-routing-section .routing-card-button * {
-  color: #FFFFFF !important;
-  -webkit-text-fill-color: #FFFFFF !important;
+  color: #312E81 !important;
+  -webkit-text-fill-color: #312E81 !important;
 }
 
 

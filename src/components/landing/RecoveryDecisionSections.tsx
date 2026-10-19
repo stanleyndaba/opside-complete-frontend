@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
 
@@ -17,7 +17,7 @@ const pathOptions = [
     copy: "Margin examines a defined financial exposure, establishes what happened, determines what the evidence supports, and takes responsibility for the agreed recovery work.",
     followUp: "From investigation and evidence preparation to approved submissions, follow-up, and settlement verification, the work continues until the agreed scope reaches a documented outcome.",
     itemHeading: "What Margin handles",
-    cta: "Start the Free Audit",
+    cta: "Send records for review",
     ctaLocation: "homepage_recover_once",
     items: ["Establishing the facts and quantifying the exposure", "Determining what the evidence supports", "Preparing evidence-backed recovery actions", "Managing approved submissions, responses, and appeals within scope", "Verifying settlement and reconciling the financial outcome"],
   },
@@ -28,7 +28,7 @@ const pathOptions = [
     copy: "For Amazon businesses where financial exceptions recur, Margin provides ongoing examination and resolution rather than leaving your team to restart the investigation every time.",
     followUp: "Margin maintains continuity across financial events, evidence, cases, responses, and settlements, so you can see what has been established, what requires action, and what remains unresolved.",
     itemHeading: "What stays under examination",
-    cta: "Start the Free Audit",
+    cta: "Contact Sales",
     ctaLocation: "homepage_recovery_workspace",
     items: ["Recurring examination of Amazon financial activity", "Identification and assessment of new exceptions", "Evidence and case history maintained over time", "Tracking of submissions, responses, reversals, and settlements", "A continuously updated view of established, actionable, and unresolved value"],
   },
@@ -181,7 +181,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
               </div>
               <div className="mt-7 pt-2">
                 <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button h-12 rounded-[6px] bg-white px-6 text-[14px] font-semibold text-[#312E81] shadow-sm hover:bg-[#F1F0FF]">
-                  {option.cta}<ArrowRight className="ml-2 h-4 w-4 text-[#312E81]" />
+                  {option.cta}<ChevronRight className="ml-2 h-4 w-4 text-[#312E81]" />
                 </Button>
               </div>
             </motion.div>
