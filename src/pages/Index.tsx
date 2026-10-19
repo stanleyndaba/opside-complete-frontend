@@ -232,7 +232,7 @@ function AccountingCodeConsole() {
   const reduceMotion = useReducedMotion();
   const consoleSources = [...accountingSources, ...accountingSources.slice(0, 5)];
   return (
-    <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
+    <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="accounting-code-editor relative order-2 min-w-0 overflow-hidden lg:order-1">
       <div className="relative overflow-hidden rounded-[5px] border-0 bg-[#E5F0F3] p-2 shadow-[0_18px_48px_rgba(37,73,91,0.12)] sm:rounded-[6px] sm:p-4">
         <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md">
           <span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />

@@ -1207,3 +1207,8 @@ html, body, #root {
   color: #56646D !important;
   -webkit-text-fill-color: #56646D !important;
 }
+/* The connected-records mock is an actual code-editor visual; keep its code font authoritative over the landing-wide type reset. */
+.landing-google-sans .accounting-code-editor,
+.landing-google-sans .accounting-code-editor * {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
