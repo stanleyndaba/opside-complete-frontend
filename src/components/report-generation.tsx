@@ -225,7 +225,8 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
                 <div className="relative h-[360px] overflow-hidden border border-[#DCE8EE] bg-white p-4 sm:h-[390px] sm:p-7">
                   <div className="flex items-start justify-between border-b border-[#DCE8EE] pb-4">
                     <div>
-                      <h2 className="text-base font-semibold tracking-tight text-[#182026]">Assembling Dispute Report</h2>
+                      <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Dispute report assembly</p>
+                      <h2 className="mt-1 text-base font-semibold tracking-tight text-[#182026]">The supported position is prepared for controlled action</h2>
                       <p className="mt-1 text-[11px] text-[#8A99A4]">Northstar Commerce LLC · Amazon US · 12-month control population</p>
                     </div>
                   </div>

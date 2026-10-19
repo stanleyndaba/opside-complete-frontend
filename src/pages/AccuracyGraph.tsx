@@ -74,8 +74,8 @@ export const AccuracyGraphContent = () => {
     <>
       <section className="mx-auto w-full max-w-6xl overflow-visible bg-white">
         <div className="px-4 pt-4 pb-1 sm:px-8 sm:pt-7">
-          <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Controlled financial workflow · completed record review</p>
-          <h1 className="mt-1.5 font-google-sans text-[24px] font-normal leading-tight tracking-[-0.04em] text-[#182026] sm:text-[30px]">Resolution Outcome Review</h1>
+          <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Resolution evaluation</p>
+          <h1 className="mt-1.5 font-google-sans text-[24px] font-normal leading-tight tracking-[-0.04em] text-[#182026] sm:text-[30px]">What the completed record proves</h1>
           <p className="mt-2 max-w-3xl text-[12px] leading-5 tracking-tight text-[#66737F] sm:text-[13px]">
             Margin evaluates the complete path from supported determination to verified financial outcome—not simply whether an agent completed an investigation.
           </p>
@@ -113,7 +113,7 @@ export const AccuracyGraphContent = () => {
       </section>
 
       <section className="mx-auto mt-0 max-w-6xl bg-white px-5 pt-3 pb-7 font-google-sans text-[13px] leading-6 tracking-[-0.012em] text-[#595E68] sm:px-8 sm:pt-5 sm:text-[14px] sm:leading-7">
-        <h2 className="mb-3 font-google-sans text-[22px] font-normal leading-tight tracking-[-0.03em] text-[#182026] sm:text-[26px]">What the completed record proves</h2>
+        <h2 className="mb-3 font-google-sans text-[22px] font-normal leading-tight tracking-[-0.03em] text-[#182026] sm:text-[26px]">Resolution outcome analysis</h2>
         <div className="max-w-5xl space-y-4">
           <p>
             Margin did not evaluate the investigation as a standalone model response. It evaluated whether the connected records supported the determination, whether the proposed action remained within the approved boundary, and whether the final position could be reproduced from the <DocumentReference icon="/amazon-logo-transparent-circle.png" source="Amazon" name="Amazon Fulfilment Network Inventory Adjustment and Disposition Ledger" /> <DocumentReference icon="/Dropbox_Icon.svg.png" source="Dropbox" name="Seller Evidence Intake and Shipment Support Folder" /> and the <DocumentReference icon="/onedriive.png" source="OneDrive" name="Settlement Period Reconciliation and Clearing Workbook" />.
