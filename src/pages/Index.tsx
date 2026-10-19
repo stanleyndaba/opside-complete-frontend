@@ -233,31 +233,29 @@ function AccountingCodeConsole() {
   const consoleSources = [...accountingSources, ...accountingSources.slice(0, 5)];
   return (
     <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
-      <div className="relative overflow-hidden rounded-[14px] border border-[#27333B] bg-[#111518] shadow-[0_24px_60px_rgba(24,32,38,0.18)] sm:rounded-[18px]">
-        <div className="flex h-11 items-center gap-2 border-b border-white/[0.08] bg-[#1D2428] px-4 sm:h-12 sm:px-5">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#E27B72]" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#E6BC70]" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#78C694]" aria-hidden="true" />
-          <span className="ml-3 truncate font-mono text-[9px] tracking-tight text-[#93A1AA] sm:text-[10px]">margin / financial-control</span>
-          <span className="ml-auto rounded-[4px] bg-[#167C80] px-1.5 py-0.5 font-mono text-[7px] font-semibold text-white sm:text-[8px]">CODE</span>
+      <div className="relative overflow-hidden rounded-[5px] border-0 bg-[#E5F0F3] p-2 shadow-[0_18px_48px_rgba(37,73,91,0.12)] sm:rounded-[6px] sm:p-4">
+        <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
         </div>
-        <div className="flex min-h-[380px] sm:min-h-[430px]">
-          <aside className="hidden w-[126px] shrink-0 border-r border-white/[0.07] bg-[#151B1F] px-3 py-4 sm:block">
-            <p className="mb-3 font-mono text-[8px] uppercase tracking-[0.13em] text-[#71818A]">Explorer</p>
-            <div className="space-y-2 font-mono text-[8px] text-[#8898A2]"><p className="text-[#B9C8D0]">▾ margin-control</p><p className="pl-3">▾ src</p><p className="pl-6 text-[#67C5C8]">▣ reconcile.ts</p><p className="pl-6">□ sources.ts</p><p className="pl-6">□ position.ts</p><p className="pl-3">▸ evidence</p><p className="pl-3">▸ records</p><p className="text-[#667780]">▾ tests</p></div>
+        <div className="flex min-h-[380px] bg-white sm:min-h-[430px]">
+          <aside className="hidden w-[126px] shrink-0 border-r border-[#E3EAED] bg-[#F7FAFB] px-3 py-4 sm:block">
+            <p className="mb-3 font-mono text-[8px] uppercase tracking-[0.13em] text-[#8A99A5]">Explorer</p>
+            <div className="space-y-2 font-mono text-[8px] text-[#7A8994]"><p className="text-[#36454D]">▾ margin-control</p><p className="pl-3">▾ src</p><p className="pl-6 text-[#167C80]">▣ reconcile.ts</p><p className="pl-6">□ sources.ts</p><p className="pl-6">□ position.ts</p><p className="pl-3">▸ evidence</p><p className="pl-3">▸ records</p><p className="text-[#A0ABB0]">▾ tests</p></div>
           </aside>
-          <div className="min-w-0 flex-1 bg-[#111518]">
-            <div className="flex h-9 items-center gap-1 overflow-hidden border-b border-white/[0.07] bg-[#181F23] px-2 font-mono text-[8px] text-[#7F9099] sm:h-10 sm:text-[9px]"><span className="border-b-2 border-[#67C5C8] bg-[#111518] px-3 py-2 text-[#D2E0E6]">reconcile.ts</span><span className="px-3 py-2">sources.ts</span><span className="px-3 py-2">position.ts</span><span className="px-3 py-2">account.json</span><span className="px-1 py-2 text-[#64757E]">+</span></div>
-            <div className="relative overflow-hidden px-3 py-5 font-mono text-[8px] leading-5 sm:px-5 sm:py-6 sm:text-[9px] sm:leading-6">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_56%_20%,rgba(57,110,117,0.13),transparent_52%)]" />
+          <div className="min-w-0 flex-1 bg-white">
+            <div className="flex h-9 items-center gap-1 overflow-hidden border-b border-[#E3EAED] bg-[#F7FAFB] px-2 font-mono text-[8px] text-[#8A99A5] sm:h-10 sm:text-[9px]"><span className="border-b-2 border-[#167C80] bg-white px-3 py-2 text-[#263438]">reconcile.ts</span><span className="px-3 py-2">sources.ts</span><span className="px-3 py-2">position.ts</span><span className="px-3 py-2">account.json</span><span className="px-1 py-2 text-[#9AA7B0]">+</span></div>
+            <div className="relative overflow-hidden bg-white px-3 py-5 font-mono text-[8px] leading-5 sm:px-5 sm:py-6 sm:text-[9px] sm:leading-6">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_56%_20%,rgba(220,238,242,0.45),transparent_52%)]" />
               <div className="relative min-w-max">
-                {accountingCodeLines.map(([number, keyword, rest], index) => <motion.div key={number} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22 + index * 0.12, duration: 0.25 }} className="grid grid-cols-[22px_minmax(0,1fr)] gap-3"><span className="select-none text-right text-[#52636C]">{number}</span><span className={rest.includes('//') ? 'text-[#789A7F]' : 'text-[#C4D2D8]'}><span className="text-[#D7A6E8]">{keyword}</span>{rest}</span></motion.div>)}
-                <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.95 }} className="ml-[35px] inline-block h-3.5 w-[5px] translate-y-0.5 bg-[#67C5C8]" aria-hidden="true" />
+                {accountingCodeLines.map(([number, keyword, rest], index) => <motion.div key={number} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22 + index * 0.12, duration: 0.25 }} className="grid grid-cols-[22px_minmax(0,1fr)] gap-3"><span className="select-none text-right text-[#A0ABB0]">{number}</span><span className={rest.includes('//') ? 'text-[#5D876A]' : 'text-[#43525A]'}><span className="text-[#7D3C98]">{keyword}</span>{rest}</span></motion.div>)}
+                <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.95 }} className="ml-[35px] inline-block h-3.5 w-[5px] translate-y-0.5 bg-[#167C80]" aria-hidden="true" />
               </div>
             </div>
           </div>
         </div>
-        <div className="border-t border-white/[0.08] bg-[#0D1113] py-3" aria-label="Connected systems">
-          <div className="mb-2 px-4 font-mono text-[7px] uppercase tracking-[0.16em] text-[#687780] sm:px-5 sm:text-[8px]">connected sources</div>
-          <div className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%)' }}><motion.div animate={reduceMotion ? { x: 0 } : { x: ['0%', '-38%'] }} transition={reduceMotion ? { duration: 0 } : { duration: 24, repeat: Infinity, ease: 'linear' }} className="flex w-max items-center gap-5 px-4 sm:gap-7 sm:px-5">{consoleSources.map((source, index) => <div key={`${source.id}-${index}`} className="flex shrink-0 items-center gap-1.5 font-mono text-[8px] text-[#9BAAB2] sm:text-[9px]">{source.src ? <img src={source.src} alt="" className="h-4 w-4 object-contain opacity-80 grayscale" /> : <span className={`flex h-4 w-4 items-center justify-center rounded-[3px] ${source.icon === 'edi' ? 'bg-[#7C3AED]' : source.icon === 'carrier' ? 'bg-[#F59E0B]' : 'bg-[#5D707A]'}`}>{source.icon === 'edi' ? <FileInput className="h-2.5 w-2.5 text-white" /> : source.icon === 'carrier' ? <Truck className="h-2.5 w-2.5 text-white" /> : <Database className="h-2.5 w-2.5 text-white" />}</span>}<span>{source.name}</span></div>)}</motion.div></div>
+        <div className="border-t border-[#E3EAED] bg-[#F7FAFB] py-3" aria-label="Connected systems">
+          <div className="mb-2 px-4 font-mono text-[7px] uppercase tracking-[0.16em] text-[#8A99A5] sm:px-5 sm:text-[8px]">connected sources</div>
+          <div className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%)' }}><motion.div animate={reduceMotion ? { x: 0 } : { x: ['0%', '-38%'] }} transition={reduceMotion ? { duration: 0 } : { duration: 24, repeat: Infinity, ease: 'linear' }} className="flex w-max items-center gap-5 px-4 sm:gap-7 sm:px-5">{consoleSources.map((source, index) => <div key={`${source.id}-${index}`} className="flex shrink-0 items-center gap-1.5 font-mono text-[8px] text-[#66737F] sm:text-[9px]">{source.src ? <img src={source.src} alt="" className="h-4 w-4 object-contain opacity-80" /> : <span className={`flex h-4 w-4 items-center justify-center rounded-[3px] ${source.icon === 'edi' ? 'bg-[#7C3AED]' : source.icon === 'carrier' ? 'bg-[#F59E0B]' : 'bg-[#5D707A]'}`}>{source.icon === 'edi' ? <FileInput className="h-2.5 w-2.5 text-white" /> : source.icon === 'carrier' ? <Truck className="h-2.5 w-2.5 text-white" /> : <Database className="h-2.5 w-2.5 text-white" />}</span>}<span>{source.name}</span></div>)}</motion.div></div>
         </div>
       </div>
     </motion.div>
