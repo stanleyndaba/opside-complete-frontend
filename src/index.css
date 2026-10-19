@@ -1156,6 +1156,26 @@ html, body, #root {
   background-color: #F1F3F2 !important;
 }
 
+/* Financial work proof — preserve the existing layout while moving the surface into the
+   indigo network treatment and keeping every piece of section copy pure white. */
+.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface {
+  background-color: #17265D !important;
+  background-image: linear-gradient(rgba(17, 28, 84, 0.12), rgba(17, 28, 84, 0.12)), url('/assets/financial-work-proof-background.png') !important;
+  background-position: center !important;
+  background-size: cover !important;
+  color: #FFFFFF !important;
+}
+
+.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface h2,
+.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface h2 *,
+.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface h3,
+.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface p,
+.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface li,
+.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface span {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+
 /* Margin Standard deliverable must remain a pure-white inspection surface after positional surface rules. */
 .landing-google-sans.landing-google-sans > main > section.margin-standard-deliverable-section {
   background: #FFFFFF !important;
