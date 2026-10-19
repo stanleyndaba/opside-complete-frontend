@@ -57,6 +57,8 @@ import { GoogleMark } from "@/components/GoogleMark";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
+const landingPrimaryCtaClass = "landing-pressable inline-flex h-11 items-center justify-center gap-2 rounded-[7px] bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] transition-colors hover:bg-[#5148E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2";
+const landingSecondaryCtaClass = "landing-pressable inline-flex h-11 items-center justify-center gap-2 rounded-[7px] border border-[#635BFF] bg-white px-5 text-[13px] font-semibold text-[#635BFF] transition-colors hover:bg-[#F1F0FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2";
 
 const faqs = [
   {
@@ -300,6 +302,7 @@ function IngestedDocumentsOutcomeSection() {
             </h2>
             <p className="mt-6 max-w-[570px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">At exposure, the seller gets a reviewable operating record: what was collected, what matched, what remains exceptional, what is supported by evidence, and what should happen next.</p>
             <p className="mt-4 max-w-[570px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin moves the account from disconnected source files to a controlled path from discovery through reconciliation.</p>
+            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See what the review produces">See what the review produces <ArrowRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="min-w-0">
             <FinalDelegationPreview compactMobile mobileHeight="h-[390px]" src="/document-ingestion" title="Document Ingestion page preview" />
@@ -608,6 +611,7 @@ function DuplicatePipelineDemoSection() {
         <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-center sm:mb-10">
           <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Financial control, built for the complexity of Amazon</h2>
           <p className="mx-auto mt-5 max-w-[820px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">From transaction-level investigation to evidence-backed recovery and settlement reconciliation, Margin gives your business a systematic way to establish what happened and account for every material exception</p>
+          <button type="button" className={`${landingSecondaryCtaClass} mt-5`} aria-label="See a sample financial position">See a sample financial position <ArrowRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div
           {...revealProps}
@@ -713,6 +717,7 @@ function ReconstructionGapSection() {
               <p>At scale, a charge, reimbursement, reversal, or adjustment can span marketplaces, entities, fulfillment networks, settlement periods, and finance records.</p>
               <p className="font-semibold text-[var(--margin-text-primary)]">Margin brings that context together into one accountable financial position—what happened, what was expected, what Amazon recognized, what remains unresolved, and who owns the next action.</p>
               <p>Your finance and operations teams spend less time reconciling fragmented records, leadership gets a clearer view of material exposure, and unresolved issues move toward closure without becoming another cross-functional investigation.</p>
+            <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See how Margin establishes the position">See how Margin establishes the position <ArrowRight className="h-4 w-4" /></button>
             </div>
           </motion.div>
           <motion.div {...revealProps} className="relative order-2 min-w-0 overflow-hidden lg:order-2">
@@ -780,6 +785,7 @@ function FinancialWorkProofSection() {
             ))}
           </motion.div>
         </div>
+        <button type="button" className={`${landingSecondaryCtaClass} mt-8`} aria-label="See what the operating record contains">See what the operating record contains <ArrowRight className="h-4 w-4" /></button>
       </div>
     </section>
   );
@@ -990,6 +996,7 @@ function RecoveryHarnessSection() {
             </motion.article>
           ))}
         </div>
+        <button type="button" className={`${landingSecondaryCtaClass} mt-8`} aria-label="See how Margin controls the next action">See how Margin controls the next action <ArrowRight className="h-4 w-4" /></button>
       </div>
     </section>
   );
@@ -1026,6 +1033,7 @@ function MarginLifecycleSection() {
           <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">
             Finance receives a defined case position. Margin carries the evidence and follow-through.
           </motion.p>
+          <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See how Margin carries the work">See how Margin carries the work <ArrowRight className="h-4 w-4" /></button>
         </div>
         </div>
       </div>
@@ -1479,6 +1487,7 @@ function OneRecordAnalysisVisual() {
             <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">No more spreadsheet archaeology</span> <span className="heading-tone-muted">for one unresolved number.</span></h2>
             <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Every shipment, receiving variance, inventory movement, settlement adjustment, and reimbursement question arrives with its financial position already established.</p>
             <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Margin connects the underlying records, distinguishes attributable exposure from timing noise and unsupported variance, and gives the right person a defined next action.</p>
+            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="Start with your financial records">Start with your financial records <ArrowRight className="h-4 w-4" /></button>
             <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8">Your team reviews the position. They do not rebuild the case.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative">
@@ -1796,6 +1805,7 @@ function NestedRecoveryBrowsers() {
               <p>Finance does not have to reconstruct what happened from inboxes, case IDs, spreadsheets, or individual memory. Each position shows what was supported, what was approved, what was paid, what remains unresolved, and who owns the next controlled action.</p>
             </div>
             <p className="mt-5 max-w-[560px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>Recovery work becomes a reconciled financial position—not an unclosed case.</p>
+            <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="View a recovery record">View a recovery record <ArrowRight className="h-4 w-4" /></button>
             <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Nested recovery pages">
               {(Object.keys(browsers) as Array<keyof typeof browsers>).map((key) => (
                 <button key={key} type="button" role="tab" aria-selected={activeBrowser === key} onClick={() => setActiveBrowser(key)} className={`rounded-full px-3 py-1.5 text-[11px] font-medium tracking-tight transition-colors ${activeBrowser === key ? 'bg-[#DCEBF2] text-[#284B5B]' : 'bg-white/70 text-[#6A7D86] hover:bg-white'}`}>{browsers[key].label}</button>
@@ -1820,6 +1830,7 @@ function MarginStandardDeliverableSection() {
           <p className="mx-auto mt-5 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">A material finding should not arrive as another signal, score, or recovery estimate. Margin converts it into an inspectable financial position: the source evidence, reconstructed event, expected entitlement, accounted-for value, remaining variance, evidence status, confidence, approval state, and next justified action.</p>
           <p className="mx-auto mt-4 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Finance can inspect the basis, challenge the conclusion, approve the action, and return to the same record when the outcome changes.</p>
           <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>No vague findings. No unsupported claims. No open question presented as a result.</p>
+          <button type="button" className={`${landingSecondaryCtaClass} mx-auto mt-6`} aria-label="Inspect the financial basis">Inspect the financial basis <ArrowRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 w-full max-w-[1040px] sm:mt-10 lg:mt-12">
           <div className="h-[456px] overflow-hidden rounded-[10px] border border-[#D0D5D7] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[800px] lg:h-[min(72vh,820px)]">
@@ -1853,6 +1864,7 @@ function AutoSubmitSection() {
             <p className="mt-4 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#274F62] sm:text-[24px]" style={{ fontWeight: 400 }}>
               Finance sets the rule once. Margin carries the execution until the position is reconciled.
             </p>
+            <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See controlled execution in action">See controlled execution in action <ArrowRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full">
             <div className="mx-auto h-[330px] w-full max-w-[900px] overflow-hidden rounded-[10px] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[430px] lg:h-[min(54vh,560px)]">
@@ -2340,6 +2352,7 @@ function FinancialReconciliationSection() {
             </div>
             <p className="mt-4 max-w-[580px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>The recovery is complete when the books agree.</p>
             <p className="mt-3 max-w-[580px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Every position resolves to reconciled, residual, reversed, disputed, or held—not simply “paid.”</p>
+            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See how Margin verifies the outcome">See how Margin verifies the outcome <ArrowRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden">
             <FinalDelegationPreview compactMobile expandedMobile src="/financial-reconciliation" title="Financial closeout page preview" />
@@ -2580,6 +2593,7 @@ function FounderNoteSection() {
               <p className="mt-5">A business can have millions of records and still not know with confidence whether its financial reality is complete. And every unresolved variance carries a second cost: the hours required to trace it, explain it, evidence it, and close it.</p>
               <p className="mt-5">Margin is built for the gap between the two — establishing what happened, quantifying what remains unresolved, determining what the evidence supports, and driving each material exception toward resolution without consuming the same hours from your team.</p>
               <p className="mt-5 font-lora text-[21px] leading-7 tracking-[-0.025em] text-[#182026] sm:text-[24px] sm:leading-8">Because at scale, “probably accounted for” is not a control.</p>
+              <button type="button" className={`${landingSecondaryCtaClass} mt-7`} aria-label="Speak with the founder">Speak with the founder <ArrowRight className="h-4 w-4" /></button>
               <p className="mt-7 border-t border-[#D5E1E8] pt-4 text-[12px] font-semibold tracking-tight text-[#557386]">— Founder &amp; CEO<br /><span className="mt-1 inline-flex items-center gap-1.5 text-[#000000]"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight sm:text-lg">Margin</span></span></p>
             </div>
           </div>
@@ -2713,6 +2727,7 @@ export default function Index() {
                 {showAllFaqs ? "Show fewer answers" : "More answers to your questions"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
+              <button type="button" className={`${landingSecondaryCtaClass} mt-4`} aria-label="Talk to Margin about your account">Still have a question about your account? Talk to Margin <ArrowRight className="h-4 w-4" /></button>
             </div>
           </div>
         </section>

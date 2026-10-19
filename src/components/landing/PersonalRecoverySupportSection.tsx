@@ -110,6 +110,7 @@ export function PersonalRecoverySupportSection() {
           </h2>
           <p className="mt-5 max-w-[560px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">A managed recovery should not leave you guessing whether Margin is still working, what Amazon asked for, or why a claim did not move forward.</p>
           <p className="mt-4 max-w-[560px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>Ask in plain language. Margin answers from the position, evidence, and next accountable action.</p>
+          <button type="button" className="landing-pressable mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-[7px] bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] transition-colors hover:bg-[#5148E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2" aria-label="Ask Margin about your recovery">Ask Margin about your recovery <span aria-hidden="true">→</span></button>
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
