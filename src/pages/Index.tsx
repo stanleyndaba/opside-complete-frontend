@@ -197,7 +197,7 @@ function TypewriterPrompt({ text }: { text: string }) {
 const accountingSources = [
   { id: "gmail", name: "Gmail", context: "source correspondence", src: "/gmailicon.png", icon: null },
   { id: "outlook", name: "Outlook", context: "finance correspondence", src: "/outlookicon.webp", icon: null },
-  { id: "onedrive", name: "OneDrive", context: "evidence files", src: "/onedrive-icon.png", icon: null },
+  { id: "onedrive", name: "OneDrive", context: "evidence files", src: "/onedriive.png", icon: null },
   { id: "googledrive", name: "Google Drive", context: "shared records", src: "/Driveboy.png", icon: null },
   { id: "dropbox", name: "Dropbox", context: "recovery records", src: "/Dropbox_Icon.svg.png", icon: null },
   { id: "quickbooks", name: "QuickBooks", context: "accounting records", src: "/quickbooks.png", icon: null },
@@ -258,7 +258,7 @@ function AccountingCodeConsole() {
               const loopedRow = [...row, ...row, ...row];
               return <div key={`integration-row-${rowIndex}`} className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)' }}>
                 <motion.div animate={reduceMotion ? { x: 0 } : { x: rowIndex === 0 ? ['0%', '-33.333%'] : ['-33.333%', '0%'] }} transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 26, repeat: Infinity, ease: 'linear' }} className="flex w-max items-center gap-3 px-1 sm:gap-4">
-                  {loopedRow.map((source, index) => <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-12 w-16 shrink-0 items-center justify-center rounded-[5px] bg-white shadow-[0_3px_12px_rgba(37,55,64,0.09)] ring-1 ring-[#E8EDF0] sm:h-14 sm:w-20" title={source.name} aria-label={source.name}>{source.src ? <img src={source.src} alt={source.name} className="h-7 w-7 object-contain sm:h-8 sm:w-8" /> : <Database className="h-7 w-7 text-[#5D707A]" aria-hidden="true" />}</div>)}
+                  {loopedRow.map((source, index) => <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-12 w-16 shrink-0 items-center justify-center sm:h-14 sm:w-20" title={source.name} aria-label={source.name}>{source.src ? <img src={source.src} alt={source.name} className="h-7 w-7 object-contain mix-blend-multiply sm:h-8 sm:w-8" /> : <Database className="h-7 w-7 text-[#5D707A]" aria-hidden="true" />}</div>)}
                 </motion.div>
               </div>;
             })}
