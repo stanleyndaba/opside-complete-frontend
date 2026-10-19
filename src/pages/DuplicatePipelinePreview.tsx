@@ -517,7 +517,7 @@ function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
           {artifactAnalysisChecks.map(([title, detail], index) => <motion.div key={title} initial={{ opacity: 0, y: 8 }} animate={analysisComplete ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }} transition={{ delay: index * 0.09, duration: 0.34, ease: [0.22, 1, 0.36, 1] }} className="flex items-start gap-2 text-[#182026]"><span className="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#16866B] text-white" aria-hidden="true"><Check className="h-2 w-2" strokeWidth={3} /></span><span className="min-w-0"><span className="block text-[10px] font-semibold leading-3.5 tracking-tight text-[#182026]">{title}</span><span className="mt-0.5 block text-[9px] leading-3.5 text-[#4D5B66]">{detail}</span></span></motion.div>)}
         </div>
       </motion.div>
-      <p className="mt-6 max-w-[980px] text-[10px] font-medium tracking-tight text-[#8A99A5]">{analysisComplete ? 'Artifact analysis complete · loading governed positions next.' : 'Margin is connecting source artifacts and separating supported evidence from unresolved signal.'}</p>
+      <p className="mt-6 max-w-[980px] text-[10px] font-medium tracking-tight text-[#8A99A5]">{analysisComplete ? 'Financial determination complete · loading governed positions next.' : 'Margin is connecting source artifacts and separating supported evidence from unresolved signal.'}</p>
     </div>
   </motion.div>;
 }
@@ -789,7 +789,7 @@ export default function FilingPipelinePreview() {
   }, [analysisComplete]);
 
   const tab = tabs.find((item) => item.id === activeTab)!;
-  const sectionTitle = activeTab === "approval" ? "Awaiting Seller Approval" : tab.label;
+  const sectionTitle = activeTab === "approval" ? "Action Authorization" : tab.label;
   const normalizedQuery = query.trim().toLowerCase();
   const visibleCards = useMemo(() => {
     const filtered = cards[activeTab].filter((card) => !normalizedQuery || Object.values(card).join(" ").toLowerCase().includes(normalizedQuery));
