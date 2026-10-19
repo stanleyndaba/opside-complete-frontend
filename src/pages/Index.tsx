@@ -212,61 +212,57 @@ const accountingRows = [
   getAccountingRow(["settlements", "quickbooks", "sftp", "gmail", "xero"]),
 ];
 
-const accountingConsoleLines = [
-  { prompt: '$ margin connect --scope account', text: 'loading connected financial records', tone: 'text-[#A8B3BC]' },
-  { prompt: 'source.amazon.orders', text: '124,860 records · 4 marketplaces', tone: 'text-[#D9E7EF]' },
-  { prompt: 'source.warehouse.receiving', text: '1,842 events · 72-unit variance detected', tone: 'text-[#F0C987]' },
-  { prompt: 'source.inventory.ledger', text: '7,630 movements · 318 SKUs matched', tone: 'text-[#B8E1C8]' },
-  { prompt: 'source.settlements', text: '8 periods · $88,200 evidence-ready', tone: 'text-[#B8E1C8]' },
-  { prompt: 'source.finance.reimbursements', text: '31,940 fee records · 14 source gaps', tone: 'text-[#F0C987]' },
-  { prompt: 'margin.reconcile()', text: 'linking event identity → settlement → account', tone: 'text-[#BFD8F2]' },
-  { prompt: 'position.status', text: 'ESTABLISHED · supported / unresolved separated', tone: 'text-[#8FE0B1]' },
+const accountingCodeLines = [
+  ['01', 'import', ' { account, source } from "@margin/financial-control";'],
+  ['02', 'import', ' { reconcile, establishPosition } from "@margin/evidence";'],
+  ['03', '', ''],
+  ['04', 'const', ' account = await account.open("NTH-US-01");'],
+  ['05', 'const', ' orders = await source("amazon.orders").read({ period: "FY2026-Q1" });'],
+  ['06', 'const', ' receiving = await source("warehouse.receiving").read();'],
+  ['07', 'const', ' ledger = await source("inventory.ledger").read();'],
+  ['08', 'const', ' settlements = await source("amazon.settlements").read();'],
+  ['09', '', ''],
+  ['10', 'const', ' events = reconcile({ orders, receiving, ledger, settlements });'],
+  ['11', '', '  // 1,842 receiving events · 72-unit delta'],
+  ['12', '', '  // 8 settlement periods · 318 SKUs matched'],
+  ['13', '', '  // supported and unresolved positions kept separate'],
+  ['14', 'return', ' establishPosition(events, { readOnly: true });'],
 ] as const;
-
 function AccountingCodeConsole() {
   const reduceMotion = useReducedMotion();
   const consoleSources = [...accountingSources, ...accountingSources.slice(0, 5)];
   return (
     <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
-      <div className="relative overflow-hidden rounded-[14px] border border-[#27333B] bg-[#151B1F] shadow-[0_24px_60px_rgba(24,32,38,0.18)] sm:rounded-[18px]">
-        <div className="flex h-11 items-center gap-2 border-b border-white/[0.08] bg-[#20282D] px-4 sm:h-12 sm:px-5">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#E27B72]" aria-hidden="true" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#E6BC70]" aria-hidden="true" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#78C694]" aria-hidden="true" />
-          <span className="ml-3 truncate font-mono text-[9px] tracking-tight text-[#93A1AA] sm:text-[10px]">margin / financial-control / connected-position</span>
+      <div className="relative overflow-hidden rounded-[14px] border border-[#27333B] bg-[#111518] shadow-[0_24px_60px_rgba(24,32,38,0.18)] sm:rounded-[18px]">
+        <div className="flex h-11 items-center gap-2 border-b border-white/[0.08] bg-[#1D2428] px-4 sm:h-12 sm:px-5">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#E27B72]" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#E6BC70]" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#78C694]" aria-hidden="true" />
+          <span className="ml-3 truncate font-mono text-[9px] tracking-tight text-[#93A1AA] sm:text-[10px]">margin / financial-control</span>
+          <span className="ml-auto rounded-[4px] bg-[#167C80] px-1.5 py-0.5 font-mono text-[7px] font-semibold text-white sm:text-[8px]">CODE</span>
         </div>
-        <div className="relative min-h-[380px] overflow-hidden px-4 py-5 font-mono text-[9px] leading-5 sm:min-h-[430px] sm:px-6 sm:py-6 sm:text-[10px] sm:leading-6">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(74,111,126,0.16),transparent_52%)]" />
-          <div className="relative">
-            <div className="mb-4 flex items-center justify-between border-b border-white/[0.08] pb-3 text-[8px] uppercase tracking-[0.14em] text-[#70808A] sm:text-[9px]">
-              <span>read-only reconciliation preview</span><span className="text-[#78C694]">● live simulation</span>
+        <div className="flex min-h-[380px] sm:min-h-[430px]">
+          <aside className="hidden w-[126px] shrink-0 border-r border-white/[0.07] bg-[#151B1F] px-3 py-4 sm:block">
+            <p className="mb-3 font-mono text-[8px] uppercase tracking-[0.13em] text-[#71818A]">Explorer</p>
+            <div className="space-y-2 font-mono text-[8px] text-[#8898A2]"><p className="text-[#B9C8D0]">▾ margin-control</p><p className="pl-3">▾ src</p><p className="pl-6 text-[#67C5C8]">▣ reconcile.ts</p><p className="pl-6">□ sources.ts</p><p className="pl-6">□ position.ts</p><p className="pl-3">▸ evidence</p><p className="pl-3">▸ records</p><p className="text-[#667780]">▾ tests</p></div>
+          </aside>
+          <div className="min-w-0 flex-1 bg-[#111518]">
+            <div className="flex h-9 items-center gap-1 overflow-hidden border-b border-white/[0.07] bg-[#181F23] px-2 font-mono text-[8px] text-[#7F9099] sm:h-10 sm:text-[9px]"><span className="border-b-2 border-[#67C5C8] bg-[#111518] px-3 py-2 text-[#D2E0E6]">reconcile.ts</span><span className="px-3 py-2">sources.ts</span><span className="px-3 py-2">position.ts</span><span className="px-3 py-2">account.json</span><span className="px-1 py-2 text-[#64757E]">+</span></div>
+            <div className="relative overflow-hidden px-3 py-5 font-mono text-[8px] leading-5 sm:px-5 sm:py-6 sm:text-[9px] sm:leading-6">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_56%_20%,rgba(57,110,117,0.13),transparent_52%)]" />
+              <div className="relative min-w-max">
+                {accountingCodeLines.map(([number, keyword, rest], index) => <motion.div key={number} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22 + index * 0.12, duration: 0.25 }} className="grid grid-cols-[22px_minmax(0,1fr)] gap-3"><span className="select-none text-right text-[#52636C]">{number}</span><span className={rest.includes('//') ? 'text-[#789A7F]' : 'text-[#C4D2D8]'}><span className="text-[#D7A6E8]">{keyword}</span>{rest}</span></motion.div>)}
+                <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.95 }} className="ml-[35px] inline-block h-3.5 w-[5px] translate-y-0.5 bg-[#67C5C8]" aria-hidden="true" />
+              </div>
             </div>
-            <div className="space-y-0.5">
-              {accountingConsoleLines.map((line, index) => (
-                <motion.div key={line.prompt} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.35 + index * 0.16, duration: 0.35 }} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] gap-3 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] sm:gap-5">
-                  <span className="truncate text-[#6F9DB2]">{line.prompt}</span><span className={`truncate ${line.tone}`}>{line.text}</span>
-                </motion.div>
-              ))}
-            </div>
-            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.8, duration: 0.4 }} className="mt-5 border-l-2 border-[#78C694] bg-[#78C694]/[0.07] px-3 py-2 text-[#B8E1C8]">
-              <span className="text-[#78C694]">✓ position://account/NTH-US-01</span><br />
-              <span className="text-[#A8B3BC]">  financial truth connected; action boundary preserved</span>
-            </motion.div>
           </div>
         </div>
-        <div className="border-t border-white/[0.08] bg-[#111619] py-3" aria-label="Connected systems">
+        <div className="border-t border-white/[0.08] bg-[#0D1113] py-3" aria-label="Connected systems">
           <div className="mb-2 px-4 font-mono text-[7px] uppercase tracking-[0.16em] text-[#687780] sm:px-5 sm:text-[8px]">connected sources</div>
-          <div className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%)' }}>
-            <motion.div animate={reduceMotion ? { x: 0 } : { x: ['0%', '-38%'] }} transition={reduceMotion ? { duration: 0 } : { duration: 24, repeat: Infinity, ease: 'linear' }} className="flex w-max items-center gap-5 px-4 sm:gap-7 sm:px-5">
-              {consoleSources.map((source, index) => <div key={`${source.id}-${index}`} className="flex shrink-0 items-center gap-1.5 font-mono text-[8px] text-[#9BAAB2] sm:text-[9px]">{source.src ? <img src={source.src} alt="" className="h-4 w-4 object-contain opacity-80 grayscale" /> : <span className={`flex h-4 w-4 items-center justify-center rounded-[3px] ${source.icon === 'edi' ? 'bg-[#7C3AED]' : source.icon === 'carrier' ? 'bg-[#F59E0B]' : 'bg-[#5D707A]'}`}>{source.icon === 'edi' ? <FileInput className="h-2.5 w-2.5 text-white" /> : source.icon === 'carrier' ? <Truck className="h-2.5 w-2.5 text-white" /> : <Database className="h-2.5 w-2.5 text-white" />}</span>}<span>{source.name}</span></div>)}
-            </motion.div>
-          </div>
+          <div className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%)' }}><motion.div animate={reduceMotion ? { x: 0 } : { x: ['0%', '-38%'] }} transition={reduceMotion ? { duration: 0 } : { duration: 24, repeat: Infinity, ease: 'linear' }} className="flex w-max items-center gap-5 px-4 sm:gap-7 sm:px-5">{consoleSources.map((source, index) => <div key={`${source.id}-${index}`} className="flex shrink-0 items-center gap-1.5 font-mono text-[8px] text-[#9BAAB2] sm:text-[9px]">{source.src ? <img src={source.src} alt="" className="h-4 w-4 object-contain opacity-80 grayscale" /> : <span className={`flex h-4 w-4 items-center justify-center rounded-[3px] ${source.icon === 'edi' ? 'bg-[#7C3AED]' : source.icon === 'carrier' ? 'bg-[#F59E0B]' : 'bg-[#5D707A]'}`}>{source.icon === 'edi' ? <FileInput className="h-2.5 w-2.5 text-white" /> : source.icon === 'carrier' ? <Truck className="h-2.5 w-2.5 text-white" /> : <Database className="h-2.5 w-2.5 text-white" />}</span>}<span>{source.name}</span></div>)}</motion.div></div>
         </div>
       </div>
     </motion.div>
   );
 }
-
 function AccountingEvidenceSection() {
   return (
     <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F6F8F9] py-10 md:py-16" aria-labelledby="accounting-section-title">
