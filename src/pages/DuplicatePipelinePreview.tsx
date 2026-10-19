@@ -582,9 +582,9 @@ function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
 function TeamHandoffStage() {
   const reduceMotion = useReducedMotion();
   const handoffMessages = [
-    { role: 'Finance Operations', subject: 'Cost basis confirmed', preview: 'Unit value agrees with the attached valuation schedule.', avatar: '/recovery-finance-avatar.png', highlight: 'bg-[#F7E7CF]' },
-    { role: 'Fulfilment Operations', subject: 'Warehouse event matched', preview: 'Receiving and carrier records resolve to the same event.', avatar: '/recovery-operations-avatar.png', highlight: 'bg-[#DDEBFF]' },
-    { role: 'Recovery Owner', subject: 'Approved for filing', preview: 'Evidence is sufficient for the next controlled action.', avatar: '/recovery-owner-avatar.png', highlight: 'bg-[#DDF4E5]' },
+    { role: 'Finance Operations', subject: 'Investigation packet is ready', preview: 'The source population, affected units, valuation basis, and next action are assembled. No manual record chase is required to begin review.', avatar: '/recovery-finance-avatar.png', highlight: 'bg-[#F7E7CF]', documents: [{ name: 'Evidence Register', icon: '/excel-icon-margin.png' }, { name: 'Unit Cost Basis', icon: '/gd.png' }] },
+    { role: 'Fulfilment Operations', subject: 'Only the unresolved source question is routed', preview: 'Margin matched the carrier, receiving, and shipment records. Fulfilment only needs to confirm the remaining custody exception.', avatar: '/recovery-operations-avatar.png', highlight: 'bg-[#DDEBFF]', documents: [{ name: 'Carrier Custody Record', icon: '/outlookicon.webp' }, { name: 'Receiving Event Record', icon: '/amazon-logo-transparent-circle.png' }] },
+    { role: 'Controller · Financial Control', subject: 'The control position is reviewable', preview: 'Supported exposure, accounted-for value, approval boundary, and unresolved items remain distinct. The position is ready for a controlled decision.', avatar: '/recovery-owner-avatar.png', highlight: 'bg-[#DDF4E5]', documents: [{ name: 'Settlement Reconciliation', icon: '/onedriive.png' }, { name: 'Approval Boundary', icon: '/gmailicon.png' }] },
   ];
 
   return <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="px-5 pb-5 sm:px-6">
@@ -593,9 +593,9 @@ function TeamHandoffStage() {
         <div className="flex min-w-0 items-start gap-3">
           <img src="/slack-icon-2019.png" alt="Slack" className="mt-0.5 h-6 w-6 shrink-0 object-contain" />
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Illustrative team handoff</p>
-            <h2 className="mt-1 font-google-sans text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">The recovery now has an owner</h2>
-            <p className="mt-1 max-w-[680px] text-[11px] leading-5 tracking-tight text-[#66737F]">A focused decision thread for the supported position.</p>
+            <p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Finance resolution operations</p>
+            <h2 className="mt-1 font-google-sans text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">Margin carries the investigation. Finance keeps the decision.</h2>
+            <p className="mt-1 max-w-[720px] text-[11px] leading-5 tracking-tight text-[#66737F]">Margin absorbs the repeatable investigative work while the finance team retains judgment, policy, approval, and accountability.</p>
           </div>
         </div>
         <span className="hidden shrink-0 text-[10px] font-medium tracking-tight text-[#8A99A5] sm:block">Focused · Just now</span>
@@ -606,23 +606,24 @@ function TeamHandoffStage() {
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#182026] shadow-[0_3px_8px_rgba(24,32,38,0.12)]"><img src="/slack-icon-2019.png" alt="Margin team handoff" className="h-4 w-4 object-contain brightness-0 invert" /></span>
           <div className="min-w-0 pt-0.5">
             <p className="text-[10px] font-semibold tracking-tight text-[#7B8A97]">Margin <span className="ml-1 font-normal text-[#A0AAB0]">just now</span></p>
-            <p className="mt-1 text-[12px] font-semibold leading-5 tracking-tight text-[#182026]"><mark className="rounded-[3px] bg-[#DDEBFF] px-1 py-0.5 font-semibold text-[#1E5878]">Supported recovery position · $1,284.60</mark></p>
-            <p className="mt-1 text-[11px] leading-5 tracking-tight text-[#66737F]">Evidence attached · no duplicate credit found · seller approval required</p>
-            <div className="mt-2 flex flex-wrap gap-1.5 text-[9px] font-medium tracking-tight text-[#66737F]"><span className="rounded-full bg-white px-2 py-1">Receiving record</span><span className="rounded-full bg-white px-2 py-1">Cost basis</span><span className="rounded-full bg-white px-2 py-1">Settlement line</span></div>
+            <p className="mt-1 text-[12px] font-semibold leading-5 tracking-tight text-[#182026]"><mark className="rounded-[3px] bg-[#DDEBFF] px-1 py-0.5 font-semibold text-[#1E5878]">Resolution work prepared · supported exposure $1,284.60</mark></p>
+            <p className="mt-1 max-w-[720px] text-[11px] leading-5 tracking-tight text-[#66737F]">Margin connected the receiving record, cost basis, and settlement line. The supported position is separated from accounted-for value and unresolved exceptions. Seller approval remains required before submission.</p>
+            <div className="mt-2 flex flex-wrap gap-1.5 text-[9px] font-medium tracking-tight text-[#66737F]"><span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1"><img src="/amazon-logo-transparent-circle.png" alt="" className="h-3 w-3 object-contain" />Receiving Event Record</span><span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1"><img src="/excel-icon-margin.png" alt="" className="h-3 w-3 object-contain" />Unit Cost Basis</span><span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1"><img src="/onedriive.png" alt="" className="h-3 w-3 object-contain" />Settlement Detail</span></div>
           </div>
         </motion.div>
 
         {handoffMessages.map((message, index) => <motion.div key={message.role} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduceMotion ? 0 : 0.48 + index * 0.2, duration: 0.32 }} className="flex items-start gap-3">
           <img src={message.avatar} alt={`${message.role} participant`} className="h-8 w-8 shrink-0 rounded-full object-cover shadow-[0_3px_8px_rgba(24,32,38,0.1)]" />
           <div className="min-w-0 pt-0.5">
-            <p className="text-[10px] font-semibold tracking-tight text-[#7B8A97]">{message.role} <span className="ml-1 font-normal text-[#A0AAB0]">in recovery handoff</span></p>
+            <p className="text-[10px] font-semibold tracking-tight text-[#7B8A97]">{message.role} <span className="ml-1 font-normal text-[#A0AAB0]">in resolution operations</span></p>
             <p className="mt-1 text-[12px] font-semibold leading-5 tracking-tight text-[#182026]"><mark className={`rounded-[3px] px-1 py-0.5 font-semibold text-[#36404A] ${message.highlight}`}>{message.subject}</mark></p>
             <p className="mt-1 text-[11px] leading-5 tracking-tight text-[#66737F]">{message.preview}</p>
+            <div className="mt-2 flex flex-wrap gap-1.5 text-[9px] font-medium tracking-tight text-[#66737F]">{message.documents.map((document) => <span key={document.name} className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1"><img src={document.icon} alt="" className="h-3 w-3 object-contain" />{document.name}</span>)}</div>
           </div>
         </motion.div>)}
       </div>
 
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduceMotion ? 0 : 1.12, duration: 0.3 }} className="mt-6 flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#26704E]"><span className="h-1.5 w-1.5 rounded-full bg-[#26704E]" />Decision recorded · Owner assigned</motion.p>
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduceMotion ? 0 : 1.12, duration: 0.3 }} className="mt-6 flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#26704E]"><span className="h-1.5 w-1.5 rounded-full bg-[#26704E]" />Investigation carried by Margin · Decision rights retained by Finance</motion.p>
     </div>
   </motion.div>;
 }
