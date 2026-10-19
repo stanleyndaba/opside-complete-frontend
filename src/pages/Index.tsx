@@ -226,18 +226,19 @@ function AccountingCodeConsole() {
   const reduceMotion = useReducedMotion();
   return (
     <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="accounting-code-editor relative order-2 min-w-0 overflow-hidden lg:order-1">
-      <div className="relative overflow-hidden rounded-[5px] border-0 bg-white p-0 shadow-[0_18px_48px_rgba(37,73,91,0.12)] sm:rounded-[6px]">
+      <div className="relative overflow-hidden rounded-[14px] border-0 bg-[radial-gradient(circle_at_54%_18%,rgba(220,238,242,0.92),transparent_46%),linear-gradient(135deg,#E5F0F3_0%,#F7FBFC_72%)] p-2 shadow-[0_24px_60px_rgba(37,73,91,0.14)] sm:rounded-[18px] sm:p-4">
         <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md">
           <span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
         </div>
-        <div className="flex min-h-[380px] bg-white sm:min-h-[430px]">
+        <div className="flex min-h-[430px] bg-white sm:min-h-[500px]">
           <aside className="hidden w-[126px] shrink-0 border-r border-[#E3EAED] bg-[#F7FAFB] px-3 py-4 sm:block">
             <p className="mb-3 font-mono text-[8px] uppercase tracking-[0.13em] text-[#8A99A5]">Explorer</p>
             <div className="space-y-2 font-mono text-[8px] text-[#7A8994]"><p className="text-[#36454D]">▾ margin-control</p><p className="pl-3">▾ src</p><p className="pl-6 text-[#167C80]">▣ reconcile.ts</p><p className="pl-6">□ sources.ts</p><p className="pl-6">□ position.ts</p><p className="pl-3">▸ evidence</p><p className="pl-3">▸ records</p><p className="text-[#A0ABB0]">▾ tests</p></div>
           </aside>
           <div className="min-w-0 flex-1 bg-white">
-            <div className="flex h-10 items-center gap-1 overflow-x-auto border-b border-[#E3EAED] bg-[#F7FAFB] px-2 font-mono text-[8px] text-[#8A99A5] sm:text-[9px]">{["reconcile.ts", "sources.ts", "position.ts", "account.json"].map((tab, index) => <span key={tab} className={`flex shrink-0 items-center gap-2 rounded-t-[9px] px-3 py-2 ${index === 0 ? "bg-[#EEF2F4] text-[#263438]" : "text-[#8A99A5]"}`}><img src="/typescript-icon.svg" alt="TypeScript" className="h-3.5 w-3.5 rounded-[2px]" /><span>{tab}</span><X className="h-3 w-3 opacity-60" aria-label={`Close ${tab}`} /></span>)}</div>
-            <div className="relative overflow-hidden bg-white px-3 py-5 font-mono text-[8px] leading-5 sm:px-5 sm:py-6 sm:text-[9px] sm:leading-6">
+            <div className="flex h-10 items-center gap-1 overflow-hidden border-b border-[#E3EAED] bg-[#F7FAFB] px-2 font-mono text-[8px] text-[#8A99A5] sm:text-[9px]">{["reconcile.ts", "sources.ts", "position.ts", "account.json"].map((tab, index) => <span key={tab} className={`flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-t-[9px] px-2 py-2 ${index === 0 ? "bg-[#EEF2F4] text-[#263438]" : "text-[#8A99A5]"}`}><img src="/typescript-icon.svg" alt="TypeScript" className="h-3.5 w-3.5 shrink-0 rounded-[2px]" /><span className="truncate">{tab}</span><X className="h-3 w-3 shrink-0 opacity-60" aria-label={`Close ${tab}`} /></span>)}</div>
+            <div className="relative overflow-hidden bg-white px-3 py-7 font-mono text-[8px] leading-6 sm:px-5 sm:py-9 sm:text-[9px] sm:leading-7">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_56%_20%,rgba(220,238,242,0.45),transparent_52%)]" />
               <div className="relative min-w-max">
                 {accountingCodeLines.map((line, index) => <motion.div key={line.number} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22 + index * 0.12, duration: 0.25 }} className={`grid grid-cols-[22px_minmax(0,1fr)] gap-3 px-1 ${index === 5 || index === 6 ? "bg-[#DDEBFF]" : ""}`}><span className="select-none text-right text-[#A0ABB0]">{line.number}</span><span>{line.parts.map(([text, tone], partIndex) => <span key={`${line.number}-${partIndex}`} className={tone === 'keyword' ? 'text-[#7C3AED]' : tone === 'string' ? 'text-[#B45309]' : tone === 'function' ? 'text-[#0B74DE]' : tone === 'provider' ? 'text-[#0F766E]' : tone === 'comment' ? 'text-[#5D876A]' : tone === 'boolean' ? 'text-[#C2410C]' : 'text-[#43525A]'}>{text}</span>)}</span></motion.div>)}
                 <div className="absolute left-[42%] top-[54px] z-20 w-[190px] rounded-[8px] border border-[#D7E0E6] bg-white py-1.5 text-[9px] leading-5 text-[#344752] shadow-[0_16px_32px_rgba(24,32,38,0.16)]"><p className="px-3 pb-1 font-sans text-[8px] font-semibold uppercase tracking-tight text-[#8A99A5]">Linked event fields</p>{["settlementId", "sourceRecords", "amount", "currency", "claimWindow", "owner", "approvalState"].map((option, index) => <div key={option} className={`px-3 py-0.5 ${index === 2 ? "bg-[#E8F0FF] text-[#1B456E]" : ""}`}>{option}</div>)}</div>
@@ -246,8 +247,8 @@ function AccountingCodeConsole() {
             </div>
           </div>
         </div>
-        <div className="relative bg-white pt-8" aria-label="Connected integrations">
-          <div className="pointer-events-none absolute -top-10 inset-x-0 h-16 bg-gradient-to-b from-transparent via-white/80 to-white" aria-hidden="true" />
+        <div className="relative bg-white pt-10" aria-label="Connected integrations">
+          <div className="pointer-events-none absolute -top-14 inset-x-0 h-24 bg-gradient-to-b from-transparent via-white/90 to-white" aria-hidden="true" />
           <div className="relative overflow-hidden space-y-2 px-3 pb-3 sm:px-5">
             {accountingRows.map((row, rowIndex) => {
               const loopedRow = [...row, ...row, ...row];
