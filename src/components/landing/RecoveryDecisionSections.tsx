@@ -152,31 +152,36 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
         <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
           {pathOptions.map((option, index) => {
             const isFirst = index === 0;
-            const gradientStyle = isFirst 
-              ? 'radial-gradient(ellipse at 15% 85%, #D8B39A 0%, transparent 50%), radial-gradient(ellipse at 75% 15%, #E7D3D8 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, #E8D8C2 0%, transparent 45%), radial-gradient(ellipse at 85% 75%, #D9B9A4 0%, transparent 40%), linear-gradient(145deg, #E8D8D3 0%, #E5C8B2 35%, #E8D4B8 70%, #E0C2B2 100%)'
-              : 'radial-gradient(ellipse at 25% 75%, #BEB5AA 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, #E0D8CF 0%, transparent 50%), radial-gradient(ellipse at 45% 35%, #E7E1D8 0%, transparent 45%), radial-gradient(ellipse at 70% 80%, #CFC4B9 0%, transparent 40%), linear-gradient(145deg, #E2DBD2 0%, #D0C4B8 35%, #BDB0A5 70%, #A99B91 100%)';
+            const cardBackground = isFirst
+              ? '/assets/recover-once-card-background.png'
+              : '/assets/ongoing-control-card-background.png';
+            const backgroundStyle = {
+              backgroundImage: `linear-gradient(rgba(8, 12, 24, 0.28), rgba(8, 12, 24, 0.28)), url(${cardBackground})`,
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+            };
             
             return (
-            <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} style={{ background: gradientStyle }} className={`relative rounded-[8px] p-6 sm:p-8 md:p-10 transition-[filter,opacity] duration-500 will-change-[filter,opacity] lg:min-w-0 lg:flex-1 ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
-              <p style={{ color: "#68655F" }} className="routing-card-label font-mono text-[11px] font-semibold uppercase tracking-tight">{option.label}</p>
-              <h3 className="routing-card-heading mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] sm:text-[36px] md:text-[42px]" style={{ fontWeight: 500 }}>{option.title}</h3>
+            <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} style={backgroundStyle} className={`relative rounded-[8px] p-6 text-white sm:p-8 md:p-10 transition-[filter,opacity] duration-500 will-change-[filter,opacity] lg:min-w-0 lg:flex-1 ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
+              <p className="routing-card-label font-mono text-[11px] font-semibold uppercase tracking-tight text-white">{option.label}</p>
+              <h3 className="routing-card-heading mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-white sm:text-[36px] md:text-[42px]" style={{ fontWeight: 500 }}>{option.title}</h3>
               <p className="routing-card-subtitle mt-3 max-w-[520px] font-lora text-[19px] leading-[1.12] tracking-[-0.03em] text-[#FFFDF9] sm:text-[22px]">{option.subtitle}</p>
-              <p style={{ color: "#F0EEEA" }} className="routing-card-copy mt-4 max-w-[520px] text-[14px] leading-6 md:text-[15px] md:leading-7">{option.copy}</p>
-              <p style={{ color: "#F0EEEA" }} className="routing-card-copy mt-3 max-w-[520px] text-[14px] leading-6 md:text-[15px] md:leading-7">{option.followUp}</p>
+              <p className="routing-card-copy mt-4 max-w-[520px] text-[14px] leading-6 text-white md:text-[15px] md:leading-7">{option.copy}</p>
+              <p className="routing-card-copy mt-3 max-w-[520px] text-[14px] leading-6 text-white md:text-[15px] md:leading-7">{option.followUp}</p>
               <div className="mt-6 border-y border-white/25">
-                <p className="routing-card-item-heading py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#FFFDF9]">{option.itemHeading}</p>
+                <p className="routing-card-item-heading py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-white">{option.itemHeading}</p>
                 <div className="grid gap-0 sm:grid-cols-2">
                   {option.items.map((item) => (
-                    <div key={item} className="routing-card-item flex items-start gap-2 border-t border-[#7B8A82]/20 py-3 text-[12px] leading-5 text-[#F6F4F0] sm:pr-4 md:text-[13px]">
-                      <Check className="routing-card-item-icon mt-0.5 h-4 w-4 shrink-0 text-[#F6F4F0]" />
+                    <div key={item} className="routing-card-item flex items-start gap-2 border-t border-white/25 py-3 text-[12px] leading-5 text-white sm:pr-4 md:text-[13px]">
+                      <Check className="routing-card-item-icon mt-0.5 h-4 w-4 shrink-0 text-white" />
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
               <div className="mt-7 pt-2">
-                <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button h-12 rounded-[6px] bg-[#0B74DE] px-6 text-[14px] font-semibold text-white shadow-sm hover:bg-[#075EBA]">
-                  {option.cta}<ArrowRight className="ml-2 h-4 w-4 text-white" />
+                <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button h-12 rounded-[6px] bg-white px-6 text-[14px] font-semibold text-[#312E81] shadow-sm hover:bg-[#F1F0FF]">
+                  {option.cta}<ArrowRight className="ml-2 h-4 w-4 text-[#312E81]" />
                 </Button>
               </div>
             </motion.div>
