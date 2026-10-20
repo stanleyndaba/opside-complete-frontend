@@ -749,9 +749,10 @@ function FinancialWorkProofSection() {
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-20">
           <motion.div {...revealProps} className="max-w-[620px]">
             <h2 id="financial-work-proof-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Built to get</span> <span className="heading-tone-muted">the financial work done.</span>
+              Built for evidence, authorization and financial close.
             </h2>
-            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#5F6D77] md:text-[17px] md:leading-8">Margin is built around three things that matter when money does not add up: less time spent searching, clearer answers, and work that actually gets finished.</p>
+            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#5F6D77] md:text-[17px] md:leading-8">Margin combines transaction-level analysis, evidence traceability, controlled recovery actions and settlement verification in one workflow.</p>
+            <p className="mt-4 max-w-[560px] text-[15px] leading-7 text-[#5F6D77] md:text-[17px] md:leading-8">Review the financial basis. Approve consequential actions. Track what was recovered, what remains unresolved, and what has been reconciled.</p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[#D8E3E8]">

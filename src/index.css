@@ -1160,7 +1160,7 @@ html, body, #root {
    indigo network treatment and keeping every piece of section copy pure white. */
 .landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface {
   background-color: #17265D !important;
-  background-image: linear-gradient(rgba(17, 28, 84, 0.12), rgba(17, 28, 84, 0.12)), url('/assets/financial-work-proof-background.png') !important;
+  background-image: url('/assets/financial-work-proof-indigo-field.png') !important;
   background-position: center !important;
   background-size: cover !important;
   color: #FFFFFF !important;
