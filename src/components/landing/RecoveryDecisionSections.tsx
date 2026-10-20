@@ -192,7 +192,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
                 </div>
               </div>
               <div className="mt-7 pt-2">
-                <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button h-12 rounded-[6px] bg-white px-6 text-[14px] font-semibold text-[#312E81] shadow-sm hover:bg-[#F1F0FF]">
+                <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button h-auto min-h-12 w-full max-w-full whitespace-normal break-words rounded-[6px] bg-white px-4 py-3 text-center text-[14px] font-semibold leading-5 text-[#312E81] shadow-sm hover:bg-[#F1F0FF] sm:h-12 sm:w-auto sm:whitespace-nowrap sm:px-6 sm:py-0">
                   {option.cta}<ChevronRight className="ml-2 h-4 w-4 text-[#312E81]" />
                 </Button>
               </div>
