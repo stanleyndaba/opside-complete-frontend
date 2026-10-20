@@ -3,7 +3,6 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FileText } from 'lucide-react';
 
 interface MatchHighlight {
   id: string;
@@ -167,20 +166,6 @@ export function EvidenceMatchContent({ embedded = false }: EvidenceMatchContentP
       <div className={`mx-auto flex ${embedded ? 'min-h-0 w-full' : 'min-h-[calc(100vh-4rem)] min-w-[760px]'} max-w-[1180px] items-center lg:min-w-0`}>
       <section className="grid min-h-[620px] w-full grid-cols-2 gap-0 overflow-hidden rounded-none border-0 bg-white shadow-none">
         <div className="relative flex min-h-0 flex-col overflow-hidden border-0 bg-white lg:border-r lg:border-[#DDE3E8]">
-          <div className="z-10 flex items-center justify-between border-0 bg-white px-4 py-3">
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-[#66737F]" />
-              <span className="font-google-sans text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
-                Shipment_FBA17ACME001.pdf
-              </span>
-            </div>
-            <div className="flex gap-1">
-              <div className="h-1.5 w-1.5 rounded-full bg-[#E8EFF3]" />
-              <div className="h-1.5 w-1.5 rounded-full bg-[#E8EFF3]" />
-              <div className="h-1.5 w-1.5 rounded-full bg-[#E8EFF3]" />
-            </div>
-          </div>
-
           <div className="relative min-h-0 flex-1 overflow-hidden p-5 sm:p-6">
             <div className="space-y-3 select-none text-[12.5px] leading-6 text-[#8A99A4]">
               <p>
