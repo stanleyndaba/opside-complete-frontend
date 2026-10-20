@@ -13,24 +13,35 @@ const pathOptions = [
   {
     label: "01 / DEFINED ENGAGEMENT",
     title: "Recover Once",
-    subtitle: "One financial exposure. Taken through to resolution.",
-    copy: "Margin examines a defined financial exposure, establishes what happened, determines what the evidence supports, and takes responsibility for the agreed recovery work.",
-    followUp: "From investigation and evidence preparation to approved submissions, follow-up, and settlement verification, the work continues until the agreed scope reaches a documented outcome.",
-    itemHeading: "What Margin handles",
-    cta: "Send records for review",
+    subtitle: "One defined financial exposure. Managed through to a documented outcome.",
+    copy: "Margin establishes what happened, determines what the evidence supports, prepares authorized recovery actions, manages follow-up within scope, and verifies the financial result.",
+    followUp: "Best suited to: a material, bounded exposure that warrants investigation and managed recovery.",
+    itemHeading: "Best suited to",
+    cta: "Discuss a Recover Once engagement",
     ctaLocation: "homepage_recover_once",
-    items: ["Establishing the facts and quantifying the exposure", "Determining what the evidence supports", "Preparing evidence-backed recovery actions", "Managing approved submissions, responses, and appeals within scope", "Verifying settlement and reconciling the financial outcome"],
+    items: ["A material, bounded exposure that warrants investigation and managed recovery"],
   },
   {
-    label: "02 / ONGOING ENGAGEMENT",
+    label: "02 / CONTROL PILOT",
+    title: "30–45 Day Control Pilot",
+    subtitle: "Establish the process for a broader or recurring control problem.",
+    copy: "Margin works with Finance and Operations to establish the financial position, define ownership and approval boundaries, and put agreed recovery and reconciliation workflows into operation.",
+    followUp: "Best suited to: businesses with recurring exceptions or cross-functional recovery work that needs ongoing ownership.",
+    itemHeading: "Best suited to",
+    cta: "Scope an Enterprise Control Pilot",
+    ctaLocation: "homepage_control_pilot",
+    items: ["Recurring exceptions or cross-functional recovery work that needs ongoing ownership"],
+  },
+  {
+    label: "03 / ONGOING CONTROL",
     title: "Recovery Workspace",
-    subtitle: "Know what happened. Know what remains. Keep it under control.",
-    copy: "For Amazon businesses where financial exceptions recur, Margin provides ongoing examination and resolution rather than leaving your team to restart the investigation every time.",
-    followUp: "Margin maintains continuity across financial events, evidence, cases, responses, and settlements, so you can see what has been established, what requires action, and what remains unresolved.",
-    itemHeading: "What stays under examination",
-    cta: "Contact Sales",
+    subtitle: "Keep recurring financial exceptions under examination.",
+    copy: "For businesses that need ongoing review, evidence continuity, response handling, reversal monitoring and reconciliation across new and unresolved financial events.",
+    followUp: "Best suited to: recurring financial exceptions that require ongoing examination, continuity, and reconciliation.",
+    itemHeading: "Best suited to",
+    cta: "Discuss ongoing control",
     ctaLocation: "homepage_recovery_workspace",
-    items: ["Recurring examination of Amazon financial activity", "Identification and assessment of new exceptions", "Evidence and case history maintained over time", "Tracking of submissions, responses, reversals, and settlements", "A continuously updated view of established, actionable, and unresolved value"],
+    items: ["Recurring financial exceptions that require ongoing examination, continuity, and reconciliation"],
   },
 ];
 
@@ -151,10 +162,11 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
         </motion.div>
         <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
           {pathOptions.map((option, index) => {
-            const isFirst = index === 0;
-            const cardBackground = isFirst
+            const cardBackground = index === 0
               ? '/assets/recover-once-card-background.png'
-              : '/assets/ongoing-control-card-background.png';
+              : index === 1
+                ? '/assets/control-pilot-card-background-b.png'
+                : '/assets/ongoing-control-card-background.png';
             const backgroundStyle = {
               backgroundImage: `linear-gradient(rgba(8, 12, 24, 0.28), rgba(8, 12, 24, 0.28)), url(${cardBackground})`,
               backgroundPosition: 'center',
