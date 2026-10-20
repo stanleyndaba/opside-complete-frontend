@@ -94,7 +94,7 @@ function ControlTypewriter({ text, speed = 3, delay = 0, onComplete }: { text: s
   return <>{visibleText}{!reduceMotion && visibleText.length < text.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</>;
 }
 
-export default function Discrepancies() {
+export function DiscrepanciesPresentation({ onComplete }: { onComplete?: () => void } = {}) {
   const [query, setQuery] = useState('');
   const [showProcessed, setShowProcessed] = useState(false);
   const [activeFilter, setActiveFilter] = useState<'all' | 'ready' | 'attention'>('all');
@@ -115,6 +115,12 @@ export default function Discrepancies() {
     setIntroStage(0);
   }, [activeFilter, query, showProcessed]);
 
+  React.useEffect(() => {
+    if (!onComplete || introStage < 3) return;
+    const timer = window.setTimeout(onComplete, 6500);
+    return () => window.clearTimeout(timer);
+  }, [introStage, onComplete]);
+
   const markerTone: Record<Finding["tone"], string> = {
     muted: 'bg-[#9AA7B0]',
     blue: 'bg-[#0B74DE]',
@@ -124,7 +130,6 @@ export default function Discrepancies() {
   };
 
   return (
-    <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] font-google-sans text-[#182026]">
       <div className="mx-auto min-w-[760px] max-w-[1280px] px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
         <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
           <header className="mb-4 border-b border-[#E5ECEF] pb-4">
@@ -166,6 +171,13 @@ export default function Discrepancies() {
           <p className="pt-2 text-[10px] font-medium tracking-tight text-[#7B8A97]">Read-only representative register for Northstar Commerce LLC · US FBA. Nothing submits from this page.</p>
         </section>
       </div>
+  );
+}
+
+export default function Discrepancies() {
+  return (
+    <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] font-google-sans text-[#182026]">
+      <DiscrepanciesPresentation />
     </main>
   );
 }
