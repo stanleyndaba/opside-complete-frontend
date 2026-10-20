@@ -744,20 +744,20 @@ function FinancialWorkProofSection() {
   ];
 
   return (
-    <section aria-labelledby="financial-work-proof-title" className="financial-work-proof-surface relative overflow-hidden bg-[#F1F3F2] py-12 text-[#182026] md:py-16">
+    <section aria-labelledby="financial-work-proof-title" className="financial-work-proof-surface relative overflow-hidden bg-[#F1F3F2] py-8 text-[#182026] sm:py-10 md:py-16">
       <div className={containerClass}>
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-20">
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-20">
           <motion.div {...revealProps} className="max-w-[620px]">
             <h2 id="financial-work-proof-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
               Built for evidence, authorization and financial close.
             </h2>
-            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#5F6D77] md:text-[17px] md:leading-8">Margin combines transaction-level analysis, evidence traceability, controlled recovery actions and settlement verification in one workflow.</p>
-            <p className="mt-4 max-w-[560px] text-[15px] leading-7 text-[#5F6D77] md:text-[17px] md:leading-8">Review the financial basis. Approve consequential actions. Track what was recovered, what remains unresolved, and what has been reconciled.</p>
+            <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-[#5F6D77] md:mt-5 md:text-[17px] md:leading-8">Margin combines transaction-level analysis, evidence traceability, controlled recovery actions and settlement verification in one workflow.</p>
+            <p className="mt-3 max-w-[560px] text-[15px] leading-6 text-[#5F6D77] md:mt-4 md:text-[17px] md:leading-8">Review the financial basis. Approve consequential actions. Track what was recovered, what remains unresolved, and what has been reconciled.</p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[#D8E3E8]">
             {proofPoints.map((point) => (
-              <div key={point.title} className="grid gap-3 border-b border-[#D8E3E8] py-5 sm:grid-cols-[110px_minmax(0,0.9fr)_minmax(0,1.1fr)] sm:items-baseline sm:gap-5 sm:py-6">
+              <div key={point.title} className="grid gap-2 border-b border-[#D8E3E8] py-3 sm:grid-cols-[110px_minmax(0,0.9fr)_minmax(0,1.1fr)] sm:items-baseline sm:gap-5 sm:py-6">
                 <span className={`${point.value === "SP-API" ? "text-[24px] sm:text-[28px]" : "text-[38px] sm:text-[44px]"} font-lora leading-none tracking-[-0.045em] text-[#182026]`} style={{ fontWeight: 500 }}>{point.value}</span>
                 <h3 className="text-[16px] font-semibold leading-5 tracking-tight text-[#182026] sm:text-[17px]">{point.title}</h3>
                 {point.details ? (
@@ -771,7 +771,7 @@ function FinancialWorkProofSection() {
             ))}
           </motion.div>
         </div>
-        <button type="button" className={`${landingSecondaryCtaClass} mt-8`} aria-label="See what the operating record contains">See what the operating record contains <ChevronRight className="h-4 w-4" /></button>
+        <button type="button" className={`${landingSecondaryCtaClass} mt-5 md:mt-8`} aria-label="See what the operating record contains">See what the operating record contains <ChevronRight className="h-4 w-4" /></button>
       </div>
     </section>
   );
