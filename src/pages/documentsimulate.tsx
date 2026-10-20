@@ -19,12 +19,9 @@ const sourceIcons: SourceIcon[] = [
   { id: 'adobe-sign', name: 'Adobe Sign', src: '/adobesign.png' },
   { id: 'sftp', name: 'S3 / SFTP', src: '/integration-icons/amazons3.jpg' },
   { id: 'amazon-duplicate', name: 'Amazon', src: '/amazon-logo-transparent-circle.png' },
-  { id: 'quickbooks-duplicate', name: 'QuickBooks', src: '/quickbooks.png' },
   { id: 'dropbox-duplicate', name: 'Dropbox', src: '/Dropbox_Icon.svg.png' },
-  { id: 'gmail-duplicate', name: 'Gmail', src: '/gmailicon.png' },
   { id: 'outlook-duplicate', name: 'Outlook', src: '/outlookicon.webp' },
   { id: 'excel-reference-one', name: 'Excel reference', src: '/excel-icon-margin.png' },
-  { id: 'excel-reference-two', name: 'Excel reference', src: '/excel-icon-margin.png' },
 ];
 
 function OrbitingSource({ source, index, reduceMotion }: { source: SourceIcon; index: number; reduceMotion: boolean }) {
