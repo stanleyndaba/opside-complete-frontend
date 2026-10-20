@@ -18,6 +18,13 @@ const sourceIcons: SourceIcon[] = [
   { id: 'xero', name: 'Xero', src: '/xero.png' },
   { id: 'adobe-sign', name: 'Adobe Sign', src: '/adobesign.png' },
   { id: 'sftp', name: 'S3 / SFTP', src: '/integration-icons/amazons3.jpg' },
+  { id: 'amazon-duplicate', name: 'Amazon', src: '/amazon-logo-transparent-circle.png' },
+  { id: 'quickbooks-duplicate', name: 'QuickBooks', src: '/quickbooks.png' },
+  { id: 'dropbox-duplicate', name: 'Dropbox', src: '/Dropbox_Icon.svg.png' },
+  { id: 'gmail-duplicate', name: 'Gmail', src: '/gmailicon.png' },
+  { id: 'outlook-duplicate', name: 'Outlook', src: '/outlookicon.webp' },
+  { id: 'excel-reference-one', name: 'Excel reference', src: '/excel-icon-margin.png' },
+  { id: 'excel-reference-two', name: 'Excel reference', src: '/excel-icon-margin.png' },
 ];
 
 function OrbitingSource({ source, index, reduceMotion }: { source: SourceIcon; index: number; reduceMotion: boolean }) {
@@ -39,8 +46,8 @@ function OrbitingSource({ source, index, reduceMotion }: { source: SourceIcon; i
         animate={reduceMotion ? { x: radius, scale: 1 } : { x: [radius, radius, radius, 0], scale: [0.82, 1, 1, 0.35] }}
         transition={reduceMotion ? { duration: 0 } : { delay, duration: 10.4, times: [0, 0.08, 0.76, 1], ease: [0.4, 0, 0.2, 1] }}
       >
-        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#DCE3E7] bg-white/95 shadow-[0_8px_22px_rgba(24,32,38,0.11)] sm:h-14 sm:w-14" title={source.name}>
-          <img src={source.src} alt={source.name} className="h-[58%] w-[58%] object-contain" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DCE3E7] bg-white/95 shadow-[0_8px_22px_rgba(24,32,38,0.11)] sm:h-16 sm:w-16" title={source.name}>
+          <img src={source.src} alt={source.name} className="h-[60%] w-[60%] object-contain" />
         </div>
       </motion.div>
     </motion.div>
@@ -65,13 +72,6 @@ const DocumentSimulate = () => {
       />
 
       <section className="relative flex h-[min(720px,100vh)] w-full max-w-6xl items-center justify-center" aria-label="Orbiting platform sources">
-        <div className="absolute left-1/2 top-[9%] -translate-x-1/2 text-[10px] font-medium uppercase tracking-[0.16em] text-gray-400">
-          Source orbit
-        </div>
-
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-[#E1E7EA] sm:h-[390px] sm:w-[390px]" aria-hidden="true" />
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[220px] w-[220px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#EEF2F4] sm:h-[290px] sm:w-[290px]" aria-hidden="true" />
-
         {sourceIcons.map((source, index) => (
           <OrbitingSource key={source.id} source={source} index={index} reduceMotion={reduceMotion} />
         ))}
@@ -92,9 +92,6 @@ const DocumentSimulate = () => {
           />
         </motion.div>
 
-        <p className="absolute bottom-[9%] left-1/2 max-w-[420px] -translate-x-1/2 text-center text-[11px] leading-5 text-[#8A99A5] sm:text-[12px]">
-          Source systems orbit the financial record, then converge into one Margin position.
-        </p>
       </section>
     </main>
   );
