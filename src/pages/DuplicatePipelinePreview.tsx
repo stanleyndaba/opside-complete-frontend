@@ -6,6 +6,7 @@ import { EvidenceMatchContent } from "../components/evidence-match";
 import { ReportGenerationStage } from "@/components/report-generation";
 import { DiscrepanciesPresentation } from "./Discrepancies";
 import { ProofRequiredVisual } from "@/components/landing/ProofRequiredVisual";
+import PlatformSimulate from "./platformsimulate";
 
 type TabId = "approval" | "filing" | "filed" | "attention" | "payout" | "resolved";
 type Tone = "ready" | "moving" | "filed" | "attention" | "payout" | "resolved";
@@ -315,6 +316,17 @@ function IssuesFoundStage({ onComplete }: { onComplete: () => void }) {
 
 function ProofRequiredStage({ onComplete }: { onComplete: () => void }) {
   return <ProofRequiredVisual onComplete={onComplete} />;
+}
+
+function PlatformSimulationStage({ onComplete }: { onComplete: () => void }) {
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const timer = window.setTimeout(onComplete, reduceMotion ? 2600 : 13200);
+    return () => window.clearTimeout(timer);
+  }, [onComplete, reduceMotion]);
+
+  return <PlatformSimulate />;
 }
 
 const intakeDocuments = [
@@ -780,7 +792,7 @@ export default function FilingPipelinePreview() {
   const [queueMode, setQueueMode] = useState<"all" | "priority" | "recent">("all");
   const [toast, setToast] = useState<string | null>(null);
   const [analysisComplete, setAnalysisComplete] = useState(false);
-  const [intakeStage, setIntakeStage] = useState<'analysis' | 'findings' | 'issues-found' | 'proof-required' | 'dropzone' | 'documents' | 'handoff' | 'register' | 'evidence-match' | 'artifact-analysis' | 'case-build' | 'correspondence' | 'claims' | 'claim-summary' | 'learning'>('analysis');
+  const [intakeStage, setIntakeStage] = useState<'analysis' | 'findings' | 'issues-found' | 'proof-required' | 'platform-simulation' | 'dropzone' | 'documents' | 'handoff' | 'register' | 'evidence-match' | 'artifact-analysis' | 'case-build' | 'correspondence' | 'claims' | 'claim-summary' | 'learning'>('analysis');
   const [intakeCycle, setIntakeCycle] = useState(0);
 
   useEffect(() => {
@@ -815,7 +827,7 @@ export default function FilingPipelinePreview() {
     setToast("Filing control recorded. Submission is now in progress.");
     window.setTimeout(() => setToast(null), 3200);
   };
-  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6"><aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside><section className="min-w-0 flex-1 bg-white">{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setIntakeStage('findings')} /></div> : intakeStage === "findings" ? <AuditFindingsStage onComplete={() => setIntakeStage('issues-found')} /> : intakeStage === "issues-found" ? <IssuesFoundStage onComplete={() => setIntakeStage('proof-required')} /> : intakeStage === "proof-required" ? <ProofRequiredStage onComplete={() => setAnalysisComplete(true)} /> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "evidence-match" ? <EvidenceMatchStage /> : intakeStage === "handoff" ? <TeamHandoffStage /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => setIntakeStage('case-build')} /> : intakeStage === "case-build" ? <ReportGenerationStage onComplete={() => {
+  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6"><aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside><section className="min-w-0 flex-1 bg-white">{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setIntakeStage('findings')} /></div> : intakeStage === "findings" ? <AuditFindingsStage onComplete={() => setIntakeStage('issues-found')} /> : intakeStage === "issues-found" ? <IssuesFoundStage onComplete={() => setIntakeStage('proof-required')} /> : intakeStage === "proof-required" ? <ProofRequiredStage onComplete={() => setIntakeStage('platform-simulation')} /> : intakeStage === "platform-simulation" ? <PlatformSimulationStage onComplete={() => setAnalysisComplete(true)} /> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "evidence-match" ? <EvidenceMatchStage /> : intakeStage === "handoff" ? <TeamHandoffStage /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => setIntakeStage('case-build')} /> : intakeStage === "case-build" ? <ReportGenerationStage onComplete={() => {
           setIntakeStage('claims');
           window.setTimeout(() => setIntakeStage('handoff'), CLAIMS_DWELL_MS);
           window.setTimeout(() => setIntakeStage('correspondence'), CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS);
