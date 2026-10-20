@@ -1,15 +1,11 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import {
-  FileText,
-  type LucideIcon,
-} from 'lucide-react';
-
 type Point = { x: number; y: number };
 
 type EvidenceNode = {
   id: string;
   name: string;
-  Icon: LucideIcon;
+  iconSrc: string;
+  iconAlt: string;
   evidence: string[];
   x: number;
   y: number;
@@ -17,42 +13,31 @@ type EvidenceNode = {
   laneX: number;
 };
 
-const marginNode: Point = { x: 50, y: 50 };
-const intakePointRight: Point = { x: 53, y: 50 };
-const intakePointLeft: Point = { x: 47, y: 50 };
+const marginNode: Point = { x: 40, y: 50 };
+const intakePointRight: Point = { x: 43, y: 50 };
 const trunkXRight = 57;
-const trunkXLeft = 43;
 
 const evidenceNodesRight: EvidenceNode[] = [
-  { id: 'r-invoice', name: 'Invoice', Icon: FileText, evidence: ['Invoice', 'Supplier', '$12,400'], x: 71, y: 13, delay: 0.8, laneX: 59 },
-  { id: 'r-shipment-id', name: 'Shipment ID', Icon: FileText, evidence: ['FBA15J2K', 'Inbound', 'FC log'], x: 89, y: 22, delay: 1.05, laneX: 65 },
-  { id: 'r-asin-fnsku', name: 'ASIN / FNSKU', Icon: FileText, evidence: ['ASIN', 'FNSKU', 'SKU map'], x: 75, y: 34, delay: 1.3, laneX: 61 },
-  { id: 'r-quantity', name: 'Quantity', Icon: FileText, evidence: ['500 shipped', '462 received', '38 delta'], x: 93, y: 45, delay: 1.55, laneX: 65 },
-  { id: 'r-bol', name: 'BOL', Icon: FileText, evidence: ['BOL', 'Carrier', 'Cartons'], x: 73, y: 57, delay: 1.8, laneX: 61 },
-  { id: 'r-pod', name: 'POD', Icon: FileText, evidence: ['POD', 'Signature', 'Timestamp'], x: 89, y: 67, delay: 2.05, laneX: 65 },
-  { id: 'r-cost-basis', name: 'Cost Basis', Icon: FileText, evidence: ['Unit cost', 'COGS', 'Variance'], x: 75, y: 79, delay: 2.3, laneX: 61 },
-  { id: 'r-case', name: 'Case', Icon: FileText, evidence: ['Case #8821', 'Evidence pack', 'Ready'], x: 93, y: 86, delay: 2.55, laneX: 65 },
+  { id: 'r-gmail', name: 'Gmail', iconSrc: '/gmailicon.png', iconAlt: 'Gmail', evidence: ['Case correspondence', 'Evidence request', 'Response'], x: 71, y: 10, delay: 0.8, laneX: 59 },
+  { id: 'r-outlook', name: 'Outlook', iconSrc: '/outlookicon.webp', iconAlt: 'Outlook', evidence: ['Carrier notice', 'Delivery proof', 'Timestamp'], x: 90, y: 18, delay: 1.05, laneX: 65 },
+  { id: 'r-onedrive', name: 'OneDrive', iconSrc: '/onedriive.png', iconAlt: 'OneDrive', evidence: ['Settlement file', 'Receiving record', 'Ledger'], x: 75, y: 29, delay: 1.3, laneX: 61 },
+  { id: 'r-googledrive', name: 'Google Drive', iconSrc: '/Driveboy.png', iconAlt: 'Google Drive', evidence: ['Shared records', 'Shipment plan', 'Source map'], x: 93, y: 38, delay: 1.55, laneX: 65 },
+  { id: 'r-dropbox', name: 'Dropbox', iconSrc: '/Dropbox_Icon.svg.png', iconAlt: 'Dropbox', evidence: ['Recovery records', 'Supplier docs', 'Attachments'], x: 71, y: 49, delay: 1.8, laneX: 59 },
+  { id: 'r-quickbooks', name: 'QuickBooks', iconSrc: '/quickbooks.png', iconAlt: 'QuickBooks', evidence: ['Accounting record', 'Cost basis', 'Variance'], x: 90, y: 59, delay: 2.05, laneX: 65 },
+  { id: 'r-xero', name: 'Xero', iconSrc: '/xero.png', iconAlt: 'Xero', evidence: ['Payout activity', 'Reconciliation', 'Entity ledger'], x: 75, y: 70, delay: 2.3, laneX: 61 },
+  { id: 'r-sap', name: 'SAP', iconSrc: '/integration-icons/sap-s4hana.png', iconAlt: 'SAP', evidence: ['Enterprise record', 'Inventory movement', 'Posting trail'], x: 93, y: 78, delay: 2.55, laneX: 65 },
+  { id: 'r-netsuite', name: 'NetSuite', iconSrc: '/integration-icons/netsuite.png', iconAlt: 'NetSuite', evidence: ['Finance system', 'Fee ledger', 'Unit valuation'], x: 71, y: 88, delay: 2.8, laneX: 59 },
+  { id: 'r-sftp', name: 'S3 / SFTP', iconSrc: '/integration-icons/amazons3.jpg', iconAlt: 'S3 / SFTP', evidence: ['Controlled files', 'Exports', 'Archive'], x: 90, y: 92, delay: 3.05, laneX: 65 },
 ];
 
-const evidenceNodesLeft: EvidenceNode[] = [
-  { id: 'l-remittance', name: 'Remittance', Icon: FileText, evidence: ['Payment', 'Advice', 'Check #'], x: 29, y: 18, delay: 0.95, laneX: 41 },
-  { id: 'l-routing', name: 'Routing Guide', Icon: FileText, evidence: ['Compliance', 'SLA', 'Terms'], x: 11, y: 36, delay: 1.2, laneX: 35 },
-  { id: 'l-deduction', name: 'Deduction', Icon: FileText, evidence: ['Code 22', 'Shortage', 'Claim'], x: 25, y: 55, delay: 1.45, laneX: 39 },
-  { id: 'l-carrier-sla', name: 'Carrier SLA', Icon: FileText, evidence: ['Transit', 'Delivery', 'On-time'], x: 7, y: 72, delay: 1.7, laneX: 35 },
-  { id: 'l-supplier-agmt', name: 'Supplier Agmt', Icon: FileText, evidence: ['Contract', 'Allowance', 'Promo'], x: 27, y: 86, delay: 2.15, laneX: 41 },
-];
-
-const evidenceNodes = [...evidenceNodesLeft, ...evidenceNodesRight];
+const evidenceNodes = evidenceNodesRight;
 
 function buildRoute(node: EvidenceNode): Point[] {
-  const side = node.x < 50 ? 'left' : 'right';
-  const intakePoint = side === 'right' ? intakePointRight : intakePointLeft;
-  
   return [
     { x: node.x, y: node.y },
     { x: node.laneX, y: node.y },
     { x: node.laneX, y: marginNode.y },
-    intakePoint,
+    intakePointRight,
     marginNode,
   ];
 }
@@ -62,8 +47,6 @@ function pathFrom(points: Point[]) {
 }
 
 function EvidenceSourceNode({ node, reduceMotion }: { node: EvidenceNode; reduceMotion: boolean }) {
-  const Icon = node.Icon;
-
   return (
     <div
       className="absolute z-30 -translate-x-1/2 -translate-y-1/2"
@@ -76,7 +59,7 @@ function EvidenceSourceNode({ node, reduceMotion }: { node: EvidenceNode; reduce
         className="flex flex-col items-center gap-1.5"
       >
         <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gray-200 bg-white/95 sm:h-14 sm:w-14">
-          <Icon className="h-[46%] w-[46%] text-[#242424]" strokeWidth={1.7} />
+          <img src={node.iconSrc} alt={node.iconAlt} className="h-[52%] w-[52%] object-contain" />
         </div>
         <span className="hidden text-[9px] font-medium text-gray-500 sm:block">{node.name}</span>
       </motion.div>
@@ -181,26 +164,6 @@ const DocumentSimulate = () => {
             transition={{ delay: reduceMotion ? 0 : 3, duration: 0.9, ease: 'easeOut' }}
           />
 
-          {/* Left Trunk */}
-          <motion.path
-            d={pathFrom([{ x: trunkXLeft, y: 13 }, { x: trunkXLeft, y: 87 }])}
-            fill="none"
-            stroke="#D1D5DB"
-            strokeWidth="1"
-            initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 0.65 }}
-            transition={{ delay: reduceMotion ? 0 : 2.85, duration: 1, ease: 'easeOut' }}
-          />
-          <motion.path
-            d={pathFrom([{ x: trunkXLeft, y: marginNode.y }, intakePointLeft, marginNode])}
-            fill="none"
-            stroke="#B8C0CC"
-            strokeWidth="1.2"
-            initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 0.85 }}
-            transition={{ delay: reduceMotion ? 0 : 3, duration: 0.9, ease: 'easeOut' }}
-          />
-
           {evidenceNodes.map((node) => {
             const route = buildRoute(node).slice(0, -1);
 
@@ -221,11 +184,7 @@ const DocumentSimulate = () => {
           {[trunkXRight, 59, 61, 65].map((x) => (
             <circle key={`r-${x}`} cx={x * 10} cy={marginNode.y * 6.4} r="3.5" fill="white" stroke="#B8C0CC" strokeWidth="1" />
           ))}
-          {[trunkXLeft, 35, 39, 41].map((x) => (
-            <circle key={`l-${x}`} cx={x * 10} cy={marginNode.y * 6.4} r="3.5" fill="white" stroke="#B8C0CC" strokeWidth="1" />
-          ))}
           <circle cx={intakePointRight.x * 10} cy={intakePointRight.y * 6.4} r="4" fill="white" stroke="#9CA3AF" strokeWidth="1" />
-          <circle cx={intakePointLeft.x * 10} cy={intakePointLeft.y * 6.4} r="4" fill="white" stroke="#9CA3AF" strokeWidth="1" />
         </svg>
 
         <div
