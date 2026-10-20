@@ -2669,7 +2669,6 @@ export default function Index() {
 
         {/* Delegation — Can I stop owning this? */}
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
-        <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
         <EnterpriseReviewsSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
         <MarginStandardDeliverableSection />
@@ -2720,6 +2719,7 @@ export default function Index() {
         </section>
         <FounderNoteSection />
         <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
+        <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
         <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
 
         {/* Closing CTA */}
