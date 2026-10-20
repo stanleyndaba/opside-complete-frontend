@@ -2688,7 +2688,6 @@ export default function Index() {
               <Accordion
                 type="single"
                 collapsible
-                defaultValue="faq-0"
                 className="w-full border-t border-[var(--margin-border)]"
               >
                 {faqs.slice(0, showAllFaqs ? faqs.length : 3).map((item, index) => (
@@ -2714,7 +2713,7 @@ export default function Index() {
                 {showAllFaqs ? "Show fewer answers" : "More answers to your questions"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <button type="button" className={`${landingSecondaryCtaClass} mt-4`} aria-label="Talk to Margin about your account">Still have a question about your account? Talk to Margin <ChevronRight className="h-4 w-4" /></button>
+              <button type="button" className="landing-pressable mt-6 flex h-11 w-fit items-center justify-start gap-2 bg-transparent px-0 text-left text-[13px] font-semibold text-[#635BFF] transition-colors hover:bg-transparent hover:text-[#5148E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2" aria-label="Talk to Margin about your account">Still have a question about your account? Talk to Margin <ChevronRight className="h-4 w-4" /></button>
             </div>
           </div>
         </section>
