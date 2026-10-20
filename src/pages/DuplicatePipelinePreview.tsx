@@ -320,13 +320,14 @@ function ProofRequiredStage({ onComplete }: { onComplete: () => void }) {
 
 function PlatformSimulationStage({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
+  const speed = 1.5;
 
   useEffect(() => {
-    const timer = window.setTimeout(onComplete, reduceMotion ? 2600 : 13200);
+    const timer = window.setTimeout(onComplete, reduceMotion ? 2600 : 13200 / speed);
     return () => window.clearTimeout(timer);
-  }, [onComplete, reduceMotion]);
+  }, [onComplete, reduceMotion, speed]);
 
-  return <PlatformSimulate />;
+  return <PlatformSimulate speed={speed} />;
 }
 
 const intakeDocuments = [

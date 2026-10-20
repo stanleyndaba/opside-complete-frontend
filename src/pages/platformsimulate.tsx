@@ -134,7 +134,7 @@ function pathFrom(points: Point[]) {
   return points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x * 10} ${point.y * 6.4}`).join(' ');
 }
 
-function SourceNode({ integration, reduceMotion }: { integration: Integration; reduceMotion: boolean }) {
+function SourceNode({ integration, reduceMotion, speed }: { integration: Integration; reduceMotion: boolean; speed: number }) {
   return (
     <div
       className="absolute z-30 -translate-x-1/2 -translate-y-1/2"
@@ -143,7 +143,7 @@ function SourceNode({ integration, reduceMotion }: { integration: Integration; r
       <motion.div
         initial={reduceMotion ? false : { opacity: 0, x: 28, scale: 0.92 }}
         animate={{ opacity: 1, x: 0, scale: 1 }}
-        transition={{ delay: reduceMotion ? 0 : integration.delay, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ delay: reduceMotion ? 0 : integration.delay / speed, duration: 0.55 / speed, ease: [0.22, 1, 0.36, 1] }}
         className="flex flex-col items-center gap-1.5"
       >
         <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gray-200 bg-white/95 sm:h-14 sm:w-14">
@@ -160,11 +160,13 @@ function EvidenceToken({
   label,
   tokenIndex,
   reduceMotion,
+  speed,
 }: {
   integration: Integration;
   label: string;
   tokenIndex: number;
   reduceMotion: boolean;
+  speed: number;
 }) {
   if (reduceMotion) return null;
 
@@ -181,8 +183,8 @@ function EvidenceToken({
         scale: route.map((_, index) => (index >= lastIndex - 1 ? 0.72 : 1)),
       }}
       transition={{
-        duration: 7.2,
-        delay: integration.delay + 1.25 + tokenIndex * 0.78,
+        duration: 7.2 / speed,
+        delay: (integration.delay + 1.25 + tokenIndex * 0.78) / speed,
         times: route.map((_, index) => (index === lastIndex ? 1 : (index / (lastIndex - 1)) * 0.9)),
         ease: [0.4, 0, 0.2, 1],
       }}
@@ -193,10 +195,10 @@ function EvidenceToken({
   );
 }
 
-const PlatformSimulate = () => {
+const PlatformSimulate = ({ speed = 1 }: { speed?: number }) => {
   const prefersReducedMotion = useReducedMotion();
   const reduceMotion = Boolean(prefersReducedMotion);
-  const finalDelay = reduceMotion ? 0 : 11.2;
+  const finalDelay = reduceMotion ? 0 : 11.2 / speed;
 
   return (
     <main
@@ -232,7 +234,7 @@ const PlatformSimulate = () => {
             strokeWidth="1"
             initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 0.65 }}
-            transition={{ delay: reduceMotion ? 0 : 2.85, duration: 1, ease: 'easeOut' }}
+            transition={{ delay: reduceMotion ? 0 : 2.85 / speed, duration: 1 / speed, ease: 'easeOut' }}
           />
           <motion.path
             d={pathFrom([{ x: trunkX, y: marginNode.y }, intakePoint, marginNode])}
@@ -241,7 +243,7 @@ const PlatformSimulate = () => {
             strokeWidth="1.2"
             initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 0.85 }}
-            transition={{ delay: reduceMotion ? 0 : 3, duration: 0.9, ease: 'easeOut' }}
+            transition={{ delay: reduceMotion ? 0 : 3 / speed, duration: 0.9 / speed, ease: 'easeOut' }}
           />
 
           {integrations.map((integration) => {
@@ -254,7 +256,7 @@ const PlatformSimulate = () => {
                 fill="none"
                 initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: 0.58 }}
-                transition={{ delay: reduceMotion ? 0 : integration.delay + 0.45, duration: 1.05, ease: 'easeOut' }}
+                transition={{ delay: reduceMotion ? 0 : (integration.delay + 0.45) / speed, duration: 1.05 / speed, ease: 'easeOut' }}
                 stroke="#CBD5E1"
                 strokeWidth="1"
               />
@@ -296,8 +298,8 @@ const PlatformSimulate = () => {
               scale: reduceMotion ? 1 : [0.5, 1, 0.85, 1, 0.85, 1, 0.85, 1, 0.85, 1, 0.72],
             }}
             transition={{
-              delay: reduceMotion ? 0 : 1.05,
-              duration: finalDelay - 1.05,
+              delay: reduceMotion ? 0 : 1.05 / speed,
+              duration: finalDelay - 1.05 / speed,
               ease: 'easeInOut',
             }}
           >
@@ -318,8 +320,8 @@ const PlatformSimulate = () => {
               scale: reduceMotion ? 1 : [0.5, 1, 0.85, 1, 0.85, 1, 0.85, 1, 0.85, 1, 0.72],
             }}
             transition={{
-              delay: reduceMotion ? 0 : 1.25,
-              duration: finalDelay - 1.25,
+              delay: reduceMotion ? 0 : 1.25 / speed,
+              duration: finalDelay - 1.25 / speed,
               ease: 'easeInOut',
             }}
           >
@@ -336,7 +338,7 @@ const PlatformSimulate = () => {
         </div>
 
         {integrations.map((integration) => (
-          <SourceNode key={integration.id} integration={integration} reduceMotion={reduceMotion} />
+          <SourceNode key={integration.id} integration={integration} reduceMotion={reduceMotion} speed={speed} />
         ))}
 
         {integrations.flatMap((integration) =>
@@ -347,6 +349,7 @@ const PlatformSimulate = () => {
               label={label}
               tokenIndex={tokenIndex}
               reduceMotion={reduceMotion}
+              speed={speed}
             />
           )),
         )}
