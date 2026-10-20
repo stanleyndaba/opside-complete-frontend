@@ -117,8 +117,8 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
   <section className="enterprise-onboarding-section relative overflow-hidden bg-white py-12 sm:py-14 md:py-20" aria-labelledby="enterprise-onboarding-title">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <motion.div {...revealProps} className="max-w-[850px]">
-        <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Your Amazon financials. Under control in 25 days.</h2>
-        <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8">Know where things stand within days, then establish a defined path to financial control within 25 days. Margin works with your team to establish the facts, resolve what can be resolved, and put the right recovery processes in place—without turning implementation into another project for the business.</p>
+        <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Establish a controlled recovery operation in 25 days.</h2>
+        <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8">In a defined 30–45 day engagement, Margin works with your team to establish the financial position, put supported recovery actions in motion, assign ownership to unresolved exceptions, and create a documented operating process. The engagement establishes the agreed operating state. Amazon responses and payment timelines remain external dependencies.</p>
       </motion.div>
 
       <div className="mt-10 overflow-x-auto pb-4 [scrollbar-width:thin] md:mt-14">
