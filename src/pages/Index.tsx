@@ -2578,23 +2578,23 @@ function FounderNoteSection() {
       <div className={containerClass}>
         <motion.div
           {...revealProps}
-          className="relative overflow-hidden rounded-[4px] border border-[#D5E1E8] bg-[#F3F7F9] px-6 py-8 shadow-[0_18px_50px_rgba(65,92,108,0.08)] sm:px-10 sm:py-10 md:px-16 md:py-14"
+          className="relative overflow-hidden rounded-[4px] border border-[#8B6DFF]/45 bg-[#3120A9] bg-cover bg-center px-6 py-8 text-white shadow-[0_24px_70px_rgba(49,32,169,0.24)] sm:px-10 sm:py-10 md:px-16 md:py-14"
+          style={{ backgroundImage: "url('/founder-note-indigo-strips-a.png')" }}
         >
-          <div className="pointer-events-none absolute -right-20 -top-28 h-72 w-72 rounded-full bg-[#BFD9E8]/35 blur-3xl" aria-hidden="true" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(112deg,rgba(27,16,110,0.12),rgba(49,32,169,0.08)_48%,rgba(13,8,78,0.24))]" aria-hidden="true" />
           <div className="relative grid gap-8 md:grid-cols-[minmax(180px,0.38fr)_minmax(0,1fr)] md:gap-14">
             <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#557386]">A note from the founder</p>
-              <h2 id="founder-note-title" className="mt-4 max-w-[220px] font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.045em] text-[#182026] sm:text-[36px]">
-                At scale, complexity compounds.
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-white/75">A note from the founder</p>
+              <h2 id="founder-note-title" className="mt-4 max-w-[260px] font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.045em] text-white sm:text-[36px]">
+                At scale, “probably accounted for” is not a control.
               </h2>
             </div>
-            <div className="max-w-[720px] text-[15px] leading-7 text-[#435762] sm:text-[16px] sm:leading-8">
-              <p>Transactions multiply, systems diverge, and small deltas become material exposure.</p>
-              <p className="mt-5">A business can have millions of records and still not know with confidence whether its financial reality is complete. And every unresolved variance carries a second cost: the hours required to trace it, explain it, evidence it, and close it.</p>
-              <p className="mt-5">Margin is built for the gap between the two — establishing what happened, quantifying what remains unresolved, determining what the evidence supports, and driving each material exception toward resolution without consuming the same hours from your team.</p>
-              <p className="mt-5 font-lora text-[21px] leading-7 tracking-[-0.025em] text-[#182026] sm:text-[24px] sm:leading-8">Because at scale, “probably accounted for” is not a control.</p>
+            <div className="max-w-[720px] text-[15px] leading-7 text-white/88 sm:text-[16px] sm:leading-8">
+              <p>Businesses can process millions of transactions and still spend hours reconstructing what happened across systems, periods and records.</p>
+              <p className="mt-5">Margin is built to establish what the evidence supports, identify what remains unresolved, and carry material recovery work toward a documented financial outcome.</p>
+              <p className="mt-5 font-lora text-[21px] leading-7 tracking-[-0.025em] text-white sm:text-[24px] sm:leading-8">The objective is simple: give Finance a defensible position without making the team rebuild every investigation itself.</p>
               <button type="button" className={`${landingSecondaryCtaClass} mt-7`} aria-label="Speak with the founder">Speak with the founder <ChevronRight className="h-4 w-4" /></button>
-              <p className="mt-7 border-t border-[#D5E1E8] pt-4 text-[12px] font-semibold tracking-tight text-[#557386]">— Founder &amp; CEO<br /><span className="mt-1 inline-flex items-center gap-1.5 text-[#000000]"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight sm:text-lg">Margin</span></span></p>
+              <p className="mt-7 border-t border-white/30 pt-4 text-[12px] font-semibold tracking-tight text-white/75">— Founder &amp; CEO<br /><span className="mt-1 inline-flex items-center gap-1.5 !text-white"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain brightness-0 invert sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight !text-white sm:text-lg">Margin</span></span></p>
             </div>
           </div>
         </motion.div>
