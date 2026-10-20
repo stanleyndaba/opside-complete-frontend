@@ -77,25 +77,29 @@ function ProofStep({ label, text, index, status, onComplete }: { label: string; 
 export function ProofRequiredVisual({ onComplete }: { onComplete?: () => void }) {
   const reduceMotion = useReducedMotion();
   const [activeStep, setActiveStep] = useState(0);
+  const [supportStage, setSupportStage] = useState<0 | 1 | 2>(0);
   const completedRef = useRef(false);
 
   useEffect(() => {
     if (!reduceMotion || !onComplete || completedRef.current) return;
-    const timer = window.setTimeout(() => {
-      completedRef.current = true;
-      onComplete();
-    }, 2600);
+    const timer = window.setTimeout(() => setSupportStage(1), 2600);
     return () => window.clearTimeout(timer);
   }, [onComplete, reduceMotion]);
 
   const advanceStep = () => {
     if (reduceMotion || completedRef.current) return;
     if (activeStep >= proofSteps.length - 1) {
-      completedRef.current = true;
-      window.setTimeout(() => onComplete?.(), 1200);
+      window.setTimeout(() => setSupportStage(1), 1200);
       return;
     }
     window.setTimeout(() => setActiveStep((current) => current + 1), 420);
+  };
+
+  const completeWhatMarginFound = () => setSupportStage(2);
+  const completeEvidenceContext = () => {
+    if (completedRef.current) return;
+    completedRef.current = true;
+    onComplete?.();
   };
 
   return (
@@ -112,9 +116,9 @@ export function ProofRequiredVisual({ onComplete }: { onComplete?: () => void })
             <div className="mb-3"><p className="mb-2 max-w-[560px] text-[10px] leading-4 tracking-tight text-[#98A5AE]">Settlement and entitlement review · 4 marketplaces · 3 entities · 8 reporting periods · REC-2026-0147 · Cross-marketplace recovery exposure</p><div className="flex flex-wrap gap-2"><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] text-[#182026]">Cross-marketplace exposure</span><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] font-medium text-[#182026]">Evidence under review</span></div></div>
             <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Required documentation</p>
             <div className="mt-2 border-y border-[#E9E9EC] py-1">{proofSteps.map(([label, text], index) => <ProofStep key={label} label={label} text={text} index={index} status={reduceMotion ? "done" : index < activeStep ? "done" : index === activeStep ? "active" : "pending"} onComplete={index === activeStep ? advanceStep : undefined} />)}</div>
-            <div className="mt-3 border-t border-[#E9E9EC] pt-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin already found</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="Margin connected the exposure across US, CA, UK, and DE marketplace activity, three operating entities, settlement periods, fulfillment records, and finance data." /></p></div>
+            {supportStage >= 1 ? <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24 }} className="mt-3 border-t border-[#E9E9EC] pt-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin already found</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="Margin connected the exposure across US, CA, UK, and DE marketplace activity, three operating entities, settlement periods, fulfillment records, and finance data." onComplete={completeWhatMarginFound} /></p></motion.div> : null}
           </div>
-          <div className="px-4 py-3 sm:px-5"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="The evidence record preserves source lineage, operating scope, policy basis, and financial responsibility across the recovery position." /></p></div>
+          <div className="px-4 py-3 sm:px-5">{supportStage >= 2 ? <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24 }}><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="The evidence record preserves source lineage, operating scope, policy basis, and financial responsibility across the recovery position." onComplete={completeEvidenceContext} /></p></motion.div> : null}</div>
         </div>
       </div>
     </motion.section>
