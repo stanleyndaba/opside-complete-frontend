@@ -125,7 +125,7 @@ export function ProofRequiredVisual({ onComplete }: { onComplete?: () => void })
 
   return (
     <motion.section initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} aria-label="Proof required and evidence Margin will assemble" className="w-full px-0 py-5 sm:py-6">
-      <div className="w-full overflow-hidden rounded-[10px] bg-white text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.12)]">
+      <div className="w-full overflow-hidden text-[#182026]">
         <div className="px-4 pb-2.5 pt-3 sm:px-6">
           <p className="text-[10px] text-[#8A99A5]">Proof required</p>
           <h2 className="mt-1 font-normal leading-tight tracking-tight text-[18px] sm:text-[20px]">Evidence Margin will Assemble</h2>
