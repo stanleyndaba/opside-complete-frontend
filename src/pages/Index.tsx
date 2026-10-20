@@ -2578,23 +2578,23 @@ function FounderNoteSection() {
       <div className={containerClass}>
         <motion.div
           {...revealProps}
-          className="relative overflow-hidden rounded-[4px] border border-[#8B6DFF]/45 bg-[#3120A9] bg-cover bg-center px-6 py-8 text-white shadow-[0_24px_70px_rgba(49,32,169,0.24)] sm:px-10 sm:py-10 md:px-16 md:py-14"
+          className="relative overflow-hidden rounded-[4px] border border-[#8B6DFF]/45 bg-[#3120A9] bg-cover bg-center px-5 py-6 text-white shadow-[0_24px_70px_rgba(49,32,169,0.24)] sm:px-10 sm:py-10 md:px-16 md:py-14"
           style={{ backgroundImage: "url('/founder-note-indigo-strips-a.png')" }}
         >
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(112deg,rgba(27,16,110,0.12),rgba(49,32,169,0.08)_48%,rgba(13,8,78,0.24))]" aria-hidden="true" />
-          <div className="relative grid gap-8 md:grid-cols-[minmax(180px,0.38fr)_minmax(0,1fr)] md:gap-14">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_22%_48%,rgba(13,8,78,0.24),transparent_54%),radial-gradient(ellipse_at_76%_52%,rgba(13,8,78,0.12),transparent_62%)]" aria-hidden="true" />
+          <div className="relative grid gap-6 drop-shadow-[0_2px_10px_rgba(13,8,78,0.34)] sm:gap-8 md:grid-cols-[minmax(180px,0.38fr)_minmax(0,1fr)] md:gap-14">
             <div>
               <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-white/75">A note from the founder</p>
-              <h2 id="founder-note-title" className="mt-4 max-w-[260px] font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.045em] text-white sm:text-[36px]">
+              <h2 id="founder-note-title" className="mt-3 max-w-[260px] font-lora text-[30px] font-normal leading-[1.02] tracking-[-0.045em] text-white sm:mt-4 sm:text-[36px] sm:leading-[1.08]">
                 At scale, “probably accounted for” is not a control.
               </h2>
             </div>
-            <div className="max-w-[720px] text-[15px] leading-7 text-white/88 sm:text-[16px] sm:leading-8">
+            <div className="max-w-[720px] text-[15px] leading-6 text-white/88 sm:text-[16px] sm:leading-8">
               <p>Businesses can process millions of transactions and still spend hours reconstructing what happened across systems, periods and records.</p>
-              <p className="mt-5">Margin is built to establish what the evidence supports, identify what remains unresolved, and carry material recovery work toward a documented financial outcome.</p>
-              <p className="mt-5 font-lora text-[21px] leading-7 tracking-[-0.025em] text-white sm:text-[24px] sm:leading-8">The objective is simple: give Finance a defensible position without making the team rebuild every investigation itself.</p>
-              <button type="button" className={`${landingSecondaryCtaClass} mt-7`} aria-label="Speak with the founder">Speak with the founder <ChevronRight className="h-4 w-4" /></button>
-              <p className="mt-7 border-t border-white/30 pt-4 text-[12px] font-semibold tracking-tight text-white/75">— Founder &amp; CEO<br /><span className="mt-1 inline-flex items-center gap-1.5 !text-white"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain brightness-0 invert sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight !text-white sm:text-lg">Margin</span></span></p>
+              <p className="mt-4 sm:mt-5">Margin is built to establish what the evidence supports, identify what remains unresolved, and carry material recovery work toward a documented financial outcome.</p>
+              <p className="mt-4 font-lora text-[21px] leading-6 tracking-[-0.025em] text-white sm:mt-5 sm:text-[24px] sm:leading-8">The objective is simple: give Finance a defensible position without making the team rebuild every investigation itself.</p>
+              <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="Speak with the founder">Speak with the founder <ChevronRight className="h-4 w-4" /></button>
+              <p className="mt-6 border-t border-white/30 pt-3 text-[12px] font-semibold tracking-tight text-white/75 sm:mt-7 sm:pt-4">— Founder &amp; CEO<br /><span className="mt-1 inline-flex items-center gap-1.5 !text-white"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain brightness-0 invert sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight !text-white sm:text-lg">Margin</span></span></p>
             </div>
           </div>
         </motion.div>
