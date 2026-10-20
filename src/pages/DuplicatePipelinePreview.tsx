@@ -328,14 +328,14 @@ function PlatformSimulationStage({ onComplete }: { onComplete: () => void }) {
     return () => window.clearTimeout(timer);
   }, [onComplete, reduceMotion, speed]);
 
-  return <PlatformSimulate speed={speed} />;
+  return <PlatformSimulate speed={speed} tokenSpeed={3} />;
 }
 
 function DocumentOrbitStage({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const timer = window.setTimeout(onComplete, reduceMotion ? 2600 : 11600);
+    const timer = window.setTimeout(onComplete, reduceMotion ? 2600 : 4300);
     return () => window.clearTimeout(timer);
   }, [onComplete, reduceMotion]);
 

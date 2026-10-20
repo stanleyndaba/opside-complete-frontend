@@ -161,12 +161,14 @@ function EvidenceToken({
   tokenIndex,
   reduceMotion,
   speed,
+  tokenSpeed,
 }: {
   integration: Integration;
   label: string;
   tokenIndex: number;
   reduceMotion: boolean;
   speed: number;
+  tokenSpeed: number;
 }) {
   if (reduceMotion) return null;
 
@@ -183,19 +185,22 @@ function EvidenceToken({
         scale: route.map((_, index) => (index >= lastIndex - 1 ? 0.72 : 1)),
       }}
       transition={{
-        duration: 7.2 / speed,
+        duration: 7.2 / tokenSpeed,
         delay: (integration.delay + 1.25 + tokenIndex * 0.78) / speed,
         times: route.map((_, index) => (index === lastIndex ? 1 : (index / (lastIndex - 1)) * 0.9)),
         ease: [0.4, 0, 0.2, 1],
       }}
-      className="pointer-events-none absolute z-40 -translate-x-1/2 -translate-y-1/2 rounded-md border border-gray-300 bg-white px-2 py-1 text-[9px] font-medium text-[#242424]"
+      className="pointer-events-none absolute z-40 -translate-x-1/2 -translate-y-1/2 rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-[10px] font-medium text-[#242424] shadow-[0_6px_16px_rgba(24,32,38,0.1)]"
     >
-      {label}
+      <span className="flex items-center gap-1.5 whitespace-nowrap">
+        <img src={integration.icon} alt="" aria-hidden="true" className="h-4 w-4 shrink-0 object-contain" />
+        <span>{label}</span>
+      </span>
     </motion.div>
   );
 }
 
-const PlatformSimulate = ({ speed = 1 }: { speed?: number }) => {
+const PlatformSimulate = ({ speed = 1, tokenSpeed = speed }: { speed?: number; tokenSpeed?: number }) => {
   const prefersReducedMotion = useReducedMotion();
   const reduceMotion = Boolean(prefersReducedMotion);
   const finalDelay = reduceMotion ? 0 : 11.2 / speed;
@@ -350,6 +355,7 @@ const PlatformSimulate = ({ speed = 1 }: { speed?: number }) => {
               tokenIndex={tokenIndex}
               reduceMotion={reduceMotion}
               speed={speed}
+              tokenSpeed={tokenSpeed}
             />
           )),
         )}
