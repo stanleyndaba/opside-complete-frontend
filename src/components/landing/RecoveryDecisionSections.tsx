@@ -157,8 +157,8 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           <div className="mb-5 flex items-center gap-3">
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">24 / ROUTING</span>
           </div>
-          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>First establish the financial position. Then choose how much responsibility Margin should carry.</h2>
-          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Audit is the underwriting step. It establishes the account&apos;s exposure, evidence position, and recurring pattern before you choose a service. From there, Margin routes the work into a defined recovery closeout or an ongoing financial control layer — so you invest in the operating outcome, not another dashboard.</p>
+          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Engagements designed around your financial operations.</h2>
+          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">Margin scopes each engagement around the financial exposure, evidence requirements, operational complexity, and level of recovery responsibility involved.</p>
         </motion.div>
         <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
           {pathOptions.map((option, index) => {
@@ -192,7 +192,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
                 </div>
               </div>
               <div className="mt-7 pt-2">
-                <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button h-auto min-h-12 w-full max-w-full whitespace-normal break-words rounded-[6px] bg-white px-4 py-3 text-center text-[14px] font-semibold leading-5 text-[#312E81] shadow-sm hover:bg-[#F1F0FF] sm:h-12 sm:w-auto sm:whitespace-nowrap sm:px-6 sm:py-0">
+                <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button inline-flex h-12 min-w-0 w-full max-w-full items-center justify-center whitespace-nowrap rounded-[6px] bg-white px-2 text-center text-[11px] font-semibold leading-5 text-[#312E81] shadow-sm hover:bg-[#F1F0FF] sm:w-auto sm:px-6 sm:text-[14px]">
                   {option.cta}<ChevronRight className="ml-2 h-4 w-4 text-[#312E81]" />
                 </Button>
               </div>
