@@ -62,64 +62,49 @@ const landingSecondaryCtaClass = "landing-pressable flex w-fit h-11 items-center
 
 const faqs = [
   {
-    question: "Does the Recovery Audit cost anything?",
+    question: "Does Margin require Amazon account access for the initial review?",
     answer:
-      "No. The Recovery Audit is free. You can review what Margin found before deciding whether you want any recovery work managed. No payment is required to run the Audit.",
+      "No Amazon account authorization is inherently required to begin a records-based review. Margin can examine the relevant records you provide and assess what they establish about your Amazon financial position. The scope of the review depends on the records available. If additional data or access is needed, Margin will explain what is required and why before proceeding.",
   },
   {
-    question: "What access does Margin need?",
+    question: "What can Margin read, change or submit?",
     answer:
-      "Margin uses read-only access or the relevant Amazon report sources for the Audit. You can see the source coverage used for your result.",
+      "The initial review is based on the records and access agreed for the engagement. Its purpose is to establish the financial position, identify unresolved exceptions, and determine what the available evidence supports. Any additional account permissions, integrations or operational actions are scoped separately. The access granted determines what Margin can technically access or do.",
   },
   {
-    question: "Can Margin submit something without me?",
+    question: "Can Margin submit a recovery without authorization?",
     answer:
-      "Yes, if you enable Auto Submit for qualifying recoveries. Margin submits only findings that pass the configured evidence, policy, and confidence controls. Exceptions, weak evidence, and consequential decisions remain held for your review.",
+      "No. Margin's operating model requires seller approval before a recovery submission is made. Margin investigates the event, assembles the supporting evidence, and prepares the proposed action. The authorized representative retains the decision right over submission and other consequential actions within the agreed engagement.",
   },
   {
-    question: "What happens if Margin does not find anything to handle?",
+    question: "Where are records stored, who can access them, and how long are they retained?",
     answer:
-      "You still receive a clear result: what Margin checked, what appears settled, what may need more evidence or time, and whether there is a sensible next step.",
+      "Margin handles business records according to its applicable privacy and data-handling policies. Access, storage arrangements, retention periods and any third-party processing should be documented in the applicable security and privacy materials. Before providing sensitive records, you should be able to understand where they will be processed, which authorized personnel and service providers may access them, and how long they will be retained. For details applicable to your engagement, contact Margin before submitting records.",
   },
   {
-    question: "How does Recover Once pricing work?",
+    question: "Can I request deletion?",
     answer:
-      "If the Audit identifies a defined recovery Margin can take over, you receive a personalized fixed quote before paid work begins. The scope states what Margin will handle, what you need to approve, and what outcome record you will receive.",
+      "You can contact Margin to request deletion of records associated with your engagement. Requests are subject to applicable contractual obligations, legal requirements and any necessary retention obligations. Margin should confirm the scope of the request, explain any applicable exceptions, and communicate the outcome once the request has been assessed.",
   },
   {
-    question: "What if I want Margin to keep looking?",
+    question: "Are third-party or AI processing services involved?",
     answer:
-      "If the Audit shows recurring recovery work that you want off your team’s plate, Recovery Workspace keeps the evidence, cases, responses, and payout tracking together over time.",
+      "Margin uses software and technical systems to support financial analysis and recovery workflows. Whether a particular engagement involves third-party infrastructure or AI processing depends on the services actually used. Before processing begins, Margin should disclose relevant third-party processing arrangements, the categories of information involved, and applicable data-handling safeguards. Customer records should not be assumed to be excluded from third-party or AI processing unless the applicable arrangements establish that.",
   },
   {
-    question: "What does payout verified mean?",
+    question: "What happens if the evidence is incomplete?",
     answer:
-      "Margin compares the current supported recovery amount with the relevant Amazon approval and settlement records. Partial payments, reversals, and unresolved balances remain visible rather than being treated as complete.",
+      "An incomplete evidence set does not automatically become a recovery claim. Margin identifies the missing information, assesses whether the available records support a conclusion, and distinguishes established findings from unresolved questions. Where further evidence is needed, the position remains qualified until it can be reassessed. Unsupported amounts are not presented as established recoveries. If the available evidence does not justify further action, Margin will explain the limitation and the options, if any, for proceeding.",
   },
   {
-    question: "Can Margin handle the work while we monitor it?",
+    question: "How are Recover Once and the Control Pilot scoped and priced?",
     answer:
-      "Yes. Margin investigates supported opportunities, assembles evidence, prepares approved recovery work, follows responses, and keeps outcomes visible through payout verification. Your team monitors the position and approves consequential actions; Margin carries the operating work between those decisions.",
+      "Margin scopes engagements according to the financial exposure, number and complexity of events, evidence requirements, entities and marketplaces involved, integration needs, and level of operational responsibility required. Recover Once covers a defined financial exposure, from investigation and evidence preparation through authorized recovery work and financial outcome verification within the agreed scope. The Control Pilot addresses a broader or recurring control requirement. It establishes an agreed operating process for financial examination, exception ownership, authorized recovery actions, and reconciliation. Fees are proposed after the scope and deliverables have been established. You receive the proposed scope, fee and engagement terms before committing to paid work.",
   },
   {
-    question: "What happens when Amazon rejects something?",
+    question: "How long does the review take, and which timelines depend on Amazon?",
     answer:
-      "The rejection reason remains visible and Margin identifies the next supported path, such as additional evidence, review, appeal, or reassessment.",
-  },
-  {
-    question: "Can I see the evidence?",
-    answer:
-      "Yes. Margin keeps the records and supporting evidence behind a finding inspectable so you can understand what happened before approving next steps.",
-  },
-  {
-    question: "Does Margin replace my accounting software?",
-    answer:
-      "No. When financial context is needed to establish a recovery, Margin can use relevant supporting records without replacing your accounting system.",
-  },
-  {
-    question: "Can I stop using Margin?",
-    answer:
-      "Yes. Margin is designed to keep your recovery records clear and visible, while you remain in control of the work and any approved actions.",
+      "The review timeline depends on the completeness, quality and volume of the records provided, the scope of the examination, and whether additional evidence is required. Margin will communicate the expected review timeline and identify any dependencies before work begins. Where records are incomplete or clarification is needed, the review may take longer. Recovery submission, Amazon responses, appeals and payment or settlement timing are partly dependent on Amazon and other external parties. Margin manages the agreed follow-through and keeps outstanding actions and unresolved outcomes visible, but cannot guarantee when an external party will respond or release funds.",
   },
 ];
 
