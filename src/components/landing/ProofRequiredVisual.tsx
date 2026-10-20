@@ -3,10 +3,13 @@ import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const proofSteps = [
-  ["Settlement and fee records", "Relevant settlement periods, fee events, reimbursements, reversals, offsets, and Amazon-recognized amounts within the defined scope."],
-  ["Fulfillment and inventory events", "Shipment, receiving, inventory, return, removal, and fulfillment records tied to the affected financial events."],
-  ["Entity and marketplace context", "Account, legal entity, marketplace, currency, reporting period, SKU, order, and shipment identifiers required to establish entitlement."],
-  ["Financial reconciliation records", "Expected entitlement, Amazon response, payout activity, ledger treatment, and remaining variance required to establish the final position."],
+  { label: "Settlement and fee records", text: "Relevant settlement periods, fee events, reimbursements, reversals, offsets, and Amazon-recognized amounts within the defined scope.", highlights: ["settlement periods", "reimbursements, reversals, offsets", "Amazon-recognized amounts"] },
+  { label: "Fulfillment and inventory events", text: "Shipment, receiving, inventory, return, removal, and fulfillment records tied to the affected financial events.", highlights: ["Shipment, receiving, inventory", "affected financial events"] },
+  { label: "Entity and marketplace context", text: "Account, legal entity, marketplace, currency, reporting period, SKU, order, and shipment identifiers required to establish entitlement.", highlights: ["legal entity, marketplace, currency", "shipment identifiers", "establish entitlement"] },
+  { label: "Event identity and source population", text: "Shipment, order, SKU, ASIN, receiving, case, and settlement identifiers required to bind every source record to the same canonical financial event.", highlights: ["every source record", "same canonical financial event"] },
+  { label: "Policy and entitlement basis", text: "Applicable Amazon policy, event dates, reimbursement window, fee basis, valuation method, and eligibility conditions used to test whether recovery is justified.", highlights: ["Applicable Amazon policy", "reimbursement window", "eligibility conditions"] },
+  { label: "Prior response and recovery history", text: "Previous claims, credits, reversals, offsets, Amazon responses, evidence requests, and unresolved residuals required to prevent duplicate recovery.", highlights: ["Previous claims, credits, reversals, offsets", "Amazon responses", "prevent duplicate recovery"] },
+  { label: "Financial reconciliation records", text: "Expected entitlement, Amazon response, payout activity, ledger treatment, and remaining variance required to establish the final position.", highlights: ["Expected entitlement", "remaining variance", "final position"] },
 ] as const;
 
 function TypewriterText({ text, speed = 3, delay = 70, onComplete }: { text: string; speed?: number; delay?: number; onComplete?: () => void }) {
@@ -43,7 +46,24 @@ function TypewriterText({ text, speed = 3, delay = 70, onComplete }: { text: str
   return <span>{visibleText}{!reduceMotion && visibleText.length < text.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</span>;
 }
 
-function ProofStep({ label, text, index, status, onComplete }: { label: string; text: string; index: number; status: "done" | "active" | "pending"; onComplete?: () => void }) {
+function HighlightedProofText({ text, highlights }: { text: string; highlights: readonly string[] }) {
+  const parts: Array<{ text: string; highlighted: boolean }> = [];
+  let cursor = 0;
+  const matches = highlights.flatMap((highlight) => {
+    const start = text.indexOf(highlight);
+    return start >= 0 ? [{ start, end: start + highlight.length }] : [];
+  }).sort((a, b) => a.start - b.start);
+  matches.forEach(({ start, end }) => {
+    if (start < cursor) return;
+    if (start > cursor) parts.push({ text: text.slice(cursor, start), highlighted: false });
+    parts.push({ text: text.slice(start, end), highlighted: true });
+    cursor = end;
+  });
+  if (cursor < text.length) parts.push({ text: text.slice(cursor), highlighted: false });
+  return <>{parts.map((part, index) => part.highlighted ? <mark key={`${part.text}-${index}`} className="rounded-[2px] bg-[#DDEBFF] px-0.5 text-[#30343B] [box-decoration-break:clone]">{part.text}</mark> : <span key={`${part.text}-${index}`}>{part.text}</span>)}</>;
+}
+
+function ProofStep({ label, text, highlights, index, status, onComplete }: { label: string; text: string; highlights: readonly string[]; index: number; status: "done" | "active" | "pending"; onComplete?: () => void }) {
   const reduceMotion = useReducedMotion();
   const isVisible = reduceMotion || status !== "pending";
   const isActive = reduceMotion || status === "active";
@@ -68,7 +88,7 @@ function ProofStep({ label, text, index, status, onComplete }: { label: string; 
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p>
-        <p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">{isActive ? <TypewriterText text={text} onComplete={onComplete} /> : text}</p>
+        <p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">{isActive ? <TypewriterText text={text} onComplete={onComplete} /> : status === "done" ? <HighlightedProofText text={text} highlights={highlights} /> : null}</p>
       </div>
     </motion.div>
   );
@@ -89,6 +109,7 @@ export function ProofRequiredVisual({ onComplete }: { onComplete?: () => void })
   const advanceStep = () => {
     if (reduceMotion || completedRef.current) return;
     if (activeStep >= proofSteps.length - 1) {
+      setActiveStep(proofSteps.length);
       window.setTimeout(() => setSupportStage(1), 1200);
       return;
     }
@@ -115,7 +136,7 @@ export function ProofRequiredVisual({ onComplete }: { onComplete?: () => void })
           <div className="border-b border-[#E9E9EC] px-4 py-3 sm:px-5 lg:border-b-0 lg:border-r">
             <div className="mb-3"><p className="mb-2 max-w-[560px] text-[10px] leading-4 tracking-tight text-[#98A5AE]">Settlement and entitlement review · 4 marketplaces · 3 entities · 8 reporting periods · REC-2026-0147 · Cross-marketplace recovery exposure</p><div className="flex flex-wrap gap-2"><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] text-[#182026]">Cross-marketplace exposure</span><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] font-medium text-[#182026]">Evidence under review</span></div></div>
             <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Required documentation</p>
-            <div className="mt-2 border-y border-[#E9E9EC] py-1">{proofSteps.map(([label, text], index) => <ProofStep key={label} label={label} text={text} index={index} status={reduceMotion ? "done" : index < activeStep ? "done" : index === activeStep ? "active" : "pending"} onComplete={index === activeStep ? advanceStep : undefined} />)}</div>
+            <div className="mt-2 border-y border-[#E9E9EC] py-1">{proofSteps.map(({ label, text, highlights }, index) => <ProofStep key={label} label={label} text={text} highlights={highlights} index={index} status={reduceMotion ? "done" : index < activeStep ? "done" : index === activeStep ? "active" : "pending"} onComplete={index === activeStep ? advanceStep : undefined} />)}</div>
             {supportStage >= 1 ? <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24 }} className="mt-3 border-t border-[#E9E9EC] pt-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin already found</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="Margin connected the exposure across US, CA, UK, and DE marketplace activity, three operating entities, settlement periods, fulfillment records, and finance data." onComplete={completeWhatMarginFound} /></p></motion.div> : null}
           </div>
           <div className="px-4 py-3 sm:px-5">{supportStage >= 2 ? <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24 }}><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="The evidence record preserves source lineage, operating scope, policy basis, and financial responsibility across the recovery position." onComplete={completeEvidenceContext} /></p></motion.div> : null}</div>
