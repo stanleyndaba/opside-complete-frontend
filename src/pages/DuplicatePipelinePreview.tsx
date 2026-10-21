@@ -51,6 +51,7 @@ const CLAIMS_DWELL_MS = 4000;
 const ARTIFACT_ANALYSIS_DWELL_MS = 2000;
 const OWNER_HANDOFF_DWELL_MS = 6000;
 const LEARNING_DWELL_MS = 12000;
+const RECOVERY_POSITION_DWELL_MS = 5000;
 
 const cards: Record<TabId, RecordCard[]> = {
   approval: [{ reference: "REC-2026-004817", type: "Governed event cohort", title: "Inbound Receiving Cohort", amount: "$14,832", detail: "Three related inbound events were reconstructed across Amazon receiving, carrier delivery, procurement, inventory movement, and settlement records. Supported exposure is isolated from unresolved items.", meta: "NTH-US-01 · FY2026 Q1 · 3 shipments · 1,240 expected / 1,168 received · ONT8 · LGB8 · PHX7 · 72 units", priority: "Material position", proof: "Sufficiency gate passed", days: "Policy window valid", route: "Seller Central / FBA inventory reimbursement / Controlled inbound cohort", packet: "SP-API snapshot, POD, receiving reports, ERP ledger, settlement clearing", safety: "No duplicate credit identified · clearing test complete", checks: ["Event identity resolved", "Valuation basis verified", "Seller approval required"], status: "Approve controlled action", next: "Approve controlled filing", movement: "Updated 9 minutes ago", docs: ["EvidenceIndex-REC-2026-004817.csv", "ShipmentPopulation-FY2026.json", "ReceivingCohort-ONT8-LGB8-PHX7.csv", "ValuationBasis-REC-2026-004817.xlsx"], tone: "ready" }],
@@ -763,28 +764,39 @@ function ReconciledAnomalies({ cards: anomalyCards }: { cards: RecordCard[] }) {
 
 function RecoveryPositionStage() {
   const reduceMotion = useReducedMotion();
-  const metrics = [
-    { label: "Total value processed", value: "$22.5M", detail: "Financial activity examined by Margin", tone: "text-[#285A86]" },
-    { label: "Potential exposure identified", value: "$184.6K", detail: "Initial discrepancies identified", tone: "text-[#285A86]" },
-    { label: "Evidence-supported exposure", value: "$151.8K", detail: "Supported by available evidence", tone: "text-[#285A86]" },
-    { label: "Verified recovered", value: "$93.6K", detail: "Confirmed financial outcome", tone: "text-[#26704E]" },
-    { label: "Open supported exposure", value: "$58.2K", detail: "Still requires resolution", tone: "text-[#9A651C]" },
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [completedIndex, setCompletedIndex] = useState(-1);
+  const timeline = [
+    { heading: 'Total value processed', amount: '$22.5M', detail: 'Financial activity examined by Margin.', tone: 'text-[#285A86]' },
+    { heading: 'Potential exposure identified', amount: '$184.6K', detail: 'Initial discrepancies identified.', tone: 'text-[#285A86]' },
+    { heading: 'Evidence-supported exposure', amount: '$151.8K', detail: 'Supported by available evidence.', tone: 'text-[#285A86]' },
+    { heading: 'Verified recovered', amount: '$93.6K', detail: 'Confirmed financial outcome.', tone: 'text-[#26704E]' },
+    { heading: 'Open supported exposure', amount: '$58.2K', detail: 'Still requires resolution.', tone: 'text-[#9A651C]' },
+    { heading: 'Disposition of potential exposure', amount: '$184,600 total', detail: 'Recovered $93,600 · Open $58,200 · Not substantiated $32,800.', tone: 'text-[#36404A]' },
   ];
 
+  const revealNext = (index: number) => {
+    setCompletedIndex((current) => Math.max(current, index));
+    window.setTimeout(() => setActiveIndex((current) => Math.max(current, index + 1)), 420);
+  };
+
   return <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} aria-label="Recovery Position portfolio-level financial position" className="w-full px-0 py-8 sm:py-10">
-    <div className="space-y-1"><p className="text-[10px] font-medium uppercase tracking-[0.12em] text-[#7B8A97]">Margin / Financial Control</p><p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Portfolio-level financial position</p><h2 className="font-google-sans text-[22px] font-normal tracking-tight text-[#182026] sm:text-[28px]">Recovery Position</h2><p className="text-[11px] leading-5 tracking-tight text-[#66737F]">Illustrative portfolio summary · All amounts in USD</p><p className="pt-2 text-[12px] font-medium tracking-tight text-[#36404A]">$22.5M examined. $93.6K recovered. $58.2K still unresolved.</p></div>
-    <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-7 md:grid-cols-3 xl:grid-cols-5">
-      {metrics.map((metric, index) => <motion.div key={metric.label} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={reduceMotion ? { duration: 0 } : { delay: index * 0.1, duration: 0.35 }} className="min-w-0"><p className="max-w-[170px] text-[10px] font-semibold uppercase leading-4 tracking-tight text-[#7B8A97]">{metric.label}</p><p className={`mt-2 text-[25px] font-semibold tabular-nums tracking-[-0.04em] ${metric.tone}`}>{metric.value}</p><p className="mt-1 max-w-[180px] text-[10px] leading-4 tracking-tight text-[#66737F]">{metric.detail}</p></motion.div>)}
+    <div className="space-y-1"><p className="text-[10px] font-medium tracking-[0.12em] text-[#7B8A97]">Margin / financial control</p><p className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Portfolio-level financial position</p><h2 className="font-google-sans text-[22px] font-normal tracking-tight text-[#182026] sm:text-[28px]">Portfolio level position</h2><p className="pt-2 text-[12px] font-medium tracking-tight text-[#36404A]">$22.5M examined. $93.6K recovered. $58.2K still unresolved.</p></div>
+    <div className="mt-8 max-w-[980px]">
+      {timeline.map((item, index) => {
+        const visible = reduceMotion || index <= activeIndex;
+        const amountVisible = reduceMotion || index <= completedIndex;
+        const active = !reduceMotion && index === activeIndex;
+        return <motion.div key={item.heading} initial={false} animate={{ opacity: visible ? 1 : 0, height: visible ? 'auto' : 0, y: visible ? 0 : 8 }} transition={{ duration: reduceMotion ? 0 : 0.25 }} className="relative overflow-hidden pl-8">
+          {index < timeline.length - 1 ? <span className="absolute bottom-[-1px] left-[7px] top-5 w-px bg-[#D9E2E7]" aria-hidden="true" /> : null}
+          <span className={`absolute left-0 top-1.5 h-4 w-4 rounded-full border-2 border-white ${index <= activeIndex || reduceMotion ? 'bg-[#285A86]' : 'bg-[#D9E2E7]'} shadow-[0_0_0_1px_#D9E2E7]`} aria-hidden="true" />
+          <div className="pb-7"><h3 className="text-[12px] font-semibold tracking-tight text-[#36404A]">{reduceMotion || index < activeIndex ? item.heading : active ? <FastDuplicateTypewriter text={item.heading} onComplete={() => revealNext(index)} /> : null}</h3>{amountVisible ? <motion.div initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.25 }}><p className={`mt-1 text-[25px] font-semibold tabular-nums tracking-[-0.04em] ${item.tone}`}>{item.amount}</p><p className="mt-1 text-[10px] leading-4 tracking-tight text-[#66737F]">{item.detail}</p>{index === timeline.length - 1 ? <><div className="mt-4 flex h-3 w-full overflow-hidden rounded-[3px] bg-[#EEF1F2]" aria-label="Disposition of potential exposure"><span className="w-[50.7%] bg-[#285A86]" /><span className="w-[31.5%] bg-[#C78B35]" /><span className="w-[17.8%] bg-[#B9C2C7]" /></div><div className="mt-3 grid gap-2 text-[10px] font-medium tracking-tight text-[#66737F] sm:grid-cols-3"><span><i className="mr-1.5 inline-block h-2 w-2 rounded-full bg-[#285A86]" />Recovered: $93,600</span><span><i className="mr-1.5 inline-block h-2 w-2 rounded-full bg-[#C78B35]" />Open: $58,200</span><span><i className="mr-1.5 inline-block h-2 w-2 rounded-full bg-[#B9C2C7]" />Not substantiated: $32,800</span></div></> : null}</motion.div> : null}</div>
+        </motion.div>;
+      })}
     </div>
-    <div className="mt-9 max-w-[1080px]">
-      <div className="flex items-end justify-between gap-4"><p className="text-[11px] font-semibold tracking-tight text-[#36404A]">Disposition of potential exposure</p><p className="text-[11px] font-semibold tabular-nums tracking-tight text-[#66737F]">$184,600 total</p></div>
-      <div className="mt-3 flex h-3 w-full overflow-hidden rounded-[3px] bg-[#EEF1F2]" aria-label="Disposition of potential exposure"><motion.div initial={{ width: 0 }} animate={{ width: "50.7%" }} transition={{ delay: 0.55, duration: reduceMotion ? 0 : 0.8 }} className="bg-[#285A86]" title="Recovered $93,600" /><motion.div initial={{ width: 0 }} animate={{ width: "31.5%" }} transition={{ delay: 0.7, duration: reduceMotion ? 0 : 0.65 }} className="bg-[#C78B35]" title="Open $58,200" /><motion.div initial={{ width: 0 }} animate={{ width: "17.8%" }} transition={{ delay: 0.85, duration: reduceMotion ? 0 : 0.5 }} className="bg-[#B9C2C7]" title="Not substantiated $32,800" /></div>
-      <div className="mt-3 grid gap-2 text-[10px] font-medium tracking-tight text-[#66737F] sm:grid-cols-3"><p><span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-[#285A86]" />Recovered: <strong className="text-[#285A86]">$93,600</strong></p><p><span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-[#C78B35]" />Open: <strong className="text-[#9A651C]">$58,200</strong></p><p><span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-[#B9C2C7]" />Not substantiated: <strong className="text-[#66737F]">$32,800</strong></p></div>
-    </div>
-    <p className="mt-8 max-w-[980px] text-[11px] leading-5 tracking-tight text-[#4D5B66]">Margin distinguishes the value examined from potential exposure, evidence-supported amounts, verified recovery, and unresolved balances. Unsupported amounts are not treated as recoverable claims.</p><p className="mt-2 text-[10px] font-medium tracking-tight text-[#98A5AE]">These are illustrative demo values, not actual Margin performance data.</p>
+    <p className="mt-3 max-w-[980px] text-[11px] leading-5 tracking-tight text-[#4D5B66]">Margin distinguishes the value examined from potential exposure, evidence-supported amounts, verified recovery, and unresolved balances. Unsupported amounts are not treated as recoverable claims.</p><p className="mt-2 text-[10px] font-medium tracking-tight text-[#98A5AE]">These are illustrative demo values, not actual Margin performance data.</p>
   </motion.section>;
 }
-
 export function RecoveryPipelineSequence({ workspaceMode = false }: { workspaceMode?: boolean } = {}) {
   const [stage, setStage] = useState<'register' | 'artifact-analysis' | 'claims'>('register');
   const [activeTab, setActiveTab] = useState<TabId>('approval');
@@ -870,12 +882,12 @@ export default function FilingPipelinePreview() {
           window.setTimeout(() => setIntakeStage('correspondence'), CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS);
           window.setTimeout(() => setIntakeStage('claim-summary'), CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS + CORRESPONDENCE_DWELL_MS);
           window.setTimeout(() => setIntakeStage('recovery-position'), CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS + CORRESPONDENCE_DWELL_MS + CLAIMS_DWELL_MS);
-          window.setTimeout(() => setIntakeStage('learning'), CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS + CORRESPONDENCE_DWELL_MS + (CLAIMS_DWELL_MS * 2));
+          window.setTimeout(() => setIntakeStage('learning'), CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS + CORRESPONDENCE_DWELL_MS + CLAIMS_DWELL_MS + RECOVERY_POSITION_DWELL_MS);
           window.setTimeout(() => {
             setAnalysisComplete(false);
             setIntakeStage('analysis');
             setIntakeCycle((cycle) => cycle + 1);
-          }, CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS + CORRESPONDENCE_DWELL_MS + (CLAIMS_DWELL_MS * 2) + LEARNING_DWELL_MS);
+          }, CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS + CORRESPONDENCE_DWELL_MS + CLAIMS_DWELL_MS + RECOVERY_POSITION_DWELL_MS + LEARNING_DWELL_MS);
         }} /> : null}{intakeStage === "correspondence" ? <AmazonCorrespondenceStage /> : null}<div className={intakeStage === "claims" ? "max-h-24 overflow-x-auto opacity-100 transition-all duration-700 ease-out" : "max-h-0 overflow-hidden opacity-0 transition-all duration-500 ease-out"}><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight transition-colors ${activeTab === item.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>{item.label}</button>)}</div></div><div id="approval-queue" className={intakeStage === "claims" ? "max-h-[12000px] overflow-hidden px-5 py-5 opacity-100 transition-all duration-700 ease-out sm:px-6" : "max-h-0 overflow-hidden px-5 py-0 opacity-0 transition-all duration-500 ease-out sm:px-6"}><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-google-sans text-[14px] font-normal tracking-tight text-[#182026]">{sectionTitle}</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "$186,420" : tab.id === "filing" ? "$94,680" : tab.id === "filed" ? "$312,740" : tab.id === "attention" ? "$58,940" : tab.id === "payout" ? "$146,280" : "$1.84M"}</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "Supported cohort queue. Review evidence sufficiency, materiality, control exceptions, and expected recovery before anything is submitted." : tab.id === "filing" ? "Live submissions with locked packets, receipt capture, response windows, and cross-system financial state." : tab.id === "attention" ? "Control exceptions held before filing because source relationships, valuation, or clearing evidence require resolution." : "Margin keeps the event record, evidence state, Amazon response, settlement truth, and next controlled action connected."}</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{tab.count} governed positions in this queue</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><div className="relative hidden sm:block"><button type="button" onClick={() => setQueueMode(queueMode === "all" ? "priority" : queueMode === "priority" ? "recent" : "all")} className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A]">Review queue: {queueMode === "all" ? "All cases" : queueMode === "priority" ? "Priority first" : "Recently updated"}<ChevronDown className="h-3.5 w-3.5" /></button></div></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={approveCard} />)}{visibleCards.length === 0 ? <div className="rounded-[10px] border border-dashed border-[#D8E3E8] px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}</div></div>{intakeStage === "learning" ? <AccuracyLearningStage /> : null}{intakeStage === "claim-summary" ? <ReconciledAnomalies cards={visibleCards} /> : null}{intakeStage === "recovery-position" ? <RecoveryPositionStage /> : null}</section></div></main>;
 }
 
