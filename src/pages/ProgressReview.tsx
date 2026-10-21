@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { ArrowRight, Check, ChevronDown, Files, Layers3, ListChecks, Mail, Search, SlidersHorizontal, Store, UserRound, Workflow } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, Files, Layers3, ListChecks, Mail, Search, SlidersHorizontal, UserRound, Workflow } from "lucide-react";
 
 type ProgressEvent = {
   type: string;
@@ -76,10 +76,7 @@ export default function ProgressReview() {
         </button>
         <div className="h-9 min-w-0 flex-1 sm:max-w-[460px]" aria-hidden="true" />
         <div className="flex shrink-0 items-center gap-2">
-          <button type="button" onClick={() => setToast("Store controls opened")} className="flex h-9 w-9 items-center justify-center rounded-[6px] text-white/80 transition-colors hover:bg-white/10 hover:text-white" aria-label="Open store controls" title="Store controls">
-            <Store className="h-5 w-5" strokeWidth={1.8} />
-          </button>
-          <button type="button" onClick={() => setToast("13 progress messages")} className="relative flex h-9 w-9 items-center justify-center rounded-[6px] text-white/80 transition-colors hover:bg-white/10 hover:text-white" aria-label="Open messages, 13 unread" title="Messages, 13 unread">
+          <button type="button" onClick={() => setToast("13 progress messages")} className="relative flex h-9 w-9 items-center justify-center rounded-[6px] text-[#7B8790] transition-colors hover:bg-[#F3F6F7] hover:text-[#52616A]" aria-label="Open messages, 13 unread" title="Messages, 13 unread">
             <Mail className="h-5 w-5" strokeWidth={1.8} />
             <span className="absolute -right-1 -top-1 min-w-[24px] rounded-full bg-[#4F46E5] px-1.5 py-0.5 text-center text-[9px] font-bold leading-4 text-white shadow-[0_2px_6px_rgba(31,25,128,0.35)]">13+</span>
           </button>
