@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { ArrowRight, Check, Files, Layers3, ListChecks, Mail, Search, SlidersHorizontal, Store } from "lucide-react";
+import { ArrowRight, Check, Files, Layers3, ListChecks, Mail, Search, SlidersHorizontal, Store, UserRound } from "lucide-react";
 
 type ProgressEvent = {
   type: string;
@@ -67,22 +67,28 @@ export default function ProgressReview() {
   };
   return <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] text-[#182026]">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
-    <header className="sticky top-0 z-30 border-b border-[#DCE8EE] bg-[#FAFAF7]/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 bg-[#FAFAF7]/95 backdrop-blur-sm">
       <div className="mx-auto flex min-h-16 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-6">
-        <button type="button" onClick={() => setToast("Store controls opened")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] text-[#52616A] transition-colors hover:bg-white hover:text-[#0B74DE]" aria-label="Open store controls" title="Store controls">
-          <Store className="h-5 w-5" strokeWidth={1.8} />
+        <button type="button" onClick={() => setToast("Profile controls opened")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#7B8790] transition-colors hover:bg-white hover:text-[#52616A]" aria-label="Open profile controls" title="Profile controls">
+          <UserRound className="h-5 w-5" strokeWidth={1.8} />
         </button>
         <div className="relative min-w-0 flex-1 sm:max-w-[460px]">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A5]" strokeWidth={1.8} />
           <input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} aria-label="Search progress record" placeholder="Search progress record" className="h-9 w-full rounded-[6px] border border-[#DCE8EE] bg-white pl-9 pr-3 text-[12px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A99A5] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/10" />
         </div>
-        <button type="button" onClick={() => setToast("No new progress messages")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] text-[#52616A] transition-colors hover:bg-white hover:text-[#0B74DE]" aria-label="Open messages" title="Messages">
-          <Mail className="h-5 w-5" strokeWidth={1.8} />
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button type="button" onClick={() => setToast("Store controls opened")} className="flex h-9 w-9 items-center justify-center rounded-[6px] text-[#52616A] transition-colors hover:bg-white hover:text-[#0B74DE]" aria-label="Open store controls" title="Store controls">
+            <Store className="h-5 w-5" strokeWidth={1.8} />
+          </button>
+          <button type="button" onClick={() => setToast("13 progress messages")} className="relative flex h-9 w-9 items-center justify-center rounded-[6px] text-[#52616A] transition-colors hover:bg-white hover:text-[#0B74DE]" aria-label="Open messages, 13 unread" title="Messages, 13 unread">
+            <Mail className="h-5 w-5" strokeWidth={1.8} />
+            <span className="absolute -right-1 -top-1 min-w-[24px] rounded-full bg-[#0B74DE] px-1.5 py-0.5 text-center text-[9px] font-bold leading-4 text-white">13+</span>
+          </button>
+        </div>
       </div>
     </header>
     <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
-      <aside aria-label="Progress preview controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
+      <aside aria-label="Progress preview controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] bg-white p-1 sm:w-[52px] sm:p-1.5">
         {assessmentRail.map(({ label, href, icon: Icon }, index) => (
           <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? 'bg-[#D9E0E3] text-[#26333A]' : ''}`}>
             <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} />
@@ -90,7 +96,7 @@ export default function ProgressReview() {
         ))}
       </aside>
       <div className="min-w-0 flex-1">
-        <section id="progress-record" className="rounded-[5px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+        <section id="progress-record" className="rounded-[5px] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
         <div className="mb-4 pb-3"><h1 id="progress-review-title" className="font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Updated Review</h1></div>
         <div className="space-y-1"><div className="text-[12px] font-medium tracking-tight text-[#182026]">EVT-FBA-2026-0001847 · Northstar Commerce LLC · Legal entity NTH-US-01 · Amazon US · FBA</div><div className="text-[11px] font-medium text-[#0B74DE]">The position is tracked from scope acceptance through evidence sufficiency, approval authority, controlled execution, response classification, settlement verification, and residual close state.</div><div className="text-[10px] font-medium text-[#4B5563]">Review period: 01 Jan–31 Mar 2026 · Source run: NTH-US-Q1-2026-0904 · Materiality: operational exception · Close state: partial outcome with residual under watch · Currency: USD</div></div>
         <div id="progress-timeline" className="mt-5 rounded-[8px] border border-[#DCE8EE] bg-white p-2 sm:p-3">
