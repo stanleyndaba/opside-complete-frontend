@@ -853,6 +853,7 @@ export default function FilingPipelinePreview() {
     setIntakeStage('dropzone');
     const documentTimer = window.setTimeout(() => setIntakeStage('documents'), 2000);
     const registerTimer = window.setTimeout(() => setIntakeStage('register'), 5000);
+    const claimsTimer = window.setTimeout(() => setIntakeStage('claims'), 7600);
     const evidenceMatchTimer = window.setTimeout(() => setIntakeStage('evidence-match'), 11200);
     const artifactTimer = window.setTimeout(() => setIntakeStage('artifact-analysis'), 17200);
     // Artifact analysis owns the handoff into correspondence. The following
@@ -861,6 +862,7 @@ export default function FilingPipelinePreview() {
     return () => {
       window.clearTimeout(documentTimer);
       window.clearTimeout(registerTimer);
+      window.clearTimeout(claimsTimer);
       window.clearTimeout(artifactTimer);
       window.clearTimeout(evidenceMatchTimer);
 
