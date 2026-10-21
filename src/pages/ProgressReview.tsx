@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { ArrowRight, Check, Files, Layers3, ListChecks, Mail, Search, SlidersHorizontal, Store, UserRound, Workflow } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, Files, Layers3, ListChecks, Mail, Search, SlidersHorizontal, Store, UserRound, Workflow } from "lucide-react";
 
 type ProgressEvent = {
   type: string;
@@ -67,10 +67,12 @@ export default function ProgressReview() {
   };
   return <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] text-[#182026]">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
-    <header className="sticky top-0 z-30 bg-[#A3ABB0] backdrop-blur-sm">
+    <header className="sticky top-0 z-30 bg-white backdrop-blur-sm">
       <div className="mx-auto flex min-h-16 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-6">
-        <button type="button" onClick={() => setToast("Profile controls opened")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white" aria-label="Open profile controls" title="Profile controls">
-          <UserRound className="h-5 w-5" strokeWidth={1.8} />
+        <button type="button" onClick={() => setToast("Northstar Commerce LLC profile selected")} className="flex h-9 shrink-0 items-center gap-2 rounded-[20px] border border-[#DCE8EE] bg-white px-3 text-[#52616A] transition-colors hover:border-[#B9CBD5] hover:bg-[#FAFCFD]" aria-label="Open Northstar Commerce LLC profile controls" title="Northstar Commerce LLC">
+          <span className="text-[11px] font-medium tracking-tight text-[#36404A]">Northstar Commerce LLC</span>
+          <UserRound className="h-4 w-4 text-[#7B8790]" strokeWidth={1.8} />
+          <ChevronDown className="h-3.5 w-3.5 text-[#7B8790]" strokeWidth={1.8} />
         </button>
         <div className="h-9 min-w-0 flex-1 sm:max-w-[460px]" aria-hidden="true" />
         <div className="flex shrink-0 items-center gap-2">
