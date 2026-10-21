@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { ArrowRight, Bot, Check, Files, Layers3, ListChecks, Mail, Search, SlidersHorizontal, Store, UserRound } from "lucide-react";
+import { ArrowRight, Check, Files, Layers3, ListChecks, Mail, Search, SlidersHorizontal, Store, UserRound, Workflow } from "lucide-react";
 
 type ProgressEvent = {
   type: string;
@@ -15,7 +15,7 @@ const assessmentRail = [
   { label: 'Source register', href: '#progress-record', icon: Layers3 },
   { label: 'Evidence position', href: '#progress-timeline', icon: Files },
   { label: 'Authority boundary', href: '#progress-review-title', icon: SlidersHorizontal },
-  { label: 'Agent', href: '#progress-review-title', icon: Bot },
+  { label: 'Agent', href: '#progress-review-title', icon: Workflow },
 ] as const;
 
 const events: ProgressEvent[] = [
