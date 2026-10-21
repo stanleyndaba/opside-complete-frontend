@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, ChevronRight } from 'lucide-react';
+import { Check, ChevronRight, Files, Layers3, ListChecks, Search, SlidersHorizontal, type LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 type DocumentReferenceProps = { name: string; source: string; icon: string };
@@ -18,41 +18,41 @@ function DocumentReference({ name, source, icon }: DocumentReferenceProps) {
 
 const controlPath = [
   {
-    number: '01',
+    icon: Layers3,
     title: 'Evidence linked',
     metric: '1,842 positions reviewed',
     detail: 'Source lineage established across operational, inventory, settlement, and ledger records.',
     state: 'Established',
   },
   {
-    number: '02',
+    icon: ListChecks,
     title: 'Financial determination',
     metric: 'Supported and held positions separated',
     detail: 'Materiality, attribution, policy basis, and evidence sufficiency tested before action.',
     state: 'Determined',
   },
   {
-    number: '03',
+    icon: Files,
     title: 'Action authorized',
     metric: 'Seller approval required before submission',
     detail: 'The proposed action remains within the approved boundary; model confidence is not permission.',
     state: 'Authorized',
   },
   {
-    number: '04',
+    icon: SlidersHorizontal,
     title: 'Response recorded',
     metric: 'Amazon response linked to the originating event',
     detail: 'Case decisions, response windows, credits, reversals, and settlement treatment preserved.',
     state: 'Recorded',
   },
   {
-    number: '05',
+    icon: Search,
     title: 'Outcome verified',
     metric: 'Credit, payout, and ledger treatment reconciled',
     detail: 'The final position is classified as resolved, partially resolved, or still unresolved.',
     state: 'Verified',
   },
-] as const;
+] satisfies ReadonlyArray<{ icon: LucideIcon; title: string; metric: string; detail: string; state: string }>;
 
 const resolutionChecks = [
   ['Evidence lineage preserved', 'Each material conclusion remains traceable to the source records available at the time of review.'],
@@ -84,8 +84,10 @@ export const AccuracyGraphContent = () => {
         <div className="px-4 py-5 sm:px-8 sm:py-8">
           <div className="relative grid grid-cols-1 gap-0 md:grid-cols-5" aria-label="Decision-to-Resolution Control Path">
             <div className="pointer-events-none absolute left-[18px] top-[18px] bottom-[18px] w-px bg-[#D7E6EE] md:left-[10%] md:right-[10%] md:top-[18px] md:bottom-auto md:h-px md:w-auto" aria-hidden="true" />
-            {controlPath.map((stage, index) => (
-              <div key={stage.number} className="relative min-w-0">
+            {controlPath.map((stage, index) => {
+              const StageIcon = stage.icon;
+              return (
+              <div key={stage.title} className="relative min-w-0">
                 <motion.article
                   initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -93,8 +95,8 @@ export const AccuracyGraphContent = () => {
                   transition={{ delay: index * 0.12, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                   className="relative z-10 flex gap-3 bg-white py-3 md:block md:px-2 md:py-0 md:text-center"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0B74DE] font-google-sans text-[10px] font-semibold text-white md:mx-auto">
-                    {stage.number}
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#52616A] md:mx-auto">
+                    <StageIcon className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
                   </span>
                   <div className="min-w-0 pt-0.5 md:pt-4">
                     <h2 className="font-google-sans text-[12px] font-semibold tracking-tight text-[#182026]">{stage.title}</h2>
@@ -107,7 +109,8 @@ export const AccuracyGraphContent = () => {
                 </motion.article>
                 {index < controlPath.length - 1 ? <ChevronRight className="absolute right-[-10px] top-[12px] z-20 hidden h-4 w-4 text-[#A7C4D5] md:block" aria-hidden="true" /> : null}
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
