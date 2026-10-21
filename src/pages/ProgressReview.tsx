@@ -67,7 +67,7 @@ export default function ProgressReview() {
   };
   return <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] text-[#182026]">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
-    <header className="sticky top-0 z-30 bg-[#5B6670] backdrop-blur-sm">
+    <header className="sticky top-0 z-30 bg-[#879198] backdrop-blur-sm">
       <div className="mx-auto flex min-h-16 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-6">
         <button type="button" onClick={() => setToast("Profile controls opened")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white" aria-label="Open profile controls" title="Profile controls">
           <UserRound className="h-5 w-5" strokeWidth={1.8} />
@@ -88,10 +88,11 @@ export default function ProgressReview() {
       </div>
     </header>
     <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
-      <aside aria-label="Progress preview controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] bg-white p-1 sm:w-[52px] sm:p-1.5">
+      <aside aria-label="Progress preview controls" className="sticky top-[76px] flex w-[220px] shrink-0 flex-col gap-1 rounded-[5px] bg-white p-2">
         {assessmentRail.map(({ label, href, icon: Icon }, index) => (
-          <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? 'bg-[#D9E0E3] text-[#26333A]' : ''}`}>
-            <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} />
+          <a key={label} href={href} title={label} aria-label={label} className={`flex h-10 w-full items-center gap-3 rounded-[5px] px-3 text-[12px] font-medium tracking-tight text-[#52616A] hover:bg-[#F0F3F4] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 ${index === 0 ? 'bg-[#E7ECEE] text-[#26333A]' : ''}`}>
+            <Icon className="h-4 w-4 shrink-0" strokeWidth={1.8} />
+            <span>{label}</span>
           </a>
         ))}
       </aside>
