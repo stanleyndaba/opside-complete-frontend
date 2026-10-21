@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ArrowRight, Check, Files, Layers3, ListChecks, Search, SlidersHorizontal } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import { ArrowRight, Check, Files, Layers3, ListChecks, Mail, Search, SlidersHorizontal, Store } from "lucide-react";
 
 type ProgressEvent = {
   type: string;
@@ -52,6 +52,12 @@ const documentSourceIcons = [
 
 export default function ProgressReview() {
   const [toast, setToast] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const filteredEvents = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return events;
+    return events.filter((event) => [event.type, event.status, event.message, event.date, event.amount, ...event.docs].filter(Boolean).join(" ").toLowerCase().includes(query));
+  }, [searchQuery]);
   const getDocumentIcon = (eventIndex: number, docIndex: number) => {
     return documentSourceIcons[(eventIndex * 3 + docIndex) % documentSourceIcons.length];
   };
@@ -61,6 +67,20 @@ export default function ProgressReview() {
   };
   return <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] text-[#182026]">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
+    <header className="sticky top-0 z-30 border-b border-[#DCE8EE] bg-[#FAFAF7]/95 backdrop-blur-sm">
+      <div className="mx-auto flex min-h-16 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-6">
+        <button type="button" onClick={() => setToast("Store controls opened")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] text-[#52616A] transition-colors hover:bg-white hover:text-[#0B74DE]" aria-label="Open store controls" title="Store controls">
+          <Store className="h-5 w-5" strokeWidth={1.8} />
+        </button>
+        <div className="relative min-w-0 flex-1 sm:max-w-[460px]">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A5]" strokeWidth={1.8} />
+          <input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} aria-label="Search progress record" placeholder="Search progress record" className="h-9 w-full rounded-[6px] border border-[#DCE8EE] bg-white pl-9 pr-3 text-[12px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A99A5] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/10" />
+        </div>
+        <button type="button" onClick={() => setToast("No new progress messages")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] text-[#52616A] transition-colors hover:bg-white hover:text-[#0B74DE]" aria-label="Open messages" title="Messages">
+          <Mail className="h-5 w-5" strokeWidth={1.8} />
+        </button>
+      </div>
+    </header>
     <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
       <aside aria-label="Progress preview controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
         {assessmentRail.map(({ label, href, icon: Icon }, index) => (
@@ -75,11 +95,12 @@ export default function ProgressReview() {
         <div className="space-y-1"><div className="text-[12px] font-medium tracking-tight text-[#182026]">EVT-FBA-2026-0001847 · Northstar Commerce LLC · Legal entity NTH-US-01 · Amazon US · FBA</div><div className="text-[11px] font-medium text-[#0B74DE]">The position is tracked from scope acceptance through evidence sufficiency, approval authority, controlled execution, response classification, settlement verification, and residual close state.</div><div className="text-[10px] font-medium text-[#4B5563]">Review period: 01 Jan–31 Mar 2026 · Source run: NTH-US-Q1-2026-0904 · Materiality: operational exception · Close state: partial outcome with residual under watch · Currency: USD</div></div>
         <div id="progress-timeline" className="mt-5 rounded-[8px] border border-[#DCE8EE] bg-white p-2 sm:p-3">
           <div className="h-[58vh] min-h-[420px] max-h-[760px] overflow-y-auto overscroll-contain pr-1 sm:pr-2">
-          {events.map((event, index) => <article key={`${event.date}-${event.status}`} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
-            {index < events.length - 1 ? <span className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
+          {filteredEvents.map((event, index) => <article key={`${event.date}-${event.status}`} className="relative grid grid-cols-[24px_minmax(0,1fr)] gap-4 py-4 text-[12px] sm:grid-cols-[26px_minmax(0,1fr)]">
+            {index < filteredEvents.length - 1 ? <span className="absolute bottom-[-1px] left-[11px] top-[54px] w-px bg-[#C9D6DE] sm:left-[12px]" aria-hidden="true" /> : null}
             <span className="relative z-10 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded event"><Check className="h-3 w-3 text-white" strokeWidth={3} /></span>
             <div className="min-w-0"><p className="font-medium tracking-tight text-[#182026]">{event.type} · {event.status}</p><p className="mt-1 leading-5 text-[#4D5B66]">{event.message}</p><time className="mt-2 block text-[10px] font-medium tabular-nums tracking-tight text-[#66737F]">{event.date}</time>{event.amount ? <p className="mt-1 font-medium tabular-nums text-[#0B74DE]">Supported amount: {event.amount}</p> : null}<div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[#4B5563]"><span className="text-[11px] font-medium tracking-tight text-[#66737F]">Docs</span>{event.docs.map((doc, docIndex) => <button type="button" key={doc} onClick={() => openDoc(doc)} className="inline-flex items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] hover:text-[#0B74DE]">{(() => { const icon = getDocumentIcon(index, docIndex); return <><img src={icon.src} alt={icon.alt} className="h-4 w-4 object-contain" />{doc}</>; })()}<ArrowRight className="h-3 w-3" /></button>)}</div></div>
           </article>)}
+          {filteredEvents.length === 0 ? <p className="px-3 py-10 text-center text-[12px] text-[#7B8A97]">No progress records match “{searchQuery}”.</p> : null}
           </div>
         </div>
         <div aria-hidden="true" className="h-6 sm:h-8" />
