@@ -15,7 +15,7 @@ const assessmentRail = [
   { label: 'Source register', href: '#progress-record', icon: Layers3 },
   { label: 'Evidence position', href: '#progress-timeline', icon: Files },
   { label: 'Authority boundary', href: '#progress-review-title', icon: SlidersHorizontal },
-  { label: 'Agent', href: '#progress-review-title', icon: Workflow },
+  { label: 'Agent (Cappy)', href: '#progress-review-title', icon: Workflow },
 ] as const;
 
 const events: ProgressEvent[] = [
@@ -92,7 +92,7 @@ export default function ProgressReview() {
           <a key={label} href={href} title={label} aria-label={label} className={`flex h-10 w-full items-center gap-3 rounded-[5px] px-3 text-[12px] font-medium tracking-tight text-[#52616A] hover:bg-[#F0F3F4] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 ${index === 0 ? 'bg-[#E7ECEE] text-[#26333A]' : ''}`}>
             <Icon className="h-4 w-4 shrink-0" strokeWidth={1.8} />
             <span>{label}</span>
-            {label === 'Agent' ? <span className="ml-1 h-2 w-2 rounded-full bg-[#0B74DE]" aria-label="Agent online" title="Agent online" /> : null}
+            {label === 'Agent (Cappy)' ? <span className="ml-1 h-2 w-2 rounded-full bg-[#3B82F6]" aria-label="Agent online" title="Agent online" /> : null}
           </a>
         ))}
       </aside>
