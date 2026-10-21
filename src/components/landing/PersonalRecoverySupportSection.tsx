@@ -145,9 +145,10 @@ export function PersonalRecoverySupportSection() {
                     <ArrowUp className="h-4 w-4" strokeWidth={2.2} />
                   </button>
                 </div>
-                <div className="mt-1 flex items-center gap-1.5 px-1.5 text-[#91A3AB] sm:px-2" aria-label="Shared in Slack with one participant">
-                  <img src="/slack-icon-2019.png" alt="Slack" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
-                  <span className="text-[11px]">+1</span>
+                <div className="mt-1 flex items-center gap-0 px-1.5 text-[#91A3AB] sm:px-2" aria-label="Shared in Slack and Excel with one participant">
+                  <img src="/slack-icon-2019.png" alt="Slack" className="relative z-10 h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
+                  <img src="/excel-icon-margin.png" alt="Excel" className="relative z-0 -ml-1 h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
+                  <span className="ml-1 text-[11px]">+1</span>
                 </div>
               </div>
             </div>
