@@ -11,11 +11,11 @@ type ProgressEvent = {
 };
 
 const assessmentRail = [
-  { label: 'Decision record', href: '#progress-review-title', icon: ListChecks },
-  { label: 'Reconciliation bridge', href: '#progress-record', icon: Layers3 },
+  { label: 'Control record', href: '#progress-review-title', icon: ListChecks },
+  { label: 'Source register', href: '#progress-record', icon: Layers3 },
   { label: 'Evidence position', href: '#progress-timeline', icon: Files },
-  { label: 'Decision boundary', href: '#progress-review-title', icon: SlidersHorizontal },
-  { label: 'Next step', href: '#progress-review-title', icon: Search },
+  { label: 'Authority boundary', href: '#progress-review-title', icon: SlidersHorizontal },
+  { label: 'Agent', href: '#progress-review-title', icon: Search },
 ] as const;
 
 const events: ProgressEvent[] = [
@@ -67,22 +67,22 @@ export default function ProgressReview() {
   };
   return <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] text-[#182026]">
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
-    <header className="sticky top-0 z-30 bg-[#FAFAF7]/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 bg-[#5B6670] backdrop-blur-sm">
       <div className="mx-auto flex min-h-16 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-6">
-        <button type="button" onClick={() => setToast("Profile controls opened")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#7B8790] transition-colors hover:bg-white hover:text-[#52616A]" aria-label="Open profile controls" title="Profile controls">
+        <button type="button" onClick={() => setToast("Profile controls opened")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white" aria-label="Open profile controls" title="Profile controls">
           <UserRound className="h-5 w-5" strokeWidth={1.8} />
         </button>
         <div className="relative min-w-0 flex-1 sm:max-w-[460px]">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A5]" strokeWidth={1.8} />
-          <input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} aria-label="Search progress record" placeholder="Search progress record" className="h-9 w-full rounded-[6px] border border-[#DCE8EE] bg-white pl-9 pr-3 text-[12px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A99A5] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/10" />
+          <input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} aria-label="Search progress record" placeholder="Search progress record" className="h-9 w-full rounded-[6px] border border-white/20 bg-white pl-9 pr-3 text-[12px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A99A5] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/10" />
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <button type="button" onClick={() => setToast("Store controls opened")} className="flex h-9 w-9 items-center justify-center rounded-[6px] text-[#52616A] transition-colors hover:bg-white hover:text-[#0B74DE]" aria-label="Open store controls" title="Store controls">
+          <button type="button" onClick={() => setToast("Store controls opened")} className="flex h-9 w-9 items-center justify-center rounded-[6px] text-white/80 transition-colors hover:bg-white/10 hover:text-white" aria-label="Open store controls" title="Store controls">
             <Store className="h-5 w-5" strokeWidth={1.8} />
           </button>
-          <button type="button" onClick={() => setToast("13 progress messages")} className="relative flex h-9 w-9 items-center justify-center rounded-[6px] text-[#52616A] transition-colors hover:bg-white hover:text-[#0B74DE]" aria-label="Open messages, 13 unread" title="Messages, 13 unread">
+          <button type="button" onClick={() => setToast("13 progress messages")} className="relative flex h-9 w-9 items-center justify-center rounded-[6px] text-white/80 transition-colors hover:bg-white/10 hover:text-white" aria-label="Open messages, 13 unread" title="Messages, 13 unread">
             <Mail className="h-5 w-5" strokeWidth={1.8} />
-            <span className="absolute -right-1 -top-1 min-w-[24px] rounded-full bg-[#0B74DE] px-1.5 py-0.5 text-center text-[9px] font-bold leading-4 text-white">13+</span>
+            <span className="absolute -right-1 -top-1 min-w-[24px] rounded-full bg-[#4F46E5] px-1.5 py-0.5 text-center text-[9px] font-bold leading-4 text-white shadow-[0_2px_6px_rgba(31,25,128,0.35)]">13+</span>
           </button>
         </div>
       </div>
