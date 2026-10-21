@@ -115,7 +115,9 @@ export function PersonalRecoverySupportSection() {
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
           <div className="relative overflow-hidden rounded-[12px] bg-white">
-            <div className="min-h-[390px] px-4 py-5 sm:min-h-[470px] sm:px-8 sm:py-8">
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-[58%] bg-[url('/assets/appeals-review-cases-snapshot.webp')] bg-cover bg-[position:center_top] bg-no-repeat opacity-[0.2]" aria-hidden="true" />
+            <div className="pointer-events-none absolute inset-x-0 top-[32%] h-[38%] bg-gradient-to-b from-transparent via-white/80 to-white" aria-hidden="true" />
+            <div className="relative z-10 min-h-[390px] px-4 py-5 sm:min-h-[470px] sm:px-8 sm:py-8">
               <div className="flex min-h-[190px] flex-col justify-end gap-4 sm:min-h-[235px] sm:gap-5">
                 {sentQuestion && (
                   <motion.div key={`sent-${activePrompt}`} initial={{ opacity: 0, y: 8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="flex justify-end">
