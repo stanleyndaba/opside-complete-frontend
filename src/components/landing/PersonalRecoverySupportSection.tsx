@@ -4,19 +4,19 @@ import { ArrowUp, Check, Copy } from "lucide-react";
 
 const prompts = [
   {
-    question: "Why is Margin taking this long to process my recovery?",
-    response: "The recovery is waiting on settlement evidence from the 14 affected transactions. Margin has kept the position open rather than treating the absence of that evidence as a completed recovery.",
-    detail: "Next review · 2 business days",
+    question: "What is the current financial position, and which amount is supported by evidence?",
+    response: "Margin has separated the examined population, supported exposure, credited value, and unresolved balance. The supported amount is tied to the receiving, settlement, and ledger records currently available; amounts that cannot be attributed without a complete evidence chain remain outside the recoverable position.",
+    detail: "Financial position · Evidence basis",
   },
   {
-    question: "Why did Amazon reject this claim? What was missing?",
-    response: "Amazon rejected the first submission because the receiving record did not establish the expected quantity for the affected shipment. Margin has retained the rejection, linked the missing record, and prepared the next justified action.",
-    detail: "Missing · receiving quantity confirmation",
+    question: "What control dependency is preventing this recovery from closing?",
+    response: "The position remains open because the source record required to complete the attribution has not yet been confirmed. Margin has retained the original decision, linked the affected event and response window, and identified the specific evidence or settlement confirmation needed before the balance can move to a verified outcome.",
+    detail: "Open dependency · Evidence or settlement confirmation",
   },
   {
-    question: "What happens next with this recovery?",
-    response: "The case remains under controlled follow-through. Margin will verify the supporting record, confirm whether the evidence threshold is met, and show you the next approval point before anything consequential is submitted.",
-    detail: "Owner · Margin recovery operations",
+    question: "What has Margin authorized, what remains with Finance, and what happens next?",
+    response: "Margin has prepared the supported recovery position and defined the next controlled action within the approved scope. Finance retains the decision right for any consequential submission; Margin will carry the evidence packet, response handling, settlement verification, and unresolved follow-through until the financial outcome is documented.",
+    detail: "Decision boundary · Next controlled action",
   },
 ] as const;
 
