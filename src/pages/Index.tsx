@@ -184,6 +184,8 @@ const accountingSources = [
   { id: "amazon", name: "Amazon SP-API", context: "orders and settlements", src: "/amazon-logo-transparent-circle.png", icon: null },
   { id: "edi", name: "3PL EDI", context: "receiving events", src: null, icon: "edi" },
   { id: "carrier", name: "Carrier events", context: "movement evidence", src: null, icon: "carrier" },
+  { id: "chatgpt", name: "ChatGPT", context: "AI systems", src: "/ai-logos/chatgpt.svg", icon: null },
+  { id: "claude", name: "Claude", context: "AI systems", src: "/ai-logos/claude.svg", icon: null },
   { id: "settlements", name: "Settlement files", context: "payout activity", src: "/gd.png", icon: null },
   { id: "gmail", name: "Gmail", context: "source correspondence", src: "/gmailicon.png", icon: null },
   { id: "outlook", name: "Outlook", context: "finance correspondence", src: "/outlookicon.webp", icon: null },
@@ -198,6 +200,7 @@ const accountingSources = [
 ];
 const accountingIntegrationGroups = [
   { label: "Marketplace and settlement", sourceIds: ["amazon", "settlements"] },
+  { label: "AI systems", sourceIds: ["chatgpt", "claude"] },
   { label: "Operations and logistics", sourceIds: ["edi", "carrier"] },
   { label: "Communication and inboxes", sourceIds: ["gmail", "outlook"] },
   { label: "Files and collaboration", sourceIds: ["onedrive", "googledrive", "dropbox"] },
