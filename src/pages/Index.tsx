@@ -198,7 +198,7 @@ const accountingSources = [
   { id: "sap", name: "SAP", context: "enterprise records", src: "/integration-icons/sap-standalone.png", icon: null },
   { id: "netsuite", name: "Oracle", context: "finance systems", src: "/integration-icons/oracle-standalone.png", icon: null },
   { id: "excel", name: "Excel", context: "finance workbooks", src: "/excel-icon-margin.png", icon: null },
-  { id: "sftp", name: "Files and storage", context: "controlled files", src: "/integration-icons/files-storage-brown.png", icon: null },
+  { id: "sftp", name: "S3 / SFTP", context: "controlled files", src: "/integration-icons/amazon-s3-logo.svg", icon: null },
 ];
 const accountingIntegrationGroups = [
   { label: "Marketplace and settlement", sourceIds: ["amazon", "settlements"] },
