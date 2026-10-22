@@ -1226,12 +1226,12 @@ function ControlSection() {
         <div className="grid items-start gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
           <motion.div {...revealProps} className="lg:sticky lg:top-28">
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">The recovery moves</span> <span className="heading-tone-muted">while you keep the financial position.</span>
+              <span className="heading-tone-dark">Keep the position current.</span>
             </h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              Each recovery stays in a controlled operating position—from evidence review to approval, response, payout, or closure. You see what changed and the next accountable action.
+              Each recovery moves through evidence review, approval, Amazon response, payout, or closure. Margin tracks what changed and identifies the next action.
             </p>
-            <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">The operation advances. Your attention stays on the decisions that matter: what to approve, what to unblock, and what to close.</p>
+            <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">Your attention stays on the decisions that matter: what to approve, what to unblock, and what to close.</p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative overflow-hidden">
