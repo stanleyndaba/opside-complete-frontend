@@ -69,6 +69,13 @@ const socialLinks = [
   }
 ];
 
+const aiSummaryLinks = [
+  { label: 'ChatGPT', href: 'https://chatgpt.com/', src: '/ai-logos/chatgpt.svg' },
+  { label: 'Claude', href: 'https://claude.ai/', src: '/ai-logos/claude.svg' },
+  { label: 'Perplexity', href: 'https://www.perplexity.ai/', src: '/ai-logos/perplexity.svg' },
+  { label: 'Grok', href: 'https://grok.com/', src: '/ai-logos/grok.svg' },
+];
+
 const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
   const className =
     'group inline-flex w-fit items-center text-sm font-normal leading-6 tracking-tight transition-colors duration-200 focus-visible:outline-none';
@@ -220,6 +227,23 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               <p className="mt-4 max-w-[340px] text-sm leading-6 tracking-tight" style={{ color: '#66737F' }}>
                 Margin takes the recovery work off your team’s plate—from investigation and evidence through follow-through and financial close.
               </p>
+              <div className="mt-7 max-w-[330px] border-t border-[#E5EAED] pt-5" aria-label="AI summary options">
+                <p className="text-[11px] font-semibold leading-5 tracking-tight text-[#182026]">Ask AI for a summary of this Margin page</p>
+                <div className="mt-4 flex items-center gap-5">
+                  {aiSummaryLinks.map((ai) => (
+                    <a
+                      key={ai.label}
+                      href={ai.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Ask ${ai.label} for a summary of this Margin page`}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF] focus-visible:ring-offset-2"
+                    >
+                      <img src={ai.src} alt={ai.label} className="h-7 w-7 object-contain" />
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-8">
