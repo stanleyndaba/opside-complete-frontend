@@ -245,7 +245,7 @@ function AccountingEvidenceSection() {
             </h2>
             <p className="mt-6 max-w-[650px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">A shipment, inventory movement, settlement adjustment, or reimbursement may exist across Amazon, your ERP, warehouse systems, carrier records, and finance files—each with its own identifiers, timing, and degree of completeness.</p>
             <p className="mt-4 max-w-[650px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin connects those records around the underlying financial event, preserves source lineage, and shows where the accounts tie out, where they diverge, and what requires action.</p>
-            <Link to="/contact" className="mt-7 inline-flex h-11 items-center gap-2 rounded-[7px] bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] no-underline transition-colors hover:bg-[#5148E5]">Request Custom Integrations <ChevronRight className="h-4 w-4" /></Link>
+            <Link to="/contact" className="mt-7 inline-flex h-11 items-center gap-2 rounded-[7px] bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] no-underline transition-colors hover:bg-[#5148E5]">Discuss your integration requirements <ChevronRight className="h-4 w-4" /></Link>
             <p className="mt-2 max-w-[430px] text-[11px] leading-5 text-[#66737F]">Tell us what needs to connect. We&apos;ll help define the right integration path for your operation.</p>
             <div className="mt-12 max-w-[520px] border-t border-[#DDE3E6]">
               {["Records stay in their systems", "Read-only by default", "Integration paths can be designed around your operation"].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-[#DDE3E6] py-3 text-[13px] text-[#26353D]"><span className="flex h-6 w-6 shrink-0 items-center justify-center text-[#182026]">{index === 0 ? <SearchCheck className="h-4 w-4" /> : index === 1 ? <Landmark className="h-4 w-4" /> : <Database className="h-4 w-4" />}</span>{item}</div>)}
@@ -2623,41 +2623,59 @@ export default function Index() {
       <PublicNavbar variant="light" wide />
 
       <main>
-        {/* Recognition — Is this my problem? */}
+        {/* 01 — What Margin does */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
         <DuplicatePipelineDemoSection />
+
+        {/* 02 — Why the problem matters at scale */}
         <RealityCheckSection />
         <ReconstructionGapSection />
 
-        {/* Diagnosis — Why can’t I reasonably handle this myself? */}
+        {/* 03 — One financial position built from the records */}
         <AccountingEvidenceSection />
         <IngestedDocumentsOutcomeSection />
         <RecoveryWorkStatement />
-
-        {/* Solution — What does Margin actually do? */}
-        <MarginEngineSection />
-        <MarginLifecycleSection />
-        <FinancialControlOperationsSection />
-        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit")} />
-        <PersonalRecoverySupportSection />
-        <NestedRecoveryBrowsers />
-
-        {/* Proof and control — Can I trust it without giving up control? */}
-        <ControlSection />
-        <RecoveryHarnessSection />
-        <RiskSection />
-        <RecoveryOutcomeExplorer />
-        <FinancialReconciliationSection />
-
-        {/* Delegation — Can I stop owning this? */}
-        <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
-        <EnterpriseReviewsSection />
-        <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
         <MarginStandardDeliverableSection />
 
-        <AutoSubmitSection />
-        <FinancialWorkProofSection />
+        {/* 04 — The evidence standard */}
+        <MarginStandardSection />
 
+        {/* 05 — From finding to resolution */}
+        <OneRecoverySection />
+        <FinancialControlOperationsSection />
+        <MarginEngineSection />
+        <MarginLifecycleSection />
+        <MarginOperationSection />
+        <FullRecoveryLoopSection />
+
+        {/* 06 — Recovery moves; Finance retains control */}
+        <ControlSection />
+        <RecoveryHarnessSection />
+        <AutoSubmitSection />
+
+        {/* 07 — Every event stays accountable */}
+        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit")} />
+
+        {/* 08 — Responses update the position */}
+        <RiskSection />
+        <RecoveryOutcomeExplorer />
+
+        {/* 09 — Approval is not reconciliation */}
+        <FinancialReconciliationSection />
+
+        {/* 10 — What changed financially? */}
+        <NestedRecoveryBrowsers />
+        <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
+
+        {/* 11 — Context carries forward */}
+        <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
+
+        {/* 12 — Your team keeps the decisions */}
+        <PersonalRecoverySupportSection />
+
+        {/* 13 — Product and technical proof */}
+        <FinancialWorkProofSection />
+        <EnterpriseReviewsSection />
         {/* Section 14 — Trust / FAQ */}
         <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
@@ -2699,11 +2717,24 @@ export default function Index() {
             </div>
           </div>
         </section>
+
+        {/* Supporting security access remains attached to the response record. */}
+        <section className="sr-only" aria-label="Security and privacy"><Link to="/privacy">Data Privacy &amp; Security</Link></section>
+
+        {/* 14 — Founder conviction */}
         <FounderNoteSection />
+
+        {/* 15 — Engagement options */}
         <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
+
+        {/* 16 — Control Pilot */}
         <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
+
+        {/* 17 — Separate future-facing consumer offer */}
         <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
 
+        {/* Supporting conversion prompts, followed by the decisive final handoff. */}
+        <FooterNestedRecoveryVisual />
         {/* Closing CTA */}
           <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="final-handoff-title">
             <div className={containerClass}>
@@ -2793,7 +2824,8 @@ export default function Index() {
               </div>
             </div>
           </section>
-        </main>
+
+      </main>
         {/* Marketplace coverage — compact trust signal before final delegation */}
         <section className="relative bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-20" aria-labelledby="marketplace-scope-title">
           <div className={containerClass}>
@@ -2813,8 +2845,6 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <FooterNestedRecoveryVisual />
-
       <DemoVideoModal
         open={isDemoOpen}
         onOpenChange={setIsDemoOpen}
