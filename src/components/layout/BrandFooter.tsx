@@ -72,6 +72,7 @@ const socialLinks = [
 const aiSummaryLinks = [
   { label: 'ChatGPT', href: 'https://chatgpt.com/', src: '/ai-logos/chatgpt.svg' },
   { label: 'Claude', href: 'https://claude.ai/', src: '/ai-logos/claude.svg' },
+  { label: 'Gemini', href: 'https://gemini.google.com/', src: '/ai-logos/gemini.svg' },
   { label: 'Perplexity', href: 'https://www.perplexity.ai/', src: '/ai-logos/perplexity.svg' },
   { label: 'Grok', href: 'https://grok.com/', src: '/ai-logos/grok.png' },
 ];
