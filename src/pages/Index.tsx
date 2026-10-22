@@ -1834,7 +1834,7 @@ function AutoSubmitSection() {
             </p>
             <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See controlled execution in action">See controlled execution in action <ChevronRight className="h-4 w-4" /></button>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full shrink-0 lg:w-[360px]">
             <div className="mx-auto h-[330px] w-full max-w-[900px] overflow-hidden rounded-[10px] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[430px] lg:h-[min(54vh,560px)]">
               <iframe title="Auto Submit control" src="/auto-submit-preview" className="h-full w-full border-0 bg-[#E7E9EB]" loading="lazy" />
             </div>
@@ -2707,7 +2707,7 @@ export default function Index() {
         {/* Closing CTA */}
           <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="final-handoff-title">
             <div className={containerClass}>
-              <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:gap-10 lg:pt-16">
+              <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:flex-row lg:gap-10 lg:pt-16">
 
                 {/* Left label */}
                 <motion.div {...revealProps} className="w-full">
@@ -2717,38 +2717,11 @@ export default function Index() {
                   <p className="mt-4 max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Start with the free Audit. Then decide whether Margin should close one supported exposure or keep the account under ongoing financial control.</p>
                   <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>When the next shipment moves tomorrow, you should know who is responsible for what happens to the money.</p>
                   <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You approve submissions and material decisions. Margin carries the investigation, evidence, follow-through, response handling, and settlement verification — with the financial record kept visible.</p>
-                  <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block lg:max-w-none">
-                    <div className="lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.25fr)] lg:gap-10">
-                      <div>
-                        <p className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">Know what happened to your Amazon money.</p>
-                        <p className="mt-3 text-[14px] leading-6 text-[#66737F]">Start with a free financial review. Margin establishes what is accounted for, what remains unresolved, and whether the evidence supports further action.</p>
-                        <p className="mt-3 text-[14px] leading-6 text-[#66737F]">If a material opportunity exists, you can decide whether to delegate a defined recovery or establish an ongoing control process.</p>
-                        <div className="mt-5 space-y-3">
-                          <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start the Free Recovery Audit</Button>
-                          <p className="text-[11px] leading-5 text-[#66737F]">See the financial position before committing to paid recovery work.</p>
-                          <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Discuss Enterprise Control</Button>
-                        </div>
-                      </div>
-                      <div className="mt-6 grid gap-5 border-t border-[#E6EDF1] pt-5 lg:mt-0 lg:grid-cols-2 lg:gap-8 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-                        <div>
-                          <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
-                          <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
-                          <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
-                          <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
-                        </div>
-                        <div>
-                          <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p>
-                          <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
-                          <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
-                          <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+
                 </motion.div>
 
                 {/* Two cards */}
-                <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
+                <div className="grid w-full flex-1 grid-cols-1 gap-3 md:grid-cols-2">
 
                   {/* Card 1 — warm aurora */}
                   <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-[4px] p-6 sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 20% 80%, #d4956a 0%, transparent 55%), radial-gradient(ellipse at 70% 20%, #c9a0c4 0%, transparent 50%), radial-gradient(ellipse at 40% 40%, #d4b896 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #e8c4a0 0%, transparent 45%), linear-gradient(145deg, #cba4b8 0%, #d5b8a0 40%, #c9a888 100%)' }}>
@@ -2780,6 +2753,37 @@ export default function Index() {
                     </div>
                   </motion.div>
 
+                </div>
+
+                <div className="w-full">
+                  <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block lg:max-w-none">
+                    <div className="lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.25fr)] lg:gap-10">
+                      <div>
+                        <p className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">Know what happened to your Amazon money.</p>
+                        <p className="mt-3 text-[14px] leading-6 text-[#66737F]">Start with a free financial review. Margin establishes what is accounted for, what remains unresolved, and whether the evidence supports further action.</p>
+                        <p className="mt-3 text-[14px] leading-6 text-[#66737F]">If a material opportunity exists, you can decide whether to delegate a defined recovery or establish an ongoing control process.</p>
+                        <div className="mt-5 space-y-3">
+                          <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start the Free Recovery Audit</Button>
+                          <p className="text-[11px] leading-5 text-[#66737F]">See the financial position before committing to paid recovery work.</p>
+                          <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Discuss Enterprise Control</Button>
+                        </div>
+                      </div>
+                      <div className="mt-6 grid gap-5 border-t border-[#E6EDF1] pt-5 lg:mt-0 lg:grid-cols-2 lg:gap-8 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+                        <div>
+                          <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
+                          <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
+                          <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
+                          <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
+                        </div>
+                        <div>
+                          <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p>
+                          <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
+                          <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
+                          <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
               </div>
