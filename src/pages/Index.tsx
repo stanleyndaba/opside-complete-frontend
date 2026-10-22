@@ -2707,10 +2707,12 @@ export default function Index() {
         {/* Closing CTA */}
           <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="final-handoff-title">
             <div className={containerClass}>
-              <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:flex-row lg:gap-10 lg:pt-16">
+              <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:pt-16">
+
+                <div className="flex w-full flex-col items-start gap-8 lg:flex-row lg:gap-10">
 
                 {/* Left label */}
-                <motion.div {...revealProps} className="w-full">
+                <motion.div {...revealProps} className="w-full shrink-0 lg:w-[360px]">
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
                     <span className="heading-tone-dark">Secure the financial outcome.</span> <span className="heading-tone-muted">Keep the decision rights.</span>
                   </h2>
@@ -2752,6 +2754,8 @@ export default function Index() {
                       </Button>
                     </div>
                   </motion.div>
+
+                </div>
 
                 </div>
 
