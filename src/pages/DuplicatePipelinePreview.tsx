@@ -862,23 +862,47 @@ const workflowNarrative: Record<string, string> = {
 
 function WorkflowInterlude({ stage }: { stage: string }) {
   const narrative = workflowNarrative[stage] ?? "The financial position is carried forward with its evidence and decision history intact.";
-  const words = narrative.split(" ");
+  const splitNarrative = (text: string) => {
+    const match = text.match(/^(.+?)(,| — | before | so | while | giving | keeping | helping | reducing | showing | from )(.+)$/);
+    if (!match) {
+      const words = text.split(" ");
+      const splitAt = Math.max(1, Math.ceil(words.length / 2));
+      return [words.slice(0, splitAt).join(" "), words.slice(splitAt).join(" ")];
+    }
+    const separator = match[2].trim();
+    const first = match[1].trim();
+    const second = `${separator === "," ? ", " : `${separator} `}${match[3].trim()}`;
+    return [first, second];
+  };
+  const [firstClause, secondClause] = splitNarrative(narrative);
+  const firstWords = firstClause.split(" ");
+  const secondWords = secondClause.split(" ");
+  const [phase, setPhase] = useState<1 | 2>(1);
   const [visibleWords, setVisibleWords] = useState(0);
   useEffect(() => {
+    setPhase(1);
     setVisibleWords(0);
     const timer = window.setInterval(() => {
       setVisibleWords((count) => {
-        if (count >= words.length) {
+        const activeWords = phase === 1 ? firstWords : secondWords;
+        if (count >= activeWords.length) {
           window.clearInterval(timer);
+          if (phase === 1) {
+            window.setTimeout(() => {
+              setPhase(2);
+              setVisibleWords(0);
+            }, 360);
+          }
           return count;
         }
         return count + 1;
       });
-    }, 62);
+    }, 66);
     return () => window.clearInterval(timer);
-  }, [stage, narrative, words.length]);
+  }, [stage, narrative, phase, firstWords.length, secondWords.length]);
+  const activeWords = phase === 1 ? firstWords : secondWords;
   return <motion.div key={stage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }} aria-live="polite" className="flex min-h-[240px] items-center justify-center px-6 py-16 sm:min-h-[360px] sm:px-12">
-    <p className="max-w-3xl text-center font-google-sans text-[18px] font-normal leading-[1.55] tracking-[-0.02em] text-[#26333A] sm:text-[24px]">{words.slice(0, visibleWords).join(" ")}{visibleWords < words.length ? <span className="ml-1 inline-block h-5 w-px animate-pulse bg-[#0B74DE] align-[-2px] sm:h-6" aria-hidden="true" /> : null}</p>
+    <p className="max-w-3xl text-center font-google-sans text-[18px] font-semibold leading-[1.55] tracking-[-0.02em] text-[#26333A] sm:text-[24px]">{phase === 2 ? <><span>{firstClause}</span>{secondClause ? <span className="ml-2">{secondWords.slice(0, visibleWords).join(" ")}</span> : null}</> : firstWords.slice(0, visibleWords).join(" ")}{visibleWords < activeWords.length ? <span className="ml-1 inline-block h-5 w-px animate-pulse bg-[#0B74DE] align-[-2px] sm:h-6" aria-hidden="true" /> : null}</p>
   </motion.div>;
 }
 
@@ -894,7 +918,7 @@ export default function FilingPipelinePreview() {
 
   useEffect(() => {
     setPreEventReady(false);
-    const timer = window.setTimeout(() => setPreEventReady(true), 2600);
+    const timer = window.setTimeout(() => setPreEventReady(true), 3200);
     return () => window.clearTimeout(timer);
   }, [intakeStage]);
 
