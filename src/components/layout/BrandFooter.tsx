@@ -69,12 +69,19 @@ const socialLinks = [
   }
 ];
 
+const aiSummaryPrompt = `Help me understand Margin (https://margin-finance.com/).
+Explore the website to understand what Margin does, how its product works, who it serves, and the financial problems it is designed to solve.
+Explain Margin in clear, practical terms, including how it investigates financial discrepancies, establishes what the available evidence supports, manages authorized recovery work, and reconciles outcomes.
+Help me understand how Margin fits into an Amazon business's existing financial operations, what value it could provide to a seller or finance team, and how it differs from simply identifying or filing reimbursement claims.
+Use the website and any relevant public information to provide context. Distinguish existing capabilities from future ambitions, cite sources where available, and be clear about anything that cannot be verified.
+The goal is to help me build a meaningful understanding of Margin and decide whether it is relevant to my business or interests.`;
+const encodedAiSummaryPrompt = encodeURIComponent(aiSummaryPrompt);
 const aiSummaryLinks = [
-  { label: 'ChatGPT', href: 'https://chatgpt.com/', src: '/ai-logos/chatgpt.svg' },
-  { label: 'Claude', href: 'https://claude.ai/', src: '/ai-logos/claude.svg' },
-  { label: 'Gemini', href: 'https://gemini.google.com/', src: '/ai-logos/gemini.svg' },
-  { label: 'Perplexity', href: 'https://www.perplexity.ai/', src: '/ai-logos/perplexity.svg' },
-  { label: 'Grok', href: 'https://grok.com/', src: '/ai-logos/grok.png' },
+  { label: 'ChatGPT', href: `https://chatgpt.com/?q=${encodedAiSummaryPrompt}`, src: '/ai-logos/chatgpt.svg' },
+  { label: 'Claude', href: `https://claude.ai/new?q=${encodedAiSummaryPrompt}`, src: '/ai-logos/claude.svg' },
+  { label: 'Gemini', href: `https://gemini.google.com/app?prompt=${encodedAiSummaryPrompt}`, src: '/ai-logos/gemini.svg' },
+  { label: 'Perplexity', href: `https://www.perplexity.ai/search/new?q=${encodedAiSummaryPrompt}`, src: '/ai-logos/perplexity.svg' },
+  { label: 'Grok', href: `https://grok.com/?q=${encodedAiSummaryPrompt}`, src: '/ai-logos/grok.png' },
 ];
 
 const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
