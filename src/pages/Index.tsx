@@ -24,6 +24,7 @@ import {
   ChevronRight,
   Landmark,
   Database,
+  FileInput,
   MessagesSquare,
   Monitor,
   PlayCircle,
@@ -180,6 +181,10 @@ function TypewriterPrompt({ text }: { text: string }) {
 }
 
 const accountingSources = [
+  { id: "amazon", name: "Amazon SP-API", context: "orders and settlements", src: "/amazon-logo-transparent-circle.png", icon: null },
+  { id: "edi", name: "3PL EDI", context: "receiving events", src: null, icon: "edi" },
+  { id: "carrier", name: "Carrier events", context: "movement evidence", src: null, icon: "carrier" },
+  { id: "settlements", name: "Settlement files", context: "payout activity", src: "/gd.png", icon: null },
   { id: "gmail", name: "Gmail", context: "source correspondence", src: "/gmailicon.png", icon: null },
   { id: "outlook", name: "Outlook", context: "finance correspondence", src: "/outlookicon.webp", icon: null },
   { id: "onedrive", name: "OneDrive", context: "evidence files", src: "/onedriive.png", icon: null },
@@ -192,6 +197,8 @@ const accountingSources = [
   { id: "sftp", name: "S3 / SFTP", context: "controlled files", src: "/integration-icons/amazons3.jpg", icon: null },
 ];
 const accountingIntegrationGroups = [
+  { label: "Marketplace and settlement", sourceIds: ["amazon", "settlements"] },
+  { label: "Operations and logistics", sourceIds: ["edi", "carrier"] },
   { label: "Communication and inboxes", sourceIds: ["gmail", "outlook"] },
   { label: "Files and collaboration", sourceIds: ["onedrive", "googledrive", "dropbox"] },
   { label: "Accounting and ERP", sourceIds: ["quickbooks", "xero", "sap", "netsuite"] },
@@ -210,7 +217,7 @@ function AccountingIntegrationGrid() {
               <div className="mt-5 flex flex-wrap items-center gap-2.5">
                 {sources.map((source) => source && (
                   <div key={source.id} className="flex h-12 w-12 items-center justify-center border border-[#E3E8EA] bg-white p-2" title={source.name} aria-label={source.name}>
-                    {source.src ? <img src={source.src} alt={source.name} className="h-full w-full object-contain" /> : <Database className="h-6 w-6 text-[#5D707A]" aria-hidden="true" />}
+                    {source.src ? <img src={source.src} alt={source.name} className="h-full w-full object-contain" /> : source.icon === "edi" ? <FileInput className="h-6 w-6 text-[#7C3AED]" aria-hidden="true" /> : <Truck className="h-6 w-6 text-[#D97706]" aria-hidden="true" />}
                   </div>
                 ))}
               </div>
