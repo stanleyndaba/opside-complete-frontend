@@ -1781,11 +1781,11 @@ function MarginStandardDeliverableSection() {
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto max-w-[820px] text-center">
           <h2 id="margin-standard-deliverable-title" className="mx-auto mt-4 max-w-[760px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>
-            <span className="heading-tone-dark">See the financial basis before you decide</span> <span className="heading-tone-muted">what to hand over.</span>
+            <span className="heading-tone-dark">Every finding has a financial basis.</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">A material finding should not arrive as another signal, score, or recovery estimate. Margin converts it into an inspectable financial position: the source evidence, reconstructed event, expected entitlement, accounted-for value, remaining variance, evidence status, confidence, approval state, and next justified action.</p>
-          <p className="mx-auto mt-4 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Finance can inspect the basis, challenge the conclusion, approve the action, and return to the same record when the outcome changes.</p>
-          <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>No vague findings. No unsupported claims. No open question presented as a result.</p>
+          <p className="mx-auto mt-5 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Margin shows the source evidence, expected entitlement, accounted-for value, remaining variance, and next justified action behind each material finding.</p>
+          <p className="mx-auto mt-4 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Finance can inspect the evidence, challenge the conclusion, approve the action, and track the outcome as the position changes.</p>
+          <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>No unsupported claims. No unresolved questions presented as conclusions.</p>
           <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="Inspect the financial basis">Inspect the financial basis <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 w-full max-w-[1040px] sm:mt-10 lg:mt-12">
