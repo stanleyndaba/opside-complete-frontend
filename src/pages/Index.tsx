@@ -1855,7 +1855,7 @@ function FooterNestedRecoveryVisual() {
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Take responsibility for one financial process.</span> <span className="heading-tone-muted">Then the next.</span></h2>
         <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} />
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
-          <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Know what happened to your Amazon money.</p>
+          <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Amazon financial complexity. Under control.</p>
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a free financial review. Margin establishes what is accounted for, what remains unresolved, and whether the evidence supports further action.</p>
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">If a material opportunity exists, you can decide whether to delegate a defined recovery or establish an ongoing control process.</p>
           <div className="mt-5 flex flex-col gap-3">
@@ -2763,7 +2763,7 @@ export default function Index() {
                   <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block lg:max-w-none">
                     <div className="lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.25fr)] lg:gap-10">
                       <div>
-                        <p className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">Know what happened to your Amazon money.</p>
+                        <p className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">Amazon financial complexity. Under control.</p>
                         <p className="mt-3 text-[14px] leading-6 text-[#66737F]">Start with a free financial review. Margin establishes what is accounted for, what remains unresolved, and whether the evidence supports further action.</p>
                         <p className="mt-3 text-[14px] leading-6 text-[#66737F]">If a material opportunity exists, you can decide whether to delegate a defined recovery or establish an ongoing control process.</p>
                         <div className="mt-5 space-y-3">
@@ -2799,7 +2799,7 @@ export default function Index() {
           <div className={containerClass}>
             <div className="grid gap-8 border-y border-[var(--margin-border)] py-8 md:grid-cols-[0.72fr_1.28fr] md:gap-12 md:py-10">
               <motion.div {...revealProps} className="max-w-[520px]">
-                <h2 id="marketplace-scope-title" className="mt-3 max-w-[520px] font-lora text-[30px] font-normal leading-[1.06] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[44px]">Supported FBA marketplaces</h2>
+                <h2 id="marketplace-scope-title" className="mt-3 max-w-[520px] font-lora text-[30px] font-normal leading-[1.06] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[44px]">Across Amazon marketplaces</h2>
                 <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin supports recovery workflows across major Amazon marketplaces in North America, Europe, Asia-Pacific, and selected Middle East regions.</p>
               </motion.div>
               <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="grid border-t border-[var(--margin-border)] sm:grid-cols-2 sm:border-t-0 lg:grid-cols-3">
