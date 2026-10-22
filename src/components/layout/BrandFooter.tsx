@@ -73,7 +73,7 @@ const aiSummaryLinks = [
   { label: 'ChatGPT', href: 'https://chatgpt.com/', src: '/ai-logos/chatgpt.svg' },
   { label: 'Claude', href: 'https://claude.ai/', src: '/ai-logos/claude.svg' },
   { label: 'Perplexity', href: 'https://www.perplexity.ai/', src: '/ai-logos/perplexity.svg' },
-  { label: 'Grok', href: 'https://grok.com/', src: '/ai-logos/grok.svg' },
+  { label: 'Grok', href: 'https://grok.com/', src: '/ai-logos/grok.png' },
 ];
 
 const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
@@ -228,7 +228,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                 Margin takes the recovery work off your team’s plate—from investigation and evidence through follow-through and financial close.
               </p>
               <div className="mt-7 max-w-[330px] border-t border-[#E5EAED] pt-5" aria-label="AI summary options">
-                <p className="text-[11px] font-semibold leading-5 tracking-tight text-[#182026]">Ask AI for a summary of this Margin page</p>
+                <p className="font-google-sans text-[11px] font-semibold leading-5 tracking-tight text-[#182026]">Ask AI for a summary of this page</p>
                 <div className="mt-4 flex items-center gap-5">
                   {aiSummaryLinks.map((ai) => (
                     <a
