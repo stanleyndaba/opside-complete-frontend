@@ -1759,12 +1759,8 @@ function NestedRecoveryBrowsers() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 lg:order-2">
-            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Every recovery position</span> <span className="heading-tone-muted">should close with a financial record.</span></h2>
-            <div className="mt-6 max-w-[560px] space-y-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              <p>From source intake through approval, submission, Amazon response, settlement matching, and final close, Margin keeps the event, evidence, decisions, and accountable actions connected in one governed record.</p>
-              <p>Finance does not have to reconstruct what happened from inboxes, case IDs, spreadsheets, or individual memory. Each position shows what was supported, what was approved, what was paid, what remains unresolved, and who owns the next controlled action.</p>
-            </div>
-            <p className="mt-5 max-w-[560px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>Recovery work becomes a reconciled financial position—not an unclosed case.</p>
+            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Every recovery ends with a record.</span></h2>
+            <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Margin connects the evidence, approvals, Amazon responses, and settlement activity in one accountable record—showing what was recovered, what remains unresolved, and why.</p>
             <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="View a recovery record">View a recovery record <ChevronRight className="h-4 w-4" /></button>
             <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Nested recovery pages">
               {(Object.keys(browsers) as Array<keyof typeof browsers>).map((key) => (
