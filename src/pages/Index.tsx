@@ -1448,11 +1448,10 @@ function OneRecordAnalysisVisual() {
       <div className={containerClass}>
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
           <motion.div {...revealProps} className="flex flex-col justify-center">
-            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">No more spreadsheet archaeology</span> <span className="heading-tone-muted">for one unresolved number.</span></h2>
-            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Every shipment, receiving variance, inventory movement, settlement adjustment, and reimbursement question arrives with its financial position already established.</p>
-            <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Margin connects the underlying records, distinguishes attributable exposure from timing noise and unsupported variance, and gives the right person a defined next action.</p>
+            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Stop rebuilding the case.</span></h2>
+            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Margin establishes the financial position, separates supported exposure from timing differences and unexplained variance, and identifies the next action.</p>
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="Start with your financial records">Start with your financial records <ArrowRight className="h-4 w-4" /></button>
-            <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8">Your team reviews the position. They do not rebuild the case.</p>
+            <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8">Your team reviews the position. They don&apos;t rebuild the case.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative">
             <OneRecordAnalysisVisual />
