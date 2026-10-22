@@ -2680,7 +2680,7 @@ export default function Index() {
         <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
 
         {/* Closing CTA */}
-          <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="final-handoff-title">
+          <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-label="Financial control handoff">
             <div className={containerClass}>
               <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:pt-16">
 
@@ -2688,12 +2688,9 @@ export default function Index() {
 
                 {/* Left label */}
                 <motion.div {...revealProps} className="w-full shrink-0 lg:w-[360px]">
-                  <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
-                    <span className="heading-tone-dark">Secure the financial outcome.</span> <span className="heading-tone-muted">Keep the decision rights.</span>
-                  </h2>
-                  <p className="mt-4 max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Start with the free Audit. Then decide whether Margin should close one supported exposure or keep the account under ongoing financial control.</p>
-                  <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>When the next shipment moves tomorrow, you should know who is responsible for what happens to the money.</p>
-                  <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You approve submissions and material decisions. Margin carries the investigation, evidence, follow-through, response handling, and settlement verification — with the financial record kept visible.</p>
+                  <p className="max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Start with the free Audit. Then decide whether Margin should resolve a supported exposure or manage recovery as an ongoing financial control function.</p>
+                  <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You approve submissions and material decisions. Margin handles the investigation, evidence, follow-through, Amazon responses, and settlement verification—with the financial position kept visible.</p>
+                  <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>Know who&apos;s responsible for what happens to the money.</p>
 
                 </motion.div>
 
