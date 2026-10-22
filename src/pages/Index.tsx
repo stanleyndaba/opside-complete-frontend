@@ -195,18 +195,18 @@ const accountingSources = [
   { id: "dropbox", name: "Dropbox", context: "recovery records", src: "/Dropbox_Icon.svg.png", icon: null },
   { id: "quickbooks", name: "QuickBooks", context: "accounting records", src: "/quickbooks.png", icon: null },
   { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png", icon: null },
-  { id: "sap", name: "SAP", context: "enterprise records", src: "/integration-icons/sap-s4hana.png", icon: null },
-  { id: "netsuite", name: "NetSuite", context: "finance systems", src: "/integration-icons/netsuite.png", icon: null },
+  { id: "sap", name: "SAP", context: "enterprise records", src: "/integration-icons/sap-standalone.png", icon: null },
+  { id: "netsuite", name: "Oracle", context: "finance systems", src: "/integration-icons/oracle-standalone.png", icon: null },
   { id: "excel", name: "Excel", context: "finance workbooks", src: "/excel-icon-margin.png", icon: null },
-  { id: "sftp", name: "S3 / SFTP", context: "controlled files", src: "/integration-icons/amazons3.jpg", icon: null },
+  { id: "sftp", name: "Files and storage", context: "controlled files", src: "/integration-icons/files-storage-brown.png", icon: null },
 ];
 const accountingIntegrationGroups = [
   { label: "Marketplace and settlement", sourceIds: ["amazon", "settlements"] },
   { label: "AI systems", sourceIds: ["chatgpt", "claude"] },
-  { label: "Operations and logistics", sourceIds: ["edi", "carrier"] },
+  { label: "Accounting and ERP", sourceIds: ["quickbooks", "xero", "sap", "netsuite", "excel"] },
   { label: "Communication and inboxes", sourceIds: ["gmail", "outlook", "slack"] },
   { label: "Files and collaboration", sourceIds: ["onedrive", "googledrive", "dropbox"] },
-  { label: "Accounting and ERP", sourceIds: ["quickbooks", "xero", "sap", "netsuite", "excel"] },
+  { label: "Operations and logistics", sourceIds: ["edi", "carrier"] },
   { label: "Controlled data access", sourceIds: ["sftp"] },
 ] as const;
 
