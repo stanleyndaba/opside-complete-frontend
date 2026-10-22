@@ -576,7 +576,7 @@ function DuplicatePipelineDemoSection() {
     <section aria-label="Recovery operations demo" className="relative overflow-hidden bg-white pb-12 pt-10 sm:pb-16 sm:pt-12 md:pb-20 md:pt-16">
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-center sm:mb-10">
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Financial control, built for the complexity of Amazon</h2>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Amazon&apos;s financials are complicated. Your answers shouldn&apos;t be.</h2>
           <p className="mx-auto mt-5 max-w-[820px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">From transaction-level investigation to evidence-backed recovery and settlement reconciliation, Margin gives your business a systematic way to establish what happened and account for every material exception</p>
           <button type="button" className={`${landingSecondaryCtaClass} mt-5`} aria-label="See a sample financial position">See a sample financial position <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
