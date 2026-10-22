@@ -984,18 +984,15 @@ function MarginLifecycleSection() {
             className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
-            <span className="heading-tone-dark">The work moves.</span> <span className="heading-tone-muted">The position stays clear.</span>
+            <span className="heading-tone-dark">From discrepancy to resolution.</span>
           </h2>
         </motion.div>
 
           <motion.p {...revealProps} className="mt-6 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            At enterprise transaction volume, a recovery can cross marketplace settlements, fulfillment events, 3PL receipts, inventory movements, returns, and ledger activity across periods.
+            Margin connects the underlying events, establishes what remains unresolved, and moves supported cases toward the next action.
           </motion.p>
           <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            Margin reconciles those populations into a canonical event, separates supported exposure from items already accounted for or unresolved, and prepares the next controlled action.
-          </motion.p>
-          <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">
-            Finance receives a defined case position. Margin carries the evidence and follow-through.
+            Finance sees the case position. Margin carries the work.
           </motion.p>
           <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See how Margin carries the work">See how Margin carries the work <ChevronRight className="h-4 w-4" /></button>
         </div>
