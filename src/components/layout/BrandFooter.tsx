@@ -236,7 +236,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                 Margin takes the recovery work off your team’s plate—from investigation and evidence through follow-through and financial close.
               </p>
               <div className="mt-7 max-w-[330px] border-t border-[#E5EAED] pt-5" aria-label="AI summary options">
-                <p className="font-google-sans text-[11px] font-semibold leading-5 tracking-tight text-[#182026]">Ask AI for a summary of this page</p>
+                <p className="font-google-sans text-[11px] font-semibold leading-5 tracking-tight text-[#182026]" style={{ fontFamily: "'Google Sans', 'Product Sans', Inter, system-ui, sans-serif" }}>Explore Margin with AI.</p>
                 <div className="mt-4 flex items-center gap-5">
                   {aiSummaryLinks.map((ai) => (
                     <a
