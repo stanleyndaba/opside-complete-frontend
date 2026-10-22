@@ -79,7 +79,7 @@ const encodedAiSummaryPrompt = encodeURIComponent(aiSummaryPrompt);
 const aiSummaryLinks = [
   { label: 'ChatGPT', href: `https://chatgpt.com/?q=${encodedAiSummaryPrompt}`, src: '/ai-logos/chatgpt.svg' },
   { label: 'Claude', href: `https://claude.ai/new?q=${encodedAiSummaryPrompt}`, src: '/ai-logos/claude.svg' },
-  { label: 'Gemini', href: `https://gemini.google.com/app?prompt=${encodedAiSummaryPrompt}`, src: '/ai-logos/gemini.svg' },
+  { label: 'Gemini', href: `https://aistudio.google.com/app/prompts/new_chat?prompt=${encodedAiSummaryPrompt}`, src: '/ai-logos/gemini.svg' },
   { label: 'Perplexity', href: `https://www.perplexity.ai/search/new?q=${encodedAiSummaryPrompt}`, src: '/ai-logos/perplexity.svg' },
   { label: 'Grok', href: `https://grok.com/?q=${encodedAiSummaryPrompt}`, src: '/ai-logos/grok.png' },
 ];
