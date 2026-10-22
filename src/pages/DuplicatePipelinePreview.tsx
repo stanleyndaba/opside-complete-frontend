@@ -839,34 +839,46 @@ export function RecoveryPipelineSequence({ workspaceMode = false }: { workspaceM
   </section>;
 }
 
-const workflowOrientation: Record<string, { label: string; description: string }> = {
-  analysis: { label: "Establishes the position", description: "Margin reads the operating population before drawing conclusions about the account." },
-  findings: { label: "Establishes the financial basis", description: "Margin identifies the account conditions that require examination and control." },
-  "issues-found": { label: "Surfaces the discrepancies", description: "Margin separates potential exposure from ordinary account activity." },
-  "proof-required": { label: "Defines the proof", description: "Margin identifies the records required to support each financial position." },
-  "document-orbit": { label: "Connects the records", description: "Margin brings related source records into one governed financial context." },
-  "platform-simulation": { label: "Maps the operating sources", description: "Margin traces activity across Amazon and the connected business systems." },
-  dropzone: { label: "Receives the evidence", description: "Margin accepts the records needed to examine the identified exposure." },
-  documents: { label: "Reads the supplied records", description: "Margin extracts the relevant fields, references, dates, and amounts from each source." },
-  register: { label: "Builds the evidence register", description: "Margin records what was received, where it came from, and how it can be used." },
-  "evidence-match": { label: "Matches exposure to proof", description: "Margin links each potential recovery position to its supporting source records." },
-  "artifact-analysis": { label: "Tests the financial basis", description: "Margin checks whether the evidence actually supports the proposed position." },
-  "case-build": { label: "Builds the controlled case", description: "Margin turns the supported finding into a documented recovery packet." },
-  claims: { label: "Presents the action for review", description: "Finance sees the supported amount, evidence basis, and approval boundary before anything moves." },
-  handoff: { label: "Routes ownership", description: "Margin carries the case to the responsible team without losing its evidence or decision history." },
-  correspondence: { label: "Manages the external response", description: "Margin tracks the submitted position, response, and remaining external dependency." },
-  "claim-summary": { label: "Verifies the outcome", description: "Margin reconciles the response against the supported position and records what changed." },
-  "recovery-position": { label: "Shows the portfolio position", description: "Margin distinguishes processed value, supported exposure, recovered value, and what remains open." },
-  learning: { label: "Strengthens the next examination", description: "Margin preserves what was found, supported, recovered, and left unresolved for the next review." },
+const workflowNarrative: Record<string, string> = {
+  analysis: "Margin brings the available financial activity into scope, giving Finance a starting point grounded in records rather than assumptions.",
+  findings: "The review identifies where account activity, inventory movements and financial records may require further examination.",
+  "issues-found": "Finance can distinguish discrepancies that warrant investigation from the ordinary activity surrounding them.",
+  "proof-required": "The team can see what must be established before a discrepancy can support a defensible financial position.",
+  "document-orbit": "Connecting documents and transactions gives Finance the context needed to understand an event without reconstructing every relationship from scratch.",
+  "platform-simulation": "Relevant marketplace, operational and accounting records can be considered together, helping Finance investigate beyond an isolated statement or transaction.",
+  dropzone: "Finance supplies the relevant source material so the identified positions can be investigated against the underlying records.",
+  documents: "Dates, quantities, transaction references and amounts are extracted into a form that allows related activity to be examined consistently.",
+  register: "Each source remains traceable, making it easier to distinguish available evidence, missing documentation and information that still needs validation.",
+  "evidence-match": "Findings are matched against relevant source records so Finance can assess which amounts have a defensible basis and which remain uncertain.",
+  "artifact-analysis": "Margin tests the proposed financial position against the available evidence, separating substantiated findings from amounts that cannot yet be supported.",
+  "case-build": "The financial basis, evidence and outstanding requirements are assembled into a documented case, reducing the need for Finance to rebuild the investigation before proceeding.",
+  claims: "The proposed action, amount, evidence and approval boundary are presented together so the responsible person can make an informed decision.",
+  handoff: "The next owner receives the case with its supporting evidence, decision history and outstanding actions intact.",
+  correspondence: "Responses, decisions and outstanding dependencies are tracked against the authorized position, keeping follow-through connected to the original finding.",
+  "claim-summary": "Finance can distinguish amounts actually credited or otherwise confirmed from approvals, expected payments and cases still awaiting resolution.",
+  "recovery-position": "Margin brings examined value, supported exposure, verified recovery and remaining unresolved amounts into one view, showing what changed and what still requires attention.",
+  learning: "The findings, decisions and verified outcomes remain connected, giving future reviews a documented history rather than requiring the team to start its investigation from zero.",
 };
 
-function WorkflowOrientation({ stage }: { stage: string }) {
-  const orientation = workflowOrientation[stage];
-  if (!orientation) return null;
-  return <motion.div key={stage} initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} aria-live="polite" className="border-l-2 border-[#0B74DE] bg-[#F8FAFC] px-4 py-3 sm:px-5">
-    <p className="text-[10px] font-semibold tracking-[0.08em] text-[#0B74DE]">What Margin is doing</p>
-    <p className="mt-1 text-[13px] font-semibold tracking-tight text-[#26333A]">{orientation.label}</p>
-    <p className="mt-0.5 max-w-3xl text-[11px] leading-5 tracking-tight text-[#66737F]">{orientation.description}</p>
+function WorkflowInterlude({ stage }: { stage: string }) {
+  const narrative = workflowNarrative[stage] ?? "The financial position is carried forward with its evidence and decision history intact.";
+  const words = narrative.split(" ");
+  const [visibleWords, setVisibleWords] = useState(0);
+  useEffect(() => {
+    setVisibleWords(0);
+    const timer = window.setInterval(() => {
+      setVisibleWords((count) => {
+        if (count >= words.length) {
+          window.clearInterval(timer);
+          return count;
+        }
+        return count + 1;
+      });
+    }, 62);
+    return () => window.clearInterval(timer);
+  }, [stage, narrative, words.length]);
+  return <motion.div key={stage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }} aria-live="polite" className="flex min-h-[240px] items-center justify-center px-6 py-16 sm:min-h-[360px] sm:px-12">
+    <p className="max-w-3xl text-center font-google-sans text-[18px] font-normal leading-[1.55] tracking-[-0.02em] text-[#26333A] sm:text-[24px]">{words.slice(0, visibleWords).join(" ")}{visibleWords < words.length ? <span className="ml-1 inline-block h-5 w-px animate-pulse bg-[#0B74DE] align-[-2px] sm:h-6" aria-hidden="true" /> : null}</p>
   </motion.div>;
 }
 
@@ -877,16 +889,23 @@ export default function FilingPipelinePreview() {
   const [toast, setToast] = useState<string | null>(null);
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [intakeStage, setIntakeStage] = useState<'analysis' | 'findings' | 'issues-found' | 'proof-required' | 'document-orbit' | 'platform-simulation' | 'dropzone' | 'documents' | 'handoff' | 'register' | 'evidence-match' | 'artifact-analysis' | 'case-build' | 'correspondence' | 'claims' | 'claim-summary' | 'recovery-position' | 'learning'>('analysis');
+  const [preEventReady, setPreEventReady] = useState(false);
   const [intakeCycle, setIntakeCycle] = useState(0);
+
+  useEffect(() => {
+    setPreEventReady(false);
+    const timer = window.setTimeout(() => setPreEventReady(true), 2600);
+    return () => window.clearTimeout(timer);
+  }, [intakeStage]);
 
   useEffect(() => {
     if (!analysisComplete) return;
     setIntakeStage('dropzone');
-    const documentTimer = window.setTimeout(() => setIntakeStage('documents'), 2000);
-    const registerTimer = window.setTimeout(() => setIntakeStage('register'), 5000);
-    const claimsTimer = window.setTimeout(() => setIntakeStage('claims'), 7600);
-    const evidenceMatchTimer = window.setTimeout(() => setIntakeStage('evidence-match'), 11200);
-    const artifactTimer = window.setTimeout(() => setIntakeStage('artifact-analysis'), 17200);
+    const documentTimer = window.setTimeout(() => setIntakeStage('documents'), 5600);
+    const registerTimer = window.setTimeout(() => setIntakeStage('register'), 10200);
+    const claimsTimer = window.setTimeout(() => setIntakeStage('claims'), 15200);
+    const evidenceMatchTimer = window.setTimeout(() => setIntakeStage('evidence-match'), 20200);
+    const artifactTimer = window.setTimeout(() => setIntakeStage('artifact-analysis'), 27200);
     // Artifact analysis owns the handoff into correspondence. The following
     // claims and replay timers are scheduled when that analysis completes so
     // correspondence can appear alone before claims replace it.
@@ -913,7 +932,7 @@ export default function FilingPipelinePreview() {
     setToast("Filing control recorded. Submission is now in progress.");
     window.setTimeout(() => setToast(null), 3200);
   };
-  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6">{intakeStage === "learning" ? null : <aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside>}<section className="min-w-0 flex-1 bg-white"><WorkflowOrientation stage={intakeStage} />{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setIntakeStage('findings')} /></div> : intakeStage === "findings" ? <AuditFindingsStage onComplete={() => setIntakeStage('issues-found')} /> : intakeStage === "issues-found" ? <IssuesFoundStage onComplete={() => setIntakeStage('proof-required')} /> : intakeStage === "proof-required" ? <ProofRequiredStage onComplete={() => setIntakeStage('document-orbit')} /> : intakeStage === "document-orbit" ? <DocumentOrbitStage onComplete={() => setIntakeStage('platform-simulation')} /> : intakeStage === "platform-simulation" ? <PlatformSimulationStage onComplete={() => setAnalysisComplete(true)} /> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "evidence-match" ? <EvidenceMatchStage /> : intakeStage === "handoff" ? <TeamHandoffStage /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => setIntakeStage('case-build')} /> : intakeStage === "case-build" ? <ReportGenerationStage onComplete={() => {
+  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6">{intakeStage === "learning" ? null : <aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside>}<section className="min-w-0 flex-1 bg-white">{preEventReady ? <>{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setIntakeStage('findings')} /></div> : intakeStage === "findings" ? <AuditFindingsStage onComplete={() => setIntakeStage('issues-found')} /> : intakeStage === "issues-found" ? <IssuesFoundStage onComplete={() => setIntakeStage('proof-required')} /> : intakeStage === "proof-required" ? <ProofRequiredStage onComplete={() => setIntakeStage('document-orbit')} /> : intakeStage === "document-orbit" ? <DocumentOrbitStage onComplete={() => setIntakeStage('platform-simulation')} /> : intakeStage === "platform-simulation" ? <PlatformSimulationStage onComplete={() => setAnalysisComplete(true)} /> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "evidence-match" ? <EvidenceMatchStage /> : intakeStage === "handoff" ? <TeamHandoffStage /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => setIntakeStage('case-build')} /> : intakeStage === "case-build" ? <ReportGenerationStage onComplete={() => {
           setIntakeStage('claims');
           window.setTimeout(() => setIntakeStage('handoff'), CLAIMS_DWELL_MS);
           window.setTimeout(() => setIntakeStage('correspondence'), CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS);
@@ -925,7 +944,7 @@ export default function FilingPipelinePreview() {
             setIntakeStage('analysis');
             setIntakeCycle((cycle) => cycle + 1);
           }, CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS + CORRESPONDENCE_DWELL_MS + CLAIMS_DWELL_MS + RECOVERY_POSITION_DWELL_MS + LEARNING_DWELL_MS);
-        }} /> : null}{intakeStage === "correspondence" ? <AmazonCorrespondenceStage /> : null}<div className={intakeStage === "claims" ? "max-h-24 overflow-x-auto opacity-100 transition-all duration-700 ease-out" : "max-h-0 overflow-hidden opacity-0 transition-all duration-500 ease-out"}><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.filter((item) => item.id !== "approval").map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight transition-colors ${activeTab === item.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>{item.label}</button>)}</div></div><div id="approval-queue" className={intakeStage === "claims" ? "max-h-[12000px] overflow-hidden px-5 py-5 opacity-100 transition-all duration-700 ease-out sm:px-6" : "max-h-0 overflow-hidden px-5 py-0 opacity-0 transition-all duration-500 ease-out sm:px-6"}><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-google-sans text-[14px] font-normal tracking-tight text-[#182026]">Financial exposure evidence match</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">$186,420</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">Cases with attached evidence are grouped here so Finance can review the exposure, source records, and next controlled action before anything moves forward.</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">Evidence-linked cases</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><div className="relative hidden sm:block"><button type="button" onClick={() => setQueueMode(queueMode === "all" ? "priority" : queueMode === "priority" ? "recent" : "all")} className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A]">Review queue: {queueMode === "all" ? "All cases" : queueMode === "priority" ? "Priority first" : "Recently updated"}<ChevronDown className="h-3.5 w-3.5" /></button></div></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={approveCard} evidenceMatchMode />)}{visibleCards.length === 0 ? <div className="rounded-[10px] border border-dashed border-[#D8E3E8] px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}</div></div>{intakeStage === "learning" ? <AccuracyLearningStage /> : null}{intakeStage === "claim-summary" ? <ReconciledAnomalies cards={visibleCards} /> : null}{intakeStage === "recovery-position" ? <RecoveryPositionStage /> : null}</section></div></main>;
+        }} /> : null}{intakeStage === "correspondence" ? <AmazonCorrespondenceStage /> : null}<div className={intakeStage === "claims" ? "max-h-24 overflow-x-auto opacity-100 transition-all duration-700 ease-out" : "max-h-0 overflow-hidden opacity-0 transition-all duration-500 ease-out"}><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.filter((item) => item.id !== "approval").map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight transition-colors ${activeTab === item.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>{item.label}</button>)}</div></div><div id="approval-queue" className={intakeStage === "claims" ? "max-h-[12000px] overflow-hidden px-5 py-5 opacity-100 transition-all duration-700 ease-out sm:px-6" : "max-h-0 overflow-hidden px-5 py-0 opacity-0 transition-all duration-500 ease-out sm:px-6"}><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-google-sans text-[14px] font-normal tracking-tight text-[#182026]">Financial exposure evidence match</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">$186,420</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">Cases with attached evidence are grouped here so Finance can review the exposure, source records, and next controlled action before anything moves forward.</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">Evidence-linked cases</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><div className="relative hidden sm:block"><button type="button" onClick={() => setQueueMode(queueMode === "all" ? "priority" : queueMode === "priority" ? "recent" : "all")} className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A]">Review queue: {queueMode === "all" ? "All cases" : queueMode === "priority" ? "Priority first" : "Recently updated"}<ChevronDown className="h-3.5 w-3.5" /></button></div></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} onApprove={approveCard} evidenceMatchMode />)}{visibleCards.length === 0 ? <div className="rounded-[10px] border border-dashed border-[#D8E3E8] px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}</div></div>{intakeStage === "learning" ? <AccuracyLearningStage /> : null}{intakeStage === "claim-summary" ? <ReconciledAnomalies cards={visibleCards} /> : null}{intakeStage === "recovery-position" ? <RecoveryPositionStage /> : null}</> : <WorkflowInterlude stage={intakeStage} />}</section></div></main>;
 }
 
 export const __previewRecords = cards;
