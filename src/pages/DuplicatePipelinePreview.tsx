@@ -839,6 +839,37 @@ export function RecoveryPipelineSequence({ workspaceMode = false }: { workspaceM
   </section>;
 }
 
+const workflowOrientation: Record<string, { label: string; description: string }> = {
+  analysis: { label: "Establishes the position", description: "Margin reads the operating population before drawing conclusions about the account." },
+  findings: { label: "Establishes the financial basis", description: "Margin identifies the account conditions that require examination and control." },
+  "issues-found": { label: "Surfaces the discrepancies", description: "Margin separates potential exposure from ordinary account activity." },
+  "proof-required": { label: "Defines the proof", description: "Margin identifies the records required to support each financial position." },
+  "document-orbit": { label: "Connects the records", description: "Margin brings related source records into one governed financial context." },
+  "platform-simulation": { label: "Maps the operating sources", description: "Margin traces activity across Amazon and the connected business systems." },
+  dropzone: { label: "Receives the evidence", description: "Margin accepts the records needed to examine the identified exposure." },
+  documents: { label: "Reads the supplied records", description: "Margin extracts the relevant fields, references, dates, and amounts from each source." },
+  register: { label: "Builds the evidence register", description: "Margin records what was received, where it came from, and how it can be used." },
+  "evidence-match": { label: "Matches exposure to proof", description: "Margin links each potential recovery position to its supporting source records." },
+  "artifact-analysis": { label: "Tests the financial basis", description: "Margin checks whether the evidence actually supports the proposed position." },
+  "case-build": { label: "Builds the controlled case", description: "Margin turns the supported finding into a documented recovery packet." },
+  claims: { label: "Presents the action for review", description: "Finance sees the supported amount, evidence basis, and approval boundary before anything moves." },
+  handoff: { label: "Routes ownership", description: "Margin carries the case to the responsible team without losing its evidence or decision history." },
+  correspondence: { label: "Manages the external response", description: "Margin tracks the submitted position, response, and remaining external dependency." },
+  "claim-summary": { label: "Verifies the outcome", description: "Margin reconciles the response against the supported position and records what changed." },
+  "recovery-position": { label: "Shows the portfolio position", description: "Margin distinguishes processed value, supported exposure, recovered value, and what remains open." },
+  learning: { label: "Strengthens the next examination", description: "Margin preserves what was found, supported, recovered, and left unresolved for the next review." },
+};
+
+function WorkflowOrientation({ stage }: { stage: string }) {
+  const orientation = workflowOrientation[stage];
+  if (!orientation) return null;
+  return <motion.div key={stage} initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} aria-live="polite" className="border-l-2 border-[#0B74DE] bg-[#F8FAFC] px-4 py-3 sm:px-5">
+    <p className="text-[10px] font-semibold tracking-[0.08em] text-[#0B74DE]">What Margin is doing</p>
+    <p className="mt-1 text-[13px] font-semibold tracking-tight text-[#26333A]">{orientation.label}</p>
+    <p className="mt-0.5 max-w-3xl text-[11px] leading-5 tracking-tight text-[#66737F]">{orientation.description}</p>
+  </motion.div>;
+}
+
 export default function FilingPipelinePreview() {
   const [activeTab, setActiveTab] = useState<TabId>("approval");
   const [query, setQuery] = useState("");
@@ -882,7 +913,7 @@ export default function FilingPipelinePreview() {
     setToast("Filing control recorded. Submission is now in progress.");
     window.setTimeout(() => setToast(null), 3200);
   };
-  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6">{intakeStage === "learning" ? null : <aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside>}<section className="min-w-0 flex-1 bg-white">{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setIntakeStage('findings')} /></div> : intakeStage === "findings" ? <AuditFindingsStage onComplete={() => setIntakeStage('issues-found')} /> : intakeStage === "issues-found" ? <IssuesFoundStage onComplete={() => setIntakeStage('proof-required')} /> : intakeStage === "proof-required" ? <ProofRequiredStage onComplete={() => setIntakeStage('document-orbit')} /> : intakeStage === "document-orbit" ? <DocumentOrbitStage onComplete={() => setIntakeStage('platform-simulation')} /> : intakeStage === "platform-simulation" ? <PlatformSimulationStage onComplete={() => setAnalysisComplete(true)} /> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "evidence-match" ? <EvidenceMatchStage /> : intakeStage === "handoff" ? <TeamHandoffStage /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => setIntakeStage('case-build')} /> : intakeStage === "case-build" ? <ReportGenerationStage onComplete={() => {
+  return <main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6">{intakeStage === "learning" ? null : <aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside>}<section className="min-w-0 flex-1 bg-white"><WorkflowOrientation stage={intakeStage} />{intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setIntakeStage('findings')} /></div> : intakeStage === "findings" ? <AuditFindingsStage onComplete={() => setIntakeStage('issues-found')} /> : intakeStage === "issues-found" ? <IssuesFoundStage onComplete={() => setIntakeStage('proof-required')} /> : intakeStage === "proof-required" ? <ProofRequiredStage onComplete={() => setIntakeStage('document-orbit')} /> : intakeStage === "document-orbit" ? <DocumentOrbitStage onComplete={() => setIntakeStage('platform-simulation')} /> : intakeStage === "platform-simulation" ? <PlatformSimulationStage onComplete={() => setAnalysisComplete(true)} /> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "evidence-match" ? <EvidenceMatchStage /> : intakeStage === "handoff" ? <TeamHandoffStage /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => setIntakeStage('case-build')} /> : intakeStage === "case-build" ? <ReportGenerationStage onComplete={() => {
           setIntakeStage('claims');
           window.setTimeout(() => setIntakeStage('handoff'), CLAIMS_DWELL_MS);
           window.setTimeout(() => setIntakeStage('correspondence'), CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS);
