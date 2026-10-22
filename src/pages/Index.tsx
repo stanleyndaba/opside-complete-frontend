@@ -189,6 +189,7 @@ const accountingSources = [
   { id: "settlements", name: "Settlement files", context: "payout activity", src: "/gd.png", icon: null },
   { id: "gmail", name: "Gmail", context: "source correspondence", src: "/gmailicon.png", icon: null },
   { id: "outlook", name: "Outlook", context: "finance correspondence", src: "/outlookicon.webp", icon: null },
+  { id: "slack", name: "Slack", context: "team correspondence", src: "/slack-icon-2019.png", icon: null },
   { id: "onedrive", name: "OneDrive", context: "evidence files", src: "/onedriive.png", icon: null },
   { id: "googledrive", name: "Google Drive", context: "shared records", src: "/Driveboy.png", icon: null },
   { id: "dropbox", name: "Dropbox", context: "recovery records", src: "/Dropbox_Icon.svg.png", icon: null },
@@ -196,15 +197,16 @@ const accountingSources = [
   { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png", icon: null },
   { id: "sap", name: "SAP", context: "enterprise records", src: "/integration-icons/sap-s4hana.png", icon: null },
   { id: "netsuite", name: "NetSuite", context: "finance systems", src: "/integration-icons/netsuite.png", icon: null },
+  { id: "excel", name: "Excel", context: "finance workbooks", src: "/excel-icon-margin.png", icon: null },
   { id: "sftp", name: "S3 / SFTP", context: "controlled files", src: "/integration-icons/amazons3.jpg", icon: null },
 ];
 const accountingIntegrationGroups = [
   { label: "Marketplace and settlement", sourceIds: ["amazon", "settlements"] },
   { label: "AI systems", sourceIds: ["chatgpt", "claude"] },
   { label: "Operations and logistics", sourceIds: ["edi", "carrier"] },
-  { label: "Communication and inboxes", sourceIds: ["gmail", "outlook"] },
+  { label: "Communication and inboxes", sourceIds: ["gmail", "outlook", "slack"] },
   { label: "Files and collaboration", sourceIds: ["onedrive", "googledrive", "dropbox"] },
-  { label: "Accounting and ERP", sourceIds: ["quickbooks", "xero", "sap", "netsuite"] },
+  { label: "Accounting and ERP", sourceIds: ["quickbooks", "xero", "sap", "netsuite", "excel"] },
   { label: "Controlled data access", sourceIds: ["sftp"] },
 ] as const;
 
