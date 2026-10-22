@@ -30,13 +30,13 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
   },
   '/pricing': {
     path: '/pricing',
-    title: 'Margin Pricing | Evidence-Ready Amazon Reimbursement Workflows',
+    title: 'Margin Pricing | Engagement-Based Financial Control',
     description:
-      'Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.',
+      'Margin scopes financial examination, recovery, and control work around the position established by the evidence—not software tiers or public prices.',
     canonical: routeUrl('/pricing'),
-    ogTitle: 'Margin Pricing | Evidence-Ready Amazon Reimbursement Workflows',
+    ogTitle: 'Margin Pricing | Engagement-Based Financial Control',
     ogDescription:
-      'Keep your approved recoveries with Margin pricing built around recovery management, evidence workflow, and seller-controlled filing.',
+      'Engagement-based financial examination, recovery, and control work scoped to the position the evidence establishes.',
     ogUrl: routeUrl('/pricing'),
     image: SITE_META.image,
   },
