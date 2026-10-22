@@ -2298,13 +2298,9 @@ function FinancialReconciliationSection() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.76fr_1.24fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
-            <h2 id="financial-reconciliation-title" className="max-w-[560px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Approval is an event.</span> <span className="heading-tone-muted">Reconciliation is financial close.</span></h2>
-            <div className="mt-6 max-w-[580px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
-              <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> An Amazon approval can be recorded as a win before the credit reaches settlement, before it is attributed to the correct entity, or before a reversal or residual balance is identified.</p>
-              <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin reconciles the expected entitlement, Amazon&apos;s decision, settlement credit, payout activity, entity attribution, and downstream ledger evidence. It distinguishes approved value from credited value, credited value from settled value, and settled value from a position that is fully closed.</p>
-            </div>
+            <h2 id="financial-reconciliation-title" className="max-w-[560px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Approved isn&apos;t the same as recovered.</span></h2>
+            <p className="mt-6 max-w-[580px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin tracks each recovery from Amazon&apos;s decision through settlement, payout, and ledger reconciliation—distinguishing approved value from credited value and money fully accounted for.</p>
             <p className="mt-4 max-w-[580px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>The recovery is complete when the books agree.</p>
-            <p className="mt-3 max-w-[580px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Every position resolves to reconciled, residual, reversed, disputed, or held—not simply “paid.”</p>
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See how Margin verifies the outcome">See how Margin verifies the outcome <ArrowRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden">
