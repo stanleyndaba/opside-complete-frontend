@@ -2707,10 +2707,10 @@ export default function Index() {
         {/* Closing CTA */}
           <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="final-handoff-title">
             <div className={containerClass}>
-              <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:flex-row lg:gap-10 lg:pt-16">
+              <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:gap-10 lg:pt-16">
 
                 {/* Left label */}
-                <motion.div {...revealProps} className="w-full shrink-0 lg:w-[560px]">
+                <motion.div {...revealProps} className="w-full">
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
                     <span className="heading-tone-dark">Secure the financial outcome.</span> <span className="heading-tone-muted">Keep the decision rights.</span>
                   </h2>
@@ -2718,7 +2718,7 @@ export default function Index() {
                   <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>When the next shipment moves tomorrow, you should know who is responsible for what happens to the money.</p>
                   <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You approve submissions and material decisions. Margin carries the investigation, evidence, follow-through, response handling, and settlement verification — with the financial record kept visible.</p>
                   <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block lg:max-w-none">
-                    <div className="lg:grid lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-8">
+                    <div className="lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.25fr)] lg:gap-10">
                       <div>
                         <p className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">Know what happened to your Amazon money.</p>
                         <p className="mt-3 text-[14px] leading-6 text-[#66737F]">Start with a free financial review. Margin establishes what is accounted for, what remains unresolved, and whether the evidence supports further action.</p>
@@ -2729,7 +2729,7 @@ export default function Index() {
                           <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Discuss Enterprise Control</Button>
                         </div>
                       </div>
-                      <div className="mt-6 grid gap-5 border-t border-[#E6EDF1] pt-5 lg:mt-0 lg:grid-cols-2 lg:gap-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+                      <div className="mt-6 grid gap-5 border-t border-[#E6EDF1] pt-5 lg:mt-0 lg:grid-cols-2 lg:gap-8 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
                         <div>
                           <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
                           <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
@@ -2748,7 +2748,7 @@ export default function Index() {
                 </motion.div>
 
                 {/* Two cards */}
-                <div className="grid w-full flex-1 grid-cols-1 gap-3 md:grid-cols-2">
+                <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
 
                   {/* Card 1 — warm aurora */}
                   <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-[4px] p-6 sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 20% 80%, #d4956a 0%, transparent 55%), radial-gradient(ellipse at 70% 20%, #c9a0c4 0%, transparent 50%), radial-gradient(ellipse at 40% 40%, #d4b896 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #e8c4a0 0%, transparent 45%), linear-gradient(145deg, #cba4b8 0%, #d5b8a0 40%, #c9a888 100%)' }}>
