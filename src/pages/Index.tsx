@@ -24,7 +24,6 @@ import {
   ChevronRight,
   Landmark,
   Database,
-  FileInput,
   MessagesSquare,
   Monitor,
   PlayCircle,
@@ -33,7 +32,6 @@ import {
   Truck,
   UserCheck,
   Square,
-  X,
 } from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
@@ -193,64 +191,32 @@ const accountingSources = [
   { id: "netsuite", name: "NetSuite", context: "finance systems", src: "/integration-icons/netsuite.png", icon: null },
   { id: "sftp", name: "S3 / SFTP", context: "controlled files", src: "/integration-icons/amazons3.jpg", icon: null },
 ];
-const getAccountingRow = (order: string[]) => order.map((id) => accountingSources.find((source) => source.id === id)!).filter(Boolean);
-const accountingRows = [
-  getAccountingRow(["gmail", "outlook", "onedrive", "googledrive", "dropbox"]),
-  getAccountingRow(["quickbooks", "xero", "sap", "netsuite", "sftp"]),
-];
-const accountingCodeLines = [
-  { number: '1', parts: [['import', 'keyword'], [' { createAdapter } from ', 'plain'], ['"@margin/integrations"', 'string'], [';', 'plain']] },
-  { number: '2', parts: [['import', 'keyword'], [' { normalizeRecord, linkEvidence } from ', 'plain'], ['"@margin/records"', 'string'], [';', 'plain']] },
-  { number: '3', parts: [['const', 'keyword'], [' sources = [', 'plain'], ['gmailAdapter', 'function'], [', ', 'plain'], ['erpAdapter', 'function'], [', ', 'plain'], ['sftpAdapter', 'function'], ['];', 'plain']] },
-  { number: '4', parts: [['const', 'keyword'], [' connectors = sources.map(', 'plain'], ['createAdapter', 'function'], [');', 'plain']] },
-  { number: '5', parts: [['const', 'keyword'], [' events = await ', 'plain'], ['Promise.all', 'function'], ['(connectors.map(loadEvents));', 'plain']] },
-  { number: '6', parts: [['const', 'keyword'], [' records = events.flat().map(', 'plain'], ['normalizeRecord', 'function'], [');', 'plain']] },
-  { number: '7', parts: [['const', 'keyword'], [' linked = ', 'plain'], ['linkEvidence', 'function'], ['(records, { preserveLineage: ', 'plain'], ['true', 'boolean'], [' });', 'plain']] },
-  { number: '8', parts: [['return', 'keyword'], [' ', 'plain'], ['buildPosition', 'function'], ['(linked, { owner: "finance" });', 'plain']] },
-  { number: '9', parts: [['export', 'keyword'], [' default ', 'plain'], ['connectSources', 'function'], [';', 'plain']] },
-  { number: '10', parts: [['function', 'keyword'], [' ', 'plain'], ['loadEvents', 'function'], ['(adapter) { return adapter.read(); }', 'plain']] },
-  { number: '11', parts: [['function', 'keyword'], [' ', 'plain'], ['buildPosition', 'function'], ['(records, policy) {', 'plain']] },
-  { number: '12', parts: [['  return', 'keyword'], [' records.reduce(', 'plain'], ['applyPolicy', 'function'], [', policy);', 'plain']] },
-  { number: '13', parts: [['}', 'keyword'], [';', 'plain']] },
+const accountingIntegrationGroups = [
+  { label: "Communication and inboxes", sourceIds: ["gmail", "outlook"] },
+  { label: "Files and collaboration", sourceIds: ["onedrive", "googledrive", "dropbox"] },
+  { label: "Accounting and ERP", sourceIds: ["quickbooks", "xero", "sap", "netsuite"] },
+  { label: "Controlled data access", sourceIds: ["sftp"] },
 ] as const;
-function AccountingCodeConsole() {
-  const reduceMotion = useReducedMotion();
+
+function AccountingIntegrationGrid() {
   return (
-    <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="accounting-code-editor relative order-2 min-w-0 overflow-hidden lg:order-1">
-      <div className="relative overflow-hidden rounded-[5px] border border-[#E3EAED] bg-white p-2 shadow-[0_18px_48px_rgba(37,73,91,0.12)] sm:rounded-[5px] sm:p-4">
-        <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
-        </div>
-        <div className="flex min-h-0 bg-white">
-          <aside className="hidden w-[126px] shrink-0 border-r border-[#E3EAED] bg-[#F7FAFB] px-3 py-4 sm:block">
-            <p className="mb-3 font-mono text-[8px] uppercase tracking-[0.13em] text-[#8A99A5]">Explorer</p>
-            <div className="space-y-2 font-mono text-[8px] text-[#7A8994]"><p className="text-[#36454D]">▾ margin-control</p><p className="pl-3">▾ src</p><p className="pl-6 text-[#167C80]">▣ reconcile.ts</p><p className="pl-6">□ sources.ts</p><p className="pl-6">□ position.ts</p><p className="pl-3">▸ evidence</p><p className="pl-3">▸ records</p><p className="text-[#A0ABB0]">▾ tests</p></div>
-          </aside>
-          <div className="min-w-0 flex-1 bg-white">
-            <div className="flex h-10 items-center gap-1 overflow-hidden border-b border-[#E3EAED] bg-[#F7FAFB] px-2 font-mono text-[8px] text-[#8A99A5] sm:text-[9px]">{["connect.js", "adapters.js", "position.js", "events.json"].map((tab, index) => <span key={tab} className={`flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-t-[5px] px-2 py-2 ${index === 0 ? "bg-[#EEF2F4] text-[#263438]" : "text-[#8A99A5]"}`}><img src="/javascript-icon.svg" alt="JavaScript" className="h-3.5 w-3.5 shrink-0 rounded-[2px]" /><span className="truncate">{tab}</span><X className="h-3 w-3 shrink-0 opacity-60" aria-label={`Close ${tab}`} /></span>)}</div>
-            <div className="relative overflow-hidden bg-white px-3 py-5 font-mono text-[8px] leading-5 sm:px-5 sm:py-6 sm:text-[9px] sm:leading-6">
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white via-white to-[#F7FAFB]" />
-              <div className="relative min-w-max">
-                {accountingCodeLines.map((line, index) => <motion.div key={line.number} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22 + index * 0.12, duration: 0.25 }} className={`grid grid-cols-[22px_minmax(0,1fr)] gap-3 px-1 ${index === 5 || index === 6 ? "bg-[#EEF2F4]" : ""}`}><span className="select-none text-right text-[#A0ABB0]">{line.number}</span><span>{line.parts.map(([text, tone], partIndex) => <span key={`${line.number}-${partIndex}`} className={tone === 'keyword' ? 'text-[#7C3AED]' : tone === 'string' ? 'text-[#B45309]' : tone === 'function' ? 'text-[#0B74DE]' : tone === 'provider' ? 'text-[#0F766E]' : tone === 'comment' ? 'text-[#5D876A]' : tone === 'boolean' ? 'text-[#C2410C]' : 'text-[#43525A]'}>{text}</span>)}</span></motion.div>)}
-                <div className="absolute left-[42%] top-[54px] z-20 w-[190px] rounded-[5px] border border-[#D7E0E6] bg-white py-1.5 text-[9px] leading-5 text-[#344752] shadow-[0_16px_32px_rgba(24,32,38,0.16)]">{["connectSource()", "normalizeRecord()", "linkEvidence()", "mapSettlement()", "reconcilePosition()", "emitControlEvent()", "assignOwner()"].map((option, index) => <div key={option} className={`px-3 py-0.5 ${index === 2 ? "bg-[#EEF2F4] text-[#263438]" : ""}`}>{option}</div>)}</div>
-                <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.95 }} className="ml-[35px] inline-block h-3.5 w-[5px] translate-y-0.5 bg-[#167C80]" aria-hidden="true" />
+    <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 lg:order-1">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {accountingIntegrationGroups.map((group, groupIndex) => {
+          const sources = group.sourceIds.map((id) => accountingSources.find((source) => source.id === id)).filter(Boolean);
+          return (
+            <motion.div key={group.label} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.14 + groupIndex * 0.08 }} className="min-h-[142px] border border-[#DDE3E6] bg-white p-4 sm:min-h-[158px] sm:p-5">
+              <p className="inline-block bg-[#F3F5F6] px-2 py-1 font-google-sans text-[9px] font-semibold uppercase tracking-tight text-[#71808A]">{group.label}</p>
+              <div className="mt-5 flex flex-wrap items-center gap-2.5">
+                {sources.map((source) => source && (
+                  <div key={source.id} className="flex h-12 w-12 items-center justify-center border border-[#E3E8EA] bg-white p-2" title={source.name} aria-label={source.name}>
+                    {source.src ? <img src={source.src} alt={source.name} className="h-full w-full object-contain" /> : <Database className="h-6 w-6 text-[#5D707A]" aria-hidden="true" />}
+                  </div>
+                ))}
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="relative bg-white pt-8" aria-label="Connected integrations">
-          <div className="pointer-events-none absolute -top-10 inset-x-0 h-16 bg-gradient-to-b from-transparent via-white/90 to-white" aria-hidden="true" />
-          <div className="relative overflow-hidden space-y-2 px-3 pb-3 sm:px-5">
-            {accountingRows.map((row, rowIndex) => {
-              const loopedRow = [...row, ...row, ...row];
-              return <div key={`integration-row-${rowIndex}`} className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)' }}>
-                <motion.div animate={reduceMotion ? { x: 0 } : { x: rowIndex === 0 ? ['0%', '-33.333%'] : ['-33.333%', '0%'] }} transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 26, repeat: Infinity, ease: 'linear' }} className="flex w-max items-center gap-3 px-1 sm:gap-4">
-                  {loopedRow.map((source, index) => <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-12 w-16 shrink-0 items-center justify-center sm:h-14 sm:w-20" title={source.name} aria-label={source.name}>{source.src ? <img src={source.src} alt={source.name} className="h-7 w-7 object-contain mix-blend-multiply sm:h-8 sm:w-8" /> : <Database className="h-7 w-7 text-[#5D707A]" aria-hidden="true" />}</div>)}
-                </motion.div>
-              </div>;
-            })}
-          </div>
-        </div>
+            </motion.div>
+          );
+        })}
       </div>
     </motion.div>
   );
@@ -259,17 +225,21 @@ function AccountingEvidenceSection() {
   return (
     <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F6F8F9] py-10 md:py-16" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
-        <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
-          <AccountingCodeConsole />
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:order-2 lg:pt-2">
-            <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">The records stay in their systems.</span> <span className="heading-tone-muted">The financial truth becomes connected.</span>
+        <div className="grid min-w-0 items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-20 xl:gap-24">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:pt-1">
+            <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71808A]">MCP and native integrations</p>
+            <h2 id="accounting-section-title" className="mt-4 max-w-[620px] font-google-sans text-[39px] leading-[0.98] tracking-[-0.045em] text-[#182026] sm:text-[50px] md:text-[60px]" style={{ fontWeight: 500 }}>
+              <span className="heading-tone-dark">Integrate anything.</span> <span className="heading-tone-muted">The financial truth becomes connected.</span>
             </h2>
             <p className="mt-6 max-w-[650px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">A shipment, inventory movement, settlement adjustment, or reimbursement may exist across Amazon, your ERP, warehouse systems, carrier records, and finance files—each with its own identifiers, timing, and degree of completeness.</p>
             <p className="mt-4 max-w-[650px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin connects those records around the underlying financial event, preserves source lineage, and shows where the accounts tie out, where they diverge, and what requires action.</p>
             <Link to="/contact" className="mt-7 inline-flex h-11 items-center gap-2 rounded-[7px] bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] no-underline transition-colors hover:bg-[#5148E5]">Request Custom Integrations <ChevronRight className="h-4 w-4" /></Link>
             <p className="mt-2 max-w-[430px] text-[11px] leading-5 text-[#66737F]">Tell us what needs to connect. We&apos;ll help define the right integration path for your operation.</p>
+            <div className="mt-12 max-w-[520px] border-t border-[#DDE3E6]">
+              {["Records stay in their systems", "Read-only by default", "Integration paths can be designed around your operation"].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-[#DDE3E6] py-3 text-[13px] text-[#26353D]"><span className="flex h-6 w-6 shrink-0 items-center justify-center text-[#182026]">{index === 0 ? <SearchCheck className="h-4 w-4" /> : index === 1 ? <Landmark className="h-4 w-4" /> : <Database className="h-4 w-4" />}</span>{item}</div>)}
+            </div>
           </motion.div>
+          <AccountingIntegrationGrid />
         </div>
       </div>
     </section>
