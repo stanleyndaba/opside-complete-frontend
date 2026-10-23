@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Check, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
 
@@ -13,35 +13,26 @@ const pathOptions = [
   {
     label: "01 / DEFINED ENGAGEMENT",
     title: "Recover Once",
-    subtitle: "One defined financial exposure. Managed through to a documented outcome.",
-    copy: "Margin establishes what happened, determines what the evidence supports, prepares authorized recovery actions, manages follow-up within scope, and verifies the financial result.",
-    followUp: "Best suited to: a material, bounded exposure that warrants investigation and managed recovery.",
-    itemHeading: "Best suited to",
+    subtitle: "Resolve a defined financial problem, from examination and supporting evidence through authorized action and a documented outcome.",
+    copy: "",
     cta: "Discuss a Recover Once engagement",
     ctaLocation: "homepage_recover_once",
-    items: ["A material, bounded exposure that warrants investigation and managed recovery"],
   },
   {
-    label: "02 / CONTROL PILOT",
+    label: "02 / FINANCIAL CONTROL PILOT",
     title: "30–45 Day Control Pilot",
-    subtitle: "Establish the process for a broader or recurring control problem.",
-    copy: "Margin works with Finance and Operations to establish the financial position, define ownership and approval boundaries, and put agreed recovery and reconciliation workflows into operation.",
-    followUp: "Best suited to: businesses with recurring exceptions or cross-functional recovery work that needs ongoing ownership.",
-    itemHeading: "Best suited to",
+    subtitle: "Establish how recurring or complex financial exceptions should be investigated, governed, and reconciled.",
+    copy: "",
     cta: "Scope an Enterprise Control Pilot",
     ctaLocation: "homepage_control_pilot",
-    items: ["Recurring exceptions or cross-functional recovery work that needs ongoing ownership"],
   },
   {
-    label: "03 / ONGOING CONTROL",
+    label: "03 / ONGOING FINANCIAL CONTROL",
     title: "Recovery Workspace",
-    subtitle: "Keep recurring financial exceptions under examination.",
-    copy: "For businesses that need ongoing review, evidence continuity, response handling, reversal monitoring and reconciliation across new and unresolved financial events.",
-    followUp: "Best suited to: recurring financial exceptions that require ongoing examination, continuity, and reconciliation.",
-    itemHeading: "Best suited to",
+    subtitle: "Maintain continuity across recurring investigations, evidence, authorized recovery work, and financial reconciliation.",
+    copy: "",
     cta: "Discuss ongoing control",
     ctaLocation: "homepage_recovery_workspace",
-    items: ["Recurring financial exceptions that require ongoing examination, continuity, and reconciliation"],
   },
 ];
 
@@ -152,8 +143,8 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           <div className="mb-5 flex items-center gap-3">
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">24 / ROUTING</span>
           </div>
-          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Engagements designed around your financial operations.</h2>
-          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">Margin scopes each engagement around the financial exposure, evidence requirements, operational complexity, and level of recovery responsibility involved.</p>
+          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>The right engagement starts with the financial position.</h2>
+          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The free Audit establishes what your Amazon records support, what remains unresolved, and what warrants further investigation. From there, Margin scopes the work around the financial problem, the evidence required, and what it takes to establish and reconcile the outcome.</p>
         </motion.div>
         <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
           {pathOptions.map((option, index) => {
@@ -173,20 +164,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
               <p className="routing-card-label font-mono text-[11px] font-semibold uppercase tracking-tight text-white">{option.label}</p>
               <h3 className="routing-card-heading mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-white sm:text-[36px] md:text-[42px]" style={{ fontWeight: 500 }}>{option.title}</h3>
               <p className="routing-card-subtitle mt-3 max-w-[520px] font-lora text-[19px] leading-[1.12] tracking-[-0.03em] text-[#FFFDF9] sm:text-[22px]">{option.subtitle}</p>
-              <p className="routing-card-copy mt-4 max-w-[520px] text-[14px] leading-6 text-white md:text-[15px] md:leading-7">{option.copy}</p>
-              <p className="routing-card-copy mt-3 max-w-[520px] text-[14px] leading-6 text-white md:text-[15px] md:leading-7">{option.followUp}</p>
-              <div className="mt-6 border-y border-white/25">
-                <p className="routing-card-item-heading py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-white">{option.itemHeading}</p>
-                <div className="grid gap-0 sm:grid-cols-2">
-                  {option.items.map((item) => (
-                    <div key={item} className="routing-card-item flex items-start gap-2 border-t border-white/25 py-3 text-[12px] leading-5 text-white sm:pr-4 md:text-[13px]">
-                      <Check className="routing-card-item-icon mt-0.5 h-4 w-4 shrink-0 text-white" />
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="mt-7 pt-2">
+              <div className="mt-8 pt-2">
                 <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button inline-flex h-12 min-w-0 w-full max-w-full items-center justify-center whitespace-nowrap rounded-[6px] bg-white px-2 text-center text-[11px] font-semibold leading-5 text-[#312E81] shadow-sm hover:bg-[#F1F0FF] sm:w-auto sm:px-6 sm:text-[14px]">
                   {option.cta}<ChevronRight className="ml-2 h-4 w-4 text-[#312E81]" />
                 </Button>
@@ -195,8 +173,8 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           )})}
         </div>
         <motion.div {...revealProps} className="routing-note mt-9 border-l-2 border-[var(--margin-border)] pl-5">
-          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not ready to choose the operating path? Start with the financial position.</p>
-          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The Audit is free. It tells you whether the account carries a defined exposure, a recurring control problem, or no supported recovery to manage — before you pay or commit.</p>
+          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not sure what the records support? Start with the Audit.</p>
+          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The Audit establishes the financial position before you commit to paid work. The findings inform what should happen next—and whether further investigation or recovery is justified at all.</p>
         </motion.div>
       </div>
     </section>
