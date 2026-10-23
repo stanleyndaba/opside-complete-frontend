@@ -57,9 +57,9 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Know where the money stands.</h2>
-          <p className="audit-routing-body mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">Margin examines the account across shipments, returns, fees, reimbursements, settlements, and inventory records to establish what&apos;s accounted for, what&apos;s unresolved, and what the evidence supports.</p>
-          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit doesn&apos;t turn every variance into a claim. It establishes the financial position first.</p>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Establish the financial position behind your Amazon records.</h2>
+          <p className="audit-routing-body mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">Margin connects Amazon transactions, settlements, inventory movements and accounting records to establish what&apos;s accounted for, what&apos;s unresolved, and what the evidence supports.</p>
+          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit distinguishes explained differences from genuine exposure, showing what warrants action, what needs further investigation, and what is already resolved.</p>
           <p className="mt-4 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">You see what needs action, what can be handed over, and what&apos;s already accounted for.</p>
         </motion.div>
 
@@ -80,9 +80,9 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
           <FinalDelegationPreview compactMobile tallMobile src="/accuracy-graph" title="Accuracy Graph page preview" />
         </motion.div>
         <motion.div {...revealProps} className="enterprise-routing-copy order-1 max-w-[780px] lg:order-2">
-          <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Every recovery makes the next one smarter.</h2>
-          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin preserves what each examination establishes—evidence, decisions, outcomes, and unresolved exposure—so recurring exceptions can be assessed with existing context instead of starting from zero.</p>
-          <p className="mt-4 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Recovery becomes a lasting operating advantage.</p>
+          <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Every resolved transactional discrepancy strengthens financial control.</h2>
+          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin carries established evidence, prior decisions and verified outcomes forward, helping distinguish recurring financial issues from timing differences, previously resolved items and genuinely unresolved exposure.</p>
+          <p className="mt-4 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Each examination builds on what is already established—reducing repeated investigation and strengthening the basis for the next decision.</p>
           <Link to="/sales" className="landing-pressable mt-6 inline-flex h-11 items-center rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Discuss an enterprise pilot <ArrowRight className="ml-2 h-4 w-4" /></Link>
         </motion.div>
       </div>
