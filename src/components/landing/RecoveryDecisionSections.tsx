@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowRight, Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
 
@@ -15,6 +15,8 @@ const pathOptions = [
     title: "Recover Once",
     subtitle: "Resolve a defined financial problem, from examination and supporting evidence through authorized action and a documented outcome.",
     copy: "",
+    itemHeading: "Best suited to",
+    items: ["A material, bounded exposure that warrants investigation and managed recovery"],
     cta: "Discuss a Recover Once engagement",
     ctaLocation: "homepage_recover_once",
   },
@@ -23,6 +25,8 @@ const pathOptions = [
     title: "30–45 Day Control Pilot",
     subtitle: "Establish how recurring or complex financial exceptions should be investigated, governed, and reconciled.",
     copy: "",
+    itemHeading: "Best suited to",
+    items: ["Recurring exceptions or cross-functional recovery work that needs ongoing ownership"],
     cta: "Scope an Enterprise Control Pilot",
     ctaLocation: "homepage_control_pilot",
   },
@@ -31,6 +35,8 @@ const pathOptions = [
     title: "Recovery Workspace",
     subtitle: "Maintain continuity across recurring investigations, evidence, authorized recovery work, and financial reconciliation.",
     copy: "",
+    itemHeading: "Best suited to",
+    items: ["Recurring financial exceptions that require ongoing examination, continuity, and reconciliation"],
     cta: "Discuss ongoing control",
     ctaLocation: "homepage_recovery_workspace",
   },
@@ -164,6 +170,17 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
               <p className="routing-card-label font-mono text-[11px] font-semibold uppercase tracking-tight text-white">{option.label}</p>
               <h3 className="routing-card-heading mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-white sm:text-[36px] md:text-[42px]" style={{ fontWeight: 500 }}>{option.title}</h3>
               <p className="routing-card-subtitle mt-3 max-w-[520px] font-lora text-[19px] leading-[1.12] tracking-[-0.03em] text-[#FFFDF9] sm:text-[22px]">{option.subtitle}</p>
+              <div className="mt-6 border-y border-white/25">
+                <p className="routing-card-item-heading py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-white">{option.itemHeading}</p>
+                <div className="grid gap-0 sm:grid-cols-2">
+                  {option.items.map((item) => (
+                    <div key={item} className="routing-card-item flex items-start gap-2 border-t border-white/25 py-3 text-[12px] leading-5 text-white sm:pr-4 md:text-[13px]">
+                      <Check className="routing-card-item-icon mt-0.5 h-4 w-4 shrink-0 text-white" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div className="mt-8 pt-2">
                 <Button onClick={() => onAuditCta(option.ctaLocation)} className="routing-card-button inline-flex h-12 min-w-0 w-full max-w-full items-center justify-center whitespace-nowrap rounded-[6px] bg-white px-2 text-center text-[11px] font-semibold leading-5 text-[#312E81] shadow-sm hover:bg-[#F1F0FF] sm:w-auto sm:px-6 sm:text-[14px]">
                   {option.cta}<ChevronRight className="ml-2 h-4 w-4 text-[#312E81]" />
