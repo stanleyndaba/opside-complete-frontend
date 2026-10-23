@@ -263,9 +263,9 @@ function IngestedDocumentsOutcomeSection() {
         <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-16 xl:gap-20">
           <motion.div {...revealProps} className="min-w-0">
             <h2 id="ingested-documents-outcome-title" className="max-w-[620px] font-lora text-[35px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[54px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">From records to a financial position.</span>
+              <span className="heading-tone-dark">From records to a defensible financial position.</span>
             </h2>
-            <p className="mt-6 max-w-[570px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Margin turns collected records into a reviewable account of what matches, what&apos;s unresolved, what the evidence supports, and what needs to happen next.</p>
+            <p className="mt-6 max-w-[570px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Margin examines the records to establish what aligns, what&apos;s unresolved, what the evidence supports, and what action is justified next.</p>
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See what the review produces">See what the review produces <ArrowRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="min-w-0">
