@@ -2635,6 +2635,7 @@ export default function Index() {
         <FinancialWorkProofSection />
         <AutoSubmitSection />
         <MarginStandardDeliverableSection />
+        <EnterpriseReviewsSection />
         <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
 
                 {/* Marketplace coverage — compact trust signal before final delegation */}
@@ -2658,7 +2659,10 @@ export default function Index() {
         </section>
 
         {/* Engagement — What should happen next? */}
+        <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
+        <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
         <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
+        <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
 
         {/* Section 14 — Trust / FAQ */}
         <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
