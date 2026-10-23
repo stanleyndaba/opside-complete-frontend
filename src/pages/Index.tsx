@@ -2600,6 +2600,9 @@ export default function Index() {
         {/* Recognition — Is this my problem? */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
 
+        {/* First proof — show the financial position before the deeper diagnosis. */}
+        <DuplicatePipelineDemoSection />
+
         {/* Problem — Why is the financial position difficult to establish? */}
         <RealityCheckSection />
         <ReconstructionGapSection />
@@ -2609,8 +2612,6 @@ export default function Index() {
         <IngestedDocumentsOutcomeSection />
         <RecoveryWorkStatement />
 
-        {/* Workflow — How does Margin move from records to outcome? */}
-        <DuplicatePipelineDemoSection />
 
         {/* Operating method — How does Margin decide and act? */}
         <MarginEngineSection />
