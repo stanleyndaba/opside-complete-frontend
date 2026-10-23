@@ -2599,38 +2599,66 @@ export default function Index() {
       <main>
         {/* Recognition — Is this my problem? */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
-        <DuplicatePipelineDemoSection />
+
+        {/* Problem — Why is the financial position difficult to establish? */}
         <RealityCheckSection />
         <ReconstructionGapSection />
 
-        {/* Diagnosis — Why can’t I reasonably handle this myself? */}
+        {/* Financial position — What does the evidence establish? */}
         <AccountingEvidenceSection />
         <IngestedDocumentsOutcomeSection />
         <RecoveryWorkStatement />
 
-        {/* Solution — What does Margin actually do? */}
+        {/* Workflow — How does Margin move from records to outcome? */}
+        <DuplicatePipelineDemoSection />
+
+        {/* Operating method — How does Margin decide and act? */}
         <MarginEngineSection />
         <MarginLifecycleSection />
         <FinancialControlOperationsSection />
-        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit")} />
-        <PersonalRecoverySupportSection />
-        <NestedRecoveryBrowsers />
-
-        {/* Proof and control — Can I trust it without giving up control? */}
+        <MarginStandardSection />
         <ControlSection />
-        <RecoveryHarnessSection />
+
+        {/* Outcome — How does the position remain controlled through resolution? */}
+        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit")} />
         <RiskSection />
         <RecoveryOutcomeExplorer />
         <FinancialReconciliationSection />
+        <NestedRecoveryBrowsers />
 
-        {/* Delegation — Can I stop owning this? */}
-        <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
-        <EnterpriseReviewsSection />
-        <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
-        <MarginStandardDeliverableSection />
+        {/* Accountability — Who explains the current position? */}
+        <PersonalRecoverySupportSection />
+        <FounderNoteSection />
 
-        <AutoSubmitSection />
+        {/* Enterprise proof — Can this operate at scale without losing control? */}
+        <RecoveryHarnessSection />
         <FinancialWorkProofSection />
+        <AutoSubmitSection />
+        <MarginStandardDeliverableSection />
+        <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
+
+                {/* Marketplace coverage — compact trust signal before final delegation */}
+        <section className="relative bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-20" aria-labelledby="marketplace-scope-title">
+          <div className={containerClass}>
+            <div className="grid gap-8 border-y border-[var(--margin-border)] py-8 md:grid-cols-[0.72fr_1.28fr] md:gap-12 md:py-10">
+              <motion.div {...revealProps} className="max-w-[520px]">
+                <h2 id="marketplace-scope-title" className="mt-3 max-w-[520px] font-lora text-[30px] font-normal leading-[1.06] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[44px]">One financial position across every marketplace.</h2>
+                <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin supports recovery workflows across major Amazon marketplaces in North America, Europe, Asia-Pacific, and selected Middle East regions—helping connect financial activity to the evidence, unresolved differences, and outcomes that need to be established.</p>
+              </motion.div>
+              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="grid border-t border-[var(--margin-border)] sm:grid-cols-2 sm:border-t-0 lg:grid-cols-3">
+                {supportedMarketplaces.map((marketplace, index) => (
+                  <div key={marketplace.code} className={cn("flex items-center gap-3 py-3.5 sm:px-4", index > 0 ? "border-t border-[var(--margin-border)] sm:border-t-0" : "", index % 2 === 1 ? "sm:border-l sm:border-[var(--margin-border)]" : "", index >= 2 ? "sm:border-t sm:border-[var(--margin-border)]" : "", index % 3 !== 0 ? "lg:border-l lg:border-[var(--margin-border)]" : "lg:border-l-0", index >= 3 ? "lg:border-t lg:border-[var(--margin-border)]" : "lg:border-t-0")}>
+                    <img src={`/flags/${marketplace.flagAsset}.svg`} alt={`${marketplace.country} flag`} className="h-[23px] w-[34px] shrink-0 rounded-[2px] object-cover" />
+                    <span className="min-w-0"><span className="block truncate text-[13px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">{marketplace.country}</span><span className="mt-0.5 block text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">{marketplace.region} · {marketplace.code}</span></span>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* Engagement — What should happen next? */}
+        <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
 
         {/* Section 14 — Trust / FAQ */}
         <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
@@ -2673,10 +2701,6 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <FounderNoteSection />
-        <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
-        <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
-        <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
 
         {/* Closing CTA */}
           <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-label="Financial control handoff">
@@ -2764,26 +2788,7 @@ export default function Index() {
               </div>
             </div>
           </section>
-        </main>
-        {/* Marketplace coverage — compact trust signal before final delegation */}
-        <section className="relative bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-20" aria-labelledby="marketplace-scope-title">
-          <div className={containerClass}>
-            <div className="grid gap-8 border-y border-[var(--margin-border)] py-8 md:grid-cols-[0.72fr_1.28fr] md:gap-12 md:py-10">
-              <motion.div {...revealProps} className="max-w-[520px]">
-                <h2 id="marketplace-scope-title" className="mt-3 max-w-[520px] font-lora text-[30px] font-normal leading-[1.06] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[44px]">One financial position across every marketplace.</h2>
-                <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin supports recovery workflows across major Amazon marketplaces in North America, Europe, Asia-Pacific, and selected Middle East regions—helping connect financial activity to the evidence, unresolved differences, and outcomes that need to be established.</p>
-              </motion.div>
-              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="grid border-t border-[var(--margin-border)] sm:grid-cols-2 sm:border-t-0 lg:grid-cols-3">
-                {supportedMarketplaces.map((marketplace, index) => (
-                  <div key={marketplace.code} className={cn("flex items-center gap-3 py-3.5 sm:px-4", index > 0 ? "border-t border-[var(--margin-border)] sm:border-t-0" : "", index % 2 === 1 ? "sm:border-l sm:border-[var(--margin-border)]" : "", index >= 2 ? "sm:border-t sm:border-[var(--margin-border)]" : "", index % 3 !== 0 ? "lg:border-l lg:border-[var(--margin-border)]" : "lg:border-l-0", index >= 3 ? "lg:border-t lg:border-[var(--margin-border)]" : "lg:border-t-0")}>
-                    <img src={`/flags/${marketplace.flagAsset}.svg`} alt={`${marketplace.country} flag`} className="h-[23px] w-[34px] shrink-0 rounded-[2px] object-cover" />
-                    <span className="min-w-0"><span className="block truncate text-[13px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">{marketplace.country}</span><span className="mt-0.5 block text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">{marketplace.region} · {marketplace.code}</span></span>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-          </div>
-        </section>
+      </main>
         <FooterNestedRecoveryVisual />
 
       <DemoVideoModal
