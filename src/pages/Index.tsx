@@ -33,6 +33,7 @@ import {
   Truck,
   UserCheck,
   Square,
+  X,
 } from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
@@ -61,49 +62,64 @@ const landingSecondaryCtaClass = "landing-pressable flex w-fit h-11 items-center
 
 const faqs = [
   {
-    question: "Does Margin require Amazon account access for the initial review?",
+    question: "Does the Recovery Audit cost anything?",
     answer:
-      "No Amazon account authorization is inherently required to begin a records-based review. Margin can examine the relevant records you provide and assess what they establish about your Amazon financial position. The scope of the review depends on the records available. If additional data or access is needed, Margin will explain what is required and why before proceeding.",
+      "No. The Recovery Audit is free. You can review what Margin found before deciding whether you want any recovery work managed. No payment is required to run the Audit.",
   },
   {
-    question: "What can Margin read, change or submit?",
+    question: "What access does Margin need?",
     answer:
-      "The initial review is based on the records and access agreed for the engagement. Its purpose is to establish the financial position, identify unresolved exceptions, and determine what the available evidence supports. Any additional account permissions, integrations or operational actions are scoped separately. The access granted determines what Margin can technically access or do.",
+      "Margin uses read-only access or the relevant Amazon report sources for the Audit. You can see the source coverage used for your result.",
   },
   {
-    question: "Can Margin submit a recovery without authorization?",
+    question: "Can Margin submit something without me?",
     answer:
-      "No. Margin's operating model requires seller approval before a recovery submission is made. Margin investigates the event, assembles the supporting evidence, and prepares the proposed action. The authorized representative retains the decision right over submission and other consequential actions within the agreed engagement.",
+      "Yes, if you enable Auto Submit for qualifying recoveries. Margin submits only findings that pass the configured evidence, policy, and confidence controls. Exceptions, weak evidence, and consequential decisions remain held for your review.",
   },
   {
-    question: "Where are records stored, who can access them, and how long are they retained?",
+    question: "What happens if Margin does not find anything to handle?",
     answer:
-      "Margin handles business records according to its applicable privacy and data-handling policies. Access, storage arrangements, retention periods and any third-party processing should be documented in the applicable security and privacy materials. Before providing sensitive records, you should be able to understand where they will be processed, which authorized personnel and service providers may access them, and how long they will be retained. For details applicable to your engagement, contact Margin before submitting records.",
+      "You still receive a clear result: what Margin checked, what appears settled, what may need more evidence or time, and whether there is a sensible next step.",
   },
   {
-    question: "Can I request deletion?",
+    question: "How does Recover Once pricing work?",
     answer:
-      "You can contact Margin to request deletion of records associated with your engagement. Requests are subject to applicable contractual obligations, legal requirements and any necessary retention obligations. Margin should confirm the scope of the request, explain any applicable exceptions, and communicate the outcome once the request has been assessed.",
+      "If the Audit identifies a defined recovery Margin can take over, you receive a personalized fixed quote before paid work begins. The scope states what Margin will handle, what you need to approve, and what outcome record you will receive.",
   },
   {
-    question: "Are third-party or AI processing services involved?",
+    question: "What if I want Margin to keep looking?",
     answer:
-      "Margin uses software and technical systems to support financial analysis and recovery workflows. Whether a particular engagement involves third-party infrastructure or AI processing depends on the services actually used. Before processing begins, Margin should disclose relevant third-party processing arrangements, the categories of information involved, and applicable data-handling safeguards. Customer records should not be assumed to be excluded from third-party or AI processing unless the applicable arrangements establish that.",
+      "If the Audit shows recurring recovery work that you want off your team’s plate, Recovery Workspace keeps the evidence, cases, responses, and payout tracking together over time.",
   },
   {
-    question: "What happens if the evidence is incomplete?",
+    question: "What does payout verified mean?",
     answer:
-      "An incomplete evidence set does not automatically become a recovery claim. Margin identifies the missing information, assesses whether the available records support a conclusion, and distinguishes established findings from unresolved questions. Where further evidence is needed, the position remains qualified until it can be reassessed. Unsupported amounts are not presented as established recoveries. If the available evidence does not justify further action, Margin will explain the limitation and the options, if any, for proceeding.",
+      "Margin compares the current supported recovery amount with the relevant Amazon approval and settlement records. Partial payments, reversals, and unresolved balances remain visible rather than being treated as complete.",
   },
   {
-    question: "How are Recover Once and the Control Pilot scoped and priced?",
+    question: "Can Margin handle the work while we monitor it?",
     answer:
-      "Margin scopes engagements according to the financial exposure, number and complexity of events, evidence requirements, entities and marketplaces involved, integration needs, and level of operational responsibility required. Recover Once covers a defined financial exposure, from investigation and evidence preparation through authorized recovery work and financial outcome verification within the agreed scope. The Control Pilot addresses a broader or recurring control requirement. It establishes an agreed operating process for financial examination, exception ownership, authorized recovery actions, and reconciliation. Fees are proposed after the scope and deliverables have been established. You receive the proposed scope, fee and engagement terms before committing to paid work.",
+      "Yes. Margin investigates supported opportunities, assembles evidence, prepares approved recovery work, follows responses, and keeps outcomes visible through payout verification. Your team monitors the position and approves consequential actions; Margin carries the operating work between those decisions.",
   },
   {
-    question: "How long does the review take, and which timelines depend on Amazon?",
+    question: "What happens when Amazon rejects something?",
     answer:
-      "The review timeline depends on the completeness, quality and volume of the records provided, the scope of the examination, and whether additional evidence is required. Margin will communicate the expected review timeline and identify any dependencies before work begins. Where records are incomplete or clarification is needed, the review may take longer. Recovery submission, Amazon responses, appeals and payment or settlement timing are partly dependent on Amazon and other external parties. Margin manages the agreed follow-through and keeps outstanding actions and unresolved outcomes visible, but cannot guarantee when an external party will respond or release funds.",
+      "The rejection reason remains visible and Margin identifies the next supported path, such as additional evidence, review, appeal, or reassessment.",
+  },
+  {
+    question: "Can I see the evidence?",
+    answer:
+      "Yes. Margin keeps the records and supporting evidence behind a finding inspectable so you can understand what happened before approving next steps.",
+  },
+  {
+    question: "Does Margin replace my accounting software?",
+    answer:
+      "No. When financial context is needed to establish a recovery, Margin can use relevant supporting records without replacing your accounting system.",
+  },
+  {
+    question: "Can I stop using Margin?",
+    answer:
+      "Yes. Margin is designed to keep your recovery records clear and visible, while you remain in control of the work and any approved actions.",
   },
 ];
 
@@ -181,54 +197,75 @@ function TypewriterPrompt({ text }: { text: string }) {
 }
 
 const accountingSources = [
-  { id: "amazon", name: "Amazon SP-API", context: "orders and settlements", src: "/amazon-logo-transparent-circle.png", icon: null },
-  { id: "edi", name: "3PL EDI", context: "receiving events", src: null, icon: "edi" },
-  { id: "carrier", name: "Carrier events", context: "movement evidence", src: null, icon: "carrier" },
-  { id: "chatgpt", name: "ChatGPT", context: "AI systems", src: "/ai-logos/chatgpt.svg", icon: null },
-  { id: "claude", name: "Claude", context: "AI systems", src: "/ai-logos/claude.svg", icon: null },
-  { id: "settlements", name: "Settlement files", context: "payout activity", src: "/gd.png", icon: null },
   { id: "gmail", name: "Gmail", context: "source correspondence", src: "/gmailicon.png", icon: null },
   { id: "outlook", name: "Outlook", context: "finance correspondence", src: "/outlookicon.webp", icon: null },
-  { id: "slack", name: "Slack", context: "team correspondence", src: "/slack-icon-2019.png", icon: null },
   { id: "onedrive", name: "OneDrive", context: "evidence files", src: "/onedriive.png", icon: null },
   { id: "googledrive", name: "Google Drive", context: "shared records", src: "/Driveboy.png", icon: null },
   { id: "dropbox", name: "Dropbox", context: "recovery records", src: "/Dropbox_Icon.svg.png", icon: null },
   { id: "quickbooks", name: "QuickBooks", context: "accounting records", src: "/quickbooks.png", icon: null },
   { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png", icon: null },
-  { id: "sap", name: "SAP", context: "enterprise records", src: "/integration-icons/sap-standalone.png", icon: null },
-  { id: "netsuite", name: "Oracle", context: "finance systems", src: "/integration-icons/oracle-standalone.png", icon: null },
-  { id: "excel", name: "Excel", context: "finance workbooks", src: "/excel-icon-margin.png", icon: null },
-  { id: "sftp", name: "S3 / SFTP", context: "controlled files", src: "/integration-icons/amazon-s3-logo.svg", icon: null },
+  { id: "sap", name: "SAP", context: "enterprise records", src: "/integration-icons/sap-s4hana.png", icon: null },
+  { id: "netsuite", name: "NetSuite", context: "finance systems", src: "/integration-icons/netsuite.png", icon: null },
+  { id: "sftp", name: "S3 / SFTP", context: "controlled files", src: "/integration-icons/amazons3.jpg", icon: null },
 ];
-const accountingIntegrationGroups = [
-  { label: "Marketplace and settlement", sourceIds: ["amazon", "settlements"] },
-  { label: "AI systems", sourceIds: ["chatgpt", "claude"] },
-  { label: "Accounting and ERP", sourceIds: ["quickbooks", "xero", "sap", "netsuite", "excel"] },
-  { label: "Communication and inboxes", sourceIds: ["gmail", "outlook", "slack"] },
-  { label: "Files and collaboration", sourceIds: ["onedrive", "googledrive", "dropbox"] },
-  { label: "Operations and logistics", sourceIds: ["edi", "carrier"] },
-  { label: "Controlled data access", sourceIds: ["sftp"] },
+const getAccountingRow = (order: string[]) => order.map((id) => accountingSources.find((source) => source.id === id)!).filter(Boolean);
+const accountingRows = [
+  getAccountingRow(["gmail", "outlook", "onedrive", "googledrive", "dropbox"]),
+  getAccountingRow(["quickbooks", "xero", "sap", "netsuite", "sftp"]),
+];
+const accountingCodeLines = [
+  { number: '1', parts: [['import', 'keyword'], [' { createAdapter } from ', 'plain'], ['"@margin/integrations"', 'string'], [';', 'plain']] },
+  { number: '2', parts: [['import', 'keyword'], [' { normalizeRecord, linkEvidence } from ', 'plain'], ['"@margin/records"', 'string'], [';', 'plain']] },
+  { number: '3', parts: [['const', 'keyword'], [' sources = [', 'plain'], ['gmailAdapter', 'function'], [', ', 'plain'], ['erpAdapter', 'function'], [', ', 'plain'], ['sftpAdapter', 'function'], ['];', 'plain']] },
+  { number: '4', parts: [['const', 'keyword'], [' connectors = sources.map(', 'plain'], ['createAdapter', 'function'], [');', 'plain']] },
+  { number: '5', parts: [['const', 'keyword'], [' events = await ', 'plain'], ['Promise.all', 'function'], ['(connectors.map(loadEvents));', 'plain']] },
+  { number: '6', parts: [['const', 'keyword'], [' records = events.flat().map(', 'plain'], ['normalizeRecord', 'function'], [');', 'plain']] },
+  { number: '7', parts: [['const', 'keyword'], [' linked = ', 'plain'], ['linkEvidence', 'function'], ['(records, { preserveLineage: ', 'plain'], ['true', 'boolean'], [' });', 'plain']] },
+  { number: '8', parts: [['return', 'keyword'], [' ', 'plain'], ['buildPosition', 'function'], ['(linked, { owner: "finance" });', 'plain']] },
+  { number: '9', parts: [['export', 'keyword'], [' default ', 'plain'], ['connectSources', 'function'], [';', 'plain']] },
+  { number: '10', parts: [['function', 'keyword'], [' ', 'plain'], ['loadEvents', 'function'], ['(adapter) { return adapter.read(); }', 'plain']] },
+  { number: '11', parts: [['function', 'keyword'], [' ', 'plain'], ['buildPosition', 'function'], ['(records, policy) {', 'plain']] },
+  { number: '12', parts: [['  return', 'keyword'], [' records.reduce(', 'plain'], ['applyPolicy', 'function'], [', policy);', 'plain']] },
+  { number: '13', parts: [['}', 'keyword'], [';', 'plain']] },
 ] as const;
-
-function AccountingIntegrationGrid() {
+function AccountingCodeConsole() {
+  const reduceMotion = useReducedMotion();
   return (
-    <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 lg:order-1">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {accountingIntegrationGroups.map((group, groupIndex) => {
-          const sources = group.sourceIds.map((id) => accountingSources.find((source) => source.id === id)).filter(Boolean);
-          return (
-            <motion.div key={group.label} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.14 + groupIndex * 0.08 }} className="min-h-[142px] border border-[#DDE3E6] bg-white p-4 sm:min-h-[158px] sm:p-5">
-              <p className="inline-block bg-[#F3F5F6] px-2 py-1 font-google-sans text-[9px] font-semibold uppercase tracking-tight text-[#71808A]">{group.label}</p>
-              <div className="mt-5 flex flex-wrap items-center gap-2.5">
-                {sources.map((source) => source && (
-                  <div key={source.id} className="flex h-12 w-12 items-center justify-center border border-[#E3E8EA] bg-white p-2" title={source.name} aria-label={source.name}>
-                    {source.src ? <img src={source.src} alt={source.name} className="h-full w-full object-contain" /> : source.icon === "edi" ? <FileInput className="h-6 w-6 text-[#7C3AED]" aria-hidden="true" /> : <Truck className="h-6 w-6 text-[#D97706]" aria-hidden="true" />}
-                  </div>
-                ))}
+    <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="accounting-code-editor relative order-2 min-w-0 overflow-hidden lg:order-1">
+      <div className="relative overflow-hidden rounded-[5px] border border-[#E3EAED] bg-white p-2 shadow-[0_18px_48px_rgba(37,73,91,0.12)] sm:rounded-[5px] sm:p-4">
+        <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" /><span className="h-2.5 w-2.5 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
+        </div>
+        <div className="flex min-h-0 bg-white">
+          <aside className="hidden w-[126px] shrink-0 border-r border-[#E3EAED] bg-[#F7FAFB] px-3 py-4 sm:block">
+            <p className="mb-3 font-mono text-[8px] uppercase tracking-[0.13em] text-[#8A99A5]">Explorer</p>
+            <div className="space-y-2 font-mono text-[8px] text-[#7A8994]"><p className="text-[#36454D]">▾ margin-control</p><p className="pl-3">▾ src</p><p className="pl-6 text-[#167C80]">▣ reconcile.ts</p><p className="pl-6">□ sources.ts</p><p className="pl-6">□ position.ts</p><p className="pl-3">▸ evidence</p><p className="pl-3">▸ records</p><p className="text-[#A0ABB0]">▾ tests</p></div>
+          </aside>
+          <div className="min-w-0 flex-1 bg-white">
+            <div className="flex h-10 items-center gap-1 overflow-hidden border-b border-[#E3EAED] bg-[#F7FAFB] px-2 font-mono text-[8px] text-[#8A99A5] sm:text-[9px]">{["connect.js", "adapters.js", "position.js", "events.json"].map((tab, index) => <span key={tab} className={`flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-t-[5px] px-2 py-2 ${index === 0 ? "bg-[#EEF2F4] text-[#263438]" : "text-[#8A99A5]"}`}><img src="/javascript-icon.svg" alt="JavaScript" className="h-3.5 w-3.5 shrink-0 rounded-[2px]" /><span className="truncate">{tab}</span><X className="h-3 w-3 shrink-0 opacity-60" aria-label={`Close ${tab}`} /></span>)}</div>
+            <div className="relative overflow-hidden bg-white px-3 py-5 font-mono text-[8px] leading-5 sm:px-5 sm:py-6 sm:text-[9px] sm:leading-6">
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white via-white to-[#F7FAFB]" />
+              <div className="relative min-w-max">
+                {accountingCodeLines.map((line, index) => <motion.div key={line.number} initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -5 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={reduceMotion ? { duration: 0 } : { delay: 0.22 + index * 0.12, duration: 0.25 }} className={`grid grid-cols-[22px_minmax(0,1fr)] gap-3 px-1 ${index === 5 || index === 6 ? "bg-[#EEF2F4]" : ""}`}><span className="select-none text-right text-[#A0ABB0]">{line.number}</span><span>{line.parts.map(([text, tone], partIndex) => <span key={`${line.number}-${partIndex}`} className={tone === 'keyword' ? 'text-[#7C3AED]' : tone === 'string' ? 'text-[#B45309]' : tone === 'function' ? 'text-[#0B74DE]' : tone === 'provider' ? 'text-[#0F766E]' : tone === 'comment' ? 'text-[#5D876A]' : tone === 'boolean' ? 'text-[#C2410C]' : 'text-[#43525A]'}>{text}</span>)}</span></motion.div>)}
+                <div className="absolute left-[42%] top-[54px] z-20 w-[190px] rounded-[5px] border border-[#D7E0E6] bg-white py-1.5 text-[9px] leading-5 text-[#344752] shadow-[0_16px_32px_rgba(24,32,38,0.16)]">{["connectSource()", "normalizeRecord()", "linkEvidence()", "mapSettlement()", "reconcilePosition()", "emitControlEvent()", "assignOwner()"].map((option, index) => <div key={option} className={`px-3 py-0.5 ${index === 2 ? "bg-[#EEF2F4] text-[#263438]" : ""}`}>{option}</div>)}</div>
+                <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1.95 }} className="ml-[35px] inline-block h-3.5 w-[5px] translate-y-0.5 bg-[#167C80]" aria-hidden="true" />
               </div>
-            </motion.div>
-          );
-        })}
+            </div>
+          </div>
+        </div>
+        <div className="relative bg-white pt-8" aria-label="Connected integrations">
+          <div className="pointer-events-none absolute -top-10 inset-x-0 h-16 bg-gradient-to-b from-transparent via-white/90 to-white" aria-hidden="true" />
+          <div className="relative overflow-hidden space-y-2 px-3 pb-3 sm:px-5">
+            {accountingRows.map((row, rowIndex) => {
+              const loopedRow = [...row, ...row, ...row];
+              return <div key={`integration-row-${rowIndex}`} className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)' }}>
+                <motion.div animate={reduceMotion ? { x: 0 } : { x: rowIndex === 0 ? ['0%', '-33.333%'] : ['-33.333%', '0%'] }} transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 26, repeat: Infinity, ease: 'linear' }} className="flex w-max items-center gap-3 px-1 sm:gap-4">
+                  {loopedRow.map((source, index) => <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-12 w-16 shrink-0 items-center justify-center sm:h-14 sm:w-20" title={source.name} aria-label={source.name}>{source.src ? <img src={source.src} alt={source.name} className="h-7 w-7 object-contain mix-blend-multiply sm:h-8 sm:w-8" /> : <Database className="h-7 w-7 text-[#5D707A]" aria-hidden="true" />}</div>)}
+                </motion.div>
+              </div>;
+            })}
+          </div>
+        </div>
       </div>
     </motion.div>
   );
@@ -237,19 +274,17 @@ function AccountingEvidenceSection() {
   return (
     <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F6F8F9] py-10 md:py-16" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
-        <div className="grid min-w-0 items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-20 xl:gap-24">
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:pt-1">
-            <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71808A]">MCP and native integrations</p>
-            <h2 id="accounting-section-title" className="mt-4 max-w-[620px] font-google-sans text-[39px] leading-[0.98] tracking-[-0.045em] text-[#182026] sm:text-[50px] md:text-[60px]" style={{ fontWeight: 500 }}>
-              <span className="heading-tone-dark">Your systems stay.</span> <span className="heading-tone-muted">Your financial records connect.</span>
+        <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
+          <AccountingCodeConsole />
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:order-2 lg:pt-2">
+            <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
+              <span className="heading-tone-dark">The records stay in their systems.</span> <span className="heading-tone-muted">The financial truth becomes connected.</span>
             </h2>
-            <p className="mt-6 max-w-[650px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Margin connects Amazon, ERP, warehouse, carrier and finance records to establish how transactions relate, where the financial records diverge, what&apos;s already accounted for, and what remains unresolved.</p>
-            <Link to="/contact" className="mt-7 inline-flex h-11 items-center gap-2 rounded-[7px] bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] no-underline transition-colors hover:bg-[#5148E5]">Discuss your integrations <ChevronRight className="h-4 w-4" /></Link>
-            <div className="mt-12 max-w-[520px] border-t border-[#DDE3E6]">
-              {["Records stay in their systems", "Read-only by default", "Integration paths can be designed around your operation"].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-[#DDE3E6] py-3 text-[13px] text-[#26353D]"><span className="flex h-6 w-6 shrink-0 items-center justify-center text-[#182026]">{index === 0 ? <SearchCheck className="h-4 w-4" /> : index === 1 ? <Landmark className="h-4 w-4" /> : <Database className="h-4 w-4" />}</span>{item}</div>)}
-            </div>
+            <p className="mt-6 max-w-[650px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">A shipment, inventory movement, settlement adjustment, or reimbursement may exist across Amazon, your ERP, warehouse systems, carrier records, and finance files—each with its own identifiers, timing, and degree of completeness.</p>
+            <p className="mt-4 max-w-[650px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin connects those records around the underlying financial event, preserves source lineage, and shows where the accounts tie out, where they diverge, and what requires action.</p>
+            <Link to="/contact" className="mt-7 inline-flex h-11 items-center gap-2 rounded-[7px] bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] no-underline transition-colors hover:bg-[#5148E5]">Request Custom Integrations <ChevronRight className="h-4 w-4" /></Link>
+            <p className="mt-2 max-w-[430px] text-[11px] leading-5 text-[#66737F]">Tell us what needs to connect. We&apos;ll help define the right integration path for your operation.</p>
           </motion.div>
-          <AccountingIntegrationGrid />
         </div>
       </div>
     </section>
@@ -263,9 +298,10 @@ function IngestedDocumentsOutcomeSection() {
         <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-16 xl:gap-20">
           <motion.div {...revealProps} className="min-w-0">
             <h2 id="ingested-documents-outcome-title" className="max-w-[620px] font-lora text-[35px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[54px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">From records to a defensible financial position.</span>
+              <span className="heading-tone-dark">Ingested records become a financial position.</span> <span className="heading-tone-muted">Not another document pile.</span>
             </h2>
-            <p className="mt-6 max-w-[570px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Margin examines the records to establish what aligns, what&apos;s unresolved, what the evidence supports, and what action is justified next.</p>
+            <p className="mt-6 max-w-[570px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">At exposure, the seller gets a reviewable operating record: what was collected, what matched, what remains exceptional, what is supported by evidence, and what should happen next.</p>
+            <p className="mt-4 max-w-[570px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">Margin moves the account from disconnected source files to a controlled path from discovery through reconciliation.</p>
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See what the review produces">See what the review produces <ArrowRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="min-w-0">
@@ -549,9 +585,9 @@ function KineticHeroSection({
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[860px]">
           <div id="margin-hero-title" className="mt-5 max-w-[820px] font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[46px] sm:mt-7 sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>
-            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Resolve complex Amazon financials.</motion.span>
+            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Resolve complex Amazon financial operations</motion.span>
           </div>
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Margin establishes what your records support, identifies unresolved financial differences, and carries justified recovery through to reconciliation—so your team can establish and defend its financial position.</motion.p>
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Margin brings financial activity, recoverable value, settlements, and unresolved exceptions into one accountable process — from investigation through reconciliation.</motion.p>
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-stretch gap-3 font-google-sans sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
             <Button onClick={onAuditCta} aria-label="Send records for review" className="landing-pressable group relative h-[54px] min-w-0 w-full justify-center overflow-hidden rounded-[8px] bg-[#635BFF] px-2 font-google-sans text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(99,91,255,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#5148E5] sm:h-[56px] sm:w-auto sm:flex-none sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" /><span className="whitespace-nowrap">Send records for review</span> <ArrowRight className="ml-2 h-5 w-5 shrink-0" /></Button>
             <Link to="/contact" className="inline-flex h-[54px] w-full min-w-0 self-center items-center justify-center gap-1 rounded-[8px] bg-[#E5E8EA] px-2 text-[15px] font-semibold text-[#30343B] transition-colors hover:bg-[#D9DEE1] sm:h-[56px] sm:w-auto sm:shrink-0 sm:self-auto sm:justify-center sm:gap-2 sm:rounded-none sm:bg-transparent sm:px-2 sm:text-[16px] sm:hover:bg-transparent sm:hover:text-[#52616A]"><img src="/outlookicon.webp" alt="" aria-hidden="true" className="h-6 w-6 shrink-0 object-contain sm:h-7 sm:w-7" /><span className="whitespace-nowrap">Talk to Us</span><ChevronRight className="h-5 w-5 shrink-0" /></Link>
@@ -573,7 +609,8 @@ function DuplicatePipelineDemoSection() {
     <section aria-label="Recovery operations demo" className="relative overflow-hidden bg-white pb-12 pt-10 sm:pb-16 sm:pt-12 md:pb-20 md:pt-16">
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-center sm:mb-10">
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Margin resolves complex Amazon financials, recovers value your business is entitled to, and reconciles the outcomes.</h2>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Financial control, built for the complexity of Amazon</h2>
+          <p className="mx-auto mt-5 max-w-[820px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">From transaction-level investigation to evidence-backed recovery and settlement reconciliation, Margin gives your business a systematic way to establish what happened and account for every material exception</p>
           <button type="button" className={`${landingSecondaryCtaClass} mt-5`} aria-label="See a sample financial position">See a sample financial position <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div
@@ -651,11 +688,11 @@ function RealityCheckSection() {
         <div className="flex flex-col justify-center">
         <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center">
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-            <span className="heading-tone-dark">Scale makes the picture harder to see.</span>
+            <span className="heading-tone-dark">Scale increases the distance</span> <span className="heading-tone-muted">between activity and financial certainty.</span>
           </h2>
-          <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">As your Amazon business grows, transactions, settlements, inventory movements and financial records become harder to connect across systems and time.</p>
-          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">Margin establishes what&apos;s accounted for, what&apos;s unresolved, and what the evidence supports doing next.</p>
-          <Link to="/contact" className={`${landingPrimaryCtaClass} mt-6`}>See a sample financial position <ChevronRight className="h-4 w-4" /></Link>
+          <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">As Amazon operations expand across entities, marketplaces, fulfilment centres, orders, returns, inventory, settlements, and payouts, the financial position becomes distributed across systems and time.</p>
+          <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">Margin reconciles those positions into a controlled view of supported exposure, accounted-for value, unresolved exceptions, and the next action supported by the record.</p>
+          <p className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">Finance gets a defensible position before recovery work is delegated, escalated, or treated as recoverable.</p>
         </motion.div>
         </div>
         <motion.div {...revealProps} className="relative min-w-0 overflow-hidden">
@@ -674,12 +711,13 @@ function ReconstructionGapSection() {
         <div className="grid items-center gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-14">
           <motion.div {...revealProps} className="order-1 max-w-[920px] border-l border-[#D8E3E8] pl-5 sm:pl-7 md:pl-10 lg:order-1">
             <h2 id="reconstruction-gap-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Every transaction tells part of the story.</span>
+              <span className="heading-tone-dark">Financial exposure</span> <span className="heading-tone-muted">does not stay inside one system.</span>
             </h2>
             <div className="mt-6 max-w-[780px] space-y-5 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
-              <p>Charges, refunds, reversals and settlements don&apos;t always align across Amazon and your financial records.</p>
-              <p>Margin connects the underlying events to establish what&apos;s accounted for, what&apos;s unresolved, and what the evidence supports doing next.</p>
-            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See how Margin establishes the position">See how Margin establishes the position <ChevronRight className="h-4 w-4" /></button>
+              <p>At scale, a charge, reimbursement, reversal, or adjustment can span marketplaces, entities, fulfillment networks, settlement periods, and finance records.</p>
+              <p className="font-semibold text-[var(--margin-text-primary)]">Margin brings that context together into one accountable financial position—what happened, what was expected, what Amazon recognized, what remains unresolved, and who owns the next action.</p>
+              <p>Your finance and operations teams spend less time reconciling fragmented records, leadership gets a clearer view of material exposure, and unresolved issues move toward closure without becoming another cross-functional investigation.</p>
+            <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See how Margin establishes the position">See how Margin establishes the position <ChevronRight className="h-4 w-4" /></button>
             </div>
           </motion.div>
           <motion.div {...revealProps} className="relative order-2 min-w-0 overflow-hidden lg:order-2">
@@ -721,20 +759,19 @@ function FinancialWorkProofSection() {
   ];
 
   return (
-    <section aria-labelledby="financial-work-proof-title" className="financial-work-proof-surface relative overflow-hidden bg-[#F1F3F2] py-8 text-[#182026] sm:py-10 md:py-16">
+    <section aria-labelledby="financial-work-proof-title" className="financial-work-proof-surface relative overflow-hidden bg-[#F1F3F2] py-12 text-[#182026] md:py-16">
       <div className={containerClass}>
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-20">
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-20">
           <motion.div {...revealProps} className="max-w-[620px]">
             <h2 id="financial-work-proof-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              Built for evidence, authorization and financial close.
+              <span className="heading-tone-dark">Built to get</span> <span className="heading-tone-muted">the financial work done.</span>
             </h2>
-            <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-[#5F6D77] md:mt-5 md:text-[17px] md:leading-8">Margin combines transaction-level analysis, evidence traceability, controlled recovery actions and settlement verification in one workflow.</p>
-            <p className="mt-3 max-w-[560px] text-[15px] leading-6 text-[#5F6D77] md:mt-4 md:text-[17px] md:leading-8">Review the financial basis. Approve consequential actions. Track what was recovered, what remains unresolved, and what has been reconciled.</p>
+            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#5F6D77] md:text-[17px] md:leading-8">Margin is built around three things that matter when money does not add up: less time spent searching, clearer answers, and work that actually gets finished.</p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[#D8E3E8]">
             {proofPoints.map((point) => (
-              <div key={point.title} className="grid gap-2 border-b border-[#D8E3E8] py-3 sm:grid-cols-[110px_minmax(0,0.9fr)_minmax(0,1.1fr)] sm:items-baseline sm:gap-5 sm:py-6">
+              <div key={point.title} className="grid gap-3 border-b border-[#D8E3E8] py-5 sm:grid-cols-[110px_minmax(0,0.9fr)_minmax(0,1.1fr)] sm:items-baseline sm:gap-5 sm:py-6">
                 <span className={`${point.value === "SP-API" ? "text-[24px] sm:text-[28px]" : "text-[38px] sm:text-[44px]"} font-lora leading-none tracking-[-0.045em] text-[#182026]`} style={{ fontWeight: 500 }}>{point.value}</span>
                 <h3 className="text-[16px] font-semibold leading-5 tracking-tight text-[#182026] sm:text-[17px]">{point.title}</h3>
                 {point.details ? (
@@ -748,7 +785,7 @@ function FinancialWorkProofSection() {
             ))}
           </motion.div>
         </div>
-        <button type="button" className={`${landingSecondaryCtaClass} mt-5 md:mt-8`} aria-label="See what the operating record contains">See what the operating record contains <ChevronRight className="h-4 w-4" /></button>
+        <button type="button" className={`${landingSecondaryCtaClass} mt-8`} aria-label="See what the operating record contains">See what the operating record contains <ChevronRight className="h-4 w-4" /></button>
       </div>
     </section>
   );
@@ -940,10 +977,10 @@ function RecoveryHarnessSection() {
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[760px]">
           <h2 id="recovery-harness-title" className="font-lora text-[36px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
-            <span className="heading-tone-dark">Evidence before action.</span> <span className="heading-tone-muted">Control before commitment.</span>
+            <span className="heading-tone-dark">Recovery at scale</span> <span className="heading-tone-muted">requires control before action.</span>
           </h2>
           <p className="mt-5 max-w-[720px] text-[16px] leading-7 text-[var(--margin-text-secondary)] sm:text-[18px] sm:leading-8">
-            A detected discrepancy is not automatically a valid claim. Margin evaluates the evidence, reconciliation status, financial materiality, claim-window risk and applicable controls before determining what can proceed. Supported cases advance to authorized action. Accounted-for items are closed, unresolved exceptions remain visible, and consequential decisions stay with the designated approver.
+            At scale, detection is not authorization. Margin classifies each position against evidence sufficiency, reconciliation state, materiality, claim-window risk, and control policy. It advances supported positions, holds exceptions, closes accounted-for items, and routes consequential decisions to delegated authority.
           </p>
         </motion.div>
         <div className="mt-10 grid gap-5 md:mt-14 md:grid-cols-3 md:gap-6">
@@ -983,15 +1020,18 @@ function MarginLifecycleSection() {
             className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
-            <span className="heading-tone-dark">From transactional discrepancy to financial resolution.</span>
+            <span className="heading-tone-dark">The work moves.</span> <span className="heading-tone-muted">The position stays clear.</span>
           </h2>
         </motion.div>
 
           <motion.p {...revealProps} className="mt-6 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            Margin traces the underlying transactions, establishes the unresolved difference, and carries evidence-supported cases through authorized action and reconciliation.
+            At enterprise transaction volume, a recovery can cross marketplace settlements, fulfillment events, 3PL receipts, inventory movements, returns, and ledger activity across periods.
           </motion.p>
           <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            Finance retains control. Margin carries the work through to a verified financial outcome.
+            Margin reconciles those populations into a canonical event, separates supported exposure from items already accounted for or unresolved, and prepares the next controlled action.
+          </motion.p>
+          <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] font-semibold leading-6 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[15px] md:leading-7">
+            Finance receives a defined case position. Margin carries the evidence and follow-through.
           </motion.p>
           <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See how Margin carries the work">See how Margin carries the work <ChevronRight className="h-4 w-4" /></button>
         </div>
@@ -1225,12 +1265,12 @@ function ControlSection() {
         <div className="grid items-start gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
           <motion.div {...revealProps} className="lg:sticky lg:top-28">
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Every change should move the financial position forward.</span>
+              <span className="heading-tone-dark">The recovery moves</span> <span className="heading-tone-muted">while you keep the financial position.</span>
             </h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              As Amazon responds, credits are issued, or transactions are reversed, Margin updates the case against the underlying records—showing what is accounted for, what remains unresolved, and what the evidence supports next.
+              Each recovery stays in a controlled operating position—from evidence review to approval, response, payout, or closure. You see what changed and the next accountable action.
             </p>
-            <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">Your team retains control of decisions. Margin carries the investigation and authorized follow-through toward a verified financial outcome.</p>
+            <p className="mt-4 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] md:text-[17px] md:leading-8">The operation advances. Your attention stays on the decisions that matter: what to approve, what to unblock, and what to close.</p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative overflow-hidden">
@@ -1444,10 +1484,11 @@ function OneRecordAnalysisVisual() {
       <div className={containerClass}>
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
           <motion.div {...revealProps} className="flex flex-col justify-center">
-            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Stop piecing together Amazon&apos;s financial story.</span></h2>
-            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Margin connects charges, reimbursements, reversals and settlements to establish what was accounted for, what remains unexplained, and what the evidence supports doing about it.</p>
+            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#182026] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">No more spreadsheet archaeology</span> <span className="heading-tone-muted">for one unresolved number.</span></h2>
+            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Every shipment, receiving variance, inventory movement, settlement adjustment, and reimbursement question arrives with its financial position already established.</p>
+            <p className="mt-5 max-w-[780px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">Margin connects the underlying records, distinguishes attributable exposure from timing noise and unsupported variance, and gives the right person a defined next action.</p>
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="Start with your financial records">Start with your financial records <ArrowRight className="h-4 w-4" /></button>
-            <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8">Your team reviews the position. They don&apos;t rebuild the case.</p>
+            <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8">Your team reviews the position. They do not rebuild the case.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative">
             <OneRecordAnalysisVisual />
@@ -1618,8 +1659,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
     <section className="relative overflow-hidden bg-[#FAFAF7] py-8 sm:py-10 md:py-12" aria-labelledby="recovery-thread-title">
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[860px]">
-          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Every recovery needs a traceable financial outcome.</span></h2>
-          <p className="mt-5 max-w-[840px] font-sans text-[16px] font-normal leading-[1.6] tracking-[-0.01em] text-[#294B61]">At scale, a recovery can span Finance, FinOps, Operations, Amazon correspondence and multiple settlement periods. Margin connects the original financial event, supporting evidence, authorized action, Amazon&apos;s response and the final settlement—so Finance can establish what was recovered, what remains unresolved, and whether the records reconcile.</p>
+          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Every recovery event.</span> <span className="heading-tone-muted">One controlled operating record.</span></h2>
+          <p className="mt-5 max-w-[840px] font-sans text-[16px] font-normal leading-[1.6] tracking-[-0.01em] text-[#294B61]">At operating scale, a recovery can cross Finance, FinOps, Operations, Amazon correspondence, and multiple settlement periods. Margin keeps the financial event, evidence basis, submission, response, reversal watch, and settlement outcome connected in one controlled record.</p>
         </motion.div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-3 md:gap-6 lg:mt-12 lg:gap-8">
@@ -1758,8 +1799,12 @@ function NestedRecoveryBrowsers() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 lg:order-2">
-            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Close the case only when the financial position is established.</span></h2>
-            <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Margin connects the evidence, approvals, Amazon responses and settlement activity to establish what was recovered, what was accounted for, what remains unresolved, and whether the records reconcile.</p>
+            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Every recovery position</span> <span className="heading-tone-muted">should close with a financial record.</span></h2>
+            <div className="mt-6 max-w-[560px] space-y-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              <p>From source intake through approval, submission, Amazon response, settlement matching, and final close, Margin keeps the event, evidence, decisions, and accountable actions connected in one governed record.</p>
+              <p>Finance does not have to reconstruct what happened from inboxes, case IDs, spreadsheets, or individual memory. Each position shows what was supported, what was approved, what was paid, what remains unresolved, and who owns the next controlled action.</p>
+            </div>
+            <p className="mt-5 max-w-[560px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>Recovery work becomes a reconciled financial position—not an unclosed case.</p>
             <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="View a recovery record">View a recovery record <ChevronRight className="h-4 w-4" /></button>
             <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Nested recovery pages">
               {(Object.keys(browsers) as Array<keyof typeof browsers>).map((key) => (
@@ -1780,11 +1825,11 @@ function MarginStandardDeliverableSection() {
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto max-w-[820px] text-center">
           <h2 id="margin-standard-deliverable-title" className="mx-auto mt-4 max-w-[760px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>
-            <span className="heading-tone-dark">Every finding has a financial basis.</span>
+            <span className="heading-tone-dark">See the financial basis before you decide</span> <span className="heading-tone-muted">what to hand over.</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Margin shows the source evidence, expected entitlement, accounted-for value, remaining variance, and next justified action behind each material finding.</p>
-          <p className="mx-auto mt-4 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Finance can inspect the evidence, challenge the conclusion, approve the action, and track the outcome as the position changes.</p>
-          <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>No unsupported claims. No unresolved questions presented as conclusions.</p>
+          <p className="mx-auto mt-5 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">A material finding should not arrive as another signal, score, or recovery estimate. Margin converts it into an inspectable financial position: the source evidence, reconstructed event, expected entitlement, accounted-for value, remaining variance, evidence status, confidence, approval state, and next justified action.</p>
+          <p className="mx-auto mt-4 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Finance can inspect the basis, challenge the conclusion, approve the action, and return to the same record when the outcome changes.</p>
+          <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>No vague findings. No unsupported claims. No open question presented as a result.</p>
           <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="Inspect the financial basis">Inspect the financial basis <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 w-full max-w-[1040px] sm:mt-10 lg:mt-12">
@@ -1804,20 +1849,24 @@ function AutoSubmitSection() {
         <div className="grid items-center gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:gap-20">
           <motion.div {...revealProps} className="max-w-[660px]">
             <h2 id="auto-submit-title" className="mt-5 font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
-              <span className="heading-tone-dark">Move routine recovery out of the queue.</span>
+              <span className="heading-tone-dark">Put routine recovery execution</span>{" "}
+              <span className="heading-tone-muted">outside the finance queue.</span>
             </h2>
             <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#3F4C55] md:text-[17px] md:leading-8">
-              Once a position meets the evidence and policy requirements, Margin prepares and manages submission, tracks Amazon&apos;s response, and keeps the financial position current.
+              Once the financial basis is proven, Margin moves qualifying positions through submission without creating another task for your team.
             </p>
             <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#3F4C55] md:text-[17px] md:leading-8">
-              Exceptions and decisions requiring judgment remain visible and held for review.
+              The mandate is defined once. Margin applies it continuously across the recovery population: verifying the reconstructed event, enforcing the evidence threshold, checking the policy window, preparing the submission, recording the receipt, and carrying the position through Amazon&apos;s response.
             </p>
             <p className="mt-6 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#274F62] sm:text-[24px]" style={{ fontWeight: 400 }}>
-              Finance sets the mandate. Margin carries the execution through reconciliation.
+              Only qualified positions move. Exceptions, weak evidence, contradictory records, unresolved balances, and decisions requiring judgment remain visible and held.
+            </p>
+            <p className="mt-4 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#274F62] sm:text-[24px]" style={{ fontWeight: 400 }}>
+              Finance sets the rule once. Margin carries the execution until the position is reconciled.
             </p>
             <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See controlled execution in action">See controlled execution in action <ChevronRight className="h-4 w-4" /></button>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full shrink-0 lg:w-[360px]">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full">
             <div className="mx-auto h-[330px] w-full max-w-[900px] overflow-hidden rounded-[10px] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[430px] lg:h-[min(54vh,560px)]">
               <iframe title="Auto Submit control" src="/auto-submit-preview" className="h-full w-full border-0 bg-[#E7E9EB]" loading="lazy" />
             </div>
@@ -1838,13 +1887,11 @@ function FooterNestedRecoveryVisual() {
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Take responsibility for one financial process.</span> <span className="heading-tone-muted">Then the next.</span></h2>
         <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} />
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
-          <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Amazon financial complexity. Under control.</p>
-          <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a free financial review. Margin establishes what is accounted for, what remains unresolved, and whether the evidence supports further action.</p>
-          <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">If a material opportunity exists, you can decide whether to delegate a defined recovery or establish an ongoing control process.</p>
+          <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Ready to establish financial control?</p>
+          <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a financial review of your Amazon business, or work with Margin to design a reconciliation and recovery engagement around your operational requirements.</p>
           <div className="mt-5 flex flex-col gap-3">
-            <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start the Free Recovery Audit</Button>
-            <p className="text-[11px] leading-5 text-[#66737F]">See the financial position before committing to paid recovery work.</p>
-            <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Discuss Enterprise Control</Button>
+            <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start a Financial Review</Button>
+            <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Design an Enterprise Engagement</Button>
           </div>
           <div className="mt-6 space-y-5 border-t border-[#E6EDF1] pt-5">
             <div>
@@ -2252,10 +2299,11 @@ function RiskSection() {
       <div className={containerClass}>
         <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-12">
           <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
-          <h2 id="amazon-thread-title" className="max-w-[620px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Every Amazon response has a financial consequence.</span></h2>
-            <p className="mt-6 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Amazon correspondence can determine what evidence is required, whether a recovery progresses, and what happens next. Margin connects each exchange to the underlying financial position, keeping outstanding evidence, unresolved amounts and required actions visible through to reconciliation.</p>
-            <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">The correspondence moves the case. The financial record establishes the outcome.</p>
-            <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">The next review starts with the current position, not an inbox search.</p>
+          <h2 id="amazon-thread-title" className="max-w-[620px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Amazon correspondence</span> <span className="heading-tone-muted">becomes a governed financial record.</span></h2>
+            <p className="mt-6 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> Amazon responses, evidence requests, and case decisions can sit outside the reconciliation process, leaving Finance to reconstruct what changed and what remains unresolved.</p>
+            <p className="mt-5 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin connects each response to the underlying event, evidence population, approval scope, settlement position, and accountable next action. Partial approvals, residual exposure, evidence requests, and reversals remain visible until the financial position is reconciled and closed.</p>
+            <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">The thread is not the record. It updates the record.</p>
+            <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">The next review starts with the current financial position—not an inbox search.</p>
             <Link to="/privacy" className="mt-7 inline-flex items-center gap-2 rounded-[8px] bg-[#4F46E5] px-4 py-2.5 text-[12px] font-semibold tracking-tight text-white transition-colors hover:bg-[#4338CA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]/35 focus-visible:ring-offset-2">Data Privacy &amp; Security <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 overflow-hidden">
@@ -2273,9 +2321,13 @@ function RecoveryOutcomeExplorer() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
           <motion.div {...revealProps} className="order-1 lg:order-2 lg:sticky lg:top-28">
-            <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">A rejected claim doesn&apos;t settle the financial question.</span></h2>
-            <p className="mt-6 max-w-[760px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin reassesses Amazon&apos;s decision against the original submission, supporting evidence and unresolved financial position—establishing whether further action is justified or the matter should be monitored or closed.</p>
-            <p className="mt-5 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">The decision may change. The underlying financial question remains until it is resolved.</p>
+            <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">A rejection changes</span> <span className="heading-tone-muted">the control state—not the financial history.</span></h2>
+            <div className="mt-6 max-w-[760px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
+              <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> An Amazon rejection can leave Finance with a disputed amount, an incomplete evidence trail, and no reliable way to determine whether the position should be strengthened, escalated, or closed.</p>
+              <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin classifies the rejection against the governed event, original submission scope, evidence population, policy basis, materiality, and response window. It separates supportable residual exposure from unsupported amounts and advances only the next action the records justify.</p>
+            </div>
+            <p className="mt-5 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">The case does not restart. The position is reassessed.</p>
+            <p className="mt-4 max-w-[760px] font-lora text-[19px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>Every rejection produces a controlled decision: strengthen, resubmit, escalate, monitor, or close.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden lg:order-1">
             <FinalDelegationPreview compactMobile expandedMobile src="/appeals-review" title="Appeals Review page preview" />
@@ -2293,9 +2345,13 @@ function FinancialReconciliationSection() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.76fr_1.24fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
-            <h2 id="financial-reconciliation-title" className="max-w-[560px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">A recovery isn&apos;t complete until the financial position reconciles.</span></h2>
-            <p className="mt-6 max-w-[580px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">An Amazon approval is one event in the recovery—not proof that the financial outcome is complete. Margin connects the decision to credit notes, settlements, payouts and accounting records to establish what was received, what was accounted for, and what remains unresolved.</p>
-            <p className="mt-4 max-w-[580px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>The case closes when the financial outcome is established, not when Amazon&apos;s response arrives.</p>
+            <h2 id="financial-reconciliation-title" className="max-w-[560px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Approval is an event.</span> <span className="heading-tone-muted">Reconciliation is financial close.</span></h2>
+            <div className="mt-6 max-w-[580px] space-y-4 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
+              <p><span className="font-semibold text-[var(--margin-text-primary)]">Before:</span> An Amazon approval can be recorded as a win before the credit reaches settlement, before it is attributed to the correct entity, or before a reversal or residual balance is identified.</p>
+              <p><span className="font-semibold text-[var(--margin-text-primary)]">Now:</span> Margin reconciles the expected entitlement, Amazon&apos;s decision, settlement credit, payout activity, entity attribution, and downstream ledger evidence. It distinguishes approved value from credited value, credited value from settled value, and settled value from a position that is fully closed.</p>
+            </div>
+            <p className="mt-4 max-w-[580px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>The recovery is complete when the books agree.</p>
+            <p className="mt-3 max-w-[580px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Every position resolves to reconciled, residual, reversed, disputed, or held—not simply “paid.”</p>
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See how Margin verifies the outcome">See how Margin verifies the outcome <ArrowRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden">
@@ -2522,23 +2578,23 @@ function FounderNoteSection() {
       <div className={containerClass}>
         <motion.div
           {...revealProps}
-          className="relative overflow-hidden rounded-[4px] border border-[#8B6DFF]/45 bg-[#3120A9] bg-cover bg-center px-5 py-6 text-white shadow-[0_24px_70px_rgba(49,32,169,0.24)] sm:px-10 sm:py-10 md:px-16 md:py-14"
-          style={{ backgroundImage: "url('/founder-note-indigo-strips-a.png')" }}
+          className="relative overflow-hidden rounded-[4px] border border-[#D5E1E8] bg-[#F3F7F9] px-6 py-8 shadow-[0_18px_50px_rgba(65,92,108,0.08)] sm:px-10 sm:py-10 md:px-16 md:py-14"
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_22%_48%,rgba(13,8,78,0.24),transparent_54%),radial-gradient(ellipse_at_76%_52%,rgba(13,8,78,0.12),transparent_62%)]" aria-hidden="true" />
-          <div className="relative grid gap-6 drop-shadow-[0_2px_10px_rgba(13,8,78,0.34)] sm:gap-8 md:grid-cols-[minmax(180px,0.38fr)_minmax(0,1fr)] md:gap-14">
+          <div className="pointer-events-none absolute -right-20 -top-28 h-72 w-72 rounded-full bg-[#BFD9E8]/35 blur-3xl" aria-hidden="true" />
+          <div className="relative grid gap-8 md:grid-cols-[minmax(180px,0.38fr)_minmax(0,1fr)] md:gap-14">
             <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-white/75">A note from the founder</p>
-              <h2 id="founder-note-title" className="mt-3 max-w-[260px] font-lora text-[30px] font-normal leading-[1.02] tracking-[-0.045em] text-white sm:mt-4 sm:text-[36px] sm:leading-[1.08]">
-                At scale, “probably accounted for” is not a control.
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#557386]">A note from the founder</p>
+              <h2 id="founder-note-title" className="mt-4 max-w-[220px] font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.045em] text-[#182026] sm:text-[36px]">
+                At scale, complexity compounds.
               </h2>
             </div>
-            <div className="max-w-[720px] text-[15px] leading-6 text-white/88 sm:text-[16px] sm:leading-8">
-              <p>Businesses can process millions of transactions and still spend hours reconstructing what happened across systems, periods and records.</p>
-              <p className="mt-4 sm:mt-5">Margin is built to establish what the evidence supports, identify what remains unresolved, and carry material recovery work toward a documented financial outcome.</p>
-              <p className="mt-4 font-lora text-[21px] leading-6 tracking-[-0.025em] text-white sm:mt-5 sm:text-[24px] sm:leading-8">The objective is simple: give Finance a defensible position without making the team rebuild every investigation itself.</p>
-              <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="Speak with the founder">Speak with the founder <ChevronRight className="h-4 w-4" /></button>
-              <p className="mt-6 border-t border-white/30 pt-3 text-[12px] font-semibold tracking-tight text-white/75 sm:mt-7 sm:pt-4">— Founder &amp; CEO<br /><span className="mt-1 inline-flex items-center gap-1.5 !text-white"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain brightness-0 invert sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight !text-white sm:text-lg">Margin</span></span></p>
+            <div className="max-w-[720px] text-[15px] leading-7 text-[#435762] sm:text-[16px] sm:leading-8">
+              <p>Transactions multiply, systems diverge, and small deltas become material exposure.</p>
+              <p className="mt-5">A business can have millions of records and still not know with confidence whether its financial reality is complete. And every unresolved variance carries a second cost: the hours required to trace it, explain it, evidence it, and close it.</p>
+              <p className="mt-5">Margin is built for the gap between the two — establishing what happened, quantifying what remains unresolved, determining what the evidence supports, and driving each material exception toward resolution without consuming the same hours from your team.</p>
+              <p className="mt-5 font-lora text-[21px] leading-7 tracking-[-0.025em] text-[#182026] sm:text-[24px] sm:leading-8">Because at scale, “probably accounted for” is not a control.</p>
+              <button type="button" className={`${landingSecondaryCtaClass} mt-7`} aria-label="Speak with the founder">Speak with the founder <ChevronRight className="h-4 w-4" /></button>
+              <p className="mt-7 border-t border-[#D5E1E8] pt-4 text-[12px] font-semibold tracking-tight text-[#557386]">— Founder &amp; CEO<br /><span className="mt-1 inline-flex items-center gap-1.5 text-[#000000]"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight sm:text-lg">Margin</span></span></p>
             </div>
           </div>
         </motion.div>
@@ -2599,84 +2655,53 @@ export default function Index() {
       <main>
         {/* Recognition — Is this my problem? */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
-
-        {/* First proof — show the financial position before the deeper diagnosis. */}
         <DuplicatePipelineDemoSection />
-
-        {/* Problem — Why is the financial position difficult to establish? */}
         <RealityCheckSection />
         <ReconstructionGapSection />
 
-        {/* Financial position — What does the evidence establish? */}
+        {/* Diagnosis — Why can’t I reasonably handle this myself? */}
         <AccountingEvidenceSection />
         <IngestedDocumentsOutcomeSection />
         <RecoveryWorkStatement />
 
-
-        {/* Operating method — How does Margin decide and act? */}
+        {/* Solution — What does Margin actually do? */}
         <MarginEngineSection />
         <MarginLifecycleSection />
         <FinancialControlOperationsSection />
-        <MarginStandardSection />
-        <ControlSection />
-
-        {/* Outcome — How does the position remain controlled through resolution? */}
         <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit")} />
+        <PersonalRecoverySupportSection />
+        <NestedRecoveryBrowsers />
+
+        {/* Proof and control — Can I trust it without giving up control? */}
+        <ControlSection />
+        <RecoveryHarnessSection />
         <RiskSection />
         <RecoveryOutcomeExplorer />
         <FinancialReconciliationSection />
-        <NestedRecoveryBrowsers />
 
-        {/* Accountability — Who explains the current position? */}
-        <PersonalRecoverySupportSection />
-        <FounderNoteSection />
-
-        {/* Enterprise proof — Can this operate at scale without losing control? */}
-        <RecoveryHarnessSection />
-        <FinancialWorkProofSection />
-        <AutoSubmitSection />
-        <MarginStandardDeliverableSection />
-        <EnterpriseReviewsSection />
-        <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
-
-                {/* Marketplace coverage — compact trust signal before final delegation */}
-        <section className="relative bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-20" aria-labelledby="marketplace-scope-title">
-          <div className={containerClass}>
-            <div className="grid gap-8 border-y border-[var(--margin-border)] py-8 md:grid-cols-[0.72fr_1.28fr] md:gap-12 md:py-10">
-              <motion.div {...revealProps} className="max-w-[520px]">
-                <h2 id="marketplace-scope-title" className="mt-3 max-w-[520px] font-lora text-[30px] font-normal leading-[1.06] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[44px]">One financial position across every marketplace.</h2>
-                <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin supports recovery workflows across major Amazon marketplaces in North America, Europe, Asia-Pacific, and selected Middle East regions—helping connect financial activity to the evidence, unresolved differences, and outcomes that need to be established.</p>
-              </motion.div>
-              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="grid border-t border-[var(--margin-border)] sm:grid-cols-2 sm:border-t-0 lg:grid-cols-3">
-                {supportedMarketplaces.map((marketplace, index) => (
-                  <div key={marketplace.code} className={cn("flex items-center gap-3 py-3.5 sm:px-4", index > 0 ? "border-t border-[var(--margin-border)] sm:border-t-0" : "", index % 2 === 1 ? "sm:border-l sm:border-[var(--margin-border)]" : "", index >= 2 ? "sm:border-t sm:border-[var(--margin-border)]" : "", index % 3 !== 0 ? "lg:border-l lg:border-[var(--margin-border)]" : "lg:border-l-0", index >= 3 ? "lg:border-t lg:border-[var(--margin-border)]" : "lg:border-t-0")}>
-                    <img src={`/flags/${marketplace.flagAsset}.svg`} alt={`${marketplace.country} flag`} className="h-[23px] w-[34px] shrink-0 rounded-[2px] object-cover" />
-                    <span className="min-w-0"><span className="block truncate text-[13px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">{marketplace.country}</span><span className="mt-0.5 block text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">{marketplace.region} · {marketplace.code}</span></span>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Engagement — What should happen next? */}
+        {/* Delegation — Can I stop owning this? */}
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
+        <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
+        <EnterpriseReviewsSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
-        <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
-        <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
+        <MarginStandardDeliverableSection />
+
+        <AutoSubmitSection />
+        <FinancialWorkProofSection />
 
         {/* Section 14 — Trust / FAQ */}
         <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
-                <span className="heading-tone-dark">Get to the bottom of your Amazon financials.</span>
+                <span className="heading-tone-dark">Your questions</span> <span className="heading-tone-muted">answered.</span>
               </h2>
             </motion.div>
             <div className="mt-10 md:mt-14 max-w-4xl">
               <Accordion
                 type="single"
                 collapsible
+                defaultValue="faq-0"
                 className="w-full border-t border-[var(--margin-border)]"
               >
                 {faqs.slice(0, showAllFaqs ? faqs.length : 3).map((item, index) => (
@@ -2702,24 +2727,49 @@ export default function Index() {
                 {showAllFaqs ? "Show fewer answers" : "More answers to your questions"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <button type="button" className="landing-pressable mt-6 flex h-11 w-fit items-center justify-start gap-2 bg-transparent px-0 text-left text-[13px] font-semibold text-[#635BFF] transition-colors hover:bg-transparent hover:text-[#5148E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2" aria-label="Talk to Margin about your account">Still have a question about your account? Talk to Margin <ChevronRight className="h-4 w-4" /></button>
+              <button type="button" className={`${landingSecondaryCtaClass} mt-4`} aria-label="Talk to Margin about your account">Still have a question about your account? Talk to Margin <ChevronRight className="h-4 w-4" /></button>
             </div>
           </div>
         </section>
+        <FounderNoteSection />
+        <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
+        <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
 
         {/* Closing CTA */}
-          <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-label="Financial control handoff">
+          <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="final-handoff-title">
             <div className={containerClass}>
-              <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:pt-16">
-
-                <div className="flex w-full flex-col items-start gap-8 lg:flex-row lg:gap-10">
+              <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:flex-row lg:gap-10 lg:pt-16">
 
                 {/* Left label */}
                 <motion.div {...revealProps} className="w-full shrink-0 lg:w-[360px]">
-                  <p className="max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Start with the free Audit. Then decide whether Margin should resolve a supported exposure or manage recovery as an ongoing financial control function.</p>
-                  <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You approve submissions and material decisions. Margin handles the investigation, evidence, follow-through, Amazon responses, and settlement verification—with the financial position kept visible.</p>
-                  <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>Know who&apos;s responsible for what happens to the money.</p>
-
+                  <h2 id="final-handoff-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
+                    <span className="heading-tone-dark">Secure the financial outcome.</span> <span className="heading-tone-muted">Keep the decision rights.</span>
+                  </h2>
+                  <p className="mt-4 max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Start with the free Audit. Then decide whether Margin should close one supported exposure or keep the account under ongoing financial control.</p>
+                  <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>When the next shipment moves tomorrow, you should know who is responsible for what happens to the money.</p>
+                  <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You approve submissions and material decisions. Margin carries the investigation, evidence, follow-through, response handling, and settlement verification — with the financial record kept visible.</p>
+                  <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block">
+                    <p className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">Ready to establish financial control?</p>
+                    <p className="mt-3 text-[14px] leading-6 text-[#66737F]">Start with a financial review of your Amazon business, or work with Margin to design a reconciliation and recovery engagement around your operational requirements.</p>
+                    <div className="mt-5 flex flex-col gap-3">
+                      <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start a Financial Review</Button>
+                      <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Design an Enterprise Engagement</Button>
+                    </div>
+                    <div className="mt-6 space-y-5 border-t border-[#E6EDF1] pt-5">
+                      <div>
+                        <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
+                        <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
+                        <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
+                        <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
+                      </div>
+                      <div>
+                        <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p>
+                        <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
+                        <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
+                        <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
 
                 {/* Two cards */}
@@ -2757,43 +2807,29 @@ export default function Index() {
 
                 </div>
 
-                </div>
-
-                <div className="w-full">
-                  <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block lg:max-w-none">
-                    <div className="lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.25fr)] lg:gap-10">
-                      <div>
-                        <p className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">Amazon financial complexity. Under control.</p>
-                        <p className="mt-3 text-[14px] leading-6 text-[#66737F]">Start with a free financial review. Margin establishes what is accounted for, what remains unresolved, and whether the evidence supports further action.</p>
-                        <p className="mt-3 text-[14px] leading-6 text-[#66737F]">If a material opportunity exists, you can decide whether to delegate a defined recovery or establish an ongoing control process.</p>
-                        <div className="mt-5 space-y-3">
-                          <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start the Free Recovery Audit</Button>
-                          <p className="text-[11px] leading-5 text-[#66737F]">See the financial position before committing to paid recovery work.</p>
-                          <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Discuss Enterprise Control</Button>
-                        </div>
-                      </div>
-                      <div className="mt-6 grid gap-5 border-t border-[#E6EDF1] pt-5 lg:mt-0 lg:grid-cols-2 lg:gap-8 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-                        <div>
-                          <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
-                          <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
-                          <p className="mt-1 text-[11px] leading-5 text-[#66737F]">See how Margin engagements are scoped and priced according to the complexity of the examination and the financial responsibility involved.</p>
-                          <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
-                        </div>
-                        <div>
-                          <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p>
-                          <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Put your financial records to work.</p>
-                          <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your available Amazon records. Margin examines the evidence, establishes what can be accounted for, and identifies where further action may be justified.</p>
-                          <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </div>
           </section>
-      </main>
+        </main>
+        {/* Marketplace coverage — compact trust signal before final delegation */}
+        <section className="relative bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-20" aria-labelledby="marketplace-scope-title">
+          <div className={containerClass}>
+            <div className="grid gap-8 border-y border-[var(--margin-border)] py-8 md:grid-cols-[0.72fr_1.28fr] md:gap-12 md:py-10">
+              <motion.div {...revealProps} className="max-w-[520px]">
+                <h2 id="marketplace-scope-title" className="mt-3 max-w-[520px] font-lora text-[30px] font-normal leading-[1.06] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[44px]">Supported FBA marketplaces</h2>
+                <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Margin supports recovery workflows across major Amazon marketplaces in North America, Europe, Asia-Pacific, and selected Middle East regions.</p>
+              </motion.div>
+              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="grid border-t border-[var(--margin-border)] sm:grid-cols-2 sm:border-t-0 lg:grid-cols-3">
+                {supportedMarketplaces.map((marketplace, index) => (
+                  <div key={marketplace.code} className={cn("flex items-center gap-3 py-3.5 sm:px-4", index > 0 ? "border-t border-[var(--margin-border)] sm:border-t-0" : "", index % 2 === 1 ? "sm:border-l sm:border-[var(--margin-border)]" : "", index >= 2 ? "sm:border-t sm:border-[var(--margin-border)]" : "", index % 3 !== 0 ? "lg:border-l lg:border-[var(--margin-border)]" : "lg:border-l-0", index >= 3 ? "lg:border-t lg:border-[var(--margin-border)]" : "lg:border-t-0")}>
+                    <img src={`/flags/${marketplace.flagAsset}.svg`} alt={`${marketplace.country} flag`} className="h-[23px] w-[34px] shrink-0 rounded-[2px] object-cover" />
+                    <span className="min-w-0"><span className="block truncate text-[13px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">{marketplace.country}</span><span className="mt-0.5 block text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">{marketplace.region} · {marketplace.code}</span></span>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </section>
         <FooterNestedRecoveryVisual />
 
       <DemoVideoModal
