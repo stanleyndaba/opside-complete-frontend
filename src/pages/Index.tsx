@@ -1618,8 +1618,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
     <section className="relative overflow-hidden bg-[#FAFAF7] py-8 sm:py-10 md:py-12" aria-labelledby="recovery-thread-title">
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[860px]">
-          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Every recovery event.</span> <span className="heading-tone-muted">One controlled operating record.</span></h2>
-          <p className="mt-5 max-w-[840px] font-sans text-[16px] font-normal leading-[1.6] tracking-[-0.01em] text-[#294B61]">At operating scale, a recovery can cross Finance, FinOps, Operations, Amazon correspondence, and multiple settlement periods. Margin keeps the financial event, evidence basis, submission, response, reversal watch, and settlement outcome connected in one controlled record.</p>
+          <h2 id="recovery-thread-title" className="max-w-[900px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Every recovery needs a traceable financial outcome.</span></h2>
+          <p className="mt-5 max-w-[840px] font-sans text-[16px] font-normal leading-[1.6] tracking-[-0.01em] text-[#294B61]">At scale, a recovery can span Finance, FinOps, Operations, Amazon correspondence and multiple settlement periods. Margin connects the original financial event, supporting evidence, authorized action, Amazon&apos;s response and the final settlement—so Finance can establish what was recovered, what remains unresolved, and whether the records reconcile.</p>
         </motion.div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-3 md:gap-6 lg:mt-12 lg:gap-8">
