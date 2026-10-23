@@ -983,15 +983,15 @@ function MarginLifecycleSection() {
             className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
-            <span className="heading-tone-dark">From discrepancy to resolution.</span>
+            <span className="heading-tone-dark">From transactional discrepancy to financial resolution.</span>
           </h2>
         </motion.div>
 
           <motion.p {...revealProps} className="mt-6 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            Margin connects the underlying events, establishes what remains unresolved, and moves supported cases toward the next action.
+            Margin traces the underlying transactions, establishes the unresolved difference, and carries evidence-supported cases through authorized action and reconciliation.
           </motion.p>
           <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            Finance sees the case position. Margin carries the work.
+            Finance retains control. Margin carries the work through to a verified financial outcome.
           </motion.p>
           <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See how Margin carries the work">See how Margin carries the work <ChevronRight className="h-4 w-4" /></button>
         </div>
