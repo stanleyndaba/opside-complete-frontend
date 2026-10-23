@@ -175,9 +175,8 @@ export default function PricingAdjust() {
             <div className={containerClass}>
               <motion.div {...reveal} className="mb-20 max-w-[900px] space-y-6 border-b border-[#D8E3EA] pb-20 md:mb-24 md:pb-24">
                 <div className="flex items-center gap-2 text-[11px] font-semibold tracking-tight text-[#0B74DE]">Pricing</div>
-                <h1 id="pricing-hero-title" className="font-google-sans text-4xl font-normal leading-[1.02] tracking-[-0.055em] text-[#182026] md:text-[72px]">Start with the financial position.</h1>
-                <p className="mt-7 max-w-[720px] text-[18px] leading-8 text-[#48616D] sm:text-[21px] sm:leading-9">Margin examines what happened to the money, establishes what the evidence supports, and carries authorized recovery work through to financial reconciliation.</p>
-                <p className="mt-5 max-w-[720px] text-[16px] leading-7 text-[#607784] sm:text-[18px] sm:leading-8">Every engagement is scoped to the work required, the complexity of the financial position, and the responsibility Margin takes on.</p>
+                <h1 id="pricing-hero-title" className="font-google-sans text-4xl font-normal leading-[1.02] tracking-[-0.055em] text-[#182026] md:text-[72px]">Resolve complex Amazon financials.</h1>
+                <p className="mt-7 max-w-[720px] text-[18px] leading-8 text-[#48616D] sm:text-[21px] sm:leading-9">Margin establishes what your records support, identifies unresolved financial differences, and carries justified recovery through to reconciliation—so your team can establish and defend its financial position.</p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button type="button" onClick={() => handleCta('Request a Recovery Audit', true)} className="h-12 justify-between rounded-[7px] bg-[#4F46E5] px-5 text-[13px] font-semibold text-white shadow-[0_12px_28px_rgba(79,70,229,0.18)] hover:bg-[#4338CA] sm:min-w-[210px]">Request a Recovery Audit <ArrowRight className="h-4 w-4" /></Button>
                   <Button type="button" onClick={() => handleCta('Discuss an Engagement')} variant="outline" className="h-12 justify-between rounded-[7px] border-[#C7D5DC] bg-white px-5 text-[13px] font-semibold text-[#263F4B] hover:bg-[#EEF3F5] sm:min-w-[190px]">Discuss an Engagement <ArrowRight className="h-4 w-4" /></Button>
