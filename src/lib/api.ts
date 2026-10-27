@@ -1113,13 +1113,23 @@ export const api = {
     body: JSON.stringify(data),
   }),
 
-  updateSellerAuditIntakeStatus: (leadId: string, handoffToken: string, status: 'upload_opened' | 'upload_confirmed') => requestJson<{
+  updateSellerAuditIntakeStatus: (leadId: string, handoffToken: string, status: 'upload_opened' | 'upload_confirmed' | 'files_received_verified') => requestJson<{
     success: boolean;
     lead_id: string;
     intake_status: string;
   }>(`/api/sales-leads/${encodeURIComponent(leadId)}/intake-status`, {
     method: 'PATCH',
     body: JSON.stringify({ status, handoff_token: handoffToken }),
+  }),
+
+  // Used by an authorized Margin operator after checking Dropbox receipt manually.
+  verifySellerAuditReceipt: (leadId: string, handoffToken: string) => requestJson<{
+    success: boolean;
+    lead_id: string;
+    intake_status: string;
+  }>(`/api/sales-leads/${encodeURIComponent(leadId)}/intake-status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: 'files_received_verified', handoff_token: handoffToken }),
   }),
 
   // Waitlist

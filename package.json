@@ -9,6 +9,7 @@
     "test:system-signal-routes": "node scripts/test-system-signal-routes.mjs",
     "build:dev": "vite build --mode development",
     "test:audit-duration": "node scripts/run-audit-duration-test.mjs",
+    "test:seller-audit-handoff": "node scripts/test-seller-audit-handoff-contract.mjs",
     "test:payment-return-auth": "node scripts/run-payment-return-auth-context-test.mjs",
     "test:account-signout": "node scripts/test-account-signout-contract.mjs",
     "test:login-session-parse": "node scripts/test-login-session-parse-contract.mjs",

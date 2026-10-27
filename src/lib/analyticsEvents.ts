@@ -35,6 +35,7 @@ export const ANALYTICS_EVENTS = {
   sellerAuditDetailsFailed: 'seller_audit_details_failed',
   sellerAuditUploadOpened: 'seller_audit_upload_opened',
   sellerAuditUploadConfirmed: 'seller_audit_upload_confirmed',
+  sellerAuditFilesReceivedVerified: 'seller_audit_files_received_verified',
   sellerAuditUploadStatusFailed: 'seller_audit_upload_status_failed',
   reservedDemoSlugBlocked: 'reserved_demo_slug_blocked',
   loginAttempt: 'login_attempt',

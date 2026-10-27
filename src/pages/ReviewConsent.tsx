@@ -6,7 +6,7 @@ import { SITE_META } from '@/config/site';
 const reviewSections = [
   {
     title: 'What Margin will do',
-    body: 'Examine the records you provide, analyze relevant financial activity, identify and assess exceptions, and prepare a documented review of the findings.',
+    body: 'Examine the Amazon records you provide, analyze relevant financial activity, identify and assess exceptions, and prepare a documented review of the findings. If additional information is needed, Margin may request read-only Amazon SP-API access for the specific review scope.',
   },
   {
     title: 'How your information will be used',
@@ -20,7 +20,7 @@ const reviewSections = [
   },
   {
     title: 'You remain in control',
-    body: 'This review does not, by itself, authorize Margin to submit claims, appeal decisions, or make changes to your Amazon account. Any separately authorized actions will follow the agreed approval process.',
+    body: 'The initial review uses the records you provide. Accounting software access is not assumed or required for every review. Any additional access—including read-only Amazon SP-API access—and any recovery authorization remain under your control. No recovery claim will be submitted without your approval.',
   },
   {
     title: 'What happens next',

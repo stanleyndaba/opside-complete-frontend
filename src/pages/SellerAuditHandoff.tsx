@@ -127,26 +127,31 @@ export default function SellerAuditHandoff() {
     setIntakeError(null);
     const savedDetails = { ...details, email: details.email.trim(), businessName: details.businessName.trim() };
     setDetails(savedDetails);
-    persistLocalHandoff();
-    const response = await api.submitSellerAuditIntake({
-      intake_type: 'seller_audit',
-      idempotency_key: idempotencyKey,
-      email: savedDetails.email,
-      business_name: savedDetails.businessName,
-      report_type: savedDetails.reportType,
-      audit_period: 'Last 3 months or the period you want reviewed',
-    });
-    if (response.ok && response.data?.lead_id) {
-      setLeadId(response.data.lead_id);
-      window.localStorage.setItem(HANDOFF_STORAGE_KEY, JSON.stringify({ ...savedDetails, submittedAt: new Date().toISOString(), leadId: response.data.lead_id, handoffToken: response.data.handoff_token, idempotencyKey }));
-      setHandoffToken(response.data.handoff_token || null);
-      trackEvent(ANALYTICS_EVENTS.sellerAuditDetailsSubmitted, { source_page: '/seller-audit', lead_id: response.data.lead_id, report_type: savedDetails.reportType });
-    } else {
-      setIntakeError('Your details are saved on this device, but Margin’s intake service could not be reached. You can still upload your files; please keep this page open until you finish.');
-      trackEvent(ANALYTICS_EVENTS.sellerAuditDetailsFailed, { source_page: '/seller-audit', error: response.error || 'intake_service_unavailable' });
+    try {
+      const response = await api.submitSellerAuditIntake({
+        intake_type: 'seller_audit',
+        idempotency_key: idempotencyKey,
+        email: savedDetails.email,
+        business_name: savedDetails.businessName,
+        report_type: savedDetails.reportType,
+        audit_period: 'Last 3 months or the period you want reviewed',
+      });
+      if (response.ok && response.data?.lead_id && response.data?.handoff_token) {
+        setLeadId(response.data.lead_id);
+        window.localStorage.setItem(HANDOFF_STORAGE_KEY, JSON.stringify({ ...savedDetails, submittedAt: new Date().toISOString(), leadId: response.data.lead_id, handoffToken: response.data.handoff_token, idempotencyKey }));
+        setHandoffToken(response.data.handoff_token);
+        setSubmitted(true);
+        trackEvent(ANALYTICS_EVENTS.sellerAuditDetailsSubmitted, { source_page: '/seller-audit', lead_id: response.data.lead_id, report_type: savedDetails.reportType });
+      } else {
+        setIntakeError(response.error || 'Margin could not record the intake. Please try again. Dropbox will remain unavailable until the intake is recorded.');
+        trackEvent(ANALYTICS_EVENTS.sellerAuditDetailsFailed, { source_page: '/seller-audit', error: response.error || 'intake_record_missing_lead_or_token' });
+      }
+    } catch (error) {
+      setIntakeError(error instanceof Error ? error.message : 'Margin could not record the intake. Please try again. Dropbox will remain unavailable until the intake is recorded.');
+      trackEvent(ANALYTICS_EVENTS.sellerAuditDetailsFailed, { source_page: '/seller-audit', error: 'intake_request_failed' });
+    } finally {
+      setIsSaving(false);
     }
-    setSubmitted(true);
-    setIsSaving(false);
   };
 
   const openUpload = () => {
@@ -161,15 +166,13 @@ export default function SellerAuditHandoff() {
     setIntakeError(null);
     persistLocalHandoff({ uploadOpenedAt: openedAt });
     trackEvent(ANALYTICS_EVENTS.sellerAuditUploadOpened, { source_page: '/seller-audit', lead_id: leadId || null });
-    if (leadId) {
-      if (!handoffToken) return;
-      void api.updateSellerAuditIntakeStatus(leadId, handoffToken, 'upload_opened').then((response) => {
-        if (!response.ok) {
-          setIntakeError('The upload page is open, but Margin could not update the intake status. You can still finish uploading.');
-          trackEvent(ANALYTICS_EVENTS.sellerAuditUploadStatusFailed, { source_page: '/seller-audit', lead_id: leadId, status: 'upload_opened' });
-        }
-      });
-    }
+    if (!leadId || !handoffToken) return;
+    void api.updateSellerAuditIntakeStatus(leadId, handoffToken, 'upload_opened').then((response) => {
+      if (!response.ok) {
+        setIntakeError('The upload page is open, but Margin could not update the intake status. Please contact Margin if you need help completing the handoff.');
+        trackEvent(ANALYTICS_EVENTS.sellerAuditUploadStatusFailed, { source_page: '/seller-audit', lead_id: leadId, status: 'upload_opened' });
+      }
+    });
   };
 
   const confirmUpload = () => {
@@ -177,15 +180,13 @@ export default function SellerAuditHandoff() {
     setUploadConfirmed(true);
     persistLocalHandoff({ uploadConfirmedAt: confirmedAt });
     trackEvent(ANALYTICS_EVENTS.sellerAuditUploadConfirmed, { source_page: '/seller-audit', lead_id: leadId || null });
-    if (leadId) {
-      if (!handoffToken) return;
-      void api.updateSellerAuditIntakeStatus(leadId, handoffToken, 'upload_confirmed').then((response) => {
-        if (!response.ok) {
-          setIntakeError('Your confirmation is saved on this device, but Margin could not update the intake status.');
-          trackEvent(ANALYTICS_EVENTS.sellerAuditUploadStatusFailed, { source_page: '/seller-audit', lead_id: leadId, status: 'upload_confirmed' });
-        }
-      });
-    }
+    if (!leadId || !handoffToken) return;
+    void api.updateSellerAuditIntakeStatus(leadId, handoffToken, 'upload_confirmed').then((response) => {
+      if (!response.ok) {
+        setIntakeError('Your confirmation is saved on this device, but Margin could not update the intake status. Please contact Margin if you need help completing the handoff.');
+        trackEvent(ANALYTICS_EVENTS.sellerAuditUploadStatusFailed, { source_page: '/seller-audit', lead_id: leadId, status: 'upload_confirmed' });
+      }
+    });
   };
 
   return (
@@ -232,19 +233,20 @@ export default function SellerAuditHandoff() {
                   </select>
                 </div>
                 <Button type="submit" disabled={!canSubmit || isSaving} className="h-10 w-full rounded-[9px] border border-[#C7DCE8] bg-[#EAF1F5] px-4 text-[13px] font-semibold text-[#182026] shadow-none hover:bg-[#DCE8EE] disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto">{isSaving ? 'Saving your details…' : 'Continue to upload'} {!isSaving ? <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /> : null}</Button>
+                {intakeError ? <div className="rounded-[6px] border border-[#E2B8C0] bg-[#FFF7F8] p-3 text-[12px] leading-5 text-[#A73549]" role="alert"><p>{intakeError}</p><Button type="button" onClick={() => void continueToUpload()} disabled={!canSubmit || isSaving} className="mt-2 h-8 bg-[#A73549] px-3 text-[12px] font-semibold text-white shadow-none hover:bg-[#8C2E40]">{isSaving ? 'Retrying…' : 'Retry intake'}</Button></div> : null}
               </form>
             ) : (
               <div className="mx-auto mt-6 max-w-xl pt-1">
                 <div className="py-3 text-[13px] leading-5 text-[#23623F]"><div className="flex items-start gap-2"><span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#3B8F5A] text-white"><Check className="h-3 w-3" aria-hidden="true" /></span><div><p className="font-semibold text-[#23623F]">Your files stay under your control.</p><p className="mt-1">The files are used for Margin’s audit review only. They are not submitted to Amazon or used to pursue anything without your approval.</p></div></div></div>
                 <div className="mt-4 py-3 text-[13px] leading-5 text-[#595E68]"><p className="font-semibold text-[#30343B]">Dropbox handoff</p><p className="mt-1">Dropbox hosts the upload screen. Your files are sent to Margin’s Audit request, and you can upload multiple files in one visit.</p><Button type="button" onClick={openUpload} className="mt-4 h-10 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-4 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1] sm:w-auto">{dropboxOpened ? 'Open upload page again' : 'Upload my files'} <ExternalLink className="ml-2 h-3.5 w-3.5" aria-hidden="true" /></Button></div>
                 {dropboxOpened && !uploadConfirmed ? <div className="mt-4 py-3 text-[13px] leading-5 text-[#595E68]"><p className="font-semibold text-[#30343B]">After you upload</p><p className="mt-1">Dropbox sends the files to Margin. You can close the upload page when you are done; returning here and marking it complete is optional, but it helps us track the handoff.</p><Button type="button" onClick={confirmUpload} className="mt-3 h-9 bg-[#3F51A8] px-3 text-[12px] font-semibold text-white shadow-none hover:bg-[#31418D]">Mark upload complete <Check className="ml-2 h-3.5 w-3.5" aria-hidden="true" /></Button></div> : null}
-                {uploadConfirmed ? <div className="mt-4 py-3 text-[13px] leading-5 text-[#23623F]"><div className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /><span><strong>Upload marked complete.</strong> Your files were sent to Margin’s Dropbox request. The team will verify the upload, review the records, and send the audit result to <strong>{details.email}</strong> within one business day. If anything important is missing, we will contact you.</span></div></div> : null}
-                {intakeError ? <p className="mt-3 text-[12px] leading-5 text-[#A73549]">{intakeError}</p> : null}
+                {uploadConfirmed ? <div className="mt-4 py-3 text-[13px] leading-6 text-[#23623F]"><div className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /><div><p className="font-semibold">Your submission is marked complete</p><p className="mt-1">Thank you. You&apos;ve marked your file submission as complete.</p><p className="mt-1 text-[#595E68]">This confirms that you&apos;ve completed the submission step. It does not yet confirm that Margin has received or verified your files.</p><p className="mt-1 text-[#595E68]">Our team will verify receipt and email you confirmation and the next steps within <strong>48 hours of verified receipt, including weekends</strong>.</p><p className="mt-1 text-[#595E68]">Your review begins once the agreed records have been received and checked. If additional records or access are needed, we&apos;ll explain what is required and why before proceeding.</p><p className="mt-1 text-[#595E68]">No recovery claims will be submitted and no further paid work will begin without your approval.</p></div></div></div> : null}
+                {intakeError ? <div className="mt-3 rounded-[6px] border border-[#E2B8C0] bg-[#FFF7F8] p-3 text-[12px] leading-5 text-[#A73549]" role="alert"><p>{intakeError}</p>{!submitted ? <Button type="button" onClick={() => void continueToUpload()} disabled={!canSubmit || isSaving} className="mt-2 h-8 bg-[#A73549] px-3 text-[12px] font-semibold text-white shadow-none hover:bg-[#8C2E40]">{isSaving ? 'Retrying…' : 'Retry intake'}</Button> : null}</div> : null}
                 <div className="mt-4 py-3 text-[12px] leading-5 text-[#595E68]"><p className="font-semibold text-[#30343B]">If the upload page does not open</p><p className="mt-1">Allow pop-ups for Margin and try again. If Dropbox still blocks the upload, <Link to="/contact" className="font-semibold text-[#0B74DE] underline underline-offset-2">contact Margin</Link> and include the business name you entered above.</p></div>
-                <div className="mt-5 pt-2"><p className="text-[12px] font-semibold text-[#777A82]">What happens next</p><p className="mt-3 text-[13px] leading-6 text-[#595E68]">Margin will review the records, identify meaningful discrepancies, and send you the audit result so you can choose the next step. Nothing is submitted or pursued without your approval. Read the <Link to="/privacy" className="text-[#0B74DE] underline underline-offset-2 hover:text-[#075EBA]">Margin Privacy Policy</Link>.</p></div>
+                <div className="mt-5 pt-2"><p className="text-[12px] font-semibold text-[#777A82]">What happens next</p><p className="mt-3 text-[13px] leading-6 text-[#595E68]">Margin will verify receipt, check the records, identify meaningful discrepancies, and send you confirmation and next steps. Nothing is submitted or pursued without your approval. Read the <Link to="/privacy" className="text-[#0B74DE] underline underline-offset-2 hover:text-[#075EBA]">Margin Privacy Policy</Link>.</p></div>
               </div>
             )}
-            {!submitted ? <p className="mx-auto mt-6 max-w-xl pt-2 text-[12px] leading-5 text-[#777A82]">After the upload, Margin will review the records and email the result within one business day. If anything else is needed, we will tell you exactly what to send. <Link to="/privacy" className="text-[#0B74DE] underline underline-offset-2 hover:text-[#075EBA]">Privacy details</Link>.</p> : null}
+            {!submitted ? <p className="mx-auto mt-6 max-w-xl pt-2 text-[12px] leading-5 text-[#777A82]">After verified receipt, Margin will check the records and email confirmation and next steps within 48 hours, including weekends. If anything else is needed, we will tell you exactly what to send. <Link to="/privacy" className="text-[#0B74DE] underline underline-offset-2 hover:text-[#075EBA]">Privacy details</Link>.</p> : null}
           </section>
         </div>
       </main>
