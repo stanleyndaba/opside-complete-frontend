@@ -302,7 +302,7 @@ export default function RecoveryWorkspace() {
               
               <div className="mt-3 pt-3"><p className="text-[12px] font-normal text-[#191B20]"><mark className="rounded-[2px] px-0.5 font-normal text-[#30343B] [box-decoration-break:clone] bg-[#DDF4E5]">Before you continue</mark></p><p className="mt-1.5 text-[12px] italic leading-5 text-[#595E68]">I understand that this Audit establishes an operating position, not a guaranteed recovery. I am requesting an Enterprise Control Pilot discussion to establish scope, responsibility, commercial structure, and approval points. Nothing is submitted without my approval.</p></div>
               
-              <button type="button" className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[8px] border border-[#C8D6DF] bg-white px-4 text-[13px] font-medium text-[#3F51A8] transition-colors hover:bg-[#F1F0FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">Discuss an Enterprise Pilot</button>
+              <button type="button" className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[8px] bg-[#3F51A8] px-4 text-[13px] font-medium text-white transition-colors hover:bg-[#31418D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">Discuss an Enterprise Pilot</button>
               
               <div className="mt-2.5 text-center">
                 <p className="text-[11px] font-medium text-[#595E68]">Scope first · Seller approval required · Smaller routes remain available</p>
