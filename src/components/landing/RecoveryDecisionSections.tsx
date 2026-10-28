@@ -80,7 +80,7 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
           <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Every resolved transactional discrepancy strengthens financial control.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin carries established evidence, prior decisions and verified outcomes forward, helping distinguish recurring financial issues from timing differences, previously resolved items and genuinely unresolved exposure.</p>
           <p className="mt-4 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Each examination builds on what is already established—reducing repeated investigation and strengthening the basis for the next decision.</p>
-          <Link to="/sales" className="landing-pressable mt-6 inline-flex h-11 items-center rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Discuss an enterprise pilot <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          <Link to="/sales" className="landing-pressable mt-6 inline-flex h-11 items-center rounded-[7px] bg-[#635BFF] px-6 text-[13px] font-bold text-white shadow-[0_18px_48px_rgba(99,91,255,0.24)] transition-colors hover:bg-[#5148E5]">Discuss an enterprise pilot <ArrowRight className="ml-2 h-4 w-4" /></Link>
         </motion.div>
       </div>
     </div>
@@ -133,7 +133,7 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
       </motion.div>
 
       <motion.div {...revealProps} className="mt-8 md:mt-10">
-        <Button onClick={() => onAuditCta("enterprise_onboarding_timeline")} className="landing-pressable h-11 rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Discuss an Enterprise Pilot</Button>
+        <Button onClick={() => onAuditCta("enterprise_onboarding_timeline")} className="landing-pressable h-11 rounded-[7px] bg-[#635BFF] px-6 text-[13px] font-bold text-white shadow-[0_18px_48px_rgba(99,91,255,0.24)] transition-colors hover:bg-[#5148E5]">Discuss an Enterprise Pilot</Button>
       </motion.div>
     </div>
   </section>

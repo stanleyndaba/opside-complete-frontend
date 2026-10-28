@@ -549,7 +549,7 @@ function KineticHeroSection({
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[860px]">
           <div id="margin-hero-title" className="mt-5 max-w-[820px] font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[46px] sm:mt-7 sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>
-            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Resolve complex Amazon financial operations</motion.span>
+            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Complex Amazon Fin-Ops, <span className="text-[#635BFF]">done for you.</span></motion.span>
           </div>
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Margin establishes what your records support, identifies unresolved financial differences, and carries justified recovery through to reconciliation—so your team can establish and defend its financial position.</motion.p>
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-stretch gap-3 font-google-sans sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
@@ -679,7 +679,7 @@ function ReconstructionGapSection() {
             <div className="mt-6 max-w-[780px] space-y-5 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
               <p>Charges, refunds, reversals and settlements don&apos;t always align across Amazon and your financial records.</p>
               <p>Margin connects the underlying events to establish what&apos;s accounted for, what&apos;s unresolved, and what the evidence supports doing next.</p>
-            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See how Margin establishes the position">See how Margin establishes the position <ChevronRight className="h-4 w-4" /></button>
+            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See how Margin proves the position">See how Margin proves the position <ChevronRight className="h-4 w-4" /></button>
             </div>
           </motion.div>
           <motion.div {...revealProps} className="relative order-2 min-w-0 overflow-hidden lg:order-2">
@@ -959,7 +959,7 @@ function RecoveryHarnessSection() {
             </motion.article>
           ))}
         </div>
-        <button type="button" className={`${landingSecondaryCtaClass} mt-8`} aria-label="See how Margin controls the next action">See how Margin controls the next action <ChevronRight className="h-4 w-4" /></button>
+        <button type="button" className={`${landingPrimaryCtaClass} mt-8`} aria-label="See how Margin controls the next action">See how Margin controls the next action <ChevronRight className="h-4 w-4" /></button>
       </div>
     </section>
   );
@@ -1785,7 +1785,10 @@ function MarginStandardDeliverableSection() {
           <p className="mx-auto mt-5 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Margin shows the source evidence, expected entitlement, accounted-for value, remaining variance, and next justified action behind each material finding.</p>
           <p className="mx-auto mt-4 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Finance can inspect the evidence, challenge the conclusion, approve the action, and track the outcome as the position changes.</p>
           <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>No unsupported claims. No unresolved questions presented as conclusions.</p>
-          <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="Inspect the financial basis">Inspect the financial basis <ChevronRight className="h-4 w-4" /></button>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <button type="button" className={landingPrimaryCtaClass} aria-label="Inspect the financial basis">Inspect the financial basis <ChevronRight className="h-4 w-4" /></button>
+            <button type="button" className={landingPrimaryCtaClass} aria-label="See the recovery operation model">See the recovery operation model <ChevronRight className="h-4 w-4" /></button>
+          </div>
         </motion.div>
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 w-full max-w-[1040px] sm:mt-10 lg:mt-12">
           <div className="h-[456px] overflow-hidden rounded-[10px] border border-[#D0D5D7] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[800px] lg:h-[min(72vh,820px)]">
@@ -2256,7 +2259,7 @@ function RiskSection() {
             <p className="mt-6 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Amazon correspondence can determine what evidence is required, whether a recovery progresses, and what happens next. Margin connects each exchange to the underlying financial position, keeping outstanding evidence, unresolved amounts and required actions visible through to reconciliation.</p>
             <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">The correspondence moves the case. The financial record establishes the outcome.</p>
             <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">The next review starts with the current position, not an inbox search.</p>
-            <Link to="/privacy" className="mt-7 inline-flex items-center gap-2 rounded-[8px] bg-[#4F46E5] px-4 py-2.5 text-[12px] font-semibold tracking-tight text-white transition-colors hover:bg-[#4338CA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]/35 focus-visible:ring-offset-2">Data Privacy &amp; Security <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
+            <Link to="/privacy" className="mt-7 inline-flex h-11 items-center gap-2 rounded-[8px] bg-[#4F46E5] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_12px_26px_rgba(79,70,229,0.18)] transition-colors hover:bg-[#4338CA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]/35 focus-visible:ring-offset-2">Data Privacy &amp; Security <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 overflow-hidden">
             <iframe title="Amazon Thread Review page preview" src="/amazon-thread-review" className="block h-[520px] w-full rounded-b-[8px] border-0 bg-[#FBFAF7] sm:h-[600px]" loading="lazy" />
