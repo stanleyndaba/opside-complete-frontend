@@ -58,6 +58,7 @@ const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
 const landingPrimaryCtaClass = "landing-pressable inline-flex h-11 items-center justify-center gap-2 rounded-[7px] bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] transition-colors hover:bg-[#5148E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2";
 const landingSecondaryCtaClass = "landing-pressable flex w-fit h-11 items-center justify-start gap-2 rounded-[7px] bg-white px-5 text-left text-[13px] font-semibold text-[#635BFF] transition-colors hover:bg-[#F1F0FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2 sm:inline-flex sm:justify-center";
+const landingMobilePrimaryCtaClass = "!bg-[var(--margin-blue)] !text-white hover:!bg-[var(--margin-blue-hover)] sm:!bg-white sm:!text-[#635BFF] sm:hover:!bg-[#F1F0FF]";
 
 const faqs = [
   {
@@ -574,7 +575,7 @@ function DuplicatePipelineDemoSection() {
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-center sm:mb-10">
           <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Margin resolves complex Amazon financials, recovers value your business is entitled to, and reconciles the outcomes.</h2>
-          <button type="button" className={`${landingSecondaryCtaClass} mt-5`} aria-label="See a sample financial position">See a sample financial position <ChevronRight className="h-4 w-4" /></button>
+          <button type="button" className={`${landingSecondaryCtaClass} ${landingMobilePrimaryCtaClass} mt-5`} aria-label="See a sample financial position">See a sample financial position <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div
           {...revealProps}
@@ -993,7 +994,7 @@ function MarginLifecycleSection() {
           <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
             Finance retains control. Margin carries the work through to a verified financial outcome.
           </motion.p>
-          <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See how Margin carries the work">See how Margin carries the work <ChevronRight className="h-4 w-4" /></button>
+          <button type="button" className={`${landingSecondaryCtaClass} ${landingMobilePrimaryCtaClass} mt-6`} aria-label="See how Margin carries the work">See how Margin carries the work <ChevronRight className="h-4 w-4" /></button>
         </div>
         </div>
       </div>
@@ -1760,7 +1761,7 @@ function NestedRecoveryBrowsers() {
           <motion.div {...revealProps} className="order-1 lg:order-2">
             <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Close the case only when the financial position is established.</span></h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Margin connects the evidence, approvals, Amazon responses and settlement activity to establish what was recovered, what was accounted for, what remains unresolved, and whether the records reconcile.</p>
-            <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="View a recovery record">View a recovery record <ChevronRight className="h-4 w-4" /></button>
+            <button type="button" className={`${landingSecondaryCtaClass} ${landingMobilePrimaryCtaClass} mt-6`} aria-label="View a recovery record">View a recovery record <ChevronRight className="h-4 w-4" /></button>
             <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Nested recovery pages">
               {(Object.keys(browsers) as Array<keyof typeof browsers>).map((key) => (
                 <button key={key} type="button" role="tab" aria-selected={activeBrowser === key} onClick={() => setActiveBrowser(key)} className={`rounded-full px-3 py-1.5 text-[11px] font-medium tracking-tight transition-colors ${activeBrowser === key ? 'bg-[#DCEBF2] text-[#284B5B]' : 'bg-white/70 text-[#6A7D86] hover:bg-white'}`}>{browsers[key].label}</button>
@@ -1785,7 +1786,7 @@ function MarginStandardDeliverableSection() {
           <p className="mx-auto mt-5 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Margin shows the source evidence, expected entitlement, accounted-for value, remaining variance, and next justified action behind each material finding.</p>
           <p className="mx-auto mt-4 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8">Finance can inspect the evidence, challenge the conclusion, approve the action, and track the outcome as the position changes.</p>
           <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>No unsupported claims. No unresolved questions presented as conclusions.</p>
-          <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="Inspect the financial basis">Inspect the financial basis <ChevronRight className="h-4 w-4" /></button>
+          <button type="button" className={`${landingSecondaryCtaClass} ${landingMobilePrimaryCtaClass} mt-6`} aria-label="Inspect the financial basis">Inspect the financial basis <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 w-full max-w-[1040px] sm:mt-10 lg:mt-12">
           <div className="h-[456px] overflow-hidden rounded-[10px] border border-[#D0D5D7] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[800px] lg:h-[min(72vh,820px)]">
@@ -1815,7 +1816,7 @@ function AutoSubmitSection() {
             <p className="mt-6 max-w-[620px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#274F62] sm:text-[24px]" style={{ fontWeight: 400 }}>
               Finance sets the mandate. Margin carries the execution through reconciliation.
             </p>
-            <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="See controlled execution in action">See controlled execution in action <ChevronRight className="h-4 w-4" /></button>
+            <button type="button" className={`${landingSecondaryCtaClass} ${landingMobilePrimaryCtaClass} mt-6`} aria-label="See controlled execution in action">See controlled execution in action <ChevronRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full shrink-0 lg:w-[360px]">
             <div className="mx-auto h-[330px] w-full max-w-[900px] overflow-hidden rounded-[10px] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[430px] lg:h-[min(54vh,560px)]">
