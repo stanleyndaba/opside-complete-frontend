@@ -1087,6 +1087,28 @@ const routes = [
     },
   },
   {
+    path: '/security',
+    title: 'Security | Margin',
+    description:
+      'How Margin protects sensitive Amazon financial operations with controlled access, evidence-led workflows, and accountable actions.',
+    ogTitle: 'Security | Margin',
+    ogDescription:
+      'Explore Margin security practices for controlled Amazon financial operations, evidence traceability, data isolation, and human oversight.',
+    shell: {
+      label: 'Security and data control',
+      h1: 'Enterprise-grade security.',
+      intro:
+        'Margin is built to support sensitive Amazon financial operations with controlled access, evidence-led workflows, and security practices designed to protect the integrity and confidentiality of your business data.',
+      sections: [
+        {
+          heading: 'Security is part of the operating model',
+          body:
+            'Margin is designed to keep access controlled, actions inspectable, and responsibility visible throughout the workflow.',
+        },
+      ],
+    },
+  },
+  {
     path: '/terms',
     title: 'Terms of Service | Margin',
     description: "Terms of Service governing use of Margin's automated FBA auditing platform.",

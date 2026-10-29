@@ -139,6 +139,9 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         <Link to="/pricing" className={desktopNavLinkClass}>
                             Pricing
                         </Link>
+                        <Link to="/security" className={desktopNavLinkClass}>
+                            Security
+                        </Link>
                         <Link to="/sales" className={desktopNavLinkClass}>
                                 Enterprise
                         </Link>
@@ -262,6 +265,12 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     onClick={() => setMobileMenuOpen(false)}
                                     className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
                                     Pricing
+                                </Link>
+                                <Link
+                                    to="/security"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    Security
                                 </Link>
                                 <Link
                                     to="/sales"

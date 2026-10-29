@@ -61,6 +61,7 @@ const StripeCallback = lazy(() => import("./pages/StripeCallback"));
 const Careers = lazy(() => import("./pages/Careers"));
 const Docs = lazy(() => import("./pages/Docs"));
 const Privacy = lazy(() => import("./pages/Privacy"));
+const Security = lazy(() => import("./pages/Security"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
@@ -326,6 +327,7 @@ const App = () => (
                         <Route path="/careers" element={<Careers />} />
                         <Route path="/docs" element={<Docs />} />
                         <Route path="/privacy" element={<Privacy />} />
+                        <Route path="/security" element={<Security />} />
                         <Route path="/terms" element={<Terms />} />
                         <Route path="/refund-policy" element={<RefundPolicy />} />
                         <Route path="/contact" element={<Contact />} />

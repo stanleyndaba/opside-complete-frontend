@@ -242,6 +242,17 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/privacy'),
     image: SITE_META.image,
   },
+  '/security': {
+    path: '/security',
+    title: 'Security | Margin',
+    description: 'How Margin protects sensitive Amazon financial operations with controlled access, evidence-led workflows, and accountable actions.',
+    canonical: routeUrl('/security'),
+    ogTitle: 'Security | Margin',
+    ogDescription:
+      'Explore Margin security practices for controlled Amazon financial operations, evidence traceability, data isolation, and human oversight.',
+    ogUrl: routeUrl('/security'),
+    image: SITE_META.image,
+  },
   '/terms': {
     path: '/terms',
     title: 'Terms of Service | Margin',
