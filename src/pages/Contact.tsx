@@ -28,8 +28,8 @@ import { cn } from '@/lib/utils';
 type ContactRoute = 'audit' | 'enterprise' | 'support' | 'partnership' | 'general' | null;
 
 const containerClass = 'mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12';
-const fieldLabelClass = 'font-google-sans text-[11px] font-semibold uppercase tracking-tight text-[#182026]';
-const inputClass = 'h-12 rounded-[7px] border-[#D8E3EA] bg-white font-google-sans text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/10 focus-visible:border-[#0B74DE]';
+const fieldLabelClass = 'font-google-sans text-[11px] font-semibold uppercase tracking-tight text-[#30343B]';
+const inputClass = 'h-12 rounded-[7px] border-[#E1E5E5] bg-white font-google-sans text-[14px] tracking-tight text-[#30343B] placeholder:text-[#9AA8B2] focus-visible:ring-[#635BFF]/10 focus-visible:border-[#635BFF]';
 
 export default function Contact() {
   usePageMeta({
@@ -82,7 +82,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="contact-page landing-google-sans relative min-h-screen overflow-x-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026] font-sans">
+    <div className="contact-page landing-google-sans relative min-h-screen overflow-x-hidden bg-[#F7F8F7] text-[#30343B] selection:bg-[#635BFF]/16 selection:text-[#30343B] font-sans">
       {/* Background effects */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.28] [background-image:linear-gradient(rgba(11,116,222,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.04)_1px,transparent_1px)] [background-size:72px_72px]" />
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -95,18 +95,18 @@ export default function Contact() {
         <div className={containerClass}>
           
           {/* Hero */}
-          <section className="mb-20 max-w-[900px] space-y-6 border-b border-[#D8E3EA] pb-20 md:mb-24 md:pb-24">
-            <div className="inline-flex items-center gap-2 font-google-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-[#0B74DE]">
+          <section className="mb-20 max-w-[900px] space-y-6 border-b border-[#E1E5E5] pb-20 md:mb-24 md:pb-24">
+            <div className="inline-flex items-center gap-2 font-google-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-[#635BFF]">
               Contact Margin
             </div>
-            <h1 className="font-google-sans text-4xl font-normal leading-[1.02] tracking-[-0.055em] text-[#182026] md:text-[72px]">
+            <h1 className="font-lora text-4xl font-normal leading-[1.02] tracking-[-0.055em] text-[#30343B] md:text-[72px]">
               Tell us what you need <br className="hidden md:block" />
               to move forward.
             </h1>
-            <p className="max-w-[760px] text-[17px] leading-8 tracking-tight text-[#4D5B66] md:text-[20px] md:leading-9">
+            <p className="max-w-[760px] text-[17px] leading-8 tracking-tight text-[#667177] md:text-[20px] md:leading-9">
               Whether you want to check an Amazon recovery issue, discuss a high-volume operation, get help with an existing Audit, or explore a partnership, choose the path that fits. We will route your request to the right next step.
             </p>
-            <p className="max-w-xl font-google-sans text-[13px] italic leading-6 tracking-tight text-[#8C9BA6]">
+            <p className="max-w-xl font-google-sans text-[13px] italic leading-6 tracking-tight text-[#7A858A]">
               You do not need to explain Margin. Just tell us what is stuck, what you are trying to establish, or what you want to do next.
             </p>
           </section>
@@ -114,7 +114,7 @@ export default function Contact() {
           {/* Intent Selector */}
           {!selectedRoute && (
             <div className="space-y-12">
-              <h2 className="text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6]">What brings you here?</h2>
+              <h2 className="text-[11px] font-bold uppercase tracking-tight text-[#7A858A]">What brings you here?</h2>
               <section className="mb-24 grid gap-x-8 gap-y-4 md:grid-cols-2 lg:grid-cols-3">
                 <IntentCard 
                   icon={ShieldCheck}
@@ -169,7 +169,7 @@ export default function Contact() {
                 <div className="mb-8">
                   <button 
                     onClick={() => setSelectedRoute(null)}
-                    className="flex items-center gap-2 text-[12px] font-bold text-[#0B74DE] uppercase tracking-tight hover:underline"
+                    className="flex items-center gap-2 text-[12px] font-bold text-[#635BFF] uppercase tracking-tight hover:underline"
                   >
                     ← Back to choices
                   </button>
@@ -179,24 +179,24 @@ export default function Contact() {
                   {selectedRoute === 'audit' && (
                     <div className="p-8 md:p-12 space-y-8">
                       <div className="max-w-2xl space-y-4">
-                        <h2 className="font-lora text-3xl font-medium tracking-tight text-[#182026]">Start with the question that brought you here.</h2>
-                        <p className="text-[16px] text-[#4D5B66] leading-relaxed">
+                        <h2 className="font-lora text-3xl font-medium tracking-tight text-[#30343B]">Start with the question that brought you here.</h2>
+                        <p className="text-[16px] text-[#667177] leading-relaxed">
                           If you think an Amazon reimbursement, return, inventory event, reversal, or payout does not add up, the fastest next step is not a sales conversation. It is an examination.
                         </p>
-                        <p className="text-[16px] text-[#4D5B66] leading-relaxed">
+                        <p className="text-[16px] text-[#667177] leading-relaxed">
                           Run a Free Recovery Audit to establish what the available records support, what is incomplete, and what you can do next.
                         </p>
                       </div>
                       <div className="pt-4 space-y-6">
-                        <Button asChild className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
+                        <Button asChild className="h-12 px-8 rounded-md bg-[#635BFF] text-[14px] font-semibold text-white shadow-lg shadow-[#635BFF]/20 hover:bg-[#5148E5] transition-all">
                           <Link to="/audit-start">Run a Free Recovery Audit</Link>
                         </Button>
                         <div className="space-y-4">
-                          <p className="text-[13px] font-medium text-[#182026] flex items-center gap-2">
-                            <ShieldCheck className="h-4 w-4 text-[#0B74DE]" />
+                          <p className="text-[13px] font-medium text-[#30343B] flex items-center gap-2">
+                            <ShieldCheck className="h-4 w-4 text-[#635BFF]" />
                             Free to start. Read-only by default. You approve the action.
                           </p>
-                          <p className="text-[13px] text-[#66737F] leading-relaxed">
+                          <p className="text-[13px] text-[#7A858A] leading-relaxed">
                             No contact form required. Start with your Audit intent and create your free account when you are ready to save the work.
                           </p>
                         </div>
@@ -207,19 +207,19 @@ export default function Contact() {
                   {selectedRoute === 'enterprise' && (
                     <div className="p-8 md:p-12 space-y-8">
                       <div className="max-w-2xl space-y-4">
-                        <h2 className="font-lora text-3xl font-medium tracking-tight text-[#182026]">For operations where unresolved recovery becomes a financial problem.</h2>
-                        <p className="text-[16px] text-[#4D5B66] leading-relaxed">
+                        <h2 className="font-lora text-3xl font-medium tracking-tight text-[#30343B]">For operations where unresolved recovery becomes a financial problem.</h2>
+                        <p className="text-[16px] text-[#667177] leading-relaxed">
                           If you manage $1M+ in Amazon GMV, multiple seller accounts, large catalogues, several markets, or an existing provider operation, request an Enterprise Assessment.
                         </p>
-                        <p className="text-[16px] text-[#4D5B66] leading-relaxed">
+                        <p className="text-[16px] text-[#667177] leading-relaxed">
                           We will review the operating shape, define a first examination boundary, and determine whether Margin can establish meaningful recovery and control value for your team.
                         </p>
                       </div>
                       <div className="pt-4 space-y-6">
-                        <Button asChild className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
+                        <Button asChild className="h-12 px-8 rounded-md bg-[#635BFF] text-[14px] font-semibold text-white shadow-lg shadow-[#635BFF]/20 hover:bg-[#5148E5] transition-all">
                           <Link to="/sales">Request an Enterprise Assessment</Link>
                         </Button>
-                        <p className="text-[12px] text-[#8C9BA6] italic">
+                        <p className="text-[12px] text-[#7A858A] italic">
                           No account connection, provider change, or platform migration is required to request an assessment.
                         </p>
                       </div>
@@ -228,14 +228,14 @@ export default function Contact() {
 
                   {selectedRoute === 'support' && (
                     <div className="grid lg:grid-cols-5">
-                      <div className="lg:col-span-2 bg-[#182026] p-8 md:p-12 text-white flex flex-col justify-between">
+                      <div className="lg:col-span-2 bg-[#30343B] p-8 md:p-12 text-white flex flex-col justify-between">
                         <div className="space-y-6">
                           <h2 className="font-lora text-3xl font-medium tracking-tight">Tell us where the workflow is stuck.</h2>
                           <p className="text-white/60 leading-relaxed text-[15px]">
                             Reach Margin for onboarding, Amazon connection issues, evidence questions, billing, API access, Audit problems, or anything blocking recovery work.
                           </p>
                           <div className="pt-6 space-y-4">
-                            <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">Direct Email</div>
+                            <div className="text-[11px] font-bold uppercase tracking-tight text-[#635BFF]">Direct Email</div>
                             <a href="mailto:support@margin-finance.com" className="text-[16px] font-medium hover:underline">support@margin-finance.com</a>
                           </div>
                         </div>
@@ -315,11 +315,11 @@ export default function Contact() {
                                 value={supportForm.message}
                                 onChange={(e) => setSupportForm({ ...supportForm, message: e.target.value })}
                                 placeholder="Tell us what is stuck and what you expected to happen."
-                                className="min-h-[120px] rounded-[5px] border-[#DCE8EE] bg-white text-[14px] leading-relaxed focus-visible:ring-[#0B74DE]/10 focus-visible:border-[#0B74DE]"
+                                className="min-h-[120px] rounded-[5px] border-[#DDE2E1] bg-white text-[14px] leading-relaxed focus-visible:ring-[#635BFF]/10 focus-visible:border-[#635BFF]"
                                 required
                               />
                             </div>
-                            <Button type="submit" disabled={isSubmitting} className="h-12 w-full rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
+                            <Button type="submit" disabled={isSubmitting} className="h-12 w-full rounded-md bg-[#635BFF] text-[14px] font-semibold text-white shadow-lg shadow-[#635BFF]/20 hover:bg-[#5148E5] transition-all">
                               {isSubmitting ? 'Sending...' : 'Send Support Request'}
                             </Button>
                           </form>
@@ -330,7 +330,7 @@ export default function Contact() {
 
                   {selectedRoute === 'partnership' && (
                     <div className="grid lg:grid-cols-5">
-                      <div className="lg:col-span-2 bg-[#182026] p-8 md:p-12 text-white flex flex-col justify-between">
+                      <div className="lg:col-span-2 bg-[#30343B] p-8 md:p-12 text-white flex flex-col justify-between">
                         <div className="space-y-6">
                           <h2 className="font-lora text-3xl font-medium tracking-tight">Build a better recovery operation for the businesses you serve.</h2>
                           <p className="text-white/60 leading-relaxed text-[15px]">
@@ -424,11 +424,11 @@ export default function Contact() {
                                 value={partnershipForm.message}
                                 onChange={(e) => setPartnershipForm({ ...partnershipForm, message: e.target.value })}
                                 placeholder="Tell us what you are trying to build or improve."
-                                className="min-h-[120px] rounded-[5px] border-[#DCE8EE] bg-white text-[14px] leading-relaxed focus-visible:ring-[#0B74DE]/10 focus-visible:border-[#0B74DE]"
+                                className="min-h-[120px] rounded-[5px] border-[#DDE2E1] bg-white text-[14px] leading-relaxed focus-visible:ring-[#635BFF]/10 focus-visible:border-[#635BFF]"
                                 required
                               />
                             </div>
-                            <Button type="submit" disabled={isSubmitting} className="h-12 w-full rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
+                            <Button type="submit" disabled={isSubmitting} className="h-12 w-full rounded-md bg-[#635BFF] text-[14px] font-semibold text-white shadow-lg shadow-[#635BFF]/20 hover:bg-[#5148E5] transition-all">
                               {isSubmitting ? 'Sending...' : 'Discuss a Partnership'}
                             </Button>
                           </form>
@@ -439,7 +439,7 @@ export default function Contact() {
 
                   {selectedRoute === 'general' && (
                     <div className="grid lg:grid-cols-5">
-                      <div className="lg:col-span-2 bg-[#182026] p-8 md:p-12 text-white flex flex-col justify-between">
+                      <div className="lg:col-span-2 bg-[#30343B] p-8 md:p-12 text-white flex flex-col justify-between">
                         <div className="space-y-6">
                           <h2 className="font-lora text-3xl font-medium tracking-tight">Have a question that does not fit the other paths?</h2>
                           <p className="text-white/60 leading-relaxed text-[15px]">
@@ -510,11 +510,11 @@ export default function Contact() {
                                 value={generalForm.message}
                                 onChange={(e) => setGeneralForm({ ...generalForm, message: e.target.value })}
                                 placeholder="Tell us what you would like to know."
-                                className="min-h-[120px] rounded-[5px] border-[#DCE8EE] bg-white text-[14px] leading-relaxed focus-visible:ring-[#0B74DE]/10 focus-visible:border-[#0B74DE]"
+                                className="min-h-[120px] rounded-[5px] border-[#DDE2E1] bg-white text-[14px] leading-relaxed focus-visible:ring-[#635BFF]/10 focus-visible:border-[#635BFF]"
                                 required
                               />
                             </div>
-                            <Button type="submit" disabled={isSubmitting} className="h-12 w-full rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
+                            <Button type="submit" disabled={isSubmitting} className="h-12 w-full rounded-md bg-[#635BFF] text-[14px] font-semibold text-white shadow-lg shadow-[#635BFF]/20 hover:bg-[#5148E5] transition-all">
                               {isSubmitting ? 'Sending...' : 'Send General Inquiry'}
                             </Button>
                           </form>
@@ -529,57 +529,57 @@ export default function Contact() {
 
           {/* Direct Contact Table */}
           <section className="mb-24">
-            <h3 className="text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6] mb-8">Direct contact</h3>
+            <h3 className="text-[11px] font-bold uppercase tracking-tight text-[#7A858A] mb-8">Direct contact</h3>
             <div className="contact-route-panel overflow-hidden border-y bg-white">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#FAFAF7] border-b border-[#D8E3E8]">
-                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#182026]">Need</th>
-                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#182026]">Contact</th>
+                  <tr className="bg-[#F7F8F7] border-b border-[#E1E5E5]">
+                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#30343B]">Need</th>
+                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#30343B]">Contact</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#D8E3E8]">
+                <tbody className="divide-y divide-[#E1E5E5]">
                   <tr>
-                    <td className="px-6 py-4 text-[13px] font-medium text-[#182026]">Existing-customer support</td>
-                    <td className="px-6 py-4 text-[13px] text-[#0B74DE] font-medium hover:underline"><a href="mailto:support@margin-finance.com">support@margin-finance.com</a></td>
+                    <td className="px-6 py-4 text-[13px] font-medium text-[#30343B]">Existing-customer support</td>
+                    <td className="px-6 py-4 text-[13px] text-[#635BFF] font-medium hover:underline"><a href="mailto:support@margin-finance.com">support@margin-finance.com</a></td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-4 text-[13px] font-medium text-[#182026]">Enterprise Assessment</td>
-                    <td className="px-6 py-4 text-[13px] text-[#0B74DE] font-medium hover:underline"><a href="mailto:enterprise@margin-finance.com">enterprise@margin-finance.com</a></td>
+                    <td className="px-6 py-4 text-[13px] font-medium text-[#30343B]">Enterprise Assessment</td>
+                    <td className="px-6 py-4 text-[13px] text-[#635BFF] font-medium hover:underline"><a href="mailto:enterprise@margin-finance.com">enterprise@margin-finance.com</a></td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-4 text-[13px] font-medium text-[#182026]">Partnerships</td>
-                    <td className="px-6 py-4 text-[13px] text-[#0B74DE] font-medium hover:underline"><a href="mailto:partnerships@margin-finance.com">partnerships@margin-finance.com</a></td>
+                    <td className="px-6 py-4 text-[13px] font-medium text-[#30343B]">Partnerships</td>
+                    <td className="px-6 py-4 text-[13px] text-[#635BFF] font-medium hover:underline"><a href="mailto:partnerships@margin-finance.com">partnerships@margin-finance.com</a></td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-4 text-[13px] font-medium text-[#182026]">General inquiry</td>
-                    <td className="px-6 py-4 text-[13px] text-[#0B74DE] font-medium hover:underline"><a href="mailto:hello@margin-finance.com">hello@margin-finance.com</a></td>
+                    <td className="px-6 py-4 text-[13px] font-medium text-[#30343B]">General inquiry</td>
+                    <td className="px-6 py-4 text-[13px] text-[#635BFF] font-medium hover:underline"><a href="mailto:hello@margin-finance.com">hello@margin-finance.com</a></td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            <p className="mt-4 text-[12px] text-[#8C9BA6] italic">
+            <p className="mt-4 text-[12px] text-[#7A858A] italic">
               A smaller number of reliable routes is better than a directory of silent inboxes. We aim to respond within one business day.
             </p>
           </section>
 
           {/* Reassurance */}
-          <section className="py-16 border-t border-[#D8E3E8] grid md:grid-cols-2 gap-12">
+          <section className="py-16 border-t border-[#E1E5E5] grid md:grid-cols-2 gap-12">
             <div className="space-y-4">
-              <h3 className="text-[18px] font-bold text-[#182026]">You are contacting a team—not entering a sales funnel blind.</h3>
-              <p className="text-[14px] text-[#66737F] leading-relaxed">
+              <h3 className="text-[18px] font-bold text-[#30343B]">You are contacting a team—not entering a sales funnel blind.</h3>
+              <p className="text-[14px] text-[#7A858A] leading-relaxed">
                 A message to Margin does not connect your Amazon account, authorize a submission, change your provider, or commit you to a paid engagement.
               </p>
-              <p className="text-[14px] text-[#66737F] leading-relaxed">
+              <p className="text-[14px] text-[#7A858A] leading-relaxed">
                 We use the information you provide to understand the request, route it correctly, and determine the next useful step. If a connection, upload, authorization, or payment is needed later, we will explain why before asking for it.
               </p>
             </div>
-            <div className="border-y border-[#D8E3E8] bg-[#FAFAF7] py-8 space-y-4">
-              <div className="flex items-center gap-2 text-[11px] font-bold text-[#0B74DE] uppercase tracking-tight">
+            <div className="border-y border-[#E1E5E5] bg-[#F7F8F7] py-8 space-y-4">
+              <div className="flex items-center gap-2 text-[11px] font-bold text-[#635BFF] uppercase tracking-tight">
                 <ShieldCheck className="h-4 w-4" />
                 Privacy first
               </div>
-              <p className="text-[14px] text-[#4D5B66] leading-relaxed">
+              <p className="text-[14px] text-[#667177] leading-relaxed">
                 Please share only the context needed to route your request. Do not include passwords, secret keys, payment-card details, or unnecessary customer information.
               </p>
             </div>
@@ -598,18 +598,18 @@ function IntentCard({ icon: Icon, title, description, cta, onClick }: { icon: Lu
     <button
       type="button"
       onClick={onClick}
-      className="group flex min-h-[220px] w-full cursor-pointer flex-col justify-between border-t border-[#D8E3E8] bg-transparent py-8 text-left transition-colors hover:bg-[#F8FAFB]/70"
+      className="group flex min-h-[220px] w-full cursor-pointer flex-col justify-between border-t border-[#E1E5E5] bg-transparent py-8 text-left transition-colors hover:bg-[#F4F5F4]/70"
     >
       <div className="space-y-5">
-        <div className="flex h-5 w-5 items-center justify-center text-[#6B7280] transition-colors group-hover:text-[#0B74DE]">
+        <div className="flex h-5 w-5 items-center justify-center text-[#6B7280] transition-colors group-hover:text-[#635BFF]">
           <Icon className="h-full w-full" strokeWidth={1.5} />
         </div>
         <div className="space-y-2">
-          <h3 className="text-[16px] font-bold text-[#182026] tracking-tight">{title}</h3>
-          <p className="text-[13px] text-[#66737F] leading-relaxed">{description}</p>
+          <h3 className="text-[16px] font-bold text-[#30343B] tracking-tight">{title}</h3>
+          <p className="text-[13px] text-[#7A858A] leading-relaxed">{description}</p>
         </div>
       </div>
-      <div className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE] tracking-tight group-hover:gap-3 transition-all">
+      <div className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold text-[#635BFF] tracking-tight group-hover:gap-3 transition-all">
         {cta} <ChevronRight className="h-3 w-3" />
       </div>
     </button>
@@ -619,23 +619,23 @@ function IntentCard({ icon: Icon, title, description, cta, onClick }: { icon: Lu
 function SuccessState({ title, message, onReset, showPrivacyNote }: { title: string, message: string, onReset: () => void, showPrivacyNote?: boolean }) {
   return (
     <div className="h-full flex flex-col items-center justify-center text-center py-12 px-6">
-      <div className="h-16 w-16 rounded-full bg-[#0B74DE]/10 flex items-center justify-center mb-6">
-        <CheckCircle2 className="h-8 w-8 text-[#0B74DE]" />
+      <div className="h-16 w-16 rounded-full bg-[#635BFF]/10 flex items-center justify-center mb-6">
+        <CheckCircle2 className="h-8 w-8 text-[#635BFF]" />
       </div>
-      <h3 className="text-2xl font-bold text-[#182026] mb-4">{title}</h3>
-      <p className="text-[#66737F] max-w-sm mb-8 leading-relaxed">
+      <h3 className="text-2xl font-bold text-[#30343B] mb-4">{title}</h3>
+      <p className="text-[#7A858A] max-w-sm mb-8 leading-relaxed">
         {message}
       </p>
       <div className="space-y-4">
         <Button 
           onClick={onReset}
           variant="outline"
-          className="h-11 rounded-md border-[#D8E3E8] px-8 text-[13px] font-semibold"
+          className="h-11 rounded-md border-[#E1E5E5] px-8 text-[13px] font-semibold"
         >
           Back to contact paths
         </Button>
         {showPrivacyNote && (
-          <p className="text-[12px] text-[#8C9BA6] italic">
+          <p className="text-[12px] text-[#7A858A] italic">
             Do not send passwords, access tokens, payment card details, or sensitive customer data by email.
           </p>
         )}
