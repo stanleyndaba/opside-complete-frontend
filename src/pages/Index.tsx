@@ -30,6 +30,7 @@ import {
   PlayCircle,
   ReceiptText,
   SearchCheck,
+  ShieldCheck,
   Truck,
   UserCheck,
   Square,
@@ -2550,6 +2551,62 @@ function FounderNoteSection() {
   );
 }
 
+function SecuritySection() {
+  const cards = [
+    {
+      title: "Connected to Amazon",
+      body: "Margin integrates with Amazon's Selling Partner API to support the examination of seller financial and operational records, using Amazon's authorization mechanisms and applicable developer requirements.",
+      visual: (
+        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-[#DCE2E5] bg-[#F4F6F6]">
+          <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-9 w-9 object-contain" />
+        </div>
+      ),
+    },
+    {
+      title: "Enterprise-grade AI",
+      body: "Margin combines purpose-built financial workflows and deterministic controls with advanced AI capabilities from OpenAI and Anthropic. AI supports complex financial analysis and explanations within Margin's broader investigation and recovery system.",
+      visual: (
+        <div className="flex items-center gap-2">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-[#DCE2E5] bg-[#F4F6F6] p-4"><img src="/ai-logos/chatgpt.svg" alt="OpenAI" className="h-full w-full object-contain" /></div>
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-[#DCE2E5] bg-[#F4F6F6] p-4"><img src="/ai-logos/claude.svg" alt="Anthropic Claude" className="h-full w-full object-contain" /></div>
+        </div>
+      ),
+    },
+    {
+      title: "Security built into the workflow",
+      body: "Margin is designed around controlled data access, seller-data isolation, evidence traceability, and approval before recovery submissions—helping keep sensitive financial work accountable and under your control.",
+      visual: (
+        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-[#DCE2E5] bg-[#F4F6F6] text-[#30343B]">
+          <ShieldCheck className="h-8 w-8" strokeWidth={1.5} aria-hidden="true" />
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <section className="relative overflow-hidden border-y border-[#E1E5E5] bg-[#F4F5F4] py-12 sm:py-16 md:py-20" aria-labelledby="security-section-title">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="max-w-[760px]">
+          <h2 id="security-section-title" className="font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#30343B] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>Your financial data, protected by design.</h2>
+          <p className="mt-5 max-w-[700px] text-[15px] leading-7 text-[#667177] sm:text-[17px] sm:leading-8">Margin is built to handle sensitive Amazon financial workflows with controlled data access, evidence-led decisions, and security designed around the integrity of your financial records.</p>
+        </motion.div>
+        <div className="mt-10 grid gap-3 md:grid-cols-3 md:gap-4 lg:mt-14">
+          {cards.map((card, index) => (
+            <motion.article key={card.title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="flex min-h-[310px] flex-col bg-white p-6 shadow-[0_1px_2px_rgba(48,52,59,0.04)] sm:p-7 md:p-8">
+              <div className="flex min-h-16 items-center">{card.visual}</div>
+              <div className="mt-auto pt-12">
+                <h3 className="text-[16px] font-semibold tracking-[-0.02em] text-[#30343B] sm:text-[17px]">{card.title}</h3>
+                <p className="mt-3 text-[14px] leading-6 text-[#667177]">{card.body}</p>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+        <Link to="/security" className="mt-7 inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#635BFF] hover:decoration-[#635BFF]">More about security <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+      </div>
+    </section>
+  );
+}
+
 function ConsumerRecoverySection({ onCta }: { onCta: () => void }) {
   return (
     <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="consumer-recovery-title">
@@ -2661,6 +2718,7 @@ export default function Index() {
             </div>
           </div>
         </section>
+        <SecuritySection />
 
         {/* Engagement — What should happen next? */}
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
