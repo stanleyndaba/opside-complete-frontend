@@ -40,6 +40,7 @@ import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PersonalRecoverySupportSection } from "@/components/landing/PersonalRecoverySupportSection";
+import { MarginOperatingWorkflow } from "@/components/landing/MarginOperatingWorkflow";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
 import { EnterpriseOnboardingSection, RecoveryOfferSection, RecoveryOfferSectionDuplicate, RecoveryRoutingSection } from "@/components/landing/RecoveryDecisionSections";
@@ -271,76 +272,6 @@ function IngestedDocumentsOutcomeSection() {
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="min-w-0">
             <FinalDelegationPreview compactMobile mobileHeight="h-[390px]" src="/document-ingestion" title="Document Ingestion page preview" />
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-const financialControlOperations = [
-  "Detect the variance",
-  "Reconstruct the event",
-  "Test the evidence",
-  "Quantify the exposure",
-  "Build the case",
-  "Manage the response",
-  "Handle the rejection",
-  "Reconcile the payout",
-];
-
-function FinancialControlOperationsSection() {
-  const reduceMotion = useReducedMotion();
-  const [activeOperation, setActiveOperation] = useState(0);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      setActiveOperation(0);
-      return;
-    }
-    const interval = window.setInterval(() => {
-      setActiveOperation((current) => (current + 1) % financialControlOperations.length);
-    }, 1000);
-    return () => window.clearInterval(interval);
-  }, [reduceMotion]);
-
-  const visibleOperations = [-3, -2, -1, 0, 1, 2, 3].map((offset) => {
-    const index = (activeOperation - offset + financialControlOperations.length) % financialControlOperations.length;
-    return { operation: financialControlOperations[index], offset, opacity: [0.1, 0.3, 0.6, 1, 0.6, 0.3, 0.1][offset + 3] };
-  });
-
-  return (
-    <section className="relative overflow-hidden bg-[#F4F7F7] py-14 sm:py-18 md:py-24" aria-labelledby="financial-control-operations-title">
-      <div className={containerClass}>
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-20">
-          <motion.div {...revealProps}>
-            <h2 id="financial-control-operations-title" className="max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              <span className="heading-tone-dark">Margin carries the problem</span> <span className="heading-tone-muted">from first signal to reconciled resolution</span>
-            </h2>
-          </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative flex min-h-[330px] items-center justify-center overflow-hidden sm:min-h-[430px] [mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_7%,black_93%,transparent_100%)]">
-            <div className="financial-control-word-stack relative flex w-full max-w-[585px] flex-col items-start justify-center gap-1.5 text-left sm:items-center sm:gap-2.5 sm:text-center">
-              {visibleOperations.map(({ operation, offset, opacity }) => {
-                const isActive = offset === 0;
-                return (
-                  <motion.div
-                    key={operation}
-                    initial={false}
-                    layout
-                    animate={{ opacity, scale: isActive ? 1.02 : 1 }}
-                    transition={{
-                      layout: { duration: reduceMotion ? 0 : 0.62, ease: [0.22, 1, 0.36, 1] },
-                      opacity: { duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] },
-                      scale: { duration: reduceMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] },
-                    }}
-                    className={`financial-control-stage font-lora text-[32px] leading-[1.05] tracking-[-0.045em] sm:text-[48px] md:text-[60px] ${isActive ? "text-[#182026]" : "text-[#A8B3B7]"}`}
-                    style={{ fontFamily: '"Lora", Georgia, "Times New Roman", serif', fontWeight: 500 }}
-                  >
-                    {operation}
-                  </motion.div>
-                );
-              })}
-            </div>
           </motion.div>
         </div>
       </div>
@@ -2676,7 +2607,7 @@ export default function Index() {
         {/* Operating method — How does Margin decide and act? */}
         <MarginEngineSection />
         <MarginLifecycleSection />
-        <FinancialControlOperationsSection />
+        <MarginOperatingWorkflow />
         <MarginStandardSection />
         <ControlSection />
 
