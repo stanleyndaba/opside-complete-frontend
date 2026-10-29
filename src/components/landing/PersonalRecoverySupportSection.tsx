@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { AtSign, Check, Copy, MessageCircle, Paperclip, Plus } from "lucide-react";
+import { ArrowUp, AtSign, Check, ChevronDown, Copy, MessageCircle, Paperclip, Plus } from "lucide-react";
 
 const prompts = [
   {
@@ -140,13 +140,13 @@ export function PersonalRecoverySupportSection() {
                 <div className="flex min-h-[44px] items-center gap-2 px-1.5 sm:min-h-[48px] sm:px-2">
                   <span className="min-w-0 flex-1 text-[13px] leading-5 text-[#52616A] sm:text-[14px]">{draftQuestion || "Ask Margin about this recovery"}{phase === "draft" && <span aria-hidden="true" className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-pulse bg-[#0B74DE]" />}</span>
                   <button type="button" onClick={advancePrompt} aria-label="Send the next recovery question" className="flex h-9 shrink-0 items-center justify-center rounded-full bg-[#111518] px-4 text-[12px] font-semibold text-white transition-colors hover:bg-[#2A3033] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/25">
-                    Ask
+                    Ask <ArrowUp className="h-3.5 w-3.5" strokeWidth={2.2} />
                   </button>
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-3 px-1.5 text-[#52616A]" aria-label="Prompt sources and files">
                 <button type="button" className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold transition-colors hover:text-[#526AB1]" aria-label="Add sources">
                   <AtSign className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />
-                  Sources
+                  Data Sources <ChevronDown className="h-3 w-3 text-[#7A929D]" strokeWidth={2} />
                 </button>
                 <button type="button" className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold transition-colors hover:text-[#526AB1]" aria-label="Add files">
                   <Paperclip className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />
