@@ -143,40 +143,41 @@ export function PersonalRecoverySupportSection() {
                     Ask
                   </button>
                 </div>
-              </div>
-
-              <div className="mt-3 flex flex-wrap items-center gap-2 text-[#52616A]" aria-label="Prompt sources and files">
-                <button type="button" className="inline-flex h-8 items-center gap-1.5 rounded-[6px] border border-[#DDE6E8] bg-white px-2.5 text-[11px] font-semibold transition-colors hover:bg-[#F5F7F7]" aria-label="Add sources">
+                <div className="mt-2 flex flex-wrap items-center gap-3 px-1.5 text-[#52616A]" aria-label="Prompt sources and files">
+                <button type="button" className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold transition-colors hover:text-[#526AB1]" aria-label="Add sources">
                   <AtSign className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />
                   Sources
                 </button>
-                <button type="button" className="inline-flex h-8 items-center gap-1.5 rounded-[6px] border border-[#DDE6E8] bg-white px-2.5 text-[11px] font-semibold transition-colors hover:bg-[#F5F7F7]" aria-label="Add files">
+                <button type="button" className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold transition-colors hover:text-[#526AB1]" aria-label="Add files">
                   <Paperclip className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />
                   Files
                 </button>
+                </div>
               </div>
 
-              <div className="mt-3 flex flex-wrap items-center gap-2.5" aria-label="Add connected sources">
+              <div className="mt-3 flex flex-wrap items-center gap-3 px-1" aria-label="Add connected sources">
                 {[
                   ["/gmailicon.png", "Gmail"],
                   ["/Dropbox_Icon.svg.png", "Dropbox"],
                   ["/xero.png", "Xero"],
                   ["/quickbooks.png", "QuickBooks"],
                 ].map(([src, label]) => (
-                  <button type="button" key={label} className="group inline-flex h-8 items-center gap-1 rounded-[6px] border border-[#E2E9EA] bg-white px-1.5 transition-colors hover:bg-[#F5F7F7]" aria-label={`Add ${label}`}>
+                  <button type="button" key={label} className="group inline-flex h-8 items-center gap-1 px-0.5 text-[11px] text-[#52616A] transition-colors hover:text-[#526AB1]" aria-label={`Add ${label}`}>
                     <img src={src} alt={label} className="h-5 w-5 object-contain" />
+                    <span>{label}</span>
                     <Plus className="h-3 w-3 text-[#7A929D] transition-colors group-hover:text-[#526AB1]" strokeWidth={2.2} />
                   </button>
                 ))}
               </div>
 
-              <div className="mt-4 border-t border-[#E1E9EB] pt-3" aria-label="Recent sessions">
-                <p className="mb-2 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#91A3AB]">Recent sessions</p>
+              <div className="mt-4 pt-1" aria-label="Recent sessions">
+                <p className="mb-2 text-[10px] font-semibold tracking-tight text-[#91A3AB]">Recent sessions</p>
                 <div className="grid gap-1.5 sm:grid-cols-3">
-                  {["Reversal query", "Dispute Arrival Delays", "Recovery Stall"].map((session) => (
-                    <button type="button" key={session} className="flex min-w-0 items-center gap-2 rounded-[6px] px-2 py-1.5 text-left text-[11px] text-[#52616A] transition-colors hover:bg-[#F5F7F7]" aria-label={`Open ${session}`}>
+                  {["Reconcile reversal exposure", "Explain arrival-delay dispute", "Why did this recovery stall?"].map((session) => (
+                    <button type="button" key={session} className="group flex min-w-0 items-center gap-1.5 px-0.5 py-1.5 text-left text-[11px] text-[#52616A] transition-colors hover:text-[#526AB1]" aria-label={`Open ${session}`}>
                       <MessageCircle className="h-3.5 w-3.5 shrink-0 text-[#7A929D]" strokeWidth={1.8} />
                       <span className="truncate">{session}</span>
+                      <Plus className="h-3 w-3 shrink-0 text-[#7A929D] transition-colors group-hover:text-[#526AB1]" strokeWidth={2.2} />
                     </button>
                   ))}
                 </div>
