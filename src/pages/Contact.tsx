@@ -82,12 +82,8 @@ export default function Contact() {
   };
 
   return (
-    <div className="contact-page landing-google-sans relative min-h-screen overflow-x-hidden bg-[#F7F8F7] text-[#30343B] selection:bg-[#635BFF]/16 selection:text-[#30343B] font-sans">
+    <div className="contact-page landing-google-sans security-design-page relative min-h-screen overflow-x-hidden bg-[#F7F8F7] text-[#30343B] selection:bg-[#635BFF]/16 selection:text-[#30343B] font-sans">
       {/* Background effects */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.28] [background-image:linear-gradient(rgba(11,116,222,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.04)_1px,transparent_1px)] [background-size:72px_72px]" />
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(178,220,232,0.25),transparent_34%),radial-gradient(circle_at_84%_0%,rgba(11,116,222,0.07),transparent_32%)]" />
-      </div>
 
       <PublicNavbar variant="light" />
 
@@ -95,7 +91,8 @@ export default function Contact() {
         <div className={containerClass}>
           
           {/* Hero */}
-          <section className="mb-20 max-w-[900px] space-y-6 border-b border-[#E1E5E5] pb-20 md:mb-24 md:pb-24">
+          <section className="relative mb-20 grid max-w-[1280px] gap-12 border-b border-[#E1E5E5] pb-20 md:mb-24 md:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.75fr)] md:items-end md:gap-16 md:pb-24">
+            <div className="space-y-6">
             <div className="inline-flex items-center gap-2 font-google-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-[#635BFF]">
               Contact Margin
             </div>
@@ -109,13 +106,19 @@ export default function Contact() {
             <p className="max-w-xl font-google-sans text-[13px] italic leading-6 tracking-tight text-[#7A858A]">
               You do not need to explain Margin. Just tell us what is stuck, what you are trying to establish, or what you want to do next.
             </p>
+            </div>
+            <div className="relative overflow-hidden bg-[#F4F5F4] p-5 shadow-[0_22px_65px_rgba(48,52,59,0.08)] sm:p-6">
+              <div className="flex items-center justify-between border-b border-[#DDE2E1] pb-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#30343B]"><ShieldCheck className="h-5 w-5" strokeWidth={1.5} /></div><div><p className="text-[12px] font-semibold">Request routing</p><p className="mt-0.5 text-[10px] text-[#7A858A]">The right route, before the next step</p></div></div><span className="text-[10px] font-semibold text-[#4D7869]">Controlled</span></div>
+              <div className="space-y-2.5 pt-4">{[['Recovery question','Start with an examination',ShieldCheck],['Enterprise operation','Define the assessment boundary',Building2],['Existing workflow','Route support with context',FileText]].map(([label, detail, Icon]) => <div key={label as string} className="flex items-center gap-3 bg-white px-3.5 py-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF2F0] text-[#4D7869]"><Icon className="h-4 w-4" strokeWidth={1.6} /></div><div><p className="text-[12px] font-semibold">{label as string}</p><p className="mt-0.5 text-[10px] text-[#7A858A]">{detail as string}</p></div></div>)}</div>
+              <div className="mt-4 flex items-center gap-2 border-t border-[#DDE2E1] pt-4 text-[10px] text-[#7A858A]"><ShieldCheck className="h-3.5 w-3.5" /> No account connection is made from this page.</div>
+            </div>
           </section>
 
           {/* Intent Selector */}
           {!selectedRoute && (
             <div className="space-y-12">
               <h2 className="text-[11px] font-bold uppercase tracking-tight text-[#7A858A]">What brings you here?</h2>
-              <section className="mb-24 grid gap-x-8 gap-y-4 md:grid-cols-2 lg:grid-cols-3">
+              <section className="mb-24 grid gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-4">
                 <IntentCard 
                   icon={ShieldCheck}
                   title="I want to check my Amazon recovery"
@@ -175,7 +178,7 @@ export default function Contact() {
                   </button>
                 </div>
 
-                <div className="contact-route-panel overflow-hidden border-y bg-white">
+                <div className="contact-route-panel overflow-hidden bg-white shadow-[0_1px_2px_rgba(48,52,59,0.04)]">
                   {selectedRoute === 'audit' && (
                     <div className="p-8 md:p-12 space-y-8">
                       <div className="max-w-2xl space-y-4">
@@ -530,7 +533,7 @@ export default function Contact() {
           {/* Direct Contact Table */}
           <section className="mb-24">
             <h3 className="text-[11px] font-bold uppercase tracking-tight text-[#7A858A] mb-8">Direct contact</h3>
-            <div className="contact-route-panel overflow-hidden border-y bg-white">
+            <div className="contact-route-panel overflow-hidden bg-white shadow-[0_1px_2px_rgba(48,52,59,0.04)]">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#F7F8F7] border-b border-[#E1E5E5]">
@@ -598,7 +601,7 @@ function IntentCard({ icon: Icon, title, description, cta, onClick }: { icon: Lu
     <button
       type="button"
       onClick={onClick}
-      className="group flex min-h-[220px] w-full cursor-pointer flex-col justify-between border-t border-[#E1E5E5] bg-transparent py-8 text-left transition-colors hover:bg-[#F4F5F4]/70"
+      className="group flex min-h-[240px] w-full cursor-pointer flex-col justify-between bg-white p-6 text-left shadow-[0_1px_2px_rgba(48,52,59,0.04)] transition-colors hover:bg-white sm:p-7"
     >
       <div className="space-y-5">
         <div className="flex h-5 w-5 items-center justify-center text-[#6B7280] transition-colors group-hover:text-[#635BFF]">

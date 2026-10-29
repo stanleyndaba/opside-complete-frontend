@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Check, ShieldCheck, BarChart3, Database, CreditCard, Activity, BriefcaseBusiness, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, Check, ShieldCheck, BarChart3, Database, CreditCard, Activity, BriefcaseBusiness, ArrowUpRight, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -84,13 +84,14 @@ export default function Sales() {
     };
 
     return (
-        <div className="font-google-sans min-h-screen overflow-x-hidden bg-[#F7F8F7] text-[#30343B] selection:bg-[#635BFF]/16 selection:text-[#30343B] font-sans">
+        <div className="font-google-sans security-design-page min-h-screen overflow-x-hidden bg-[#F7F8F7] text-[#30343B] selection:bg-[#635BFF]/16 selection:text-[#30343B] font-sans">
             <PublicNavbar variant="light" />
 
             <main className="relative z-10 pt-32 pb-24">
                 {/* Hero Section */}
-                <section className="mb-32 border-b border-[#E1E5E5] bg-[#F7F8F7] px-6 py-16 text-[#30343B] md:py-24">
-                    <div className="container mx-auto max-w-5xl">
+                <section className="relative mb-24 overflow-hidden border-b border-[#E1E5E5] bg-white px-6 pb-16 pt-16 text-[#30343B] md:mb-28 md:pb-24 md:pt-24">
+                    <div className="pointer-events-none absolute right-[-12%] top-[-14%] h-[520px] w-[520px] rounded-full bg-[#EDEFF0] blur-3xl" />
+                    <div className="relative mx-auto grid w-full max-w-[1280px] gap-12 md:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.75fr)] md:items-end md:gap-16">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -137,12 +138,17 @@ export default function Sales() {
                             </div>
                         </div>
                     </motion.div>
+                    <div className="relative overflow-hidden bg-[#F4F5F4] p-5 shadow-[0_22px_65px_rgba(48,52,59,0.08)] sm:p-6">
+                        <div className="flex items-center justify-between border-b border-[#DDE2E1] pb-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#30343B]"><ShieldCheck className="h-5 w-5" strokeWidth={1.5} /></div><div><p className="text-[12px] font-semibold">Enterprise control surface</p><p className="mt-0.5 text-[10px] text-[#7A858A]">Evidence-led recovery operations</p></div></div><span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-[#4D7869]"><span className="h-1.5 w-1.5 rounded-full bg-[#4D7869]" /> Ready to assess</span></div>
+                        <div className="space-y-2.5 pt-4">{[['Account coverage','Multiple brands and marketplaces',Database],['Evidence position','Source records linked to findings',FileText],['Decision rights','Your team approves the action',Check]].map(([label, detail, Icon]) => <div key={label as string} className="flex items-center gap-3 bg-white px-3.5 py-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF2F0] text-[#4D7869]"><Icon className="h-4 w-4" strokeWidth={1.6} /></div><div><p className="text-[12px] font-semibold">{label as string}</p><p className="mt-0.5 text-[10px] text-[#7A858A]">{detail as string}</p></div></div>)}</div>
+                        <div className="mt-4 flex items-center gap-2 border-t border-[#DDE2E1] pt-4 text-[10px] text-[#7A858A]"><ShieldCheck className="h-3.5 w-3.5" /> Start with the operation you need to control.</div>
+                    </div>
                     </div>
                 </section>
 
                 {/* Section 1: The Problem */}
-                <section className="container mx-auto px-6 max-w-5xl mb-32">
-                    <div className="grid lg:grid-cols-12 gap-16">
+                <section className="border-y border-[#E1E5E5] bg-[#F4F5F4] py-16 sm:py-20 md:py-28">
+                    <div className="mx-auto grid w-full max-w-[1280px] px-6 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14">
                         <div className="lg:col-span-5 space-y-6">
                             <h2 className="font-lora text-3xl font-medium tracking-tight text-[#30343B] leading-tight">
                                 The more you sell, the less you can afford to leave unresolved.
@@ -307,7 +313,7 @@ export default function Sales() {
                             { icon: Activity, title: "Recurring control", desc: "Move from one-off recovery work toward a scheduled examination and a consistent Control Statement that shows what changed, what was recovered, what reversed, and what requires attention." },
                             { icon: BriefcaseBusiness, title: "A clear handoff", desc: "Your team can own the work, ask Margin to handle an approved recovery route, or use Margin as an independent control layer alongside an existing provider." }
                         ].map((benefit, i) => (
-                            <div key={i} className="border-t border-[#E1E5E5] bg-transparent py-8 flex gap-5">
+                            <div key={i} className="flex gap-5 bg-white p-6 shadow-[0_1px_2px_rgba(48,52,59,0.04)] sm:p-7">
                                 <div className="h-9 w-9 border-l-2 border-[#E1E5E5] pl-5 flex items-center justify-center flex-shrink-0">
                                     <benefit.icon className="h-4 w-4 text-[#7A858A]" strokeWidth={1.5} />
                                 </div>

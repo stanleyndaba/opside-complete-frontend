@@ -96,13 +96,13 @@ function EngagementCard({
     <motion.article
       {...reveal}
       transition={{ ...reveal.transition, delay: index * 0.08 }}
-      className="group flex h-full flex-col border-y border-[#E1E5E5] bg-transparent py-8 transition-colors duration-200 hover:bg-white/60 sm:px-6"
+      className="group flex min-h-[320px] h-full flex-col bg-white p-6 shadow-[0_1px_2px_rgba(48,52,59,0.04)] transition-colors duration-200 hover:bg-white sm:p-7 md:p-8"
     >
-      <div className="flex items-center gap-3 text-[12px] font-semibold tracking-tight text-[#635BFF]">
+      <div className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#7A858A]">
         <span className="h-px w-7 bg-[#635BFF]" />
         {eyebrow}
       </div>
-      <h3 className="mt-5 font-lora text-3xl font-medium leading-tight tracking-tight text-[#30343B]">{title}</h3>
+      <h3 className="mt-5 font-lora text-[26px] font-normal leading-tight tracking-[-0.04em] text-[#30343B]">{title}</h3>
       <p className="mt-4 text-[17px] font-semibold leading-7 text-[#3F4A50]">{summary}</p>
       <p className="mt-4 text-[15px] leading-7 text-[#667177]">{body}</p>
       <p className="mt-4 text-[15px] leading-7 text-[#667177]">{detail}</p>
@@ -110,7 +110,7 @@ function EngagementCard({
         <Button
           type="button"
           onClick={() => onCta(cta)}
-          className="h-11 w-full justify-between rounded-md bg-[#635BFF] px-4 text-left text-[13px] font-semibold text-white shadow-lg shadow-[#635BFF]/20 hover:bg-[#5148E5] sm:w-auto sm:min-w-[220px]"
+          className="h-11 rounded-[7px] bg-[#635BFF] px-4 text-left text-[13px] font-semibold text-white shadow-lg shadow-[#635BFF]/20 hover:bg-[#5148E5] sm:min-w-[220px]"
         >
           {cta}
           <ArrowRight className="h-4 w-4 shrink-0" />
@@ -155,7 +155,7 @@ export default function PricingAdjust() {
 
   return (
     <PageLayout title="Pricing" noPadding hideNavbar hideSidebar hideLogo plainBackground>
-      <div className="pricing-page landing-google-sans relative min-h-screen overflow-x-hidden bg-[#F7F8F7] font-sans text-[#30343B] selection:bg-[#635BFF]/16 selection:text-[#30343B]">
+      <div className="pricing-page landing-google-sans security-design-page relative min-h-screen overflow-x-hidden bg-[#F7F8F7] font-sans text-[#30343B] selection:bg-[#635BFF]/16 selection:text-[#30343B]">
         {isInAppOverlay ? (
           <div className="fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 sm:px-8">
             <Link to="/" className="rounded-full border border-[#DDE2E1] bg-white px-3 py-1.5 text-[10px] font-semibold tracking-tight text-[#7A858A] shadow-sm hover:bg-[#F4F5F4]">Landing page</Link>
@@ -168,8 +168,6 @@ export default function PricingAdjust() {
         )}
 
         <main className="relative">
-          <div className="pointer-events-none fixed inset-0 z-0 opacity-[0.28] [background-image:linear-gradient(rgba(11,116,222,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.04)_1px,transparent_1px)] [background-size:72px_72px]" />
-          <div className="pointer-events-none fixed inset-0 z-0"><div className="absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(178,220,232,0.25),transparent_34%),radial-gradient(circle_at_84%_0%,rgba(11,116,222,0.07),transparent_32%)]" /></div>
 
           <section className={isInAppOverlay ? 'relative px-5 pb-16 pt-28 sm:px-8 sm:pt-32' : 'relative px-5 pb-20 pt-32 sm:px-8 sm:pb-24 sm:pt-40'} aria-labelledby="pricing-hero-title">
             <div className={containerClass}>

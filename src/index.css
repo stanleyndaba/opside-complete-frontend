@@ -1212,3 +1212,27 @@ html, body, #root {
 .landing-google-sans .accounting-code-editor * {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
 }
+
+
+/* Security visual system page scope: keep legacy landing rules from overriding public-page redesigns. */
+.security-design-page {
+  background-color: #F7F8F7 !important;
+  color: #30343B !important;
+}
+.security-design-page .font-lora,
+.security-design-page .font-lora *,
+.security-design-page h1,
+.security-design-page h2,
+.security-design-page h3,
+.security-design-page h4,
+.security-design-page h5,
+.security-design-page h6 {
+  font-family: var(--font-serif) !important;
+}
+.security-design-page > main > section {
+  border-color: #E1E5E5 !important;
+}
+.security-design-page .contact-route-panel {
+  border-radius: 0 !important;
+  border-color: #E1E5E5 !important;
+}

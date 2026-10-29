@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, FileCheck2, ShieldCheck, UserCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { BrandFooter } from "@/components/layout/BrandFooter";
@@ -7,50 +7,30 @@ const containerClass = "mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px
 
 export default function ConsumerRecovery() {
   return (
-    <div className="landing-google-sans min-h-screen bg-[#F7F8F7] text-[#30343B] selection:bg-[#635BFF]/15 selection:text-[#30343B]">
+    <div className="landing-google-sans security-design-page min-h-screen bg-[#F7F8F7] text-[#30343B] selection:bg-[#635BFF]/15 selection:text-[#30343B]">
       <PublicNavbar variant="light" wide />
-
       <main>
-        <section className="relative overflow-hidden border-b border-[#DDE2E1] bg-[#F7F8F7] pb-16 pt-32 sm:pb-24 sm:pt-40 lg:pb-28 lg:pt-48">
-          <div className="pointer-events-none absolute inset-0 opacity-40 [background-image:linear-gradient(rgba(37,49,58,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(37,49,58,0.045)_1px,transparent_1px)] [background-size:72px_72px]" />
-          <div className={`${containerClass} relative grid items-end gap-12 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-20`}>
+        <section className="relative overflow-hidden bg-white pb-16 pt-32 sm:pb-20 sm:pt-40 md:pb-28 md:pt-48">
+          <div className="pointer-events-none absolute right-[-12%] top-[-14%] h-[520px] w-[520px] rounded-full bg-[#EDEFF0] blur-3xl" />
+          <div className={`${containerClass} relative grid gap-12 md:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.75fr)] md:items-end md:gap-16`}>
             <div className="max-w-[820px]">
-              <div className="mb-6 flex items-center gap-3">
-                <div className="h-px w-8 bg-[#635BFF]" />
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#635BFF]">Consumer recovery</span>
-              </div>
-              <h1 className="max-w-[780px] font-lora text-[46px] font-normal leading-[0.98] tracking-[-0.055em] text-[#30343B] sm:text-[68px] md:text-[82px] lg:text-[94px]">
-                The same recovery engine.
-                <span className="block text-[#7A858A]">Now for consumers.</span>
-              </h1>
-              <p className="mt-8 max-w-[660px] text-[17px] leading-8 text-[#667177] sm:text-[20px] sm:leading-9">
-                Margin is extending its financial recovery infrastructure beyond businesses.
-              </p>
-              <p className="mt-4 max-w-[660px] text-[17px] leading-8 text-[#667177] sm:text-[20px] sm:leading-9">
-                We&apos;re starting with high-value claims where a financial recovery may be available but hasn&apos;t been pursued.
-              </p>
-              <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
-                <Link to="/early-access" className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[7px] bg-[#635BFF] px-5 py-3 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] transition-all hover:-translate-y-px hover:bg-[#5148E5] sm:w-auto">
-                  Get Early Access <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#7A858A]">Target launch · Late November 2026</span>
-              </div>
+              <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7A858A]">Consumer recovery</p>
+              <h1 className="max-w-[780px] font-lora text-[46px] font-normal leading-[0.99] tracking-[-0.055em] text-[#30343B] sm:text-[68px] md:text-[82px]">The same recovery engine.<span className="block text-[#7A858A]">Now for consumers.</span></h1>
+              <p className="mt-7 max-w-[660px] text-[17px] leading-8 text-[#667177] sm:text-[20px] sm:leading-9">Margin is extending its financial recovery infrastructure beyond businesses.</p>
+              <p className="mt-4 max-w-[660px] text-[17px] leading-8 text-[#667177] sm:text-[20px] sm:leading-9">We&apos;re starting with high-value claims where a financial recovery may be available but hasn&apos;t been pursued.</p>
+              <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center"><Link to="/early-access" className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[7px] bg-[#635BFF] px-5 py-3 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] transition-colors hover:bg-[#5148E5] sm:w-auto">Get Early Access <ArrowRight className="h-4 w-4" /></Link><span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#7A858A]">Target launch · Late November 2026</span></div>
+            </div>
+            <div className="relative overflow-hidden bg-[#F4F5F4] p-5 shadow-[0_22px_65px_rgba(48,52,59,0.08)] sm:p-6">
+              <div className="flex items-center justify-between border-b border-[#DDE2E1] pb-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#30343B]"><ShieldCheck className="h-5 w-5" strokeWidth={1.5} /></div><div><p className="text-[12px] font-semibold">Consumer claim record</p><p className="mt-0.5 text-[10px] text-[#7A858A]">Evidence before action</p></div></div><span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-[#4D7869]"><span className="h-1.5 w-1.5 rounded-full bg-[#4D7869]" /> Early access</span></div>
+              <div className="space-y-2.5 pt-4">{[['Records received','Transaction trail assembled',FileCheck2],['Contradiction identified','Evidence linked to the issue',Check],['Next action','Recovery route under review',UserCheck]].map(([label, detail, Icon]) => <div key={label as string} className="flex items-center gap-3 bg-white px-3.5 py-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF2F0] text-[#4D7869]"><Icon className="h-4 w-4" strokeWidth={1.6} /></div><div><p className="text-[12px] font-semibold">{label as string}</p><p className="mt-0.5 text-[10px] text-[#7A858A]">{detail as string}</p></div></div>)}</div>
+              <div className="mt-4 flex items-center gap-2 border-t border-[#DDE2E1] pt-4 text-[10px] text-[#7A858A]"><ShieldCheck className="h-3.5 w-3.5" /> No generic refund promises. Evidence determines the route.</div>
             </div>
           </div>
         </section>
-
-        <section className="border-b border-[#DDE2E1] bg-[#F4F5F4] py-14 sm:py-20">
-          <div className={`${containerClass} grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:gap-24`}>
-            <div><p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#635BFF]">A narrower beginning</p><h2 className="mt-4 max-w-[520px] font-lora text-[34px] font-normal leading-[1.03] tracking-[-0.045em] text-[#30343B] sm:text-[48px]">Not every transaction needs a claim.</h2></div>
-            <div className="max-w-[650px] text-[16px] leading-8 text-[#667177] sm:text-[18px] sm:leading-9"><p>Consumer Recovery will focus on high-value unresolved transactions where the records support a meaningful contradiction—not generic customer support or promises of easy refunds.</p><p className="mt-5">The same discipline that helps businesses recover money now turns toward the consumer side of the transaction.</p></div>
-          </div>
-        </section>
-
-        <section className="border-t border-[#DDE2E1] bg-[#F4F5F4] py-14 text-[#30343B] sm:py-20">
-          <div className={`${containerClass} grid gap-8 sm:grid-cols-[1fr_auto] sm:items-end`}><div><p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#635BFF]">Consumer Recovery</p><h2 className="mt-4 max-w-[650px] font-lora text-[34px] font-normal leading-[1.03] tracking-[-0.045em] text-[#30343B] sm:text-[48px]">A clearer record of what happened to your money.</h2></div><Link to="/early-access" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[7px] bg-[#635BFF] px-5 py-3 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] transition-all hover:bg-[#5148E5]">Join Early Access <ArrowRight className="h-4 w-4" /></Link></div>
-        </section>
+        <section className="border-y border-[#E1E5E5] bg-[#F4F5F4] py-16 sm:py-20 md:py-28"><div className={`${containerClass} grid gap-10 md:grid-cols-[0.72fr_1.28fr] md:gap-14`}><div><p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7A858A]">A narrower beginning</p><h2 className="mt-4 max-w-[520px] font-lora text-[38px] font-normal leading-[1.03] tracking-[-0.05em] text-[#30343B] sm:text-[50px]">Not every transaction needs a claim.</h2></div><div className="max-w-[650px] text-[16px] leading-8 text-[#667177] sm:text-[18px] sm:leading-9"><p>Consumer Recovery will focus on high-value unresolved transactions where the records support a meaningful contradiction—not generic customer support or promises of easy refunds.</p><p className="mt-5">The same discipline that helps businesses recover money now turns toward the consumer side of the transaction.</p></div></div></section>
+        <section className="bg-white py-16 sm:py-20 md:py-28"><div className={containerClass}><div className="max-w-[680px]"><p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7A858A]">What Margin brings to the claim</p><h2 className="mt-4 font-lora text-[38px] font-normal leading-[1.03] tracking-[-0.05em] text-[#30343B] sm:text-[50px]">A clearer record of what happened to your money.</h2><p className="mt-5 text-[17px] leading-8 text-[#667177]">The consumer workflow carries the same standards: establish the event, connect the records, separate what is supported from what is uncertain, and make the next action visible.</p></div><div className="mt-10 grid gap-3 md:grid-cols-3 md:gap-4">{[['Evidence first','The record comes before the request.','Margin organizes the underlying transaction and supporting documents before deciding whether a recovery route is justified.',FileCheck2],['Controlled action','A claim is not the starting point.','Where the evidence supports action, the next step remains explicit and accountable rather than automatic.',UserCheck],['Outcome visible','Follow-through matters.','The work stays connected to the response and financial outcome so the case does not disappear after submission.',ShieldCheck]].map(([title, summary, body, Icon]) => <article key={title as string} className="flex min-h-[270px] flex-col bg-[#F4F5F4] p-6 sm:p-7"><div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#30343B]"><Icon className="h-5 w-5" strokeWidth={1.5} /></div><div className="mt-auto pt-10"><h3 className="text-[16px] font-semibold text-[#30343B]">{title as string}</h3><p className="mt-2 text-[15px] font-semibold leading-6 text-[#3F4A50]">{summary as string}</p><p className="mt-3 text-[13px] leading-6 text-[#667177]">{body as string}</p></div></article>)}</div></div></section>
+        <section className="border-y border-[#E1E5E5] bg-[#30343B] py-16 text-white sm:py-20 md:py-28"><div className={containerClass}><div className="max-w-[780px]"><p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#C8C3FF]">Early access</p><h2 className="mt-4 font-lora text-[38px] font-normal leading-[1.03] tracking-[-0.05em] text-white sm:text-[50px]">Start with the record. Decide what it supports.</h2><p className="mt-6 max-w-[680px] text-[17px] leading-8 text-[#D8DEDF]">Consumer Recovery is opening soon. Join early access to hear when the first high-value claim workflows are available.</p><Link to="/early-access" className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-[7px] bg-white px-5 py-3 text-[13px] font-semibold text-[#30343B] hover:bg-[#F4F5F4]">Join Early Access <ArrowRight className="h-4 w-4" /></Link></div></div></section>
       </main>
-
       <BrandFooter wide />
     </div>
   );
