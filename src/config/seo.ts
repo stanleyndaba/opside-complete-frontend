@@ -253,6 +253,16 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/security'),
     image: SITE_META.image,
   },
+  '/workflows': {
+    path: '/workflows',
+    title: 'Workflows | Margin',
+    description: 'See how Margin traces Amazon financial activity from source records through evidence, authorized recovery, settlement matching, and the final supported financial position.',
+    canonical: routeUrl('/workflows'),
+    ogTitle: 'Workflows | Margin',
+    ogDescription: 'Explore the Margin operating workflow for investigation, evidence control, authorized recovery, and financial reconciliation.',
+    ogUrl: routeUrl('/workflows'),
+    image: SITE_META.image,
+  },
   '/terms': {
     path: '/terms',
     title: 'Terms of Service | Margin',

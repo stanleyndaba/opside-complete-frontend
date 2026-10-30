@@ -40,7 +40,6 @@ import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PersonalRecoverySupportSection } from "@/components/landing/PersonalRecoverySupportSection";
-import { MarginOperatingWorkflow } from "@/components/landing/MarginOperatingWorkflow";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
 import { EnterpriseOnboardingSection, RecoveryOfferSection, RecoveryOfferSectionDuplicate, RecoveryRoutingSection } from "@/components/landing/RecoveryDecisionSections";
@@ -2607,7 +2606,6 @@ export default function Index() {
         {/* Operating method — How does Margin decide and act? */}
         <MarginEngineSection />
         <MarginLifecycleSection />
-        <MarginOperatingWorkflow />
         <MarginStandardSection />
         <ControlSection />
 

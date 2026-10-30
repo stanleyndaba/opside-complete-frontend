@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -98,10 +99,10 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                                     <p className="text-[14px] font-semibold tracking-tight text-[#182026]">From first signal to reconciled payout.</p>
                                     <p className="mt-0.5 text-[11px] font-normal tracking-tight text-[#66737F]">See how Margin controls the complete recovery lifecycle.</p>
                                 </div>
-                                <span className="mt-4 inline-flex cursor-pointer items-center gap-2 text-[12px] font-semibold tracking-tight text-[#0B74DE] transition-colors hover:text-[#0967C8] lg:mt-0">
+                                <Link to="/workflows" className="mt-4 inline-flex items-center gap-2 text-[12px] font-semibold tracking-tight text-[#0B74DE] transition-colors hover:text-[#0967C8] lg:mt-0">
                                     Explore the workflow
                                     <ArrowRight className="h-3.5 w-3.5" />
-                                </span>
+                                </Link>
                             </div>
                         </div>
                     </NavigationMenuContent>

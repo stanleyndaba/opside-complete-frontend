@@ -261,6 +261,12 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     </AccordionItem>
                                 </Accordion>
                                 <Link
+                                    to="/workflows"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    Full workflow
+                                </Link>
+                                <Link
                                     to="/pricing"
                                     onClick={() => setMobileMenuOpen(false)}
                                     className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">

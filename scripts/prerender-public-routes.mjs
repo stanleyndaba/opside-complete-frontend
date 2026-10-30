@@ -1109,6 +1109,28 @@ const routes = [
     },
   },
   {
+    path: '/workflows',
+    title: 'Workflows | Margin',
+    description:
+      'See how Margin traces Amazon financial activity from source records through evidence, authorized recovery, settlement matching, and the final supported financial position.',
+    ogTitle: 'Workflows | Margin',
+    ogDescription:
+      'Explore the Margin operating workflow for investigation, evidence control, authorized recovery, and financial reconciliation.',
+    shell: {
+      label: 'Margin operating model',
+      h1: 'From Amazon activity to a supported financial position.',
+      intro:
+        'The workflow traces the evidence, the action, the downstream money, and the residual position instead of treating a closed case as the end of the financial work.',
+      sections: [
+        {
+          heading: 'Financial activity becomes explainable.',
+          body:
+            'Margin connects source records, evidence relationships, investigation, controlled action, and financial truth into one operating workflow.',
+        },
+      ],
+    },
+  },
+  {
     path: '/terms',
     title: 'Terms of Service | Margin',
     description: "Terms of Service governing use of Margin's automated FBA auditing platform.",
