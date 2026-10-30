@@ -105,7 +105,7 @@ export function PersonalRecoverySupportSection() {
       <div className="relative mx-auto grid w-full max-w-[1280px] items-center gap-10 px-5 sm:px-6 md:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16 lg:px-10 2xl:px-12">
         <motion.div {...revealProps} className="max-w-[600px]">
           <h2 id="personal-recovery-support-title" className="font-lora text-[36px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
-            <span className="heading-tone-dark">Every recovery decision has an explainable basis.</span>
+            <span className="heading-tone-dark">Have someone who can explain the decision—not just tell you what to submit.</span>
           </h2>
           <p className="mt-5 max-w-[560px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">You shouldn&apos;t have to chase updates to understand a recovery&apos;s status, what Amazon requested, why a claim stalled, or what evidence is still missing.</p>
           <p className="mt-4 max-w-[560px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>Ask in plain language. Margin explains the case position, the evidence behind it, and who is accountable for the next action.</p>

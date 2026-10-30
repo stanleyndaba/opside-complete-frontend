@@ -8,7 +8,7 @@ export function MarginEngineSection() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(178,220,232,0.28),transparent_38%)]" />
       <div className="relative mx-auto w-full max-w-[1240px] px-5 sm:px-8">
         <div className="mb-10 max-w-[720px] md:mb-14">
-          <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Know what the evidence justifies.</h2>
+          <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Never let an unexplained difference become an unsupported claim.</h2>
           <p className="mt-4 max-w-[660px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Margin establishes what happened across Amazon&apos;s financial records, what&apos;s still unresolved, and which actions the evidence supports.</p>
           <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Your team retains decision authority. Margin does the investigative work needed to make that decision defensible.</p>
         </div>
