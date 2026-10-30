@@ -98,35 +98,68 @@ const lifecycleCards = [
 const caseFlow = [
   {
     eyebrow: "Amazon signal",
-    title: "Settlement line does not match the expected position",
+    title: "Detect a settlement difference",
     detail: "Case 19822888381 · Residual exposure $19,240",
     state: "Needs examination",
     tone: "#526AB1",
     platforms: [{ src: "/amazon-logo-transparent-circle.png", alt: "Amazon" }],
   },
   {
-    eyebrow: "Margin gathers context",
-    title: "Records joined around the original event",
+    eyebrow: "Connect the record",
+    title: "Join the records around the original event",
     detail: "Settlement · shipment · return · finance records",
     state: "Evidence connected",
     tone: "#8B6D4B",
     platforms: [
+      { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
       { src: "/gmailicon.png", alt: "Gmail" },
       { src: "/Dropbox_Icon.svg.png", alt: "Dropbox" },
+    ],
+  },
+  {
+    eyebrow: "Evidence request",
+    title: "Ask for the missing return record",
+    detail: "Specific file requested · reason attached · case remains open",
+    state: "Evidence requested",
+    tone: "#8B6D4B",
+    platforms: [
+      { src: "/gmailicon.png", alt: "Gmail" },
+      { src: "/Dropbox_Icon.svg.png", alt: "Dropbox" },
+    ],
+  },
+  {
+    eyebrow: "Recovery preparation",
+    title: "Build the supported recovery",
+    detail: "Evidence basis · amount · requested action · limitations",
+    state: "Ready for authorization",
+    tone: "#4D7869",
+    platforms: [
+      { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
       { src: "/xero.png", alt: "Xero" },
     ],
   },
   {
     eyebrow: "Seller decision",
-    title: "Supported recovery is ready for approval",
-    detail: "Evidence basis · amount · requested action · limitations",
+    title: "Approve the proposed action",
+    detail: "The seller decides what Margin is authorized to submit and manage",
     state: "Waiting for authorization",
     tone: "#4D7869",
     platforms: [{ src: "/slack-icon-2019.png", alt: "Slack" }],
   },
   {
+    eyebrow: "Amazon response",
+    title: "Track the case through response and appeal",
+    detail: "Submitted · requested evidence · rejection · approval · closure",
+    state: "Response tracked",
+    tone: "#526AB1",
+    platforms: [
+      { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
+      { src: "/gmailicon.png", alt: "Gmail" },
+    ],
+  },
+  {
     eyebrow: "Financial consequence",
-    title: "Credit traced through settlement and payout",
+    title: "Verify the credit in settlement",
     detail: "Approved $26,000 · $18,650 matched · $7,350 still open",
     state: "Position remains visible",
     tone: "#635BFF",
@@ -136,14 +169,22 @@ const caseFlow = [
       { src: "/xero.png", alt: "Xero" },
     ],
   },
+  {
+    eyebrow: "Final position",
+    title: "Record what is accounted for and what is not",
+    detail: "Reconciled amount · residual gap · evidence limitation · next step",
+    state: "Financial Position Brief",
+    tone: "#635BFF",
+    platforms: [{ src: "/quickbooks.png", alt: "QuickBooks" }, { src: "/xero.png", alt: "Xero" }],
+  },
 ] as const;
 
 function PlatformMarks({ platforms }: { platforms: readonly { src: string; alt: string }[] }) {
   return (
     <div className="flex items-center gap-1.5" aria-label={`Connected platforms: ${platforms.map((platform) => platform.alt).join(", ")}`}>
       {platforms.map((platform) => (
-        <span key={`${platform.src}-${platform.alt}`} className="flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-[0_2px_8px_rgba(24,32,38,0.08)]">
-          <img src={platform.src} alt={platform.alt} className="h-4 w-4 object-contain" />
+        <span key={`${platform.src}-${platform.alt}`} className="flex h-7 w-7 items-center justify-center">
+          <img src={platform.src} alt={platform.alt} className="h-6 w-6 object-contain" />
         </span>
       ))}
     </div>
@@ -167,22 +208,22 @@ export function MarginOperatingWorkflow() {
             </div>
             <p className="max-w-[300px] text-[11px] leading-5 text-[#71808A]">This is the operating state Margin is establishing—not a straight line from claim to credit.</p>
           </div>
-          <div className="relative grid gap-2 px-4 py-5 sm:px-7 sm:py-7 lg:grid-cols-4 lg:gap-3">
-            <svg className="pointer-events-none absolute left-[11%] right-[11%] top-[52px] hidden h-[86px] w-[78%] overflow-visible lg:block" viewBox="0 0 1000 100" fill="none" aria-hidden="true">
-              <defs><marker id="margin-workflow-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#A6B2B4" strokeWidth="1.2" /></marker></defs>
-              <path d="M35 48 C105 4 155 92 250 48 S395 4 500 48 S650 92 750 48 S875 4 965 48" stroke="#B9C5C8" strokeWidth="1.4" strokeDasharray="5 6" markerEnd="url(#margin-workflow-arrow)" />
-            </svg>
-            {caseFlow.map((step, index) => (
-              <div key={step.eyebrow} className="relative z-10">
-                <div className="bg-[#FAFBFB] p-4 ring-1 ring-[#E3E9EA] transition-shadow hover:shadow-[0_10px_22px_rgba(48,52,59,0.07)] sm:min-h-[184px]">
-                  <div className="flex items-start justify-between gap-3"><p className="text-[9px] font-semibold uppercase tracking-[0.08em]" style={{ color: step.tone }}>{step.eyebrow}</p><PlatformMarks platforms={step.platforms} /></div>
-                  <p className="mt-4 text-[12px] font-semibold leading-5 text-[#30343B]">{step.title}</p>
-                  <p className="mt-2 text-[10px] leading-4 text-[#71808A]">{step.detail}</p>
-                  <p className="mt-4 inline-flex items-center gap-1.5 text-[9px] font-semibold" style={{ color: step.tone }}><span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: step.tone }} />{step.state}</p>
+          <div className="relative px-4 py-8 sm:px-7 sm:py-12">
+            <div className="absolute bottom-10 left-1/2 top-8 w-px -translate-x-1/2 bg-[#D4DDDE]" aria-hidden="true" />
+            <div className="relative mx-auto max-w-[680px]">
+              {caseFlow.map((step, index) => (
+                <div key={step.eyebrow} className="relative z-10">
+                  <div className={`relative bg-[#FAFBFB] p-5 ring-1 ring-[#E3E9EA] transition-shadow hover:shadow-[0_12px_26px_rgba(48,52,59,0.08)] sm:p-6 ${index === 2 ? "lg:translate-x-10" : index === 5 ? "lg:-translate-x-10" : ""}`}>
+                    <span className="absolute left-1/2 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#F4F7F7] bg-[#A6B2B4]" aria-hidden="true" />
+                    <div className="flex items-start justify-between gap-4"><div><p className="text-[9px] font-semibold uppercase tracking-[0.08em]" style={{ color: step.tone }}>{step.eyebrow}</p><p className="mt-2 text-[15px] font-semibold leading-6 tracking-[-0.015em] text-[#30343B] sm:text-[17px]">{step.title}</p></div><PlatformMarks platforms={step.platforms} /></div>
+                    <p className="mt-3 max-w-[540px] text-[12px] leading-5 text-[#71808A] sm:text-[13px]">{step.detail}</p>
+                    <p className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-semibold" style={{ color: step.tone }}><span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: step.tone }} />{step.state}</p>
+                    {index === 2 ? <svg className="pointer-events-none absolute -right-[150px] top-1/2 hidden h-[170px] w-[160px] -translate-y-1/2 overflow-visible lg:block" viewBox="0 0 160 170" fill="none" aria-hidden="true"><path d="M4 30H92C125 30 148 53 148 86V111C148 134 132 150 108 150H82" stroke="#A6B2B4" strokeWidth="1.2" /><path d="M82 145L76 150L82 155" stroke="#A6B2B4" strokeWidth="1.2" /></svg> : null}
+                  </div>
+                  {index < caseFlow.length - 1 ? <div className="flex h-12 items-center justify-center text-[#A6B2B4]"><ArrowDown className="h-4 w-4" /></div> : null}
                 </div>
-                {index < caseFlow.length - 1 ? <div className="flex h-7 items-center justify-center text-[#A6B2B4] lg:hidden"><ArrowDown className="h-4 w-4" /></div> : null}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[#E6EBEC] px-5 py-3 text-[10px] text-[#71808A] sm:px-7"><span>Verified match</span><span className="text-[#8B6D4B]">Unresolved relationship</span><span className="text-[#4D7869]">Authorization boundary</span><span className="text-[#635BFF]">Downstream financial state</span></div>
         </motion.div>
