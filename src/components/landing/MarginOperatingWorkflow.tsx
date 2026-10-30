@@ -95,6 +95,61 @@ const lifecycleCards = [
   },
 ];
 
+const caseFlow = [
+  {
+    eyebrow: "Amazon signal",
+    title: "Settlement line does not match the expected position",
+    detail: "Case 19822888381 · Residual exposure $19,240",
+    state: "Needs examination",
+    tone: "#526AB1",
+    platforms: [{ src: "/amazon-logo-transparent-circle.png", alt: "Amazon" }],
+  },
+  {
+    eyebrow: "Margin gathers context",
+    title: "Records joined around the original event",
+    detail: "Settlement · shipment · return · finance records",
+    state: "Evidence connected",
+    tone: "#8B6D4B",
+    platforms: [
+      { src: "/gmailicon.png", alt: "Gmail" },
+      { src: "/Dropbox_Icon.svg.png", alt: "Dropbox" },
+      { src: "/xero.png", alt: "Xero" },
+    ],
+  },
+  {
+    eyebrow: "Seller decision",
+    title: "Supported recovery is ready for approval",
+    detail: "Evidence basis · amount · requested action · limitations",
+    state: "Waiting for authorization",
+    tone: "#4D7869",
+    platforms: [{ src: "/slack-icon-2019.png", alt: "Slack" }],
+  },
+  {
+    eyebrow: "Financial consequence",
+    title: "Credit traced through settlement and payout",
+    detail: "Approved $26,000 · $18,650 matched · $7,350 still open",
+    state: "Position remains visible",
+    tone: "#635BFF",
+    platforms: [
+      { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
+      { src: "/quickbooks.png", alt: "QuickBooks" },
+      { src: "/xero.png", alt: "Xero" },
+    ],
+  },
+] as const;
+
+function PlatformMarks({ platforms }: { platforms: readonly { src: string; alt: string }[] }) {
+  return (
+    <div className="flex items-center gap-1.5" aria-label={`Connected platforms: ${platforms.map((platform) => platform.alt).join(", ")}`}>
+      {platforms.map((platform) => (
+        <span key={`${platform.src}-${platform.alt}`} className="flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-[0_2px_8px_rgba(24,32,38,0.08)]">
+          <img src={platform.src} alt={platform.alt} className="h-4 w-4 object-contain" />
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export function MarginOperatingWorkflow() {
   const reduceMotion = useReducedMotion();
   const [activeLayer, setActiveLayer] = useState("investigation");
@@ -104,6 +159,33 @@ export function MarginOperatingWorkflow() {
     <section className="relative overflow-hidden bg-[#F4F7F7] py-14 sm:py-18 md:py-24" aria-labelledby="margin-operating-workflow-title">
       <div className="pointer-events-none absolute inset-0 opacity-[0.42] [background-image:radial-gradient(#B9C5C8_0.8px,transparent_0.8px)] [background-size:18px_18px]" aria-hidden="true" />
       <div className="relative mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
+        <motion.div initial={reduceMotion ? false : { opacity: 0, y: 14 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.55 }} className="mb-12 overflow-hidden bg-white shadow-[0_16px_38px_rgba(48,52,59,0.07)] sm:mb-16">
+          <div className="flex flex-col gap-3 border-b border-[#E6EBEC] px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-7">
+            <div>
+              <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71808A]">A recovery in motion</p>
+              <h2 className="mt-2 max-w-[720px] font-lora text-[27px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[36px]" style={{ fontWeight: 400 }}>One financial discrepancy. Every consequence kept in view.</h2>
+            </div>
+            <p className="max-w-[300px] text-[11px] leading-5 text-[#71808A]">This is the operating state Margin is establishing—not a straight line from claim to credit.</p>
+          </div>
+          <div className="relative grid gap-2 px-4 py-5 sm:px-7 sm:py-7 lg:grid-cols-4 lg:gap-3">
+            <svg className="pointer-events-none absolute left-[11%] right-[11%] top-[52px] hidden h-[86px] w-[78%] overflow-visible lg:block" viewBox="0 0 1000 100" fill="none" aria-hidden="true">
+              <defs><marker id="margin-workflow-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#A6B2B4" strokeWidth="1.2" /></marker></defs>
+              <path d="M35 48 C105 4 155 92 250 48 S395 4 500 48 S650 92 750 48 S875 4 965 48" stroke="#B9C5C8" strokeWidth="1.4" strokeDasharray="5 6" markerEnd="url(#margin-workflow-arrow)" />
+            </svg>
+            {caseFlow.map((step, index) => (
+              <div key={step.eyebrow} className="relative z-10">
+                <div className="bg-[#FAFBFB] p-4 ring-1 ring-[#E3E9EA] transition-shadow hover:shadow-[0_10px_22px_rgba(48,52,59,0.07)] sm:min-h-[184px]">
+                  <div className="flex items-start justify-between gap-3"><p className="text-[9px] font-semibold uppercase tracking-[0.08em]" style={{ color: step.tone }}>{step.eyebrow}</p><PlatformMarks platforms={step.platforms} /></div>
+                  <p className="mt-4 text-[12px] font-semibold leading-5 text-[#30343B]">{step.title}</p>
+                  <p className="mt-2 text-[10px] leading-4 text-[#71808A]">{step.detail}</p>
+                  <p className="mt-4 inline-flex items-center gap-1.5 text-[9px] font-semibold" style={{ color: step.tone }}><span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: step.tone }} />{step.state}</p>
+                </div>
+                {index < caseFlow.length - 1 ? <div className="flex h-7 items-center justify-center text-[#A6B2B4] lg:hidden"><ArrowDown className="h-4 w-4" /></div> : null}
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[#E6EBEC] px-5 py-3 text-[10px] text-[#71808A] sm:px-7"><span>Verified match</span><span className="text-[#8B6D4B]">Unresolved relationship</span><span className="text-[#4D7869]">Authorization boundary</span><span className="text-[#635BFF]">Downstream financial state</span></div>
+        </motion.div>
         <div className="grid items-start gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           <motion.div initial={reduceMotion ? false : { opacity: 0, y: 14 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-48px" }} transition={{ duration: 0.6 }} className="max-w-[560px] lg:sticky lg:top-28">
             <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71808A]">The operating workflow</p>
