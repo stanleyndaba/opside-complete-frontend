@@ -181,7 +181,7 @@ const caseFlow = [
 
 function PlatformMarks({ platforms }: { platforms: readonly { src: string; alt: string }[] }) {
   return (
-    <div className="flex items-center gap-1.5" aria-label={`Connected platforms: ${platforms.map((platform) => platform.alt).join(", ")}`}>
+    <div className="flex shrink-0 items-center gap-1.5" aria-label={`Connected platforms: ${platforms.map((platform) => platform.alt).join(", ")}`}>
       {platforms.map((platform) => (
         <span key={`${platform.src}-${platform.alt}`} className="flex h-7 w-7 items-center justify-center">
           <img src={platform.src} alt={platform.alt} className="h-6 w-6 object-contain" />
@@ -200,32 +200,29 @@ export function MarginOperatingWorkflow() {
     <section className="relative overflow-hidden bg-[#F4F7F7] py-14 sm:py-18 md:py-24" aria-labelledby="margin-operating-workflow-title">
       <div className="pointer-events-none absolute inset-0 opacity-[0.42] [background-image:radial-gradient(#B9C5C8_0.8px,transparent_0.8px)] [background-size:18px_18px]" aria-hidden="true" />
       <div className="relative mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
-        <motion.div initial={reduceMotion ? false : { opacity: 0, y: 14 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.55 }} className="mb-12 overflow-hidden bg-white shadow-[0_16px_38px_rgba(48,52,59,0.07)] sm:mb-16">
-          <div className="flex flex-col gap-3 border-b border-[#E6EBEC] px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-7">
+        <motion.div initial={reduceMotion ? false : { opacity: 0, y: 14 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.55 }} className="mb-12 overflow-visible sm:mb-16">
+          <div className="flex flex-col gap-3 px-5 py-7 sm:px-10 sm:py-10">
             <div>
-              <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71808A]">A recovery in motion</p>
+              <p className="text-[11px] font-medium tracking-tight text-[#71808A]">A recovery in motion</p>
               <h2 className="mt-2 max-w-[720px] font-lora text-[27px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[36px]" style={{ fontWeight: 400 }}>One financial discrepancy. Every consequence kept in view.</h2>
             </div>
-            <p className="max-w-[300px] text-[11px] leading-5 text-[#71808A]">This is the operating state Margin is establishing—not a straight line from claim to credit.</p>
+            <p className="max-w-[500px] text-[12px] leading-5 text-[#71808A]">Margin keeps the original issue, the recovery, and the downstream financial consequence connected.</p>
           </div>
-          <div className="relative px-4 py-8 sm:px-7 sm:py-12">
-            <div className="absolute bottom-10 left-1/2 top-8 w-px -translate-x-1/2 bg-[#D4DDDE]" aria-hidden="true" />
-            <div className="relative mx-auto max-w-[680px]">
+          <div className="relative px-4 pb-10 pt-2 sm:px-10 sm:pb-14 sm:pt-4">
+            <div className="absolute bottom-12 left-1/2 top-0 w-px -translate-x-1/2 bg-[#D8D8D5]" aria-hidden="true" />
+            <div className="relative mx-auto max-w-[650px]">
               {caseFlow.map((step, index) => (
                 <div key={step.eyebrow} className="relative z-10">
-                  <div className={`relative bg-[#FAFBFB] p-5 ring-1 ring-[#E3E9EA] transition-shadow hover:shadow-[0_12px_26px_rgba(48,52,59,0.08)] sm:p-6 ${index === 2 ? "lg:translate-x-10" : index === 5 ? "lg:-translate-x-10" : ""}`}>
-                    <span className="absolute left-1/2 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#F4F7F7] bg-[#A6B2B4]" aria-hidden="true" />
-                    <div className="flex items-start justify-between gap-4"><div><p className="text-[9px] font-semibold uppercase tracking-[0.08em]" style={{ color: step.tone }}>{step.eyebrow}</p><p className="mt-2 text-[15px] font-semibold leading-6 tracking-[-0.015em] text-[#30343B] sm:text-[17px]">{step.title}</p></div><PlatformMarks platforms={step.platforms} /></div>
-                    <p className="mt-3 max-w-[540px] text-[12px] leading-5 text-[#71808A] sm:text-[13px]">{step.detail}</p>
-                    <p className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-semibold" style={{ color: step.tone }}><span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: step.tone }} />{step.state}</p>
-                    {index === 2 ? <svg className="pointer-events-none absolute -right-[150px] top-1/2 hidden h-[170px] w-[160px] -translate-y-1/2 overflow-visible lg:block" viewBox="0 0 160 170" fill="none" aria-hidden="true"><path d="M4 30H92C125 30 148 53 148 86V111C148 134 132 150 108 150H82" stroke="#A6B2B4" strokeWidth="1.2" /><path d="M82 145L76 150L82 155" stroke="#A6B2B4" strokeWidth="1.2" /></svg> : null}
+                  <div className={`relative overflow-hidden rounded-[24px] bg-[#FBF7F6] ${index === 2 ? "lg:translate-x-10" : index === 5 ? "lg:-translate-x-10" : ""}`}>
+                    <div className="flex items-center gap-4 px-6 py-5 sm:px-8 sm:py-6"><PlatformMarks platforms={step.platforms} /><p className="text-[16px] font-medium leading-6 tracking-[-0.02em] text-[#202428] sm:text-[19px]">{step.title}</p></div>
+                    <div className="border-t border-[#E1DCDA] px-6 py-5 sm:px-8 sm:py-6"><p className="max-w-[540px] text-[13px] leading-6 text-[#4D5357] sm:text-[15px] sm:leading-7">{step.detail}</p></div>
+                    {index === 2 ? <svg className="pointer-events-none absolute -right-[150px] top-1/2 hidden h-[170px] w-[160px] -translate-y-1/2 overflow-visible lg:block" viewBox="0 0 160 170" fill="none" aria-hidden="true"><path d="M4 30H92C125 30 148 53 148 86V111C148 134 132 150 108 150H82" stroke="#C8C4C1" strokeWidth="1.2" /><path d="M82 145L76 150L82 155" stroke="#C8C4C1" strokeWidth="1.2" /></svg> : null}
                   </div>
-                  {index < caseFlow.length - 1 ? <div className="flex h-12 items-center justify-center text-[#A6B2B4]"><ArrowDown className="h-4 w-4" /></div> : null}
+                  {index < caseFlow.length - 1 ? <div className="flex h-14 items-center justify-center text-[#C8C4C1]"><ArrowDown className="h-5 w-5" strokeWidth={1.4} /></div> : null}
                 </div>
               ))}
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[#E6EBEC] px-5 py-3 text-[10px] text-[#71808A] sm:px-7"><span>Verified match</span><span className="text-[#8B6D4B]">Unresolved relationship</span><span className="text-[#4D7869]">Authorization boundary</span><span className="text-[#635BFF]">Downstream financial state</span></div>
         </motion.div>
         <div className="grid items-start gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           <motion.div initial={reduceMotion ? false : { opacity: 0, y: 14 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-48px" }} transition={{ duration: 0.6 }} className="max-w-[560px] lg:sticky lg:top-28">
