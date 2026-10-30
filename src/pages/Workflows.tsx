@@ -6,7 +6,7 @@ import { MarginOperatingWorkflow } from "@/components/landing/MarginOperatingWor
 
 export default function Workflows() {
   return (
-    <div className="min-h-screen bg-[#F7F8F7] text-[#30343B] font-sans">
+    <div className="workflow-page min-h-screen bg-[#F7F8F7] text-[#30343B] font-google-sans">
       <PublicNavbar variant="light" />
       <main className="pt-24 md:pt-28">
         <section className="bg-[#F7F8F7] px-5 pb-12 pt-10 sm:px-6 sm:pb-16 md:px-8 md:pt-16 lg:px-10 2xl:px-12">

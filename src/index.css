@@ -141,6 +141,21 @@ html, body, #root {
 }
 .font-google-sans, .font-google-sans * { font-family: var(--font-google-sans) !important; }
 
+/* The standalone workflow keeps Lora display headings, but its operational UI,
+   navigation, labels, and body copy use Google Sans rather than the global Inter base. */
+.workflow-page,
+.workflow-page * {
+  font-family: var(--font-google-sans) !important;
+}
+.workflow-page .font-lora,
+.workflow-page .font-lora * {
+  font-family: var(--font-serif) !important;
+}
+.workflow-page .brand-wordmark,
+.workflow-page .brand-wordmark * {
+  font-family: 'Merriweather', Georgia, serif !important;
+}
+
 .preview-google-sans,
 .preview-google-sans * {
   font-family: var(--font-google-sans) !important;
