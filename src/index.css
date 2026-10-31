@@ -6,8 +6,9 @@
 
 .hero-atmosphere {
   background:
-    radial-gradient(circle at 92% 78%, rgba(254, 133, 0, 0.10), transparent 27%),
-    radial-gradient(circle at 72% 38%, rgba(99, 91, 255, 0.075), transparent 34%);
+    radial-gradient(ellipse at 57% 88%, color-mix(in srgb, var(--margin-bubblegum-pink) 28%, transparent), transparent 42%),
+    radial-gradient(ellipse at 70% 72%, rgba(16, 91, 255, 0.20), transparent 50%),
+    radial-gradient(circle at 93% 78%, rgba(254, 133, 0, 0.05), transparent 25%);
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -25,8 +26,9 @@
 
   .hero-atmosphere {
     background:
-      radial-gradient(circle at 86% 84%, rgba(254, 133, 0, 0.115), transparent 31%),
-      radial-gradient(circle at 62% 48%, rgba(99, 91, 255, 0.06), transparent 35%);
+      radial-gradient(ellipse at 16% 86%, color-mix(in srgb, var(--margin-bubblegum-pink) 34%, transparent), transparent 43%),
+      radial-gradient(ellipse at 38% 76%, rgba(16, 91, 255, 0.22), transparent 50%),
+      radial-gradient(circle at 92% 83%, rgba(254, 133, 0, 0.04), transparent 22%);
   }
 
   .hero-section #margin-hero-title {
@@ -127,6 +129,7 @@
   --margin-success: #10B981;
   --margin-recovery-orange: #FE8500;
   --margin-recovery-orange-text: #B45309;
+  --margin-bubblegum-pink: #F05AC8;
 
   /* Tailwind/Shadcn HSL Variables (Required for UI Components) */
   --background: 0 0% 98%; /* #FAFAF7 approx */
