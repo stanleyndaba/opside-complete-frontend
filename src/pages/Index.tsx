@@ -402,7 +402,7 @@ function KineticHeroSection({
       <HeroSwarmBackground reduceMotion={reduceMotion} />
       <div
         aria-hidden="true"
-        className="hero-gmail-visual pointer-events-none relative order-2 mt-10 h-[430px] w-full shrink-0 overflow-hidden rounded-[12px] border border-[#E7EBED] bg-[#F6F8F9] shadow-[0_18px_44px_rgba(24,32,38,0.10)] sm:absolute sm:inset-y-0 sm:right-0 sm:order-none sm:mt-0 sm:h-auto sm:w-[70%] sm:rounded-none sm:border-0 sm:bg-transparent sm:shadow-none"
+        className="hero-gmail-visual pointer-events-none relative order-2 mt-10 h-[430px] w-full shrink-0 overflow-hidden rounded-[12px] border border-[#E7EBED] bg-[#F6F8F9] shadow-[0_18px_44px_rgba(24,32,38,0.10)] md:absolute md:inset-y-0 md:right-0 md:order-none md:mt-0 md:h-auto md:w-[70%] md:rounded-none md:border-0 md:bg-transparent md:shadow-none"
         style={{
           maskImage: "linear-gradient(to right, transparent 0%, transparent 38%, black 68%, black 100%)",
           WebkitMaskImage: "linear-gradient(to right, transparent 0%, transparent 38%, black 68%, black 100%)",
@@ -478,7 +478,7 @@ function KineticHeroSection({
         </motion.div>
         </div>
       </div>
-      <div className="relative z-10 order-1 flex w-full items-center sm:order-none">
+      <div className="relative z-10 order-1 flex w-full items-center md:order-none">
         <div className="max-w-[860px]">
           <div id="margin-hero-title" className="mt-5 max-w-[820px] font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[46px] sm:mt-7 sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>
             <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Complex Amazon Fin-Ops, <span className="text-[#635BFF]">done for you.</span></motion.span>
