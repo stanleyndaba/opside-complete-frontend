@@ -4,6 +4,12 @@
   display: none;
 }
 
+.hero-atmosphere {
+  background:
+    radial-gradient(circle at 92% 78%, rgba(254, 133, 0, 0.10), transparent 27%),
+    radial-gradient(circle at 72% 38%, rgba(99, 91, 255, 0.075), transparent 34%);
+}
+
 @media (hover: none) and (pointer: coarse) {
   .hero-section {
     flex-direction: column;
@@ -15,6 +21,12 @@
 
   .hero-copy-mobile {
     display: inline;
+  }
+
+  .hero-atmosphere {
+    background:
+      radial-gradient(circle at 86% 84%, rgba(254, 133, 0, 0.115), transparent 31%),
+      radial-gradient(circle at 62% 48%, rgba(99, 91, 255, 0.06), transparent 35%);
   }
 
   .hero-section #margin-hero-title {
