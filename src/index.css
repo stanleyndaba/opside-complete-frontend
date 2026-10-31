@@ -15,6 +15,7 @@
 
   .hero-copy-mobile {
     display: inline;
+    font-weight: 500;
   }
 
   .hero-section .hero-gmail-visual {
