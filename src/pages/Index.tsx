@@ -224,7 +224,7 @@ function AccountingIntegrationGrid() {
               <div className="mt-5 flex flex-wrap items-center gap-2.5">
                 {sources.map((source) => source && (
                   <div key={source.id} className="flex h-12 w-12 items-center justify-center border border-[#E3E8EA] bg-white p-2" title={source.name} aria-label={source.name}>
-                    {source.src ? <img src={source.src} alt={source.name} className="h-full w-full object-contain" /> : source.icon === "edi" ? <FileInput className="h-6 w-6 text-[#7C3AED]" aria-hidden="true" /> : <Truck className="h-6 w-6 text-[#D97706]" aria-hidden="true" />}
+                    {source.src ? <img src={source.src} alt={source.name} className={`h-full w-full object-contain ${source.id === "linear" ? "rounded-[5px]" : ""}`} /> : source.icon === "edi" ? <FileInput className="h-6 w-6 text-[#7C3AED]" aria-hidden="true" /> : <Truck className="h-6 w-6 text-[#D97706]" aria-hidden="true" />}
                   </div>
                 ))}
               </div>
@@ -448,7 +448,7 @@ function KineticHeroSection({
           <div className="flex items-center gap-2.5">
             <img src="/favicon-margin.svg" alt="Margin" className="h-[18.4px] w-[18.4px] shrink-0" />
             <ArrowRight className="h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
-            <img src="/gmailicon.png" alt="Gmail" className="h-[18.4px] w-[18.4px] shrink-0 object-contain" />
+            <img src="/slack-icon-2019.png" alt="Slack" className="h-[18.4px] w-[18.4px] shrink-0 object-contain" />
             <div className="min-w-0 flex-1 text-[9px] leading-4 tracking-tight text-[#46545B] sm:text-[10px]">
               <div className="flex items-baseline justify-end gap-3"><span className="shrink-0">05/09/26, 13:24:17</span></div>
               <p className="truncate text-[#263438]">[Case ID: 19822888381] Residual evidence response prepared | $2,850</p>
@@ -465,7 +465,7 @@ function KineticHeroSection({
           <div className="flex items-start gap-2.5">
             <img src="/favicon-margin.svg" alt="Margin" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0" />
             <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
-            <img src="/slack-icon-2019.png" alt="Slack" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0 object-contain" />
+            <img src="/linear-icon.svg" alt="Linear" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0 rounded-[5px] object-contain" />
             <div className="min-w-0 flex-1 text-[9px] leading-4 tracking-tight text-[#46545B] sm:text-[10px]">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-semibold text-[#263438]">Recovery review · residual exposure</span>
