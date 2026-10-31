@@ -480,7 +480,7 @@ function KineticHeroSection({
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[860px]">
           <div id="margin-hero-title" className="mt-5 max-w-[820px] font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[46px] sm:mt-7 sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>
-            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Follow the recovery beyond Amazon&apos;s decision</motion.span>
+            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Complex Amazon Fin-Ops, <span className="text-[#635BFF]">done for you.</span></motion.span>
           </div>
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Margin handles complex Amazon financial operations—from investigating transactional discrepancies and building the evidence to pursuing justified recoveries and reconciling the outcome—so your team spends less time chasing Amazon and more time running the operation.</motion.p>
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-stretch gap-3 font-google-sans sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
@@ -504,7 +504,7 @@ function DuplicatePipelineDemoSection() {
     <section aria-label="Recovery operations demo" className="relative overflow-hidden bg-white pb-12 pt-10 sm:pb-16 sm:pt-12 md:pb-20 md:pt-16">
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-center sm:mb-10">
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Amazon can close the case. Your financial position still needs an answer.</h2>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Follow the recovery beyond Amazon&apos;s decision</h2>
           <button type="button" className={`${landingPrimaryCtaClass} mt-5`} aria-label="See a sample financial position">See a sample financial position <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div
@@ -582,7 +582,7 @@ function RealityCheckSection() {
         <div className="flex flex-col justify-center">
         <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center">
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-            <span className="heading-tone-dark">Scale makes the picture harder to see.</span>
+            <span className="heading-tone-dark">Amazon can close the case. Your financial position still needs an answer.</span>
           </h2>
           <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8">As your Amazon business grows, transactions, settlements, inventory movements and financial records become harder to connect across systems and time.</p>
           <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">Margin establishes what&apos;s accounted for, what&apos;s unresolved, and what the evidence supports doing next.</p>
