@@ -9,8 +9,8 @@ export function MarginEngineSection() {
       <div className="relative mx-auto w-full max-w-[1240px] px-5 sm:px-8">
         <div className="mb-10 max-w-[720px] md:mb-14">
           <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Never let an unexplained difference become an unsupported claim.</h2>
-          <p className="mt-4 max-w-[660px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Margin establishes what happened across Amazon&apos;s financial records, what&apos;s still unresolved, and which actions the evidence supports.</p>
-          <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Your team retains decision authority. Margin does the investigative work needed to make that decision defensible.</p>
+          <p className="mt-4 max-w-[660px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Margin evaluates the underlying event, expected treatment, observed records and available supporting evidence before determining whether a recovery is justified. It identifies missing proof, distinguishes recoverable exposure from accounted-for activity, and prepares the basis for an action your team can inspect and authorize.</p>
+          <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Your team retains decision authority. Margin supplies the investigation and evidence behind it.</p>
         </div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="mx-auto w-full max-w-[1040px] lg:max-w-[1350px]">
