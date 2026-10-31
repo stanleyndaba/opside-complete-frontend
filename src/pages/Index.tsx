@@ -434,7 +434,7 @@ function KineticHeroSection({
                 <div className="mt-0.5 text-[#263438]">Amazon decision · partial approval</div>
                 <span className="shrink-0">Outbound</span>
               </div>
-              <p className="truncate text-[#46545B]">[Case ID: 19822888381] Partial approval issued — $26,000 | $18,650 residual</p>
+              <p className="truncate text-[#46545B]">[Case ID: 19822888381] Partial approval issued — $26,000 | <span className="font-semibold text-[var(--margin-recovery-orange-text)]">$18,650 residual</span></p>
             </div>
           </div>
         </motion.div>
@@ -472,7 +472,7 @@ function KineticHeroSection({
                 <span className="shrink-0">05/09/26, 11:28:00</span>
               </div>
               <div className="mt-0.5 text-[#263438]">To: Sarah Mitchell · Business Lead</div>
-              <p className="truncate text-[#46545B]">Amazon approved $26,000 — $19,240 remains open</p>
+              <p className="truncate text-[#46545B]">Amazon approved $26,000 — <span className="font-semibold text-[var(--margin-recovery-orange-text)]">$19,240 remains open</span></p>
             </div>
           </div>
         </motion.div>

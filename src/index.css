@@ -113,6 +113,8 @@
   --margin-primary: #182026;
   --margin-primary-hover: #2d3748;
   --margin-success: #10B981;
+  --margin-recovery-orange: #FE8500;
+  --margin-recovery-orange-text: #B45309;
 
   /* Tailwind/Shadcn HSL Variables (Required for UI Components) */
   --background: 0 0% 98%; /* #FAFAF7 approx */

@@ -277,6 +277,13 @@ const stageAccents = [
   }
 ] as const;
 
+const recoveryOrangeAccent = {
+  line: [0.996, 0.522, 0] as const,
+  glow: [1, 0.65, 0.12] as const,
+  packet: [1, 0.84, 0.42] as const,
+  output: [1, 0.58, 0.08] as const
+};
+
 const toClipSpace = (x: number, y: number) => ({
   x: x * 2 - 1,
   y: 1 - y * 2
@@ -546,14 +553,15 @@ export function RecoveryEngineVisualization() {
       routes.forEach((route) => {
         const isActive = route.stage === stageIndex;
         const accent = stageAccents[route.stage];
+        const activeAccent = recoveryOrangeAccent;
         const routeColor = isActive
           ? route.role === 'output'
-            ? [accent.output[0], accent.output[1], accent.output[2], 0.5]
+            ? [activeAccent.output[0], activeAccent.output[1], activeAccent.output[2], 0.5]
             : route.role === 'evidence'
-              ? [accent.glow[0], accent.glow[1], accent.glow[2], 0.42]
+              ? [activeAccent.glow[0], activeAccent.glow[1], activeAccent.glow[2], 0.42]
               : route.role === 'trunk'
-                ? [accent.packet[0], accent.packet[1], accent.packet[2], 0.44]
-                : [accent.line[0], accent.line[1], accent.line[2], 0.36]
+                ? [activeAccent.packet[0], activeAccent.packet[1], activeAccent.packet[2], 0.44]
+                : [activeAccent.line[0], activeAccent.line[1], activeAccent.line[2], 0.36]
           : route.role === 'output'
             ? [0.5, 0.48, 0.46, 0.12]
             : route.role === 'trunk'
@@ -837,7 +845,7 @@ export function RecoveryEngineVisualization() {
                   key={label}
                   className={`rounded-full border px-3 py-1.5 text-[11px] font-medium tracking-tight transition-colors ${
                     activeStage === index
-                      ? 'border-white/18 bg-white/[0.12] text-white'
+                      ? 'border-[var(--margin-recovery-orange)]/60 bg-[var(--margin-recovery-orange)]/15 text-[var(--margin-recovery-orange)]'
                       : 'border-white/8 bg-white/[0.015] text-white/42'
                   }`}
                 >

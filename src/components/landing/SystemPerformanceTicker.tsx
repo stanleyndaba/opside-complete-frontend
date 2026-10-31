@@ -1,7 +1,7 @@
 const layers = [
   {
     label: "Outcome",
-    tone: "text-[#0B74DE]",
+    tone: "text-[var(--margin-recovery-orange-text)]",
     items: [
       "Needs evidence",
       "Rejected",
