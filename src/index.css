@@ -15,7 +15,10 @@
 
   .hero-copy-mobile {
     display: inline;
-    font-weight: 500;
+  }
+
+  .hero-section #margin-hero-title {
+    font-weight: 600 !important;
   }
 
   .hero-section .hero-gmail-visual {
