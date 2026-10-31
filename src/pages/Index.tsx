@@ -396,13 +396,13 @@ function KineticHeroSection({
     <motion.section
       style={{ scale: reduceMotion ? 1 : heroScale, opacity: reduceMotion ? 1 : heroOpacity }}
       data-navbar-theme="light"
-      className="relative isolate flex min-h-svh overflow-hidden bg-white px-4 pb-16 pt-28 text-[#182026] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
+      className="hero-section relative isolate flex min-h-svh overflow-hidden bg-white px-4 pb-16 pt-28 text-[#182026] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
       aria-labelledby="margin-hero-title"
     >
       <HeroSwarmBackground reduceMotion={reduceMotion} />
       <div
         aria-hidden="true"
-        className="hero-gmail-visual pointer-events-none relative order-2 mt-10 h-[430px] w-full shrink-0 overflow-hidden rounded-[12px] border border-[#E7EBED] bg-[#F6F8F9] shadow-[0_18px_44px_rgba(24,32,38,0.10)] lg:absolute lg:inset-y-0 lg:right-0 lg:order-none lg:mt-0 lg:h-auto lg:w-[70%] lg:rounded-none lg:border-0 lg:bg-transparent lg:shadow-none"
+        className="hero-gmail-visual pointer-events-none absolute inset-y-0 right-0 w-[70%] overflow-hidden"
         style={{
           maskImage: "linear-gradient(to right, transparent 0%, transparent 38%, black 68%, black 100%)",
           WebkitMaskImage: "linear-gradient(to right, transparent 0%, transparent 38%, black 68%, black 100%)",
@@ -478,7 +478,7 @@ function KineticHeroSection({
         </motion.div>
         </div>
       </div>
-      <div className="relative z-10 order-1 flex w-full items-center lg:order-none">
+      <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[860px]">
           <div id="margin-hero-title" className="mt-5 max-w-[820px] font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[46px] sm:mt-7 sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>
             <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Complex Amazon Fin-Ops, <span className="text-[#635BFF]">done for you.</span></motion.span>
