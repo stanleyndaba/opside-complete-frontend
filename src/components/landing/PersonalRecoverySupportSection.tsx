@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUp, AtSign, Check, ChevronDown, ChevronRight, Copy, FileText, Paperclip } from "lucide-react";
+import { ArrowUp, AtSign, Check, ChevronDown, ChevronRight, Copy, Paperclip } from "lucide-react";
 
 const singlePrompt = "Explain the Amazon decision, the financial position it leaves open, and what evidence or action is needed next.";
 
@@ -11,26 +11,34 @@ const responseBranches = [
     label: "Decision",
     text: "Amazon's response is recorded against the original submission and evidence. The approved portion is separated from the amount that remains unsupported or unresolved.",
     reference: "Amazon case response",
+    referenceIcon: "/amazon-logo-transparent-circle.png",
+    referenceSource: "Amazon",
     tone: "text-[#526AB1]",
   },
   {
     label: "Financial position",
     text: "The supported exposure, credited value and residual balance remain visible together. Finance can see what is accounted for, what is still open and why the remaining position has not been classified as recovered.",
     reference: "Settlement and ledger position",
+    referenceIcon: "/onedriive.png",
+    referenceSource: "OneDrive",
     tone: "text-[#9A620E]",
   },
   {
     label: "Next action",
     text: "Margin identifies the specific evidence or settlement confirmation required next, assigns the accountable owner and carries the authorized follow-through without transferring the consequential decision away from Finance.",
     reference: "Evidence packet",
+    referenceIcon: "/excel-icon-margin.png",
+    referenceSource: "Excel",
     tone: "text-[#635BFF]",
   },
 ] as const;
 
 const documentReferences = [
-  "Amazon case response · 19822888381",
-  "Original evidence packet · shipment and inventory records",
-  "Settlement and ledger position · outcome pending",
+  { name: "Shipment Receiving Register", source: "Amazon", icon: "/amazon-logo-transparent-circle.png" },
+  { name: "Receiving Variance Schedule", source: "Excel", icon: "/excel-icon-margin.png" },
+  { name: "Carrier Custody Record", source: "PDF", icon: "/pdf-file-icon.webp" },
+  { name: "Amazon Reimbursement Thread", source: "Gmail", icon: "/gmailicon.png" },
+  { name: "Executive Evidence Pack", source: "Dropbox", icon: "/Dropbox_Icon.svg.png" },
 ];
 
 const responseForCopy = `${responseLead} ${responseBranches.map(({ label, text }) => `${label}: ${text}`).join(" ")}`;
@@ -131,7 +139,7 @@ export function PersonalRecoverySupportSection() {
                       {responseBranches.map(({ label, text, reference, tone }) => (
                         <div key={label} className="flex items-start gap-2 text-[11px] leading-4 text-[#52616A] sm:gap-2.5 sm:text-[12px]">
                           <span className={`mt-0.5 shrink-0 text-[10px] font-semibold ${tone}`}>{label}</span>
-                          <span>{text} <span className="inline-flex items-center gap-1 whitespace-nowrap text-[10px] font-medium text-[#667DA6]"><FileText className="h-3 w-3" strokeWidth={1.9} />{reference}</span></span>
+                          <span>{text} <span className="mx-1 inline-flex max-w-full translate-y-[0.12em] items-center gap-1 rounded-[3px] bg-[#F1F3F4] px-1.5 py-0.5 align-baseline text-[10px] font-semibold leading-4 text-[#3B4650]" title={`${referenceSource}: ${reference}`}><img src={referenceIcon} alt={referenceSource} className="h-3.5 w-3.5 shrink-0 object-contain" />{reference}</span></span>
                         </div>
                       ))}
                     </div>
@@ -139,7 +147,7 @@ export function PersonalRecoverySupportSection() {
                   {typedResponse && (
                     <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#E1E9EB] pt-2.5">
                       <div className="flex min-w-0 items-center gap-2 overflow-hidden text-[#7B8C93]">
-                        {documentReferences.map((reference) => <span key={reference} title={reference} className="inline-flex shrink-0 items-center gap-1 text-[10px]"><FileText className="h-3.5 w-3.5 text-[#7A929D]" strokeWidth={1.8} /><span className="sr-only">{reference}</span></span>)}
+                        {documentReferences.map(({ name, source, icon }) => <span key={name} title={`${source}: ${name}`} className="inline-flex shrink-0 items-center gap-1 text-[10px]"><img src={icon} alt={source} className="h-4 w-4 object-contain" /><span className="sr-only">{name}</span></span>)}
                       </div>
                       <button type="button" onClick={copyResponse} aria-label={copied ? "Explanation copied" : "Copy explanation"} className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] text-[#7A929D] transition-colors hover:bg-[#EEF0F1] hover:text-[#384B55] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/20">{copied ? <Check className="h-3.5 w-3.5" strokeWidth={2.2} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.8} />}</button>
                     </div>
@@ -159,7 +167,7 @@ export function PersonalRecoverySupportSection() {
                   <span className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold"><Paperclip className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />Files</span>
                 </div>
                 <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-[#F2F2F2] px-1.5 pt-1.5" aria-label="Prompt document references">
-                  {documentReferences.map((reference) => <span key={reference} className="inline-flex items-center gap-1 text-[10px] text-[#667780]"><FileText className="h-3.5 w-3.5 text-[#7A929D]" strokeWidth={1.8} /><span>{reference}</span></span>)}
+                  {documentReferences.map(({ name, source, icon }) => <span key={name} className="inline-flex items-center gap-1 text-[10px] text-[#667780]"><img src={icon} alt={source} className="h-4 w-4 object-contain" /><span>{name}</span></span>)}
                 </div>
               </div>
 
