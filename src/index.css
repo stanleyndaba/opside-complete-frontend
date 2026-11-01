@@ -12,7 +12,10 @@
 }
 
 .hero-inbox-frame {
-  inset: 7% -8% 4% 8%;
+  top: 7%;
+  left: 8%;
+  width: 1136px;
+  height: 629px;
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -36,7 +39,8 @@
   }
 
   .hero-inbox-frame {
-    inset: 3% 2% 3% 2%;
+    top: 3%;
+    left: 2%;
   }
 
   .hero-section #margin-hero-title {
