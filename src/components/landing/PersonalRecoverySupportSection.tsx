@@ -113,11 +113,9 @@ export function PersonalRecoverySupportSection() {
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
-          <div className="relative overflow-hidden rounded-[12px] bg-white">
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-[58%] bg-[url('/assets/appeals-review-cases-snapshot.webp')] bg-cover bg-[position:center_top] bg-no-repeat opacity-[0.3]" aria-hidden="true" />
-            <div className="pointer-events-none absolute inset-x-0 top-[32%] h-[38%] bg-gradient-to-b from-transparent via-white/80 to-white" aria-hidden="true" />
-            <div className="relative z-10 min-h-[390px] px-4 py-5 sm:min-h-[470px] sm:px-8 sm:py-8">
-              <div className="flex min-h-[190px] flex-col justify-end gap-4 sm:min-h-[235px] sm:gap-5">
+          <div className="relative overflow-hidden rounded-[12px] border border-[#E7E7E7] bg-white">
+            <div className="relative z-10 min-h-[390px] bg-white px-4 py-5 sm:min-h-[470px] sm:px-8 sm:py-8">
+              <div className="mx-auto flex min-h-[150px] w-full max-w-[860px] flex-col justify-end gap-4 sm:min-h-[185px] sm:gap-5">
                 {sentQuestion && (
                   <motion.div key={`sent-${activePrompt}`} initial={{ opacity: 0, y: 8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="flex justify-end">
                     <div className="max-w-[92%] rounded-[10px] rounded-br-[3px] bg-[#EEF0F1] px-3.5 py-3 text-[13px] leading-5 text-[#384B55] shadow-[0_4px_12px_rgba(44,80,96,0.04)] sm:max-w-[80%] sm:px-4 sm:text-[14px]">
@@ -136,14 +134,14 @@ export function PersonalRecoverySupportSection() {
                 </motion.div>
               </div>
 
-              <div className="mt-4 rounded-[10px] border border-[#C8D8DE] bg-white p-2 shadow-[0_7px_18px_rgba(44,80,96,0.06)] sm:mt-5 sm:p-2.5">
-                <div className="flex min-h-[44px] items-center gap-2 px-1.5 sm:min-h-[48px] sm:px-2">
+              <div className="mx-auto mt-4 w-full max-w-[860px] rounded-[10px] border border-[#D8D8D8] bg-white p-3 shadow-[0_3px_12px_rgba(30,35,40,0.05)] sm:mt-5 sm:p-4">
+                <div className="flex min-h-[72px] items-start gap-2 px-1.5 sm:min-h-[86px] sm:px-2">
                   <span className="min-w-0 flex-1 text-[13px] leading-5 text-[#52616A] sm:text-[14px]">{draftQuestion || "Ask Margin about this recovery"}{phase === "draft" && <span aria-hidden="true" className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-pulse bg-[#0B74DE]" />}</span>
-                  <button type="button" onClick={advancePrompt} aria-label="Send the next recovery question" className="flex h-9 shrink-0 items-center justify-center rounded-full bg-[#111518] px-4 text-[12px] font-semibold text-white transition-colors hover:bg-[#2A3033] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/25">
+                  <button type="button" onClick={advancePrompt} aria-label="Send the next recovery question" className="mt-auto flex h-8 shrink-0 items-center justify-center rounded-full bg-[#111518] px-3.5 text-[12px] font-semibold text-white transition-colors hover:bg-[#2A3033] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/25">
                     Ask <ArrowUp className="h-3.5 w-3.5" strokeWidth={2.2} />
                   </button>
                 </div>
-                <div className="mt-2 flex flex-wrap items-center gap-3 px-1.5 text-[#52616A]" aria-label="Prompt sources and files">
+                <div className="mt-2 flex flex-wrap items-center gap-3 border-t border-[#EEEEEE] px-1.5 pt-2 text-[#52616A]" aria-label="Prompt sources and files">
                 <button type="button" className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold transition-colors hover:text-[#526AB1]" aria-label="Add sources">
                   <AtSign className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />
                   Data Sources <ChevronDown className="h-3 w-3 text-[#7A929D]" strokeWidth={2} />
@@ -155,7 +153,7 @@ export function PersonalRecoverySupportSection() {
                 </div>
               </div>
 
-              <div className="mt-3 flex flex-wrap items-center gap-3 px-1" aria-label="Add connected sources">
+              <div className="mx-auto mt-3 flex w-full max-w-[860px] flex-wrap items-center gap-3 px-1" aria-label="Add connected sources">
                 {[
                   ["/gmailicon.png", "Gmail"],
                   ["/Dropbox_Icon.svg.png", "Dropbox"],
@@ -170,7 +168,7 @@ export function PersonalRecoverySupportSection() {
                 ))}
               </div>
 
-              <div className="mt-4 pt-1" aria-label="Recent sessions">
+              <div className="mx-auto mt-4 w-full max-w-[860px] pt-1" aria-label="Recent sessions">
                 <p className="mb-2 text-[10px] font-semibold tracking-tight text-[#91A3AB]">Recent sessions</p>
                 <div className="grid gap-1.5 sm:grid-cols-3">
                   {["Reconcile reversal exposure", "Explain arrival-delay dispute", "Why did this recovery stall?"].map((session) => (
