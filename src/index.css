@@ -11,6 +11,10 @@
     radial-gradient(circle at 93% 78%, rgba(254, 133, 0, 0.05), transparent 25%);
 }
 
+.hero-inbox-frame {
+  inset: 7% -8% 4% 8%;
+}
+
 @media (hover: none) and (pointer: coarse) {
   .hero-section {
     flex-direction: column;
@@ -29,6 +33,10 @@
       radial-gradient(ellipse at 16% 86%, color-mix(in srgb, var(--margin-bubblegum-pink) 34%, transparent), transparent 43%),
       radial-gradient(ellipse at 38% 76%, rgba(16, 91, 255, 0.22), transparent 50%),
       radial-gradient(circle at 92% 83%, rgba(254, 133, 0, 0.04), transparent 22%);
+  }
+
+  .hero-inbox-frame {
+    inset: 3% 2% 3% 2%;
   }
 
   .hero-section #margin-hero-title {

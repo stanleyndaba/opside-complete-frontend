@@ -54,6 +54,7 @@ import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import { MarginEngineSection } from "@/components/landing/MarginEngineSection";
 import { GoogleMark } from "@/components/GoogleMark";
+import { HeroInboxVisual } from "@/components/landing/HeroInboxVisual";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -409,11 +410,7 @@ function KineticHeroSection({
           WebkitMaskImage: "linear-gradient(to right, transparent 0%, transparent 38%, black 68%, black 100%)",
         }}
       >
-        <img
-          src="/gmaillist.png"
-          alt=""
-          className="h-full w-full scale-[0.98] object-cover object-[60%_top] opacity-[0.92] mix-blend-multiply"
-        />
+        <HeroInboxVisual />
         <div key={notificationCycle} className="contents">
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: -28, scaleX: 0.42, scaleY: 0.88 }}
