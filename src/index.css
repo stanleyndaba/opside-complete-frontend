@@ -1332,3 +1332,36 @@ html, body, #root {
   border-radius: 0 !important;
   border-color: #E1E5E5 !important;
 }
+
+/* Personal recovery support: a soft, irregular generation indicator that blends Margin's sky blue and bubblegum pink. */
+.financial-position-indicator {
+  display: inline-block;
+  border-radius: 62% 38% 54% 46% / 45% 58% 42% 55%;
+  background: linear-gradient(135deg, #7DD3FC 0%, #A5B4FC 48%, #F472B6 100%);
+  box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.12), 0 2px 8px rgba(244, 114, 182, 0.2);
+  transform-origin: center;
+}
+.financial-position-indicator.is-generating {
+  animation: financial-position-morph 2.2s ease-in-out infinite;
+}
+.financial-position-indicator.is-settled {
+  border-radius: 50%;
+}
+@keyframes financial-position-morph {
+  0%, 100% {
+    border-radius: 62% 38% 54% 46% / 45% 58% 42% 55%;
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    border-radius: 38% 62% 45% 55% / 58% 42% 60% 40%;
+    transform: rotate(12deg) scale(1.08, 0.92);
+  }
+  50% {
+    border-radius: 54% 46% 68% 32% / 35% 64% 36% 65%;
+    transform: rotate(-10deg) scale(0.92, 1.08);
+  }
+  75% {
+    border-radius: 44% 56% 34% 66% / 62% 38% 55% 45%;
+    transform: rotate(7deg) scale(1.05, 0.95);
+  }
+}

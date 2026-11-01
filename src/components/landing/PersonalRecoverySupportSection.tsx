@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUp, AtSign, Check, ChevronDown, ChevronRight, CircleAlert, Copy, FileText, Paperclip } from "lucide-react";
+import { ArrowUp, AtSign, Check, ChevronDown, ChevronRight, Copy, FileText, Paperclip } from "lucide-react";
 
 const singlePrompt = "Explain the Amazon decision, the financial position it leaves open, and what evidence or action is needed next.";
 
@@ -10,17 +10,20 @@ const responseBranches = [
   {
     label: "Decision",
     text: "Amazon's response is recorded against the original submission and evidence. The approved portion is separated from the amount that remains unsupported or unresolved.",
-    tone: "text-[#526AB1] bg-[#EEF3FF] border-[#D9E4FF]",
+    reference: "Amazon case response",
+    tone: "text-[#526AB1]",
   },
   {
     label: "Financial position",
     text: "The supported exposure, credited value and residual balance remain visible together. Finance can see what is accounted for, what is still open and why the remaining position has not been classified as recovered.",
-    tone: "text-[#9A620E] bg-[#FFF8ED] border-[#F1D8AB]",
+    reference: "Settlement and ledger position",
+    tone: "text-[#9A620E]",
   },
   {
     label: "Next action",
     text: "Margin identifies the specific evidence or settlement confirmation required next, assigns the accountable owner and carries the authorized follow-through without transferring the consequential decision away from Finance.",
-    tone: "text-[#635BFF] bg-[#F3F0FF] border-[#DED8FF]",
+    reference: "Evidence packet",
+    tone: "text-[#635BFF]",
   },
 ] as const;
 
@@ -119,7 +122,32 @@ export function PersonalRecoverySupportSection() {
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
           <div className="relative overflow-hidden rounded-[12px] border border-[#E7E7E7] bg-white">
             <div className="relative z-10 min-h-[390px] bg-white px-4 py-5 sm:min-h-[470px] sm:px-8 sm:py-8">
-              <div className="mx-auto w-full max-w-[860px] rounded-[10px] border border-[#D8D8D8] bg-white p-3 shadow-[0_3px_12px_rgba(30,35,40,0.05)] sm:p-4">
+              <div className="mx-auto mt-5 w-full max-w-[860px] border-l-2 border-[#DCE5EA] pl-4 sm:mt-6 sm:pl-5">
+                <div className="flex items-center gap-2 text-[11px] font-medium text-[#667780]"><span className={`financial-position-indicator h-2.5 w-2.5 shrink-0 ${phase === "response" ? "is-generating" : "is-settled"}`} />Establishing your financial position</div>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: typedResponse ? 1 : 0.5 }} className="mt-2">
+                  <p className="text-[13px] leading-5.5 text-[#384B55] sm:text-[14px] sm:leading-6">{typedResponse}{phase === "response" && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-px translate-y-0.5 animate-pulse bg-[#7A929D]" />}</p>
+                  {phase === "pause" && (
+                    <div className="mt-3 space-y-2">
+                      {responseBranches.map(({ label, text, reference, tone }) => (
+                        <div key={label} className="flex items-start gap-2 text-[11px] leading-4 text-[#52616A] sm:gap-2.5 sm:text-[12px]">
+                          <span className={`mt-0.5 shrink-0 text-[10px] font-semibold ${tone}`}>{label}</span>
+                          <span>{text} <span className="inline-flex items-center gap-1 whitespace-nowrap text-[10px] font-medium text-[#667DA6]"><FileText className="h-3 w-3" strokeWidth={1.9} />{reference}</span></span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {typedResponse && (
+                    <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#E1E9EB] pt-2.5">
+                      <div className="flex min-w-0 items-center gap-2 overflow-hidden text-[#7B8C93]">
+                        {documentReferences.map((reference) => <span key={reference} title={reference} className="inline-flex shrink-0 items-center gap-1 text-[10px]"><FileText className="h-3.5 w-3.5 text-[#7A929D]" strokeWidth={1.8} /><span className="sr-only">{reference}</span></span>)}
+                      </div>
+                      <button type="button" onClick={copyResponse} aria-label={copied ? "Explanation copied" : "Copy explanation"} className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] text-[#7A929D] transition-colors hover:bg-[#EEF0F1] hover:text-[#384B55] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/20">{copied ? <Check className="h-3.5 w-3.5" strokeWidth={2.2} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.8} />}</button>
+                    </div>
+                  )}
+                </motion.div>
+              </div>
+
+              <div className="mx-auto mt-5 w-full max-w-[860px] rounded-[10px] border border-[#D8D8D8] bg-white p-3 shadow-[0_3px_12px_rgba(30,35,40,0.05)] sm:mt-6 sm:p-4">
                 <div className="flex min-h-[72px] items-start gap-2 px-1.5 sm:min-h-[86px] sm:px-2">
                   <span className="min-w-0 flex-1 text-[13px] leading-5 text-[#52616A] sm:text-[14px]">{sent ? singlePrompt : draftQuestion}{!sent && <span aria-hidden="true" className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-pulse bg-[#0B74DE]" />}</span>
                   <span className={`mt-auto flex h-8 shrink-0 items-center gap-1 rounded-full px-3.5 text-[12px] font-semibold ${sent ? "bg-[#EAF6EF] text-[#2D7B59]" : "bg-[#111518] text-white"}`}>
@@ -130,39 +158,10 @@ export function PersonalRecoverySupportSection() {
                   <span className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold"><AtSign className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />Data Sources <ChevronDown className="h-3 w-3 text-[#7A929D]" strokeWidth={2} /></span>
                   <span className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold"><Paperclip className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />Files</span>
                 </div>
-              </div>
-
-              <div className="mx-auto mt-5 w-full max-w-[860px] border-l-2 border-[#DCE5EA] pl-4 sm:mt-6 sm:pl-5">
-                <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#81919A]"><span className="h-2 w-2 rounded-full bg-[#635BFF]" />Margin response</div>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: typedResponse ? 1 : 0.5 }} className="mt-2">
-                  <p className="text-[13px] leading-5.5 text-[#384B55] sm:text-[14px] sm:leading-6">{typedResponse}{phase === "response" && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-px translate-y-0.5 animate-pulse bg-[#7A929D]" />}</p>
-                  {phase === "pause" && (
-                    <div className="mt-3 space-y-2">
-                      {responseBranches.map(({ label, text, tone }) => (
-                        <div key={label} className="flex items-start gap-2 rounded-[7px] border bg-white px-2.5 py-2 text-[11px] leading-4 text-[#52616A] sm:px-3">
-                          <span className={`mt-0.5 shrink-0 rounded-[4px] border px-1.5 py-0.5 text-[9px] font-semibold ${tone}`}>{label}</span>
-                          <span>{text}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {typedResponse && (
-                    <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#E1E9EB] pt-2.5">
-                      <p className="flex items-center gap-1.5 font-mono text-[10px] text-[#7B8C93]"><CircleAlert className="h-3 w-3 text-[#C58A28]" strokeWidth={2} />Financial position · Evidence basis</p>
-                      <button type="button" onClick={copyResponse} aria-label={copied ? "Response copied" : "Copy Margin response"} className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] text-[#7A929D] transition-colors hover:bg-[#EEF0F1] hover:text-[#384B55] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/20">{copied ? <Check className="h-3.5 w-3.5" strokeWidth={2.2} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.8} />}</button>
-                    </div>
-                  )}
-                </motion.div>
-              </div>
-
-              {phase === "pause" && (
-                <div className="mx-auto mt-4 w-full max-w-[860px] rounded-[8px] bg-[#FAFBFC] px-3 py-2.5 sm:mt-5 sm:px-4">
-                  <div className="flex items-center gap-1.5 text-[10px] font-semibold text-[#52616A]"><FileText className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />Documents referenced</div>
-                  <div className="mt-2 grid gap-1.5 sm:grid-cols-3">
-                    {documentReferences.map((reference) => <div key={reference} className="flex min-w-0 items-start gap-1.5 text-[10px] leading-4 text-[#667780]"><FileText className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#7A929D]" strokeWidth={1.8} /><span>{reference}</span></div>)}
-                  </div>
+                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-[#F2F2F2] px-1.5 pt-1.5" aria-label="Prompt document references">
+                  {documentReferences.map((reference) => <span key={reference} className="inline-flex items-center gap-1 text-[10px] text-[#667780]"><FileText className="h-3.5 w-3.5 text-[#7A929D]" strokeWidth={1.8} /><span>{reference}</span></span>)}
                 </div>
-              )}
+              </div>
 
               <div className="mx-auto mt-4 flex w-full max-w-[860px] items-center gap-2 border-t border-[#F0F0F0] pt-3 text-[10px] text-[#81919A]"><ChevronRight className="h-3.5 w-3.5 text-[#635BFF]" strokeWidth={2} />One prompt sent · explanation grounded in the recorded financial work</div>
             </div>
