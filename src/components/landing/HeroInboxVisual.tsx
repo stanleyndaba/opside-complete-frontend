@@ -74,8 +74,9 @@ export function HeroInboxVisual() {
           </div>
         </aside>
 
-        <aside className="h-full w-[256px] shrink-0 border-r border-[#E0E3E7] bg-[#F8F9FC] pt-5">
-          <button type="button" className="ml-3 flex h-[56px] w-[138px] items-center gap-3 rounded-[18px] bg-[#BFE5FF] px-5 text-[14px] font-medium text-[#202124] shadow-[0_1px_2px_rgba(60,64,67,0.08)]">
+        <aside className="h-full w-[256px] shrink-0 border-r border-[#E0E3E7] bg-[#F8F9FC] pt-0">
+          <div className="flex h-[62px] items-center gap-2 px-5 text-[23px] font-normal tracking-[-0.04em] text-[#202124]"><img src="/gmailicon.png" alt="" className="h-7 w-7 object-contain" /><span>Gmail</span></div>
+          <button type="button" className="ml-3 mt-1 flex h-[56px] w-[138px] items-center gap-3 rounded-[18px] bg-[#BFE5FF] px-5 text-[14px] font-medium text-[#202124] shadow-[0_1px_2px_rgba(60,64,67,0.08)]">
             <PenLine className="h-5 w-5" strokeWidth={2} />
             Compose
           </button>
@@ -99,7 +100,6 @@ export function HeroInboxVisual() {
 
         <main className="min-w-0 flex-1 bg-white">
           <div className="flex h-[62px] items-center gap-6 border-b border-[#E5E7EA] px-5">
-            <div className="flex shrink-0 items-center gap-2 text-[23px] font-normal tracking-[-0.04em] text-[#202124]"><img src="/gmailicon.png" alt="" className="h-7 w-7 object-contain" /><span>Gmail</span></div>
             <div className="flex h-[44px] w-[520px] items-center gap-4 rounded-full bg-[#E9EEF6] px-5 text-[#3C4043] shadow-[inset_0_1px_1px_rgba(60,64,67,0.05)]">
               <Search className="h-5 w-5 shrink-0" strokeWidth={2} />
               <span className="flex-1 text-[14px] tracking-tight">seller central</span>
