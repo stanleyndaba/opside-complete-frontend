@@ -136,7 +136,7 @@ export function PersonalRecoverySupportSection() {
                   <p className="text-[13px] leading-5.5 text-[#384B55] sm:text-[14px] sm:leading-6">{typedResponse}{phase === "response" && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-px translate-y-0.5 animate-pulse bg-[#7A929D]" />}</p>
                   {phase === "pause" && (
                     <div className="mt-3 space-y-2">
-                      {responseBranches.map(({ label, text, reference, tone }) => (
+                      {responseBranches.map(({ label, text, reference, referenceIcon, referenceSource, tone }) => (
                         <div key={label} className="flex items-start gap-2 text-[11px] leading-4 text-[#52616A] sm:gap-2.5 sm:text-[12px]">
                           <span className={`mt-0.5 shrink-0 text-[10px] font-semibold ${tone}`}>{label}</span>
                           <span>{text} <span className="mx-1 inline-flex max-w-full translate-y-[0.12em] items-center gap-1 rounded-[3px] bg-[#F1F3F4] px-1.5 py-0.5 align-baseline text-[10px] font-semibold leading-4 text-[#3B4650]" title={`${referenceSource}: ${reference}`}><img src={referenceIcon} alt={referenceSource} className="h-3.5 w-3.5 shrink-0 object-contain" />{reference}</span></span>
