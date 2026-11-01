@@ -1,24 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUp, AtSign, Check, ChevronDown, Copy, MessageCircle, Paperclip, Plus } from "lucide-react";
+import { ArrowUp, AtSign, Check, ChevronDown, ChevronRight, CircleAlert, Copy, FileText, Paperclip } from "lucide-react";
 
-const prompts = [
+const singlePrompt = "Explain the Amazon decision, the financial position it leaves open, and what evidence or action is needed next.";
+
+const responseLead = "Margin reviewed the case history, Amazon's decision, the available evidence and the settlement position. The decision explains what Amazon accepted or declined; it does not, by itself, close the underlying financial question.";
+
+const responseBranches = [
   {
-    question: "What is the current financial position, and which amount is supported by evidence?",
-    response: "Margin has separated the examined population, supported exposure, credited value, and unresolved balance. The supported amount is tied to the receiving, settlement, and ledger records currently available; amounts that cannot be attributed without a complete evidence chain remain outside the recoverable position.",
-    detail: "Financial position · Evidence basis",
+    label: "Decision",
+    text: "Amazon's response is recorded against the original submission and evidence. The approved portion is separated from the amount that remains unsupported or unresolved.",
+    tone: "text-[#526AB1] bg-[#EEF3FF] border-[#D9E4FF]",
   },
   {
-    question: "What control dependency is preventing this recovery from closing?",
-    response: "The position remains open because the source record required to complete the attribution has not yet been confirmed. Margin has retained the original decision, linked the affected event and response window, and identified the specific evidence or settlement confirmation needed before the balance can move to a verified outcome.",
-    detail: "Open dependency · Evidence or settlement confirmation",
+    label: "Financial position",
+    text: "The supported exposure, credited value and residual balance remain visible together. Finance can see what is accounted for, what is still open and why the remaining position has not been classified as recovered.",
+    tone: "text-[#9A620E] bg-[#FFF8ED] border-[#F1D8AB]",
   },
   {
-    question: "What has Margin authorized, what remains with Finance, and what happens next?",
-    response: "Margin has prepared the supported recovery position and defined the next controlled action within the approved scope. Finance retains the decision right for any consequential submission; Margin will carry the evidence packet, response handling, settlement verification, and unresolved follow-through until the financial outcome is documented.",
-    detail: "Decision boundary · Next controlled action",
+    label: "Next action",
+    text: "Margin identifies the specific evidence or settlement confirmation required next, assigns the accountable owner and carries the authorized follow-through without transferring the consequential decision away from Finance.",
+    tone: "text-[#635BFF] bg-[#F3F0FF] border-[#DED8FF]",
   },
 ] as const;
+
+const documentReferences = [
+  "Amazon case response · 19822888381",
+  "Original evidence packet · shipment and inventory records",
+  "Settlement and ledger position · outcome pending",
+];
+
+const responseForCopy = `${responseLead} ${responseBranches.map(({ label, text }) => `${label}: ${text}`).join(" ")}`;
 
 const revealProps = {
   initial: { opacity: 0, y: 16 },
@@ -28,9 +40,8 @@ const revealProps = {
 };
 
 export function PersonalRecoverySupportSection() {
-  const [activePrompt, setActivePrompt] = useState(0);
   const [draftQuestion, setDraftQuestion] = useState("");
-  const [sentQuestion, setSentQuestion] = useState("");
+  const [sent, setSent] = useState(false);
   const [typedResponse, setTypedResponse] = useState("");
   const [phase, setPhase] = useState<"draft" | "response" | "pause">("draft");
   const [copied, setCopied] = useState(false);
@@ -38,42 +49,38 @@ export function PersonalRecoverySupportSection() {
   useEffect(() => {
     let sendTimer: number | undefined;
     let responseTimer: number | undefined;
-    let nextTimer: number | undefined;
-    const prompt = prompts[activePrompt];
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     setDraftQuestion("");
-    setSentQuestion("");
+    setSent(false);
     setTypedResponse("");
     setPhase("draft");
     setCopied(false);
 
     if (reducedMotion) {
-      setSentQuestion(prompt.question);
-      setTypedResponse(prompt.response);
+      setDraftQuestion(singlePrompt);
+      setSent(true);
+      setTypedResponse(responseLead);
       setPhase("pause");
-      nextTimer = window.setTimeout(() => setActivePrompt((current) => (current + 1) % prompts.length), 6500);
-      return () => window.clearTimeout(nextTimer);
+      return undefined;
     }
 
     let draftIndex = 0;
     const draftTimer = window.setInterval(() => {
       draftIndex += 1;
-      setDraftQuestion(prompt.question.slice(0, draftIndex));
-      if (draftIndex >= prompt.question.length) {
+      setDraftQuestion(singlePrompt.slice(0, draftIndex));
+      if (draftIndex >= singlePrompt.length) {
         window.clearInterval(draftTimer);
         sendTimer = window.setTimeout(() => {
-          setDraftQuestion("");
-          setSentQuestion(prompt.question);
+          setSent(true);
           setPhase("response");
           let responseIndex = 0;
           responseTimer = window.setInterval(() => {
             responseIndex += 1;
-            setTypedResponse(prompt.response.slice(0, responseIndex));
-            if (responseIndex >= prompt.response.length) {
+            setTypedResponse(responseLead.slice(0, responseIndex));
+            if (responseIndex >= responseLead.length) {
               window.clearInterval(responseTimer);
               setPhase("pause");
-              nextTimer = window.setTimeout(() => setActivePrompt((current) => (current + 1) % prompts.length), 4200);
             }
           }, 17);
         }, 520);
@@ -81,18 +88,15 @@ export function PersonalRecoverySupportSection() {
     }, 31);
 
     return () => {
-      if (draftTimer) window.clearInterval(draftTimer);
+      window.clearInterval(draftTimer);
       if (sendTimer) window.clearTimeout(sendTimer);
       if (responseTimer) window.clearInterval(responseTimer);
-      if (nextTimer) window.clearTimeout(nextTimer);
     };
-  }, [activePrompt]);
+  }, []);
 
-  const prompt = prompts[activePrompt];
-  const advancePrompt = () => setActivePrompt((current) => (current + 1) % prompts.length);
   const copyResponse = async () => {
     try {
-      await navigator.clipboard.writeText(prompt.response);
+      await navigator.clipboard.writeText(responseForCopy);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1600);
     } catch {
@@ -115,73 +119,54 @@ export function PersonalRecoverySupportSection() {
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
           <div className="relative overflow-hidden rounded-[12px] border border-[#E7E7E7] bg-white">
             <div className="relative z-10 min-h-[390px] bg-white px-4 py-5 sm:min-h-[470px] sm:px-8 sm:py-8">
-              <div className="mx-auto flex min-h-[150px] w-full max-w-[860px] flex-col justify-end gap-4 sm:min-h-[185px] sm:gap-5">
-                {sentQuestion && (
-                  <motion.div key={`sent-${activePrompt}`} initial={{ opacity: 0, y: 8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="flex justify-end">
-                    <div className="max-w-[92%] rounded-[10px] rounded-br-[3px] bg-[#EEF0F1] px-3.5 py-3 text-[13px] leading-5 text-[#384B55] shadow-[0_4px_12px_rgba(44,80,96,0.04)] sm:max-w-[80%] sm:px-4 sm:text-[14px]">
-                      <span className="mr-1.5 rounded-[4px] bg-[#D2DDF5] px-1.5 py-1 font-mono text-[12px] font-semibold text-[#526AB1]">@Margin</span>
-                      {sentQuestion}
-                    </div>
-                  </motion.div>
-                )}
+              <div className="mx-auto w-full max-w-[860px] rounded-[10px] border border-[#D8D8D8] bg-white p-3 shadow-[0_3px_12px_rgba(30,35,40,0.05)] sm:p-4">
+                <div className="flex min-h-[72px] items-start gap-2 px-1.5 sm:min-h-[86px] sm:px-2">
+                  <span className="min-w-0 flex-1 text-[13px] leading-5 text-[#52616A] sm:text-[14px]">{sent ? singlePrompt : draftQuestion}{!sent && <span aria-hidden="true" className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-pulse bg-[#0B74DE]" />}</span>
+                  <span className={`mt-auto flex h-8 shrink-0 items-center gap-1 rounded-full px-3.5 text-[12px] font-semibold ${sent ? "bg-[#EAF6EF] text-[#2D7B59]" : "bg-[#111518] text-white"}`}>
+                    {sent ? "Sent" : "Ask"}{sent ? <Check className="h-3.5 w-3.5" strokeWidth={2.2} /> : <ArrowUp className="h-3.5 w-3.5" strokeWidth={2.2} />}
+                  </span>
+                </div>
+                <div className="mt-2 flex flex-wrap items-center gap-3 border-t border-[#EEEEEE] px-1.5 pt-2 text-[#52616A]" aria-label="Prompt sources and files">
+                  <span className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold"><AtSign className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />Data Sources <ChevronDown className="h-3 w-3 text-[#7A929D]" strokeWidth={2} /></span>
+                  <span className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold"><Paperclip className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />Files</span>
+                </div>
+              </div>
 
-                <motion.div key={`response-${activePrompt}`} initial={{ opacity: 0, y: 7 }} animate={{ opacity: typedResponse ? 1 : 0.45, y: 0 }} className="max-w-[92%] pl-1 sm:max-w-[84%] sm:pl-2">
-                  <p className="min-h-[76px] text-[14px] leading-6 text-[#384B55] sm:text-[16px] sm:leading-7">
-                    {typedResponse}
-                    {phase === "response" && <span aria-hidden="true" className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-pulse bg-[#7A929D]" />}
-                  </p>
-                  {typedResponse && <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#E1E9EB] pt-3"><p className="font-mono text-[10px] text-[#7B8C93]">{prompt.detail}</p><button type="button" onClick={copyResponse} aria-label={copied ? "Response copied" : "Copy Margin response"} className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] text-[#7A929D] transition-colors hover:bg-[#EEF0F1] hover:text-[#384B55] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/20">{copied ? <Check className="h-3.5 w-3.5" strokeWidth={2.2} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.8} />}</button></div>}
+              <div className="mx-auto mt-5 w-full max-w-[860px] border-l-2 border-[#DCE5EA] pl-4 sm:mt-6 sm:pl-5">
+                <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#81919A]"><span className="h-2 w-2 rounded-full bg-[#635BFF]" />Margin response</div>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: typedResponse ? 1 : 0.5 }} className="mt-2">
+                  <p className="text-[13px] leading-5.5 text-[#384B55] sm:text-[14px] sm:leading-6">{typedResponse}{phase === "response" && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-px translate-y-0.5 animate-pulse bg-[#7A929D]" />}</p>
+                  {phase === "pause" && (
+                    <div className="mt-3 space-y-2">
+                      {responseBranches.map(({ label, text, tone }) => (
+                        <div key={label} className="flex items-start gap-2 rounded-[7px] border bg-white px-2.5 py-2 text-[11px] leading-4 text-[#52616A] sm:px-3">
+                          <span className={`mt-0.5 shrink-0 rounded-[4px] border px-1.5 py-0.5 text-[9px] font-semibold ${tone}`}>{label}</span>
+                          <span>{text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {typedResponse && (
+                    <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#E1E9EB] pt-2.5">
+                      <p className="flex items-center gap-1.5 font-mono text-[10px] text-[#7B8C93]"><CircleAlert className="h-3 w-3 text-[#C58A28]" strokeWidth={2} />Financial position · Evidence basis</p>
+                      <button type="button" onClick={copyResponse} aria-label={copied ? "Response copied" : "Copy Margin response"} className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] text-[#7A929D] transition-colors hover:bg-[#EEF0F1] hover:text-[#384B55] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/20">{copied ? <Check className="h-3.5 w-3.5" strokeWidth={2.2} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.8} />}</button>
+                    </div>
+                  )}
                 </motion.div>
               </div>
 
-              <div className="mx-auto mt-4 w-full max-w-[860px] rounded-[10px] border border-[#D8D8D8] bg-white p-3 shadow-[0_3px_12px_rgba(30,35,40,0.05)] sm:mt-5 sm:p-4">
-                <div className="flex min-h-[72px] items-start gap-2 px-1.5 sm:min-h-[86px] sm:px-2">
-                  <span className="min-w-0 flex-1 text-[13px] leading-5 text-[#52616A] sm:text-[14px]">{draftQuestion || "Ask Margin about this recovery"}{phase === "draft" && <span aria-hidden="true" className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-pulse bg-[#0B74DE]" />}</span>
-                  <button type="button" onClick={advancePrompt} aria-label="Send the next recovery question" className="mt-auto flex h-8 shrink-0 items-center justify-center rounded-full bg-[#111518] px-3.5 text-[12px] font-semibold text-white transition-colors hover:bg-[#2A3033] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/25">
-                    Ask <ArrowUp className="h-3.5 w-3.5" strokeWidth={2.2} />
-                  </button>
+              {phase === "pause" && (
+                <div className="mx-auto mt-4 w-full max-w-[860px] rounded-[8px] bg-[#FAFBFC] px-3 py-2.5 sm:mt-5 sm:px-4">
+                  <div className="flex items-center gap-1.5 text-[10px] font-semibold text-[#52616A]"><FileText className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />Documents referenced</div>
+                  <div className="mt-2 grid gap-1.5 sm:grid-cols-3">
+                    {documentReferences.map((reference) => <div key={reference} className="flex min-w-0 items-start gap-1.5 text-[10px] leading-4 text-[#667780]"><FileText className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#7A929D]" strokeWidth={1.8} /><span>{reference}</span></div>)}
+                  </div>
                 </div>
-                <div className="mt-2 flex flex-wrap items-center gap-3 border-t border-[#EEEEEE] px-1.5 pt-2 text-[#52616A]" aria-label="Prompt sources and files">
-                <button type="button" className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold transition-colors hover:text-[#526AB1]" aria-label="Add sources">
-                  <AtSign className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />
-                  Data Sources <ChevronDown className="h-3 w-3 text-[#7A929D]" strokeWidth={2} />
-                </button>
-                <button type="button" className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold transition-colors hover:text-[#526AB1]" aria-label="Add files">
-                  <Paperclip className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />
-                  Files
-                </button>
-                </div>
-              </div>
+              )}
 
-              <div className="mx-auto mt-3 flex w-full max-w-[860px] flex-wrap items-center gap-3 px-1" aria-label="Add connected sources">
-                {[
-                  ["/gmailicon.png", "Gmail"],
-                  ["/Dropbox_Icon.svg.png", "Dropbox"],
-                  ["/xero.png", "Xero"],
-                  ["/quickbooks.png", "QuickBooks"],
-                ].map(([src, label]) => (
-                  <button type="button" key={label} className="group inline-flex h-8 items-center gap-1 px-0.5 text-[11px] text-[#52616A] transition-colors hover:text-[#526AB1]" aria-label={`Add ${label}`}>
-                    <img src={src} alt={label} className="h-5 w-5 object-contain" />
-                    <span>{label}</span>
-                    <Plus className="h-3 w-3 text-[#7A929D] transition-colors group-hover:text-[#526AB1]" strokeWidth={2.2} />
-                  </button>
-                ))}
-              </div>
-
-              <div className="mx-auto mt-4 w-full max-w-[860px] pt-1" aria-label="Recent sessions">
-                <p className="mb-2 text-[10px] font-semibold tracking-tight text-[#91A3AB]">Recent sessions</p>
-                <div className="grid gap-1.5 sm:grid-cols-3">
-                  {["Reconcile reversal exposure", "Explain arrival-delay dispute", "Why did this recovery stall?"].map((session) => (
-                    <button type="button" key={session} className="group flex min-w-0 items-center gap-1.5 px-0.5 py-1.5 text-left text-[11px] text-[#52616A] transition-colors hover:text-[#526AB1]" aria-label={`Open ${session}`}>
-                      <MessageCircle className="h-3.5 w-3.5 shrink-0 text-[#7A929D]" strokeWidth={1.8} />
-                      <span className="truncate">{session}</span>
-                      <Plus className="h-3 w-3 shrink-0 text-[#7A929D] transition-colors group-hover:text-[#526AB1]" strokeWidth={2.2} />
-                    </button>
-                  ))}
-                </div>
-                </div>
-              </div>
+              <div className="mx-auto mt-4 flex w-full max-w-[860px] items-center gap-2 border-t border-[#F0F0F0] pt-3 text-[10px] text-[#81919A]"><ChevronRight className="h-3.5 w-3.5 text-[#635BFF]" strokeWidth={2} />One prompt sent · explanation grounded in the recorded financial work</div>
             </div>
+          </div>
         </motion.div>
       </div>
     </section>
