@@ -404,7 +404,7 @@ function KineticHeroSection({
       <HeroSwarmBackground reduceMotion={reduceMotion} />
       <div
         aria-hidden="true"
-        className="hero-gmail-visual pointer-events-none absolute inset-y-0 right-0 w-[70%] overflow-hidden"
+        className="hero-gmail-visual pointer-events-auto absolute inset-y-0 right-0 w-[70%] overflow-hidden"
         style={{
           maskImage: "linear-gradient(to right, transparent 0%, transparent 38%, black 68%, black 100%)",
           WebkitMaskImage: "linear-gradient(to right, transparent 0%, transparent 38%, black 68%, black 100%)",
