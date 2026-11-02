@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUp, AtSign, Check, ChevronDown, ChevronRight, Copy, Paperclip } from "lucide-react";
+import { AtSign, Check, ChevronDown, ChevronRight, Copy, Paperclip, Search } from "lucide-react";
 
 const singlePrompt = "Explain the Amazon decision, the financial position it leaves open, and what evidence or action is needed next.";
 
@@ -51,59 +51,7 @@ const revealProps = {
 };
 
 export function PersonalRecoverySupportSection() {
-  const [draftQuestion, setDraftQuestion] = useState("");
-  const [sent, setSent] = useState(false);
-  const [typedResponse, setTypedResponse] = useState("");
-  const [phase, setPhase] = useState<"draft" | "response" | "pause">("draft");
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    let sendTimer: number | undefined;
-    let responseTimer: number | undefined;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    setDraftQuestion("");
-    setSent(false);
-    setTypedResponse("");
-    setPhase("draft");
-    setCopied(false);
-
-    if (reducedMotion) {
-      setDraftQuestion(singlePrompt);
-      setSent(true);
-      setTypedResponse(responseLead);
-      setPhase("pause");
-      return undefined;
-    }
-
-    let draftIndex = 0;
-    const draftTimer = window.setInterval(() => {
-      draftIndex += 1;
-      setDraftQuestion(singlePrompt.slice(0, draftIndex));
-      if (draftIndex >= singlePrompt.length) {
-        window.clearInterval(draftTimer);
-        sendTimer = window.setTimeout(() => {
-          setSent(true);
-          setPhase("response");
-          let responseIndex = 0;
-          responseTimer = window.setInterval(() => {
-            responseIndex += 1;
-            setTypedResponse(responseLead.slice(0, responseIndex));
-            if (responseIndex >= responseLead.length) {
-              window.clearInterval(responseTimer);
-              setPhase("pause");
-            }
-          }, 17);
-        }, 520);
-      }
-    }, 31);
-
-    return () => {
-      window.clearInterval(draftTimer);
-      if (sendTimer) window.clearTimeout(sendTimer);
-      if (responseTimer) window.clearInterval(responseTimer);
-    };
-  }, []);
 
   const copyResponse = async () => {
     try {
@@ -131,40 +79,42 @@ export function PersonalRecoverySupportSection() {
           <div className="relative overflow-hidden rounded-[12px] border border-[#E7E7E7] bg-white">
             <div className="relative z-10 min-h-[390px] bg-white px-4 py-5 sm:min-h-[470px] sm:px-8 sm:py-8">
               <div className="mx-auto mt-5 w-full max-w-[860px] border-l-2 border-[#DCE5EA] pl-4 sm:mt-6 sm:pl-5">
-                <div className="flex items-center gap-2 text-[11px] font-medium text-[#667780]"><span className={`financial-position-indicator h-2.5 w-2.5 shrink-0 ${phase === "response" ? "is-generating" : "is-settled"}`} />Establishing your financial position</div>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: typedResponse ? 1 : 0.5 }} className="mt-2">
-                  <p className="text-[13px] leading-5.5 text-[#384B55] sm:text-[14px] sm:leading-6">{typedResponse}{phase === "response" && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-px translate-y-0.5 animate-pulse bg-[#7A929D]" />}</p>
-                  {phase === "pause" && (
-                    <div className="mt-3 space-y-2">
-                      {responseBranches.map(({ label, text, reference, referenceIcon, referenceSource, tone }) => (
-                        <div key={label} className="flex items-start gap-2 text-[11px] leading-4 text-[#52616A] sm:gap-2.5 sm:text-[12px]">
-                          <span className={`mt-0.5 shrink-0 text-[10px] font-semibold ${tone}`}>{label}</span>
-                          <span>{text} <span className="mx-1 inline-flex max-w-full translate-y-[0.12em] items-center gap-1 rounded-[3px] bg-[#F1F3F4] px-1.5 py-0.5 align-baseline text-[10px] font-semibold leading-4 text-[#3B4650]" title={`${referenceSource}: ${reference}`}><img src={referenceIcon} alt={referenceSource} className="h-3.5 w-3.5 shrink-0 object-contain" />{reference}</span></span>
-                        </div>
-                      ))}
+                <div className="flex items-center gap-2 text-[11px] font-medium text-[#667780]"><span className="financial-position-indicator is-settled h-2.5 w-2.5 shrink-0" />Financial position established</div>
+                <div className="mt-1 flex items-center gap-1 text-[10px] text-[#8A99A4]">Finished in 6 steps • 21s <ChevronDown className="h-3 w-3" strokeWidth={1.8} /></div>
+
+                <div className="mt-3 space-y-3">
+                  <p className="text-[13px] leading-5.5 text-[#384B55] sm:text-[14px] sm:leading-6">{responseLead}</p>
+
+                  <div className="flex items-center gap-1 text-[11px] font-medium text-[#52616A]">Reviewing attached files <ChevronDown className="h-3 w-3 text-[#7A929D]" strokeWidth={1.8} /></div>
+                  <div className="flex items-center gap-1.5 text-[10px] text-[#667780]"><span className="inline-flex items-center gap-1.5 rounded-[3px] bg-[#F1F3F4] px-1.5 py-0.5 font-semibold text-[#3B4650]"><img src="/excel-icon-margin.png" alt="Excel" className="h-3.5 w-3.5 object-contain" />Evidence Packet</span><span className="rounded-[3px] bg-[#F1F3F4] px-1.5 py-0.5 font-semibold text-[#667780]">+2</span></div>
+
+                  <div className="space-y-1 text-[11px] text-[#667780]"><div className="flex items-center gap-1.5"><Search className="h-3.5 w-3.5 text-[#7A929D]" strokeWidth={1.8} />Cross referencing events</div><div className="flex items-center gap-1.5"><Search className="h-3.5 w-3.5 text-[#7A929D]" strokeWidth={1.8} />Investigating the issue</div></div>
+                  <div className="flex items-center gap-2 text-[10px] font-medium text-[#8A99A4]"><span className="h-1.5 w-1.5 rounded-full bg-[#7A929D]" />Establishment <span className="text-[#A0ADB4]">(processed 7s)</span></div>
+                </div>
+
+                <div className="mt-3 space-y-2">
+                  {responseBranches.map(({ label, text, reference, referenceIcon, referenceSource, tone }) => (
+                    <div key={label} className="flex items-start gap-2 text-[11px] leading-4 text-[#52616A] sm:gap-2.5 sm:text-[12px]">
+                      <span className={`mt-0.5 shrink-0 text-[10px] font-semibold ${tone}`}>{label}</span>
+                      <span>{text} <span className="mx-1 inline-flex max-w-full translate-y-[0.12em] items-center gap-1 rounded-[3px] bg-[#F1F3F4] px-1.5 py-0.5 align-baseline text-[10px] font-semibold leading-4 text-[#3B4650]" title={`${referenceSource}: ${reference}`}><img src={referenceIcon} alt={referenceSource} className="h-3.5 w-3.5 shrink-0 object-contain" />{reference}</span></span>
                     </div>
-                  )}
-                  {typedResponse && (
-                    <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#E1E9EB] pt-2.5">
-                      <div className="flex min-w-0 items-center gap-2 overflow-hidden text-[#7B8C93]">
-                        {documentReferences.map(({ name, source, icon }) => <span key={name} title={`${source}: ${name}`} className="inline-flex shrink-0 items-center gap-1 text-[10px]"><img src={icon} alt={source} className="h-4 w-4 object-contain" /><span className="sr-only">{name}</span></span>)}
-                      </div>
-                      <button type="button" onClick={copyResponse} aria-label={copied ? "Explanation copied" : "Copy explanation"} className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] text-[#7A929D] transition-colors hover:bg-[#EEF0F1] hover:text-[#384B55] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/20">{copied ? <Check className="h-3.5 w-3.5" strokeWidth={2.2} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.8} />}</button>
-                    </div>
-                  )}
-                </motion.div>
+                  ))}
+                </div>
+
+                <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#E1E9EB] pt-2.5">
+                  <div className="flex min-w-0 items-center gap-2 overflow-hidden text-[#7B8C93]"><span title="Executive Evidence Pack" className="inline-flex shrink-0 items-center"><img src="/Dropbox_Icon.svg.png" alt="Dropbox" className="h-4 w-4 object-contain" /></span><span className="rounded-[3px] bg-[#F1F3F4] px-1.5 py-0.5 text-[10px] font-semibold text-[#667780]">+5</span></div>
+                  <button type="button" onClick={copyResponse} aria-label={copied ? "Explanation copied" : "Copy explanation"} className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] text-[#7A929D] transition-colors hover:bg-[#EEF0F1] hover:text-[#384B55] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111518]/20">{copied ? <Check className="h-3.5 w-3.5" strokeWidth={2.2} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.8} />}</button>
+                </div>
               </div>
 
               <div className="mx-auto mt-5 w-full max-w-[860px] rounded-[10px] border border-[#D8D8D8] bg-white p-3 shadow-[0_3px_12px_rgba(30,35,40,0.05)] sm:mt-6 sm:p-4">
                 <div className="flex min-h-[72px] items-start gap-2 px-1.5 sm:min-h-[86px] sm:px-2">
-                  <span className="min-w-0 flex-1 text-[13px] leading-5 text-[#52616A] sm:text-[14px]">{sent ? singlePrompt : draftQuestion}{!sent && <span aria-hidden="true" className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-pulse bg-[#0B74DE]" />}</span>
-                  <span className={`mt-auto flex h-8 shrink-0 items-center gap-1 rounded-full px-3.5 text-[12px] font-semibold ${sent ? "bg-[#EAF6EF] text-[#2D7B59]" : "bg-[#111518] text-white"}`}>
-                    {sent ? "Sent" : "Ask"}{sent ? <Check className="h-3.5 w-3.5" strokeWidth={2.2} /> : <ArrowUp className="h-3.5 w-3.5" strokeWidth={2.2} />}
-                  </span>
+                  <span className="min-w-0 flex-1 text-[13px] leading-5 text-[#52616A] sm:text-[14px]">{singlePrompt}</span>
+                  <span className="mt-auto flex h-8 shrink-0 items-center gap-1 rounded-full bg-[#EAF6EF] px-3.5 text-[12px] font-semibold text-[#2D7B59]">Sent <Check className="h-3.5 w-3.5" strokeWidth={2.2} /></span>
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-3 border-t border-[#EEEEEE] px-1.5 pt-2 text-[#52616A]" aria-label="Prompt sources and files">
                   <span className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold"><AtSign className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />Data Sources <ChevronDown className="h-3 w-3 text-[#7A929D]" strokeWidth={2} /></span>
-                  <span className="inline-flex h-7 items-center gap-1.5 px-1 text-[11px] font-semibold"><Paperclip className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />Files</span>
+                  <span className="inline-flex h-7 items-center gap-1.5 rounded-[3px] bg-[#F1F3F4] px-2 text-[11px] font-semibold text-[#52616A]"><Paperclip className="h-3.5 w-3.5 text-[#526AB1]" strokeWidth={2} />Files</span>
                 </div>
                 <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-[#F2F2F2] px-1.5 pt-1.5" aria-label="Prompt document references">
                   {documentReferences.map(({ name, source, icon }) => <span key={name} className="inline-flex items-center gap-1 text-[10px] text-[#667780]"><img src={icon} alt={source} className="h-4 w-4 object-contain" /><span>{name}</span></span>)}
