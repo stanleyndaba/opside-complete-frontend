@@ -586,24 +586,24 @@ function FinancialPositionOutputSection() {
 
 function BuildObjectionSection() {
   return (
-    <section className="relative overflow-hidden bg-[#182026] py-12 text-white sm:py-16 md:py-20" aria-labelledby="build-objection-title">
+    <section className="relative overflow-hidden bg-white py-12 text-[#182026] sm:py-16 md:py-20" aria-labelledby="build-objection-title">
       <div className={containerClass}>
         <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-16">
           <motion.div {...revealProps}>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#A9C7FF]">The build-versus-buy question</p>
-            <h2 id="build-objection-title" className="mt-4 max-w-[640px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-white sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You can build an AI that explains a case. Margin keeps the case financially accountable after the explanation.</h2>
+            <h2 id="build-objection-title" className="mt-4 max-w-[640px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You can build an AI that explains a case. Margin keeps the case financially accountable after the explanation.</h2>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
-            <p className="max-w-[650px] text-[15px] leading-7 text-white/75 sm:text-[17px] sm:leading-8">AI can summarize. Internal engineering can connect APIs. A recovery tool can submit claims. A spreadsheet can record a result. Margin maintains the ongoing chain from evidence to decision, approval, response, outcome and remaining responsibility.</p>
+            <p className="max-w-[650px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">AI can summarize. Internal engineering can connect APIs. A recovery tool can submit claims. A spreadsheet can record a result. Margin maintains the ongoing chain from evidence to decision, approval, response, outcome and remaining responsibility.</p>
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
               {["Evidence", "Decision", "Approval", "Response", "Outcome", "Remaining responsibility"].map((step, index) => (
-                <div key={step} className="flex items-center gap-3 border border-white/15 bg-white/5 px-4 py-3">
-                  <span className="font-mono text-[10px] text-[#A9C7FF]">0{index + 1}</span>
-                  <span className="text-[13px] font-semibold text-white">{step}</span>
+                <div key={step} className="flex items-center gap-3 border border-[#DDE3E6] bg-[#F8FAFA] px-4 py-3">
+                  <span className="font-mono text-[10px] text-[#635BFF]">0{index + 1}</span>
+                  <span className="text-[13px] font-semibold text-[#182026]">{step}</span>
                 </div>
               ))}
             </div>
-            <p className="mt-8 border-l-2 border-[#A9C7FF] pl-4 text-[15px] font-semibold leading-7 text-white sm:text-[17px] sm:leading-8">AI-assisted analysis remains bounded by evidence, validation and approval.</p>
+            <p className="mt-8 border-l-2 border-[#635BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">AI-assisted analysis remains bounded by evidence, validation and approval.</p>
           </motion.div>
         </div>
       </div>
