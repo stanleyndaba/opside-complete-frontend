@@ -42,6 +42,13 @@ const pathOptions = [
   },
 ];
 
+function LandingResponsiveCopy({ desktop, mobile }: { desktop: string; mobile: string }) {
+  return <>
+    <span className="landing-copy-desktop">{desktop}</span>
+    <span className="landing-copy-mobile">{mobile}</span>
+  </>;
+}
+
 const revealProps = {
   initial: { opacity: 0, y: 16 },
   whileInView: { opacity: 1, y: 0 },
@@ -110,7 +117,7 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <motion.div {...revealProps} className="max-w-[850px]">
         <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Know how your recovery operation will work before it goes live.</h2>
-        <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8">During the defined 30–45 day engagement, Margin works with your team to examine the agreed records, establish the initial financial position, configure the recovery and control workflow, and assign responsibility to outstanding exceptions. The engagement establishes a documented operating process and agreed control state; Amazon&apos;s decisions and payment timelines remain external dependencies.</p>
+        <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8"><LandingResponsiveCopy desktop={'During the defined 30–45 day engagement, Margin works with your team to examine the agreed records, establish the initial financial position, configure the recovery and control workflow, and assign responsibility to outstanding exceptions. The engagement establishes a documented operating process and agreed control state; Amazon&apos;s decisions and payment timelines remain external dependencies.'} mobile={'Across the 30–45 day engagement, Margin examines the agreed records, establishes the initial position and sets up the investigation, approval and ownership workflows for outstanding exceptions. Amazon response and payment times remain external dependencies.'} /></p>
       </motion.div>
 
       <div className="mt-10 overflow-x-auto pb-4 [scrollbar-width:thin] md:mt-14">
@@ -128,8 +135,8 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
       </div>
 
       <motion.div {...revealProps} className="mt-5 max-w-[900px] border-l-2 border-[#AABAC3] pl-5 md:mt-8">
-        <p className="text-[14px] font-semibold leading-6 text-[#182026] md:text-[15px]">The engagement does not promise that every recovery will be completed by Day 25. It establishes the agreed operating state, with Amazon response times, further evidence requirements and payment timing tracked as external dependencies.</p>
-        <p className="mt-1 text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">By that point, the agreed operating state is established: reconciled items, supported recovery actions, unresolved exceptions, accountable owners, and defined next steps. Amazon response times and payment timing remain visible dependencies—not hidden assumptions.</p>
+        <p className="text-[14px] font-semibold leading-6 text-[#182026] md:text-[15px]"><LandingResponsiveCopy desktop={"The engagement does not promise that every recovery will be completed by Day 25. It establishes the agreed operating state, with Amazon response times, further evidence requirements and payment timing tracked as external dependencies."} mobile={"The engagement establishes the agreed operating process—not a guaranteed recovery or Amazon decision by Day 25."} /></p>
+        <p className="mt-1 text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7"><LandingResponsiveCopy desktop={"By that point, the agreed operating state is established: reconciled items, supported recovery actions, unresolved exceptions, accountable owners, and defined next steps. Amazon response times and payment timing remain visible dependencies—not hidden assumptions."} mobile={"The agreed operating state documents reconciled items, supported actions, unresolved exceptions, accountable owners and next steps. Amazon response and payment timing remain visible dependencies."} /></p>
       </motion.div>
 
       <motion.div {...revealProps} className="mt-8 md:mt-10">

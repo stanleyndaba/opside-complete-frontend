@@ -4,6 +4,14 @@
   display: none;
 }
 
+.landing-copy-mobile {
+  display: none;
+}
+
+.landing-copy-desktop {
+  display: inline;
+}
+
 .hero-atmosphere {
   background:
     radial-gradient(ellipse at 57% 88%, color-mix(in srgb, var(--margin-bubblegum-pink) 28%, transparent), transparent 42%),
@@ -33,6 +41,14 @@
   }
 
   .hero-copy-mobile {
+    display: inline;
+  }
+
+  .landing-copy-desktop {
+    display: none;
+  }
+
+  .landing-copy-mobile {
     display: inline;
   }
 
