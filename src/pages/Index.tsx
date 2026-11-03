@@ -485,7 +485,7 @@ function KineticHeroSection({
       </div>
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[860px]">
-          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, delay: 0.02, ease: [0.22, 1, 0.36, 1] }} className="font-google-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-[#635BFF] sm:text-[12px]">Complex Amazon Fin-Ops, done for you.</motion.p>
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, delay: 0.02, ease: [0.22, 1, 0.36, 1] }} className="font-google-sans text-[11px] font-semibold uppercase tracking-tight text-[#635BFF] sm:text-[12px]">Complex Amazon Fin-Ops, done for you.</motion.p>
           <h1 id="margin-hero-title" className="mt-5 max-w-[820px] font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[46px] sm:mt-7 sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>
             <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Your stack shows the activity. <span className="text-[#635BFF]">Margin establishes the financial position.</span></motion.span>
           </h1>
@@ -518,7 +518,7 @@ function BuyerRealitySection() {
     <section className="relative overflow-hidden bg-white py-12 sm:py-16 md:py-20" aria-labelledby="buyer-reality-title">
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[820px]">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#635BFF]">Why Margin exists</p>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#635BFF]">Why Margin exists</p>
           <h2 id="buyer-reality-title" className="mt-4 max-w-[760px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>You already have the tools. That is why Margin exists.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">Amazon provides the records. Recovery tools find claim opportunities. ERPs record entries. AI can summarize the evidence. But when the financial position changes, none of those systems owns the complete history.</p>
         </motion.div>
@@ -557,7 +557,7 @@ function FinancialPositionOutputSection() {
       <div className={containerClass}>
         <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start lg:gap-16">
           <motion.div {...revealProps}>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">The deliverable</p>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">The deliverable</p>
             <h2 id="position-output-title" className="mt-4 max-w-[620px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>What Finance gets when the position is established.</h2>
             <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#48677A] sm:text-[17px] sm:leading-8">Margin does not merely find discrepancies. It produces a defensible, inspectable financial position—so Finance can see what the evidence supports, what remains unresolved and who owns the next justified action.</p>
           </motion.div>
@@ -590,7 +590,6 @@ function BuildObjectionSection() {
       <div className={containerClass}>
         <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-16">
           <motion.div {...revealProps}>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#A9C7FF]">The build-versus-buy question</p>
             <h2 id="build-objection-title" className="mt-4 max-w-[640px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You can build an AI that explains a case. Margin keeps the case financially accountable after the explanation.</h2>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
