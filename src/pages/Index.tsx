@@ -1680,10 +1680,12 @@ function NestedRecoveryVisual({
   activeBrowser,
   onBrowserChange,
   progressPath = nestedRecoveryBrowsers.progress.path,
+  backgroundImage = '/visual-english-landscape-2.jpg',
 }: {
   activeBrowser: keyof typeof nestedRecoveryBrowsers;
   onBrowserChange: (browser: keyof typeof nestedRecoveryBrowsers) => void;
   progressPath?: string;
+  backgroundImage?: string;
 }) {
   const browsers = {
     ...nestedRecoveryBrowsers,
@@ -1691,7 +1693,7 @@ function NestedRecoveryVisual({
   };
 
   return (
-    <motion.div {...revealProps} className="relative min-h-[620px] overflow-visible bg-transparent p-2 sm:min-h-[570px] sm:p-4">
+    <motion.div {...revealProps} className="relative min-h-[620px] overflow-visible rounded-[12px] bg-[#EEF3F0] p-2 sm:min-h-[570px] sm:p-4" style={{ backgroundImage: `linear-gradient(rgba(246,249,247,0.4), rgba(246,249,247,0.56)), url(${backgroundImage})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>
       <div className="relative h-full min-h-[590px] sm:min-h-[538px]">
         {(Object.keys(browsers) as Array<keyof typeof browsers>).map((key) => {
           const isActive = activeBrowser === key;
@@ -1717,10 +1719,7 @@ function FinancialCertaintyNestedVisual() {
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof financialCertaintyBrowsers>('issues');
 
   return (
-    <div className="relative min-h-[620px] overflow-hidden rounded-[5px] bg-transparent p-2 sm:min-h-[570px] sm:p-4">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(135deg,#EAF5F9_0%,#DCECF2_52%,#F6FAFB_100%)]" />
-      <motion.div aria-hidden="true" className="absolute -left-14 -top-16 h-48 w-48 rounded-full bg-[#B9E0EF]/60 blur-3xl" animate={{ x: [0, 18, 0], y: [0, 14, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} />
-      <motion.div aria-hidden="true" className="absolute -bottom-16 -right-12 h-52 w-52 rounded-full bg-[#C9D5F0]/65 blur-3xl" animate={{ x: [0, -16, 0], y: [0, -12, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }} />
+    <div className="relative min-h-[620px] overflow-hidden rounded-[5px] bg-[#EEF3F0] p-2 sm:min-h-[570px] sm:p-4" style={{ backgroundImage: 'linear-gradient(rgba(246,249,247,0.38), rgba(246,249,247,0.54)), url(/visual-english-landscape-1.jpg)', backgroundPosition: 'center', backgroundSize: 'cover' }}>
       <div className="relative h-full min-h-[590px] sm:min-h-[538px]">
         {(Object.keys(financialCertaintyBrowsers) as Array<keyof typeof financialCertaintyBrowsers>).map((key) => {
           const browser = financialCertaintyBrowsers[key];
@@ -1801,7 +1800,7 @@ function NestedRecoveryBrowsers() {
               ))}
             </div>
           </motion.div>
-          <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} />
+          <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} backgroundImage="/visual-english-landscape-2.jpg" />
         </div>
       </div>
     </section>
@@ -1870,7 +1869,7 @@ function FooterNestedRecoveryVisual() {
     <section className="relative overflow-hidden bg-white py-10 sm:py-14 md:py-16" aria-label="Connected operational view visual">
       <div className={containerClass}>
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Keep the next financial action from getting lost between people.</span></h2>
-        <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} />
+        <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} backgroundImage="/visual-english-landscape-3.jpg" />
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
           <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Every case, decision and evidence requirement stays linked to the financial event it concerns.</p>
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a free review. Margin establishes what the records explain, what remains unresolved and whether further action is justified.</p>
