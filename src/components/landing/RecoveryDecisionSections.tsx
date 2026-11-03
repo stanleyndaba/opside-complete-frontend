@@ -62,8 +62,8 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
           <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Find out what your Amazon records can—and cannot—prove.</h2>
-          <p className="audit-routing-body mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">Margin examines the Amazon records supplied for the review, connecting relevant transactions, settlement activity, inventory movements and adjustments to establish what the available evidence explains. It separates substantiated exposure from accounted-for activity, unresolved differences and conclusions that cannot yet be verified.</p>
-          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>The Audit identifies what warrants further investigation, what supports a recovery, what additional records may be needed and what is already explained — before you commit to paid work.</p>
+          <p className="audit-routing-body mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">The Initial Financial Position Review examines the Amazon records supplied, connecting relevant transactions, settlement activity, inventory movements and adjustments to establish what the available evidence explains. It separates supported exposure from accounted-for activity, unresolved differences and conclusions that cannot yet be verified.</p>
+          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Read-only records review. No claim submission. No commitment to paid recovery work.</p>
           <p className="mt-4 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8"></p>
         </motion.div>
 
@@ -157,7 +157,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">24 / ROUTING</span>
           </div>
           <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the problem. Choose only the work it justifies.</h2>
-          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The free Audit establishes the financial position supported by the records available, identifies material unresolved differences and determines whether further investigation or recovery is justified. Margin then scopes any proposed engagement around the nature of the problem, evidence requirements, operational complexity and level of ongoing responsibility required.</p>
+          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Initial Financial Position Review establishes the financial position supported by the records available, identifies material unresolved differences and determines whether further investigation or recovery is justified. First establish the position. Then decide what work is justified.</p>
         </motion.div>
         <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
           {pathOptions.map((option, index) => {
@@ -197,8 +197,8 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           )})}
         </div>
         <motion.div {...revealProps} className="routing-note mt-9 border-l-2 border-[var(--margin-border)] pl-5">
-          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not sure what the records support? Start with the Audit.</p>
-          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The Audit establishes what the available records support before you commit to paid work. Its findings determine whether a defined recovery, a control engagement, ongoing oversight or no further action is appropriate.</p>
+          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not sure what the records support? Start with an Initial Financial Position Review.</p>
+          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The review establishes what the available records support before you commit to paid work. Its findings determine whether a defined recovery, a financial control pilot, ongoing financial control or no further action is appropriate.</p>
         </motion.div>
       </div>
     </section>

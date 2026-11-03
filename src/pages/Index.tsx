@@ -506,6 +506,111 @@ function KineticHeroSection({
   );
 }
 
+function BuyerRealitySection() {
+  const contrasts = [
+    { title: "Not another connector", copy: "Moving data is not the same as establishing what the data proves.", icon: Database },
+    { title: "Not another claim engine", copy: "A claim is one action in the financial position—not the position itself.", icon: FileInput },
+    { title: "Not a chatbot over spreadsheets", copy: "An answer is not source lineage, approval history or outcome verification.", icon: MessagesSquare },
+    { title: "Not a replacement ERP", copy: "Margin preserves the investigation and control context across the systems you already use.", icon: ShieldCheck },
+  ];
+
+  return (
+    <section className="relative overflow-hidden bg-white py-12 sm:py-16 md:py-20" aria-labelledby="buyer-reality-title">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="max-w-[820px]">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#635BFF]">Why Margin exists</p>
+          <h2 id="buyer-reality-title" className="mt-4 max-w-[760px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>You already have the tools. That is why Margin exists.</h2>
+          <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">Amazon provides the records. Recovery tools find claim opportunities. ERPs record entries. AI can summarize the evidence. But when the financial position changes, none of those systems owns the complete history.</p>
+        </motion.div>
+        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {contrasts.map(({ title, copy, icon: Icon }, index) => (
+            <motion.article key={title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.07 }} className="flex min-h-[190px] flex-col border border-[#DDE3E6] bg-[#F8FAFA] p-5 sm:min-h-[220px] sm:p-6">
+              <Icon className="h-5 w-5 text-[#635BFF]" strokeWidth={1.8} aria-hidden="true" />
+              <h3 className="mt-8 text-[16px] font-semibold tracking-[-0.02em] text-[#182026] sm:text-[17px]">{title}</h3>
+              <p className="mt-2 text-[13px] leading-6 text-[#66737F]">{copy}</p>
+            </motion.article>
+          ))}
+        </div>
+        <motion.p {...revealProps} className="mt-8 max-w-[800px] border-l-2 border-[#635BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">Your existing systems remain sources of record. Margin carries the cross-system financial position.</motion.p>
+      </div>
+    </section>
+  );
+}
+
+function FinancialPositionOutputSection() {
+  const outputs = [
+    "Original financial event",
+    "Source records",
+    "Evidence basis",
+    "Supported exposure",
+    "Accounted-for value",
+    "Unresolved difference",
+    "Decision status",
+    "Approval status",
+    "Accountable owner",
+    "Next justified action",
+    "Settlement or accounting outcome",
+  ];
+
+  return (
+    <section className="relative overflow-hidden bg-[#F4FAFC] py-12 sm:py-16 md:py-20" aria-labelledby="position-output-title">
+      <div className={containerClass}>
+        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start lg:gap-16">
+          <motion.div {...revealProps}>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">The deliverable</p>
+            <h2 id="position-output-title" className="mt-4 max-w-[620px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>What Finance gets when the position is established.</h2>
+            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#48677A] sm:text-[17px] sm:leading-8">Margin does not merely find discrepancies. It produces a defensible, inspectable financial position—so Finance can see what the evidence supports, what remains unresolved and who owns the next justified action.</p>
+          </motion.div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="border border-[#C9DDE5] bg-white p-4 shadow-[0_18px_50px_rgba(37,85,104,0.08)] sm:p-6">
+            <div className="flex items-center justify-between border-b border-[#E0EAEE] pb-4">
+              <div>
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[#7A8994]">Financial position</p>
+                <p className="mt-1 text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Case 19822888381</p>
+              </div>
+              <span className="rounded-full bg-[#E8F3F8] px-2.5 py-1 text-[10px] font-semibold text-[#0B74DE]">Inspectable</span>
+            </div>
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              {outputs.map((output, index) => (
+                <div key={output} className={`flex items-start gap-2 rounded-[5px] px-3 py-2.5 ${index === 5 ? "bg-[#FFF4E8]" : index >= 8 ? "bg-[#F4F7F8]" : "bg-[#F8FAFB]"}`}>
+                  <span className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${index === 5 ? "bg-[#FE8500]" : "bg-[#0B74DE]"} text-white`}><Check className="h-2.5 w-2.5" strokeWidth={3} /></span>
+                  <span className="text-[12px] leading-5 text-[#344149]">{output}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BuildObjectionSection() {
+  return (
+    <section className="relative overflow-hidden bg-[#182026] py-12 text-white sm:py-16 md:py-20" aria-labelledby="build-objection-title">
+      <div className={containerClass}>
+        <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-16">
+          <motion.div {...revealProps}>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#A9C7FF]">The build-versus-buy question</p>
+            <h2 id="build-objection-title" className="mt-4 max-w-[640px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-white sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You can build an AI that explains a case. Margin keeps the case financially accountable after the explanation.</h2>
+          </motion.div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
+            <p className="max-w-[650px] text-[15px] leading-7 text-white/75 sm:text-[17px] sm:leading-8">AI can summarize. Internal engineering can connect APIs. A recovery tool can submit claims. A spreadsheet can record a result. Margin maintains the ongoing chain from evidence to decision, approval, response, outcome and remaining responsibility.</p>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {["Evidence", "Decision", "Approval", "Response", "Outcome", "Remaining responsibility"].map((step, index) => (
+                <div key={step} className="flex items-center gap-3 border border-white/15 bg-white/5 px-4 py-3">
+                  <span className="font-mono text-[10px] text-[#A9C7FF]">0{index + 1}</span>
+                  <span className="text-[13px] font-semibold text-white">{step}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-8 border-l-2 border-[#A9C7FF] pl-4 text-[15px] font-semibold leading-7 text-white sm:text-[17px] sm:leading-8">AI-assisted analysis remains bounded by evidence, validation and approval.</p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function DuplicatePipelineDemoSection() {
   return (
     <section aria-label="Recovery operations demo" className="relative overflow-hidden bg-white pb-12 pt-10 sm:pb-16 sm:pt-12 md:pb-20 md:pt-16">
@@ -1772,7 +1877,7 @@ function FooterNestedRecoveryVisual() {
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a free review. Margin establishes what the records explain, what remains unresolved and whether further action is justified.</p>
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">If a material opportunity exists, choose a defined recovery or ongoing financial control.</p>
           <div className="mt-5 flex flex-col gap-3">
-            <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start the Free Recovery Audit</Button>
+            <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">See what your records establish</Button>
             <p className="text-[11px] leading-5 text-[#66737F]">See the financial position before committing to paid recovery work.</p>
             <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Discuss Enterprise Control</Button>
           </div>
@@ -2585,6 +2690,11 @@ export default function Index() {
         {/* Recognition — Is this my problem? */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
 
+        {/* Conversion repositioning — Why the existing stack still needs Margin. */}
+        <BuyerRealitySection />
+        <FinancialPositionOutputSection />
+        <BuildObjectionSection />
+
         {/* First proof — show the financial position before the deeper diagnosis. */}
         <DuplicatePipelineDemoSection />
 
@@ -2701,7 +2811,7 @@ export default function Index() {
 
                 {/* Left label */}
                 <motion.div {...revealProps} className="w-full shrink-0 lg:w-[360px]">
-                  <p className="max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Start with the free Audit. Margin examines your available Amazon records, establishes what can be explained, identifies unresolved financial differences and determines whether the evidence justifies further action.</p>
+                  <p className="max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">The Initial Financial Position Review examines your available Amazon records, establishes what the evidence supports, identifies unresolved financial differences and determines whether further action is justified.</p>
                   <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You decide whether to delegate a defined recovery, establish ongoing financial control or take no further action. You approve submissions and material decisions; Margin carries the authorized investigation, evidence work, follow-through and outcome verification.</p>
                   <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>Know who is responsible for what happens to the financial outcome.</p>
 
@@ -2716,11 +2826,11 @@ export default function Index() {
                       Find out what your Amazon financial records actually support.
                     </h3>
                     <p className="mt-3 text-[15px] leading-relaxed text-white/80 font-medium">
-                      Start with a free Audit. Margin examines the records you provide, traces the relevant financial activity and distinguishes explained transactions from unresolved differences and evidence-supported recovery opportunities.
+                      The Initial Financial Position Review examines the records you provide, traces the relevant financial activity and distinguishes explained transactions from unresolved differences and evidence-supported recovery opportunities.
                     </p>
                     <div className="mt-auto pt-10 sm:pt-16">
                       <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
-                        Start the free Audit <ArrowRight className="h-4 w-4 text-white/60" />
+                        See what your records establish <ArrowRight className="h-4 w-4 text-white/60" />
                       </Button>
                     </div>
                   </motion.div>
@@ -2752,7 +2862,7 @@ export default function Index() {
                         <p className="mt-3 text-[14px] leading-6 text-[#66737F]">Start with the Amazon records you have. No diagnosis or account connection is required to begin.</p>
                         <p className="mt-3 text-[14px] leading-6 text-[#66737F]">If a material opportunity exists, decide whether to delegate a defined recovery or establish ongoing financial control.</p>
                         <div className="mt-5 space-y-3">
-                          <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">Start the Free Recovery Audit</Button>
+                          <Button type="button" onClick={() => navigate('/context-review')} className="h-10 w-full rounded-[6px] bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">See what your records establish</Button>
                           <p className="text-[11px] leading-5 text-[#66737F]">See the financial position before committing to paid recovery work.</p>
                           <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Discuss Enterprise Control</Button>
                         </div>
