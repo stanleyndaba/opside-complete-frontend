@@ -618,7 +618,7 @@ function DuplicatePipelineDemoSection() {
         <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-center sm:mb-10">
           <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Follow the recovery beyond Amazon&apos;s decision</h2>
           <p className="mt-5 max-w-[780px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Margin follows a recovery from its originating transaction through the supporting evidence, Amazon&apos;s decision, the resulting reimbursement or adjustment, and its appearance in subsequent financial records. See which events have been connected, what outcome was recorded, and whether any part of the original discrepancy remains unresolved.'} mobile={'Margin traces each recovery from its originating transaction through evidence, Amazon&apos;s decision, the resulting credit and its settlement treatment—showing what was resolved and what remains outstanding.'} /></p>
-          <button type="button" className={`${landingPrimaryCtaClass} mt-5`} aria-label="See a sample financial position">See a sample financial position <ChevronRight className="h-4 w-4" /></button>
+          <button type="button" className={`${landingPrimaryCtaClass} mt-5`} aria-label="Inspect the financial position">Inspect the financial position <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div
           {...revealProps}
@@ -2690,13 +2690,13 @@ export default function Index() {
         {/* Recognition — Is this my problem? */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
 
+        {/* First proof — show the financial position while the Hero promise is still fresh. */}
+        <DuplicatePipelineDemoSection />
+
         {/* Conversion repositioning — Why the existing stack still needs Margin. */}
         <BuyerRealitySection />
         <FinancialPositionOutputSection />
         <BuildObjectionSection />
-
-        {/* First proof — show the financial position before the deeper diagnosis. */}
-        <DuplicatePipelineDemoSection />
 
         {/* Problem — Why is the financial position difficult to establish? */}
         <RealityCheckSection />
