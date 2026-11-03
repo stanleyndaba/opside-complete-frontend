@@ -625,7 +625,7 @@ function DuplicatePipelineDemoSection() {
           initial={{ opacity: 0, x: 46, y: 18, scale: 0.985 }}
           transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
           className="overflow-hidden rounded-[5px] bg-[#E5F0F3] p-2 sm:p-4"
-          style={{ backgroundImage: 'linear-gradient(rgba(231,242,246,0.78), rgba(241,248,250,0.88)), url(/demo-mountain-landscape.jpg)', backgroundPosition: 'center', backgroundSize: 'cover' }}
+          style={{ backgroundImage: 'linear-gradient(rgba(247,250,249,0.3), rgba(247,250,249,0.46)), url(/demo-english-reservoir.jpg)', backgroundPosition: 'center', backgroundSize: 'cover' }}
         >
           <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md" aria-label="Mac browser preview chrome">
               <span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
