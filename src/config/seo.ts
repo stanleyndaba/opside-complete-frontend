@@ -253,6 +253,16 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/security'),
     image: SITE_META.image,
   },
+  '/access-scope': {
+    path: '/access-scope',
+    title: 'Amazon Access Scope | Margin',
+    description: 'See the records, roles, review period, data boundaries, and outputs Margin uses for a defined Amazon financial investigation.',
+    canonical: routeUrl('/access-scope'),
+    ogTitle: 'Amazon Access Scope | Margin',
+    ogDescription: 'A defined, least-privilege access model for Amazon financial investigations: files first, scoped authorization only when required, and a documented Financial Position Brief.',
+    ogUrl: routeUrl('/access-scope'),
+    image: SITE_META.image,
+  },
   '/workflows': {
     path: '/workflows',
     title: 'Workflows | Margin',

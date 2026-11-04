@@ -1109,6 +1109,33 @@ const routes = [
     },
   },
   {
+    path: '/access-scope',
+    title: 'Amazon Access Scope | Margin',
+    description:
+      'See the records, roles, review period, data boundaries, and outputs Margin uses for a defined Amazon financial investigation.',
+    ogTitle: 'Amazon Access Scope | Margin',
+    ogDescription:
+      'A defined, least-privilege access model for Amazon financial investigations: files first, scoped authorization only when required, and a documented Financial Position Brief.',
+    shell: {
+      label: 'Amazon access scope',
+      h1: 'The records Margin needs. No broader access than the work requires.',
+      intro:
+        'Start with the files relevant to one defined Amazon financial question. If the records do not establish the position, Margin can request narrowly scoped, time-bounded, read-only Amazon access.',
+      sections: [
+        {
+          heading: 'Files first. Narrow access only when the records cannot answer the question.',
+          body:
+            'The initial review is defined around the records, roles, marketplaces, investigation period, data boundaries, and Financial Position Brief that the agreed work requires.',
+        },
+        {
+          heading: 'A clean result is still a result.',
+          body:
+            'If the records do not support a material variance, recoverable exposure or defensible action, Margin returns a documented no-material-finding result rather than implying a claim.',
+        },
+      ],
+    },
+  },
+  {
     path: '/workflows',
     title: 'Workflows | Margin',
     description:

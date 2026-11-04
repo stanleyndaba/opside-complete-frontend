@@ -34,6 +34,7 @@ const teamDescriptors: FooterLink[] = [
 
 const resourceLinks: FooterLink[] = [
   { label: 'Docs', href: '/docs' },
+  { label: 'Amazon access scope', href: '/access-scope' },
   { label: 'Help Center', href: '/contact' }
 ];
 

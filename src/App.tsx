@@ -62,6 +62,7 @@ const Careers = lazy(() => import("./pages/Careers"));
 const Docs = lazy(() => import("./pages/Docs"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Security = lazy(() => import("./pages/Security"));
+const AccessScope = lazy(() => import("./pages/AccessScope"));
 const Workflows = lazy(() => import("./pages/Workflows"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
@@ -204,6 +205,7 @@ const PRELOAD_ROUTES = [
   () => import("./pages/PaymentSuccess"),
   () => import("./pages/FoundingActivationStatus"),
   () => import("./pages/Privacy"),
+  () => import("./pages/AccessScope"),
   () => import("./pages/Terms"),
   () => import("./pages/RefundPolicy"),
 ] as const;
@@ -329,6 +331,7 @@ const App = () => (
                         <Route path="/docs" element={<Docs />} />
                         <Route path="/privacy" element={<Privacy />} />
                         <Route path="/security" element={<Security />} />
+                        <Route path="/access-scope" element={<AccessScope />} />
                         <Route path="/workflows" element={<Workflows />} />
                         <Route path="/terms" element={<Terms />} />
                         <Route path="/refund-policy" element={<RefundPolicy />} />

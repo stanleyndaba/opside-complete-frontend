@@ -2629,7 +2629,10 @@ function SecuritySection() {
             </motion.article>
           ))}
         </div>
-        <Link to="/security" className="mt-7 inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#635BFF] hover:decoration-[#635BFF]">More about security <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+        <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Link to="/security" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#635BFF] hover:decoration-[#635BFF]">More about security <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+          <Link to="/access-scope" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#635BFF] hover:decoration-[#635BFF]">Review the Amazon access scope <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+        </div>
       </div>
     </section>
   );
