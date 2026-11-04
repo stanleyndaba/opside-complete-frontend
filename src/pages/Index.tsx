@@ -522,12 +522,14 @@ function BuyerRealitySection() {
           <h2 id="buyer-reality-title" className="mt-4 max-w-[760px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>You already have the tools. That is why Margin exists.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">Amazon provides the records. Recovery tools find claim opportunities. ERPs record entries. AI can summarize the evidence. But when the financial position changes, none of those systems owns the complete history.</p>
         </motion.div>
-        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 max-w-[940px] border-t border-[#DDE3E6]">
           {contrasts.map(({ title, copy, icon: Icon }, index) => (
-            <motion.article key={title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.07 }} className="flex min-h-[190px] flex-col border border-[#DDE3E6] bg-[#F8FAFA] p-5 sm:min-h-[220px] sm:p-6">
-              <Icon className="h-5 w-5 text-[#635BFF]" strokeWidth={1.8} aria-hidden="true" />
-              <h3 className="mt-8 text-[16px] font-semibold tracking-[-0.02em] text-[#182026] sm:text-[17px]">{title}</h3>
-              <p className="mt-2 text-[13px] leading-6 text-[#66737F]">{copy}</p>
+            <motion.article key={title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.07 }} className="grid gap-4 border-b border-[#DDE3E6] py-7 sm:grid-cols-[minmax(250px,0.72fr)_minmax(0,1.28fr)] sm:items-start sm:gap-10 sm:py-8">
+              <div className="flex items-center gap-3">
+                <Icon className="h-5 w-5 shrink-0 text-[#635BFF]" strokeWidth={1.8} aria-hidden="true" />
+                <h3 className="text-[18px] font-semibold leading-6 tracking-[-0.02em] text-[#182026] sm:text-[21px] sm:leading-7">{title}</h3>
+              </div>
+              <p className="max-w-[620px] text-[15px] leading-7 text-[#66737F] sm:text-[16px] sm:leading-8">{copy}</p>
             </motion.article>
           ))}
         </div>
