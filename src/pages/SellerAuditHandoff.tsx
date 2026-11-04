@@ -208,6 +208,7 @@ export default function SellerAuditHandoff() {
             <div className="mx-auto pb-2 sm:pb-3">
               <h1 id="handoff-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-tight text-[#30343B] sm:text-[40px]">{submitted ? 'Your upload is ready.' : 'Send your files to Margin.'}</h1>
               <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">{submitted ? 'The next step opens Margin’s Dropbox file request. It is hosted by Dropbox, but the files go directly to the Margin Audit team.' : 'Add two quick details, then send the Amazon records you already have. You can send multiple files at once.'}</p>
+              {!submitted ? <Link to="/access-scope" className="mt-3 inline-flex items-center gap-1 text-[13px] font-semibold text-[#0B74DE] underline underline-offset-4">Review exactly what Margin may request <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link> : null}
             </div>
             {!submitted ? (
               <form className="mx-auto mt-4 max-w-xl space-y-3.5 sm:mt-6 sm:space-y-4" onSubmit={(event) => { event.preventDefault(); void continueToUpload(); }} noValidate>

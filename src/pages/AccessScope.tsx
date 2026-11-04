@@ -3,25 +3,20 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Check,
-  ChevronRight,
+  ChevronDown,
+  ChevronLeft,
   CircleOff,
-  Clock3,
   Database,
   FileCheck2,
-  FileText,
-  LockKeyhole,
-  ScanSearch,
-  ShieldCheck,
   Users,
 } from 'lucide-react';
-import { BrandFooter } from '@/components/layout/BrandFooter';
-import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { PUBLIC_ROUTE_META } from '@/config/seo';
 
-const containerClass = 'mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12';
-const bodyClass = 'text-[15px] leading-7 text-[#667177] sm:text-[16px] sm:leading-8';
-const labelClass = 'font-google-sans text-[11px] font-semibold uppercase tracking-[0.1em] text-[#0B74DE]';
+const containerClass = 'mx-auto w-full max-w-[860px] px-4 sm:px-8 lg:px-10';
+const bodyClass = 'text-[14px] leading-6 text-[#595E68] sm:text-[15px] sm:leading-7';
+const labelClass = 'text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]';
+const headingClass = 'font-google-sans text-[24px] font-normal leading-[1.08] tracking-tight text-[#30343B] sm:text-[32px]';
 
 const coreRecords = [
   ['Amazon settlement reports', 'Settlement periods, deposits, transaction types, fees, adjustments, amounts, marketplace and fulfilment references.'],
@@ -68,17 +63,29 @@ const sourceLinks = [
 
 function RecordCard({ title, body }: { title: string; body: string }) {
   return (
-    <article className="border border-[#DDE4E7] bg-white p-5 shadow-[0_1px_2px_rgba(48,52,59,0.03)] sm:p-6">
+    <article className="border border-[#E8E7E1] bg-white p-4 sm:p-5">
       <div className="flex items-start gap-3">
-        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF4F7] text-[#0B74DE]">
-          <FileCheck2 className="h-4 w-4" strokeWidth={1.7} aria-hidden="true" />
+        <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#F4F3ED] text-[#3F51A8]">
+          <FileCheck2 className="h-3.5 w-3.5" strokeWidth={1.7} aria-hidden="true" />
         </span>
         <div>
-          <h3 className="text-[15px] font-semibold tracking-[-0.015em] text-[#182026]">{title}</h3>
-          <p className="mt-2 text-[13px] leading-6 text-[#667177]">{body}</p>
+          <h3 className="text-[14px] font-semibold tracking-tight text-[#30343B]">{title}</h3>
+          <p className="mt-1.5 text-[13px] leading-5 text-[#595E68]">{body}</p>
         </div>
       </div>
     </article>
+  );
+}
+
+function ScopeDetail({ label, title, children }: { label: string; title: string; children: React.ReactNode }) {
+  return (
+    <details className="group border-t border-[#E8E7E1] py-4 first:border-t-0" open={label === '02'}>
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-5 outline-none marker:hidden focus-visible:text-[#0B74DE]">
+        <span><span className="mr-3 text-[11px] font-semibold text-[#0B74DE]">{label}</span><span className="text-[16px] font-semibold tracking-tight text-[#30343B]">{title}</span></span>
+        <ChevronDown className="h-4 w-4 shrink-0 text-[#7B909D] transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
+      </summary>
+      <div className="pt-4">{children}</div>
+    </details>
   );
 }
 
@@ -86,115 +93,74 @@ export default function AccessScope() {
   usePageMeta(PUBLIC_ROUTE_META['/access-scope']);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
-      <PublicNavbar variant="light" />
-      <main>
-        <section className="relative overflow-hidden border-b border-[#DDE4E7] bg-white pb-16 pt-32 sm:pb-20 sm:pt-40 md:pb-28 md:pt-48">
-          <div className="pointer-events-none absolute right-[-12%] top-[-20%] h-[600px] w-[600px] rounded-full bg-[#E9F1F4] blur-3xl" aria-hidden="true" />
-          <div className="pointer-events-none absolute bottom-[-22%] left-[-12%] h-[440px] w-[440px] rounded-full bg-[#F2EFE8] blur-3xl" aria-hidden="true" />
-          <div className={`${containerClass} relative grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.78fr)] lg:items-end lg:gap-20`}>
-            <div className="max-w-[790px]">
-              <p className={labelClass}>Amazon access scope</p>
-              <h1 className="mt-5 max-w-[790px] font-lora text-[46px] font-normal leading-[0.99] tracking-[-0.06em] text-[#182026] sm:text-[64px] md:text-[82px]">The records Margin needs. No broader access than the work requires.</h1>
-              <p className="mt-7 max-w-[700px] text-[18px] leading-8 tracking-[-0.02em] text-[#48677A] sm:text-[22px] sm:leading-9">Start with the files relevant to one defined Amazon financial question. If the records do not establish the position, Margin can request narrowly scoped, time-bounded, read-only Amazon access.</p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <a href="#records" className="inline-flex h-11 items-center gap-2 rounded-[7px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 focus-visible:ring-offset-2">See the records checklist <ArrowRight className="h-4 w-4" aria-hidden="true" /></a>
-                <Link to="/" className="inline-flex h-11 items-center gap-2 rounded-[7px] px-3 text-[13px] font-semibold text-[#30343B] transition-colors hover:text-[#0B74DE]">Back to Margin <ChevronRight className="h-4 w-4" aria-hidden="true" /></Link>
-              </div>
+    <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] font-google-sans text-[#191B20] selection:bg-[#5165C7]/16 selection:text-[#191B20]">
+      <header className="sticky top-0 z-50 border-b border-[#E8E7E1] bg-[#FBFAF7]/95 backdrop-blur">
+        <div className={`${containerClass} flex min-h-12 items-center justify-between gap-4`}>
+          <Link to="/" title="Margin home" className="inline-flex items-center gap-2 rounded-md px-1.5 py-2 text-[16px] font-semibold tracking-tight text-[#191B20] transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">Margin</Link>
+          <Link to="/audit-start" className="inline-flex h-9 items-center justify-center gap-1 rounded-[5px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#075EBA]"><ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />Back</Link>
+        </div>
+      </header>
+
+      <main className={`${containerClass} py-6 sm:py-9`}>
+        <section className="border-b border-[#E8E7E1] pb-6 sm:pb-8" aria-labelledby="access-scope-title">
+          <p className={labelClass}>Financial Review · Access Scope</p>
+          <h1 id="access-scope-title" className="mt-3 max-w-[720px] text-[32px] font-normal leading-[1.06] tracking-tight text-[#191B20] sm:text-[48px]">The records Margin needs. No broader access than the work requires.</h1>
+          <p className="mt-4 max-w-[680px] text-[15px] leading-7 text-[#595E68] sm:text-[16px]">Start with the files relevant to one defined Amazon financial question. If those records do not establish the position, Margin can request narrowly scoped, time-bounded, read-only Amazon access.</p>
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <Link to="/audit-start" className="inline-flex h-11 items-center justify-center gap-2 rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_12px_28px_rgba(11,116,222,0.16)] transition-colors hover:bg-[#075EBA]">Continue to send records <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+            <a href="#records" className="inline-flex h-11 items-center justify-center rounded-[5px] bg-[#E5E8EA] px-5 text-[13px] font-semibold text-[#30343B] transition-colors hover:bg-[#D9DEE1]">See the records checklist</a>
+          </div>
+        </section>
+
+        <section className="border-b border-[#E8E7E1] py-6 sm:py-8" aria-labelledby="scope-principle-title">
+          <div className="grid gap-5 md:grid-cols-[0.72fr_1.28fr] md:gap-12">
+            <div><p className={labelClass}>Before you continue</p><h2 id="scope-principle-title" className={`${headingClass} mt-2`}>Files first. Narrow access only when the records cannot answer the question.</h2></div>
+            <div className="space-y-4"><p className={bodyClass}>Margin does not ask for an Amazon username, password, MFA code, bank access, ERP access or unrestricted administrator access.</p><p className={bodyClass}>The preferred model is seller authorization through Amazon’s official service-provider or Selling Partner API flow, with only the roles, reports and marketplaces required for the agreed investigation. Access can be removed by the seller and is not a substitute for approval to submit a claim or take another consequential action.</p><div className="border-l-2 border-[#5165C7] pl-4 text-[13px] font-medium leading-6 text-[#30343B]">The initial review is records-first, read-only and defined around one question and one agreed period.</div></div>
+          </div>
+        </section>
+
+        <section id="records" className="scroll-mt-16 border-b border-[#E8E7E1] py-6 sm:py-8" aria-labelledby="records-title">
+          <p className={labelClass}>01 · Records first</p>
+          <h2 id="records-title" className={`${headingClass} mt-2 max-w-[700px]`}>The initial review does not require a full system handover.</h2>
+          <p className={`mt-3 max-w-[700px] ${bodyClass}`}>Margin begins with the relevant files for the agreed question and period. The report list is generated from the case type; the complete Amazon account is not requested by default.</p>
+          <div className="mt-5 grid gap-3 md:grid-cols-2">{coreRecords.map(([title, body]) => <RecordCard key={title} title={title} body={body} />)}</div>
+          <div className="mt-7 border-t border-[#E8E7E1] pt-6"><p className={labelClass}>Only where relevant</p><h3 className="mt-2 text-[18px] font-semibold tracking-tight text-[#30343B]">Supporting records follow the question.</h3><div className="mt-4 grid gap-3 md:grid-cols-2">{supportingRecords.map(([title, body]) => <RecordCard key={title} title={title} body={body} />)}</div></div>
+        </section>
+
+        <section className="border-b border-[#E8E7E1] py-2 sm:py-3" aria-label="Detailed access scope">
+          <ScopeDetail label="02" title="If Amazon access is required">
+            <div className="space-y-5">
+              <p className={bodyClass}>For a normal FBA financial investigation, the relevant Amazon roles may include:</p>
+              <div className="grid gap-3 sm:grid-cols-3">{[['Finance and Accounting', 'Settlement and financial records'], ['Amazon Fulfillment', 'FBA inventory and fulfilment records'], ['Inventory and Order Tracking', 'Only where inventory or order reconciliation requires it']].map(([title, body]) => <div key={title} className="border border-[#E8E7E1] bg-[#F4F3ED] p-4"><p className="text-[13px] font-semibold text-[#30343B]">{title}</p><p className="mt-1.5 text-[12px] leading-5 text-[#595E68]">{body}</p></div>)}</div>
+              <div className="border border-[#E8E7E1] bg-white p-4 sm:p-5"><div className="flex items-center gap-2"><CircleOff className="h-4 w-4 text-[#3F51A8]" strokeWidth={1.7} /><h3 className="text-[14px] font-semibold text-[#30343B]">Not requested in the standard review</h3></div><ul className="mt-4 grid gap-x-6 gap-y-2 sm:grid-cols-2">{excludedItems.map((item) => <li key={item} className="flex items-start gap-2 text-[13px] leading-5 text-[#595E68]"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[#3B8F5A]" strokeWidth={2} aria-hidden="true" />{item}</li>)}</ul></div>
+              <p className="text-[12px] leading-5 text-[#777A82]">Some Amazon report operations are technically named <code className="rounded bg-[#F4F3ED] px-1.5 py-0.5 text-[11px] text-[#48677A]">createReport</code> because the application requests report generation. That does not mean Margin is asking for account-management or operational-write authority.</p>
             </div>
-            <div className="relative overflow-hidden border border-[#D9E3E6] bg-[#F4F7F6] p-5 shadow-[0_24px_70px_rgba(37,49,58,0.08)] sm:p-6">
-              <div className="flex items-center justify-between border-b border-[#D9E1E1] pb-4">
-                <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0B74DE]"><ScanSearch className="h-5 w-5" strokeWidth={1.6} /></div><div><p className="text-[12px] font-semibold text-[#182026]">Defined review</p><p className="mt-0.5 text-[10px] text-[#7A858A]">Seller-controlled access boundary</p></div></div>
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-[#4D7869]"><span className="h-1.5 w-1.5 rounded-full bg-[#4D7869]" /> Scoped</span>
-              </div>
-              <div className="space-y-2.5 pt-4">
-                {[['Question', 'One financial or marketplace question', FileText], ['Period', 'Agreed event and settlement window', Clock3], ['Access', 'Files first · read-only if required', LockKeyhole], ['Output', 'Financial Position Brief', FileCheck2]].map(([label, detail, Icon]) => (
-                  <div key={label as string} className="flex items-center gap-3 bg-white px-3.5 py-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF4F7] text-[#0B74DE]"><Icon className="h-4 w-4" strokeWidth={1.6} /></div><div><p className="text-[12px] font-semibold text-[#182026]">{label as string}</p><p className="mt-0.5 text-[10px] text-[#7A858A]">{detail as string}</p></div></div>
-                ))}
-              </div>
-              <div className="mt-4 flex items-start gap-2 border-t border-[#D9E1E1] pt-4 text-[10px] leading-4 text-[#667177]"><ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#4D7869]" />No account-management or consequential action is included in the standard review.</div>
-            </div>
-          </div>
+          </ScopeDetail>
+          <ScopeDetail label="03" title="Review period">
+            <div className="space-y-4"><p className={bodyClass}>Margin does not request “all historical Amazon data.” The initial review normally examines the agreed investigation period, commonly the 12 months preceding the identified event through the latest available settlement period.</p><div className="grid gap-3 sm:grid-cols-2"><div className="border border-[#E8E7E1] bg-[#F4F3ED] p-4"><p className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">For a specific FBA event</p><ul className="mt-3 space-y-2 text-[13px] leading-5 text-[#595E68]"><li><strong className="text-[#30343B]">Primary:</strong> event date through the relevant settlement period.</li><li><strong className="text-[#30343B]">Context:</strong> normally up to 90 days before the event.</li></ul></div><div className="border border-[#E8E7E1] bg-[#F4F3ED] p-4"><p className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">Follow-through</p><ul className="mt-3 space-y-2 text-[13px] leading-5 text-[#595E68]"><li><strong className="text-[#30343B]">Post-event:</strong> until reimbursement, adjustment, settlement or case outcome is recorded.</li><li><strong className="text-[#30343B]">Extension:</strong> only when evidence indicates it is needed and the seller approves it.</li></ul></div></div><p className="text-[12px] leading-5 text-[#777A82]">Report availability and historical coverage can vary by account and marketplace. Margin confirms the usable period before relying on a report.</p></div>
+          </ScopeDetail>
+          <ScopeDetail label="04" title="Data boundaries">
+            <div className="space-y-4"><p className={bodyClass}>The data used is limited to the authorized seller account, marketplaces, reports, fields and investigation period. Depending on the question, it may include settlement transactions, fees, adjustments, reimbursements, case IDs, SKUs, ASINs, FNSKUs, quantities, warehouse events, shipment references, inventory movements, return outcomes and related correspondence.</p><div className="grid gap-3 sm:grid-cols-2"><div className="border border-[#E8E7E1] bg-[#F4F3ED] p-4"><div className="flex items-center gap-2"><Database className="h-4 w-4 text-[#3F51A8]" strokeWidth={1.5} /><h3 className="text-[13px] font-semibold text-[#30343B]">Minimized by purpose</h3></div><p className="mt-2 text-[13px] leading-5 text-[#595E68]">The standard review does not require buyer names, addresses, phone numbers, email addresses, payment-card information or other customer PII.</p></div><div className="border border-[#E8E7E1] bg-[#F4F3ED] p-4"><div className="flex items-center gap-2"><Users className="h-4 w-4 text-[#3F51A8]" strokeWidth={1.5} /><h3 className="text-[13px] font-semibold text-[#30343B]">Role-based access</h3></div><p className="mt-2 text-[13px] leading-5 text-[#595E68]">Authorized Margin personnel and controlled service providers involved in ingestion, reconciliation, investigation, security and customer delivery only.</p></div></div><p className="text-[12px] leading-5 text-[#777A82]">Exact storage locations, subprocessors, access logging, incident response, retention and deletion arrangements should be confirmed in the relevant security, privacy and contractual materials before processing begins.</p></div>
+          </ScopeDetail>
+          <ScopeDetail label="05" title="What Margin returns">
+            <div className="space-y-4"><p className={bodyClass}>Margin returns a Financial Position Brief that connects the operational event to the available financial evidence and makes the decision boundary visible.</p><div className="grid gap-2 sm:grid-cols-2">{['Case summary and approved scope', 'Investigation period and marketplaces examined', 'Source reports and records used', 'Transaction, inventory or settlement reconciliation', 'Evidence chain connecting event to financial impact', 'Supported exposure and amounts already credited, settled or accounted for', 'Unresolved balance, evidence gaps and contradictions', 'Recommended next action, accountable owner and approval boundary'].map((item) => <div key={item} className="flex items-start gap-2 border border-[#E8E7E1] bg-[#F4F3ED] p-3 text-[13px] leading-5 text-[#595E68]"><FileCheck2 className="mt-0.5 h-4 w-4 shrink-0 text-[#3B8F5A]" strokeWidth={1.8} />{item}</div>)}</div><div className="border-l-2 border-[#5165C7] pl-4 text-[13px] leading-6 text-[#48677A]">A supported exposure is not the same as a recovered amount. The brief keeps supported exposure, pending claim, Amazon-approved reimbursement, cash received, and unresolved balance distinct.</div></div>
+          </ScopeDetail>
+          <ScopeDetail label="06" title="If nothing material is found">
+            <div className="space-y-4"><p className={bodyClass}>Margin does not imply that every investigation produces a reimbursement claim. If the records do not support a material variance, recoverable exposure or defensible action, Margin returns a documented no-material-finding result.</p><div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{outcomes.map(([title, body]) => <article key={title} className="border border-[#E8E7E1] bg-[#F4F3ED] p-4"><h3 className="text-[13px] font-semibold text-[#30343B]">{title}</h3><p className="mt-1.5 text-[12px] leading-5 text-[#595E68]">{body}</p></article>)}</div></div>
+          </ScopeDetail>
         </section>
 
-        <section className="border-b border-[#DDE4E7] bg-[#F4F7F6] py-14 sm:py-20 md:py-24">
-          <div className={containerClass}>
-            <div className="grid gap-10 md:grid-cols-[0.7fr_1.3fr] md:gap-16">
-              <div><p className={labelClass}>The access principle</p><h2 className="mt-4 font-lora text-[36px] font-normal leading-[1.03] tracking-[-0.05em] text-[#182026] sm:text-[50px]">Least privilege. Case-scoped. Time-bounded.</h2></div>
-              <div className="max-w-[720px] space-y-5"><p className={bodyClass}>Margin does not ask for an Amazon username, password, MFA code, bank access, ERP access or unrestricted administrator access.</p><p className={bodyClass}>The preferred model is seller authorization through Amazon’s official service-provider or Selling Partner API flow, with only the roles, reports and marketplaces required for the agreed investigation. Access can be removed by the seller and is not a substitute for approval to submit a claim or take another consequential action.</p><div className="border-l-2 border-[#0B74DE] pl-5"><p className="font-lora text-[22px] leading-8 tracking-[-0.025em] text-[#182026]">Files first. Narrow access only when the records cannot answer the question.</p></div></div>
-            </div>
-          </div>
+        <section className="border-b border-[#E8E7E1] py-6 sm:py-8" aria-labelledby="working-request-title">
+          <div className="grid gap-5 md:grid-cols-[0.72fr_1.28fr] md:gap-12"><div><p className={labelClass}>The working request</p><h2 id="working-request-title" className={`${headingClass} mt-2`}>Specific data. Specific people. Specific output.</h2></div><div className="space-y-4"><blockquote className="border-l-2 border-[#5165C7] pl-4 text-[14px] leading-6 text-[#595E68]">Margin is requesting scoped, read-only access to the seller’s authorized Amazon business data for the purpose of investigating and reconciling FBA inventory, settlement, reimbursement and related operational events.</blockquote><p className={bodyClass}>Margin will not submit a claim, alter the seller’s Amazon account, initiate a payout or take another consequential action without the seller’s separate approval.</p></div></div>
         </section>
 
-        <section id="records" className="scroll-mt-24 bg-white py-16 sm:py-20 md:py-28">
-          <div className={containerClass}>
-            <div className="max-w-[720px]"><p className={labelClass}>01 · Start with the records</p><h2 className="mt-4 font-lora text-[38px] font-normal leading-[1.03] tracking-[-0.05em] text-[#182026] sm:text-[54px]">The initial review does not require a full system handover.</h2><p className={`mt-5 ${bodyClass}`}>Margin begins with the relevant files for the agreed question and period. The report list is generated from the case type; the complete Amazon account is not requested by default.</p></div>
-            <div className="mt-10 grid gap-3 md:grid-cols-2 md:gap-4">{coreRecords.map(([title, body]) => <RecordCard key={title} title={title} body={body} />)}</div>
-            <div className="mt-14 grid gap-8 border-t border-[#DDE4E7] pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-14"><div><p className={labelClass}>Only where relevant</p><h3 className="mt-3 font-lora text-[30px] leading-[1.05] tracking-[-0.045em] text-[#182026] sm:text-[38px]">Supporting records follow the question.</h3></div><div className="grid gap-3 sm:grid-cols-2">{supportingRecords.map(([title, body]) => <RecordCard key={title} title={title} body={body} />)}</div></div>
-          </div>
+        <section className="py-6 sm:py-8" aria-labelledby="source-references-title">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className={labelClass}>Source references</p><h2 id="source-references-title" className="mt-2 text-[20px] font-semibold tracking-tight text-[#30343B]">The Amazon framework behind the boundary.</h2></div><Link to="/security" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#0B74DE] underline underline-offset-4">Read Margin security practices <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link></div>
+          <div className="mt-4 grid gap-x-6 gap-y-2 border-t border-[#E8E7E1] pt-4 sm:grid-cols-2">{sourceLinks.map((source) => <a key={source.href} href={source.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-[13px] text-[#48677A] underline underline-offset-4 transition-colors hover:text-[#0B74DE]"><ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />{source.label}</a>)}</div>
         </section>
 
-        <section className="border-y border-[#DDE4E7] bg-[#F4F7F6] py-16 sm:py-20 md:py-28">
-          <div className={containerClass}>
-            <div className="grid gap-10 md:grid-cols-[0.72fr_1.28fr] md:gap-16">
-              <div><p className={labelClass}>02 · If Amazon access is required</p><h2 className="mt-4 font-lora text-[36px] font-normal leading-[1.03] tracking-[-0.05em] text-[#182026] sm:text-[50px]">Only the roles and data needed for the investigation.</h2></div>
-              <div className="space-y-8">
-                <div><p className={bodyClass}>For a normal FBA financial investigation, the relevant Amazon roles may include:</p><div className="mt-4 grid gap-3 sm:grid-cols-3">{[['Finance and Accounting', 'Settlement and financial records'], ['Amazon Fulfillment', 'FBA inventory and fulfilment records'], ['Inventory and Order Tracking', 'Only where inventory or order reconciliation requires it']].map(([title, body]) => <div key={title} className="border border-[#D6E1E3] bg-white p-4"><p className="text-[13px] font-semibold text-[#182026]">{title}</p><p className="mt-2 text-[12px] leading-5 text-[#667177]">{body}</p></div>)}</div></div>
-                <div className="border border-[#D6E1E3] bg-white p-5 sm:p-6"><div className="flex items-center gap-3"><div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#EEF4F7] text-[#0B74DE]"><CircleOff className="h-4 w-4" strokeWidth={1.7} /></div><h3 className="text-[15px] font-semibold text-[#182026]">Not requested in the standard review</h3></div><ul className="mt-5 grid gap-x-6 gap-y-3 sm:grid-cols-2">{excludedItems.map((item) => <li key={item} className="flex items-start gap-2 text-[13px] leading-5 text-[#667177]"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[#4D7869]" strokeWidth={2} aria-hidden="true" />{item}</li>)}</ul></div>
-                <p className="text-[12px] leading-6 text-[#7A858A]">Some Amazon report operations are technically named <code className="rounded bg-white px-1.5 py-0.5 text-[11px] text-[#48677A]">createReport</code> because the application requests report generation. That does not mean Margin is asking for account-management or operational-write authority. The intended boundary is report retrieval and financial or inventory analysis only.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-white py-16 sm:py-20 md:py-28">
-          <div className={containerClass}>
-            <div className="grid gap-10 md:grid-cols-[0.72fr_1.28fr] md:gap-16">
-              <div><p className={labelClass}>03 · The review boundary</p><h2 className="mt-4 font-lora text-[36px] font-normal leading-[1.03] tracking-[-0.05em] text-[#182026] sm:text-[50px]">A defined question. A defined period.</h2></div>
-              <div className="space-y-6"><p className={bodyClass}>Margin does not request “all historical Amazon data.” The initial review normally examines the agreed investigation period, commonly the 12 months preceding the identified event through the latest available settlement period.</p><div className="grid gap-3 sm:grid-cols-2"><div className="border border-[#DDE4E7] bg-[#F4F7F6] p-5"><p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#0B74DE]">For a specific FBA event</p><ul className="mt-4 space-y-3 text-[13px] leading-6 text-[#667177]"><li><strong className="text-[#182026]">Primary period:</strong> event date through the relevant settlement period.</li><li><strong className="text-[#182026]">Pre-event context:</strong> normally up to 90 days before the event.</li></ul></div><div className="border border-[#DDE4E7] bg-[#F4F7F6] p-5"><p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#0B74DE]">Follow-through</p><ul className="mt-4 space-y-3 text-[13px] leading-6 text-[#667177]"><li><strong className="text-[#182026]">Post-event:</strong> until reimbursement, adjustment, settlement or case outcome is recorded.</li><li><strong className="text-[#182026]">Extension:</strong> only when evidence indicates it is needed and the seller approves it.</li></ul></div></div><p className="text-[12px] leading-6 text-[#7A858A]">Report availability and historical coverage can vary by account and marketplace. Margin confirms the usable period before relying on a report for the finding.</p></div>
-            </div>
-          </div>
-        </section>
-
-        <section className="border-y border-[#DDE4E7] bg-[#F4F7F6] py-16 sm:py-20 md:py-28">
-          <div className={containerClass}>
-            <div className="grid gap-10 md:grid-cols-[0.72fr_1.28fr] md:gap-16">
-              <div><p className={labelClass}>04 · Data boundaries</p><h2 className="mt-4 font-lora text-[36px] font-normal leading-[1.03] tracking-[-0.05em] text-[#182026] sm:text-[50px]">Business records for the investigation. Not customer data for its own sake.</h2></div>
-              <div className="space-y-6"><p className={bodyClass}>The data used is limited to the authorized seller account, marketplaces, reports, fields and investigation period. Depending on the question, it may include settlement transactions, fees, adjustments, reimbursements, case IDs, SKUs, ASINs, FNSKUs, quantities, warehouse events, shipment references, inventory movements, return outcomes and related correspondence.</p><div className="grid gap-3 sm:grid-cols-2"><div className="border border-[#D6E1E3] bg-white p-5"><div className="flex items-center gap-3"><Database className="h-5 w-5 text-[#0B74DE]" strokeWidth={1.5} /><h3 className="text-[14px] font-semibold text-[#182026]">Minimized by purpose</h3></div><p className="mt-3 text-[13px] leading-6 text-[#667177]">The standard review does not require buyer names, addresses, phone numbers, email addresses, payment-card information or other customer PII.</p></div><div className="border border-[#D6E1E3] bg-white p-5"><div className="flex items-center gap-3"><Users className="h-5 w-5 text-[#0B74DE]" strokeWidth={1.5} /><h3 className="text-[14px] font-semibold text-[#182026]">Role-based access</h3></div><p className="mt-3 text-[13px] leading-6 text-[#667177]">Authorized Margin personnel and controlled service providers involved in ingestion, reconciliation, investigation, security and customer delivery only.</p></div></div><p className="text-[12px] leading-6 text-[#7A858A]">The exact storage locations, subprocessors, access logging, incident response, retention and deletion arrangements applicable to an engagement should be confirmed in the relevant security, privacy and contractual materials before processing begins.</p></div>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-white py-16 sm:py-20 md:py-28">
-          <div className={containerClass}>
-            <div className="grid gap-10 md:grid-cols-[0.72fr_1.28fr] md:gap-16">
-              <div><p className={labelClass}>05 · What Margin returns</p><h2 className="mt-4 font-lora text-[36px] font-normal leading-[1.03] tracking-[-0.05em] text-[#182026] sm:text-[50px]">A documented financial position, not just an analysis.</h2></div>
-              <div className="space-y-6"><p className={bodyClass}>Margin returns a Financial Position Brief that connects the operational event to the available financial evidence and makes the decision boundary visible.</p><div className="grid gap-3 sm:grid-cols-2">{['Case summary and approved scope', 'Investigation period and marketplaces examined', 'Source reports and records used', 'Transaction, inventory or settlement reconciliation', 'Evidence chain connecting event to financial impact', 'Supported exposure and amounts already credited, settled or accounted for', 'Unresolved balance, evidence gaps and contradictions', 'Recommended next action, accountable owner and approval boundary'].map((item) => <div key={item} className="flex items-start gap-3 border border-[#DDE4E7] bg-[#F4F7F6] p-4 text-[13px] leading-5 text-[#667177]"><FileCheck2 className="mt-0.5 h-4 w-4 shrink-0 text-[#4D7869]" strokeWidth={1.8} />{item}</div>)}</div><div className="border-l-2 border-[#0B74DE] pl-5"><p className="text-[13px] leading-6 text-[#48677A]">A supported exposure is not the same as a recovered amount. The brief keeps these states distinct:</p><p className="mt-3 font-semibold text-[13px] leading-6 text-[#182026]">Supported exposure · Submitted or pending claim · Amazon-approved reimbursement · Cash or settlement received · Unresolved or unsupported balance</p></div></div>
-            </div>
-          </div>
-        </section>
-
-        <section className="border-y border-[#DDE4E7] bg-[#F4F7F6] py-16 sm:py-20 md:py-28">
-          <div className={containerClass}>
-            <div className="max-w-[760px]"><p className={labelClass}>06 · If nothing material is found</p><h2 className="mt-4 font-lora text-[38px] font-normal leading-[1.03] tracking-[-0.05em] text-[#182026] sm:text-[54px]">A clean result is still a result.</h2><p className={`mt-5 ${bodyClass}`}>Margin does not imply that every investigation produces a reimbursement claim. If the records do not support a material variance, recoverable exposure or defensible action, Margin returns a documented no-material-finding result.</p></div>
-            <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{outcomes.map(([title, body]) => <article key={title} className="min-h-[150px] border border-[#D6E1E3] bg-white p-5"><h3 className="text-[14px] font-semibold text-[#182026]">{title}</h3><p className="mt-3 text-[13px] leading-6 text-[#667177]">{body}</p></article>)}</div>
-          </div>
-        </section>
-
-        <section className="bg-[#182026] py-16 text-white sm:py-20 md:py-24">
-          <div className={containerClass}>
-            <div className="grid gap-10 md:grid-cols-[0.72fr_1.28fr] md:gap-16"><div><p className="font-google-sans text-[11px] font-semibold uppercase tracking-[0.1em] text-[#9CCCF1]">The working request</p><h2 className="mt-4 font-lora text-[36px] font-normal leading-[1.03] tracking-[-0.05em] text-white sm:text-[50px]">Specific data. Specific people. Specific output.</h2></div><div><blockquote className="border-l-2 border-[#9CCCF1] pl-5 text-[15px] leading-8 text-white/80 sm:text-[17px] sm:leading-9">Margin is requesting scoped, read-only access to the seller’s authorized Amazon business data for the purpose of investigating and reconciling FBA inventory, settlement, reimbursement and related operational events. The requested access is limited to the relevant seller account, marketplaces, report types and investigation period.</blockquote><p className="mt-6 text-[14px] leading-7 text-white/65">Margin uses the data to reconstruct the financial and operational position, reconcile supported and unsupported amounts, identify evidence gaps and return a documented recommendation. Margin will not submit a claim, alter the seller’s Amazon account, initiate a payout or take another consequential action without the seller’s separate approval.</p></div></div>
-          </div>
-        </section>
-
-        <section className="bg-white py-16 sm:py-20">
-          <div className={`${containerClass} flex flex-col gap-8 md:flex-row md:items-end md:justify-between`}><div className="max-w-[720px]"><p className={labelClass}>Source and security references</p><h2 className="mt-4 font-lora text-[34px] font-normal leading-[1.04] tracking-[-0.05em] text-[#182026] sm:text-[46px]">Review the Amazon framework behind the boundary.</h2><p className={`mt-4 ${bodyClass}`}>The access model is designed around Amazon’s published authorization, report, role and data-protection guidance. Engagement-specific arrangements remain subject to the applicable contract and security materials.</p></div><Link to="/security" className="inline-flex h-11 shrink-0 items-center gap-2 rounded-[7px] bg-[#30343B] px-5 text-[13px] font-semibold text-white transition-colors hover:bg-[#20242A]">Read Margin security practices <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></div>
-          <div className={`${containerClass} mt-10 grid gap-x-8 gap-y-3 border-t border-[#DDE4E7] pt-7 sm:grid-cols-2 lg:grid-cols-3`}>{sourceLinks.map((source) => <a key={source.href} href={source.href} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 text-[13px] font-semibold text-[#48677A] transition-colors hover:text-[#0B74DE]"><ArrowRight className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />{source.label}</a>)}</div>
-        </section>
-
-        <section className="border-t border-[#DDE4E7] bg-[#F4F7F6] py-16 sm:py-20"><div className="mx-auto flex w-full max-w-[900px] flex-col items-center px-5 text-center sm:px-6"><div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#0B74DE]"><LockKeyhole className="h-6 w-6" strokeWidth={1.5} /></div><h2 className="mt-5 font-lora text-[34px] font-normal leading-[1.04] tracking-[-0.05em] text-[#182026] sm:text-[46px]">Ready to define the question?</h2><p className="mt-4 max-w-[650px] text-[16px] leading-7 text-[#667177]">Start with the relevant records for the agreed period. Margin will show what they establish before any discussion about further recovery or control work.</p><Link to="/contact" className="mt-7 inline-flex items-center gap-2 rounded-[7px] bg-[#0B74DE] px-5 py-3 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]">Contact Margin about a defined review <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></div></section>
+        <section className="border-t border-[#E8E7E1] py-6 sm:py-8" aria-label="Continue to records submission"><div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-[15px] font-semibold text-[#30343B]">Ready to send the records you already have?</p><p className="mt-1 text-[13px] leading-5 text-[#595E68]">You do not need to prepare a perfect package. Margin will explain if anything important is missing.</p></div><Link to="/audit-start" className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white transition-colors hover:bg-[#075EBA]">Continue to send records <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></div></section>
       </main>
-      <BrandFooter wide />
     </div>
   );
 }
