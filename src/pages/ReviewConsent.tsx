@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
+import { ReviewJourneyVisual } from '@/components/landing/ReviewJourneyVisual';
 
 const reviewSections = [
   {
@@ -49,15 +50,17 @@ export default function ReviewConsent() {
 
         <section className="max-w-[700px] pb-6 pt-7 sm:pt-9" aria-labelledby="review-consent-title">
           <p className="text-[13px] font-medium tracking-tight text-[#0B74DE]">Financial Review · Before you begin</p>
-          <h1 id="review-consent-title" className="mt-4 max-w-[680px] text-[34px] font-normal leading-[1.08] tracking-tight text-[#30343B] sm:text-[50px]">Before we examine your records</h1>
+          <h1 id="review-consent-title" className="mt-4 max-w-[680px] text-[34px] font-bold leading-[1.08] tracking-tight text-[#30343B] sm:text-[50px]">Before we examine your records</h1>
           <p className="mt-4 max-w-[650px] text-[15px] leading-6.5 text-[#595E68] sm:text-[16px] sm:leading-7">Margin reviews your Amazon financial records to establish what has been accounted for, identify material discrepancies, and determine whether further investigation or recovery action is justified.</p>
           <p className="mt-3 max-w-[650px] text-[15px] leading-6.5 text-[#595E68] sm:text-[16px] sm:leading-7">Before continuing, please understand how your information will be used and what this review authorizes.</p>
         </section>
 
+        <div className="max-w-[700px]"><ReviewJourneyVisual kind="consent" /></div>
+
         <section className="max-w-[700px]" aria-label="Review terms">
           {reviewSections.map((section) => (
             <div key={section.title} className="py-3.5 sm:py-4">
-              <h2 className="text-[16px] font-semibold tracking-tight text-[#30343B] sm:text-[18px]">{section.title}</h2>
+              <h2 className="text-[16px] font-bold tracking-tight text-[#30343B] sm:text-[18px]">{section.title}</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68] sm:text-[15px] sm:leading-6.5">{section.body}</p>
             </div>
           ))}

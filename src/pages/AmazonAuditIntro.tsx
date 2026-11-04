@@ -6,6 +6,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
+import { ReviewJourneyVisual } from '@/components/landing/ReviewJourneyVisual';
 
 /**
  * Design reminder: keep this page pure white, editorial, and reassuring.
@@ -66,10 +67,11 @@ export default function AmazonAuditIntro() {
 
         <section className="mx-auto max-w-2xl bg-white px-3.5 py-4 font-google-sans md:hidden" aria-labelledby="mobile-audit-title">
           <div className="pb-2">
-            <h1 id="mobile-audit-title" className="font-google-sans text-[25px] font-normal leading-[1.08] tracking-tight text-[#30343B]">
+            <h1 id="mobile-audit-title" className="font-google-sans text-[25px] font-bold leading-[1.08] tracking-tight text-[#30343B]">
               {mobileStep === 1 ? 'Get your Amazon financial review started.' : mobileStep === 2 ? "You're ready to submit your records." : "Here's what happens next."}
             </h1>
           </div>
+          <ReviewJourneyVisual kind="review" />
 
           {mobileStep === 1 ? (
             <div className="pt-4">
@@ -83,7 +85,7 @@ export default function AmazonAuditIntro() {
 
           {mobileStep === 2 ? (
             <div className="pt-4">
-              <h2 className="font-google-sans text-[20px] font-normal tracking-tight text-[#30343B]">Send what you have.</h2>
+              <h2 className="font-google-sans text-[20px] font-bold tracking-tight text-[#30343B]">Send what you have.</h2>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon settlement and payment reports, transaction reports, inventory records, FBA records, returns, and refunds can all help establish what happened to your money.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">CSV, XLSX, PDF, and ZIP files are accepted.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You don’t need to organize everything perfectly or identify a discrepancy yourself. Send the records you already have available. Margin will examine them and let you know if anything else is needed.</p>
@@ -93,11 +95,11 @@ export default function AmazonAuditIntro() {
 
           {mobileStep === 3 ? (
             <div className="pt-4">
-              <h2 className="font-google-sans text-[20px] font-normal tracking-tight text-[#30343B]">From financial records to resolution.</h2>
+              <h2 className="font-google-sans text-[20px] font-bold tracking-tight text-[#30343B]">From financial records to resolution.</h2>
               <div className="mt-2">
                 {auditSteps.map(({ title, description }) => (
                   <div key={title} className="py-2.5 text-[14px]">
-                    <p className="font-semibold text-[#30343B]">{title}</p>
+                    <p className="font-bold text-[#30343B]">{title}</p>
                     <p className="mt-1 leading-5 text-[#777A82]">{description}</p>
                   </div>
                 ))}
@@ -110,13 +112,14 @@ export default function AmazonAuditIntro() {
 
         <section className="mx-auto hidden max-w-2xl bg-white px-4 py-5 sm:px-8 sm:py-8 md:block" aria-labelledby="audit-intro-title">
           <div className="pb-2 sm:pb-3">
-            <h1 id="audit-intro-title" className="font-google-sans text-[28px] font-normal leading-[1.06] tracking-tight text-[#30343B] sm:text-[40px]">Get your Amazon financial review started.</h1>
+            <h1 id="audit-intro-title" className="font-google-sans text-[28px] font-bold leading-[1.06] tracking-tight text-[#30343B] sm:text-[40px]">Get your Amazon financial review started.</h1>
+            <ReviewJourneyVisual kind="review" />
             <p className="mt-4 max-w-xl text-[14px] leading-6 text-[#595E68]">Send the Amazon records you already have available.</p>
             <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68]">You don’t need to know what went wrong or prepare a perfect package. Margin examines the records to establish what has been accounted for, identify material discrepancies, and determine what may require further investigation.</p>
           </div>
 
           <div className="mt-4 pb-2 sm:mt-5 sm:pb-3">
-            <h2 className="font-google-sans text-[21px] font-normal tracking-tight text-[#30343B] sm:text-[23px]">You&apos;re ready to submit your records.</h2>
+            <h2 className="font-google-sans text-[21px] font-bold tracking-tight text-[#30343B] sm:text-[23px]">You&apos;re ready to submit your records.</h2>
             <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Send what you have.</p>
             <p className="mt-3 text-[14px] leading-6 text-[#595E68]">Amazon settlement and payment reports, transaction reports, inventory records, FBA records, returns, and refunds can all help establish what happened to your money.</p>
             <p className="mt-3 text-[14px] leading-6 text-[#595E68]">CSV, XLSX, PDF, and ZIP files are accepted.</p>
@@ -124,11 +127,11 @@ export default function AmazonAuditIntro() {
           </div>
 
           <div className="mt-4 sm:mt-5" aria-labelledby="audit-next-title">
-            <h2 id="audit-next-title" className="font-google-sans text-[21px] font-normal tracking-tight text-[#30343B] sm:text-[23px]">From financial records to resolution.</h2>
+            <h2 id="audit-next-title" className="font-google-sans text-[21px] font-bold tracking-tight text-[#30343B] sm:text-[23px]">From financial records to resolution.</h2>
             <div className="mt-2">
               {auditSteps.map(({ title, description }) => (
                 <div key={title} className="py-2.5">
-                  <p className="text-[14px] font-semibold text-[#30343B]">{title}</p>
+                  <p className="text-[14px] font-bold text-[#30343B]">{title}</p>
                   <p className="mt-1 max-w-xl text-[13px] leading-5 text-[#777A82]">{description}</p>
                 </div>
               ))}
