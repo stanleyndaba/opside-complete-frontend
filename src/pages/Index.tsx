@@ -2839,38 +2839,44 @@ export default function Index() {
 
                 </motion.div>
 
-                {/* Two cards */}
-                <div className="grid w-full flex-1 grid-cols-1 gap-3 md:grid-cols-2">
+                {/* Two editorial engagement cards */}
+                <div className="grid w-full flex-1 grid-cols-1 gap-4 md:grid-cols-2">
 
-                  {/* Card 1 — warm aurora */}
-                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-[4px] p-6 sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 20% 80%, #d4956a 0%, transparent 55%), radial-gradient(ellipse at 70% 20%, #c9a0c4 0%, transparent 50%), radial-gradient(ellipse at 40% 40%, #d4b896 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #e8c4a0 0%, transparent 45%), linear-gradient(145deg, #cba4b8 0%, #d5b8a0 40%, #c9a888 100%)' }}>
-                    <h3 className="text-[22px] font-semibold tracking-tight text-white leading-tight sm:text-[24px]">
+                  {/* Card 1 — Initial Financial Position Review */}
+                  <motion.article {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="group relative flex min-h-[680px] flex-col overflow-hidden rounded-[18px] bg-[#064C38] px-5 pb-5 pt-7 text-white sm:min-h-[760px] sm:px-7 sm:pb-7 sm:pt-9">
+                    <h3 className="max-w-[430px] text-[29px] font-google-sans font-normal leading-[1.04] tracking-[-0.045em] text-white sm:text-[36px]">
                       Find out what your Amazon financial records actually support.
                     </h3>
-                    <p className="mt-3 text-[15px] leading-relaxed text-white/80 font-medium">
+                    <p className="mt-6 max-w-[470px] text-[15px] leading-7 text-white/78 sm:text-[16px] sm:leading-7">
                       The Initial Financial Position Review examines the records you provide, traces the relevant financial activity and distinguishes explained transactions from unresolved differences and evidence-supported recovery opportunities.
                     </p>
-                    <div className="mt-auto pt-10 sm:pt-16">
-                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
-                        See what your records establish <ArrowRight className="h-4 w-4 text-white/60" />
+                    <div className="relative mt-8 flex min-h-[270px] flex-1 items-center justify-center overflow-hidden rounded-[12px] bg-white sm:mt-10 sm:min-h-[330px]">
+                      <img src="/journey-step-review.png" alt="Margin follows the evidence through a financial review" className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]" />
+                    </div>
+                    <div className="flex justify-center pt-6 sm:pt-7">
+                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable inline-flex h-12 items-center gap-3 rounded-full bg-white px-5 text-[14px] font-medium text-[#182026] shadow-none transition-transform hover:-translate-y-0.5 hover:bg-[#F5F7F4] sm:px-6">
+                        Establish the financial position <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#E7ECE8]"><ArrowRight className="h-4 w-4 text-[#064C38]" /></span>
                       </Button>
                     </div>
-                  </motion.div>
+                  </motion.article>
 
-                  {/* Card 2 — cool sage earth */}
-                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-[4px] p-6 sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 30% 70%, #4a5e3a 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, #8a9a7e 0%, transparent 50%), radial-gradient(ellipse at 50% 30%, #b0b8a8 0%, transparent 50%), radial-gradient(ellipse at 20% 20%, #c4c8be 0%, transparent 45%), linear-gradient(145deg, #b8bdb0 0%, #8a9680 40%, #5a6e4a 100%)' }}>
-                    <h3 className="text-[22px] font-semibold tracking-tight text-white leading-tight sm:text-[24px]">
+                  {/* Card 2 — Ongoing Recovery Control */}
+                  <motion.article {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="group relative flex min-h-[680px] flex-col overflow-hidden rounded-[18px] bg-[#E7E1F0] px-5 pb-5 pt-7 text-[#24212B] sm:min-h-[760px] sm:px-7 sm:pb-7 sm:pt-9">
+                    <h3 className="max-w-[430px] text-[29px] font-google-sans font-normal leading-[1.04] tracking-[-0.045em] text-[#24212B] sm:text-[36px]">
                       Stop carrying unresolved recovery work from one reporting period to the next.
                     </h3>
-                    <p className="mt-3 text-[15px] leading-relaxed text-white/75 font-medium">
+                    <p className="mt-6 max-w-[470px] text-[15px] leading-7 text-[#24212B]/72 sm:text-[16px] sm:leading-7">
                       Margin keeps discrepancies, evidence requirements, submissions, Amazon responses and financial checks connected—with each outstanding item retaining its status, owner and next action.
                     </p>
-                    <div className="mt-auto pt-10 sm:pt-16">
-                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_handled"); navigate("/contact"); }} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
-                        Talk to Margin about your account <ArrowRight className="h-4 w-4 text-white/60" />
+                    <div className="relative mt-8 flex min-h-[270px] flex-1 items-center justify-center overflow-hidden rounded-[12px] bg-white sm:mt-10 sm:min-h-[330px]">
+                      <img src="/journey-step-handoff.png" alt="Organized records handed into an ongoing recovery operation" className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]" />
+                    </div>
+                    <div className="flex justify-center pt-6 sm:pt-7">
+                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_handled"); navigate("/contact"); }} className="landing-pressable inline-flex h-12 items-center gap-3 rounded-full bg-[#24212B] px-5 text-[14px] font-medium text-white shadow-none transition-transform hover:-translate-y-0.5 hover:bg-[#332F3C] sm:px-6">
+                        Put recovery under control <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15"><ArrowRight className="h-4 w-4 text-white" /></span>
                       </Button>
                     </div>
-                  </motion.div>
+                  </motion.article>
 
                 </div>
 
