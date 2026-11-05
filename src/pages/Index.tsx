@@ -1284,8 +1284,6 @@ function ControlSection() {
 }
 
 function RepeatableRoutineSection() {
-  const reduceMotion = useReducedMotion();
-
   return (
     <section className="relative overflow-hidden bg-white py-14 sm:py-20 md:py-24" aria-labelledby="repeatable-routine-title">
       <div className={containerClass}>
@@ -1301,14 +1299,14 @@ function RepeatableRoutineSection() {
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative flex min-h-[300px] items-center justify-center overflow-hidden bg-white sm:min-h-[380px]" aria-label="Routine creation visual">
             <div className="relative flex h-full min-h-[260px] w-full items-center justify-center sm:min-h-[330px]">
-              <motion.button type="button" aria-label="Create Routine" className="relative z-10 inline-flex h-12 items-center justify-center rounded-[20px] bg-[#111111] px-6 text-[14px] font-semibold text-white shadow-[0_12px_24px_rgba(17,17,17,0.12)]" animate={reduceMotion ? undefined : { scale: [1, 1, 0.97, 1, 1] }} transition={reduceMotion ? undefined : { duration: 3.8, repeat: Infinity, repeatDelay: 1.2, times: [0, 0.57, 0.62, 0.7, 1], ease: [0.22, 1, 0.36, 1] }}>
+              <button type="button" aria-label="Create Routine" className="relative z-10 inline-flex h-12 items-center justify-center rounded-[20px] bg-[#111111] px-6 text-[14px] font-semibold text-white shadow-[0_12px_24px_rgba(17,17,17,0.12)]">
                 + Create Routine
-                {!reduceMotion && <motion.span aria-hidden="true" className="pointer-events-none absolute inset-[-12px] rounded-[26px] border-2 border-[#635BFF]/70" animate={{ opacity: [0, 0, 0.8, 0], scale: [0.72, 0.72, 1.05, 1.28] }} transition={{ duration: 3.8, repeat: Infinity, repeatDelay: 1.2, times: [0, 0.54, 0.64, 0.86], ease: "easeOut" }} />}
-                {!reduceMotion && <motion.span aria-hidden="true" className="pointer-events-none absolute inset-[-22px] rounded-[34px] border border-[#B0AAFF]/75" animate={{ opacity: [0, 0, 0.65, 0], scale: [0.72, 0.72, 1.02, 1.3] }} transition={{ duration: 3.8, repeat: Infinity, repeatDelay: 1.2, times: [0, 0.54, 0.68, 0.9], ease: "easeOut" }} />}
-              </motion.button>
-              <motion.div aria-hidden="true" className="pointer-events-none absolute z-20 -translate-x-2 translate-y-3 text-[#182026] drop-shadow-[0_4px_5px_rgba(24,32,38,0.16)]" initial={false} animate={reduceMotion ? undefined : { x: [74, 74, 0, 0, 74], y: [54, 54, 20, 20, 54], opacity: [0, 1, 1, 1, 0] }} transition={reduceMotion ? undefined : { duration: 3.8, repeat: Infinity, repeatDelay: 1.2, times: [0, 0.42, 0.58, 0.72, 1], ease: [0.22, 1, 0.36, 1] }}>
-                <MousePointer2 className="h-7 w-7 fill-white stroke-[1.8]" />
-              </motion.div>
+              </button>
+              <div aria-hidden="true" className="pointer-events-none absolute left-[calc(50%+48px)] top-[calc(50%+24px)] z-20 text-[#182026] drop-shadow-[0_4px_5px_rgba(24,32,38,0.16)]">
+                <span className="absolute -left-3 -top-3 h-8 w-8 rounded-full border-[3px] border-[#635BFF]/75" />
+                <span className="absolute -left-6 -top-6 h-14 w-14 rounded-full border-2 border-[#B0AAFF]/80" />
+                <MousePointer2 className="relative h-7 w-7 fill-white stroke-[1.8]" />
+              </div>
             </div>
           </motion.div>
         </div>
