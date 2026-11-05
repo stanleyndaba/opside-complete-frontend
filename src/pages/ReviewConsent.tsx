@@ -48,14 +48,13 @@ export default function ReviewConsent() {
           <Link to="/" className="inline-flex h-9 items-center justify-center rounded-[5px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#075EBA]">Back</Link>
         </header>
 
-        <section className="max-w-[700px] pb-6 pt-7 sm:pt-9" aria-labelledby="review-consent-title">
-          <p className="text-[13px] font-medium tracking-tight text-[#0B74DE]">Financial Review · Before you begin</p>
-          <h1 id="review-consent-title" className="mt-4 max-w-[680px] text-[34px] font-bold leading-[1.08] tracking-tight text-[#30343B] sm:text-[50px]">Before we examine your records</h1>
+        <div className="max-w-[700px] pt-7 sm:pt-9"><ReviewJourneyVisual kind="consent" /></div>
+
+        <section className="max-w-[700px] pb-6" aria-labelledby="review-consent-title">
+          <h1 id="review-consent-title" className="max-w-[680px] text-[34px] font-bold leading-[1.08] tracking-tight text-[#30343B] sm:text-[50px]">Before we examine your records</h1>
           <p className="mt-4 max-w-[650px] text-[15px] leading-6.5 text-[#595E68] sm:text-[16px] sm:leading-7">Margin reviews your Amazon financial records to establish what has been accounted for, identify material discrepancies, and determine whether further investigation or recovery action is justified.</p>
           <p className="mt-3 max-w-[650px] text-[15px] leading-6.5 text-[#595E68] sm:text-[16px] sm:leading-7">Before continuing, please understand how your information will be used and what this review authorizes.</p>
         </section>
-
-        <div className="max-w-[700px]"><ReviewJourneyVisual kind="consent" /></div>
 
         <section className="max-w-[700px]" aria-label="Review terms">
           {reviewSections.map((section) => (
