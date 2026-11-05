@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
@@ -54,6 +55,11 @@ export default function ReviewConsent() {
           <h1 id="review-consent-title" className="max-w-[680px] text-[34px] font-bold leading-[1.08] tracking-tight text-[#30343B] sm:text-[50px]">Before we examine your records</h1>
           <p className="mt-4 max-w-[650px] text-[15px] leading-6.5 text-[#595E68] sm:text-[16px] sm:leading-7">Margin reviews your Amazon financial records to establish what has been accounted for, identify material discrepancies, and determine whether further investigation or recovery action is justified.</p>
           <p className="mt-3 max-w-[650px] text-[15px] leading-6.5 text-[#595E68] sm:text-[16px] sm:leading-7">Before continuing, please understand how your information will be used and what this review authorizes.</p>
+          <div className="mt-5 max-w-[650px] rounded-[8px] border border-[#D8E2E8] bg-[#F7FAFC] p-4 sm:p-5">
+            <p className="text-[14px] font-semibold leading-5 text-[#30343B]">Want to see exactly what access may be needed?</p>
+            <p className="mt-1.5 text-[13px] leading-5.5 text-[#595E68]">Review the Amazon access scope before you continue. You can still begin with the records you already have; if the picture is incomplete, Margin will explain what additional files or narrowly scoped read-only access would help.</p>
+            <Link to="/access-scope" className="mt-3 inline-flex h-9 items-center justify-center gap-1.5 rounded-[5px] bg-white px-3.5 text-[13px] font-semibold text-[#0B74DE] shadow-[inset_0_0_0_1px_#B9D4E5] transition-colors hover:bg-[#EFF7FC]">Review Amazon access scope <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
+          </div>
         </section>
 
         <section className="max-w-[700px]" aria-label="Review terms">

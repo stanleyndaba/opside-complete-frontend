@@ -78,8 +78,14 @@ export default function AmazonAuditIntro() {
               <p className="text-[14px] leading-6 text-[#595E68]">Send the Amazon records you already have available.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">You don’t need to know what went wrong or prepare a perfect package. Margin examines the records to establish what has been accounted for, identify material discrepancies, and determine what may require further investigation.</p>
               <p className="mt-3 text-[14px] font-medium leading-6 text-[#30343B]">You provide the records. Margin establishes what they show.</p>
-              <Link to="/access-scope" className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-[#0B74DE] underline underline-offset-4">Review the Amazon access scope <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
-              <Button type="button" onClick={() => setMobileStep(2)} className="mt-5 h-10 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-4 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1]">Continue to records submission <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+              <div className="mt-5 rounded-[8px] border border-[#D8E2E8] bg-[#F7FAFC] p-4">
+                <p className="text-[14px] font-semibold leading-5 text-[#30343B]">Have you reviewed the Amazon access scope?</p>
+                <p className="mt-1.5 text-[13px] leading-5 text-[#595E68]">It explains what Margin may request and what is not needed. You can still send whatever records you have now; if something is missing, we will tell you what would complete the financial picture and why.</p>
+                <div className="mt-3 flex flex-col gap-2.5">
+                  <Button type="button" onClick={() => setMobileStep(2)} className="h-10 w-full rounded-[5px] border-0 bg-[#0B74DE] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#075EBA]">Yes, I have. Continue <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
+                  <Link to="/access-scope" className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-[5px] bg-white px-4 text-[13px] font-semibold text-[#0B74DE] shadow-[inset_0_0_0_1px_#B9D4E5] transition-colors hover:bg-[#EFF7FC]">Review Amazon access scope <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
+                </div>
+              </div>
             </div>
           ) : null}
 
@@ -127,6 +133,14 @@ export default function AmazonAuditIntro() {
           </div>
 
           <div className="mt-4 sm:mt-5" aria-labelledby="audit-next-title">
+            <div className="mb-6 rounded-[8px] border border-[#D8E2E8] bg-[#F7FAFC] p-4 sm:p-5">
+              <p className="text-[14px] font-semibold leading-5 text-[#30343B]">Have you reviewed the Amazon access scope?</p>
+              <p className="mt-1.5 max-w-xl text-[13px] leading-5 text-[#595E68]">It explains what Margin may request and what is not needed. You can still send whatever records you have now; if something is missing, we will tell you what would complete the financial picture and why.</p>
+              <div className="mt-3 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+                <button type="button" onClick={() => document.getElementById('audit-next-title')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="inline-flex h-10 items-center justify-center rounded-[5px] bg-[#0B74DE] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#075EBA]">Yes, I have. Continue <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></button>
+                <Link to="/access-scope" className="inline-flex h-10 items-center justify-center gap-1.5 rounded-[5px] bg-white px-4 text-[13px] font-semibold text-[#0B74DE] shadow-[inset_0_0_0_1px_#B9D4E5] transition-colors hover:bg-[#EFF7FC]">Review Amazon access scope <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
+              </div>
+            </div>
             <h2 id="audit-next-title" className="font-google-sans text-[21px] font-bold tracking-tight text-[#30343B] sm:text-[23px]">From financial records to resolution.</h2>
             <div className="mt-2">
               {auditSteps.map(({ title, description }) => (
@@ -142,7 +156,6 @@ export default function AmazonAuditIntro() {
           <div className="mt-5 flex flex-col items-stretch gap-3 pt-2 sm:mt-6 sm:items-start sm:gap-4">
             <p className="max-w-xl text-[13px] font-medium leading-5 text-[#30343B]">You provide the records. Margin establishes what they show.</p>
             <p className="max-w-xl text-[13px] font-medium leading-5 text-[#595E68]">You don’t need to know what to look for. Establishing what happened is Margin’s job.</p>
-            <Link to="/access-scope" className="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0B74DE] underline underline-offset-4">Review the Amazon access scope <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
             <Button type="button" onClick={() => navigate('/seller-audit')} className="h-11 w-full rounded-[3px] border-0 bg-[#E5E8EA] px-5 text-[13px] font-semibold text-[#30343B] shadow-none hover:bg-[#D9DEE1] sm:w-auto">Proceed to records submission <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Button>
           </div>
         </section>
