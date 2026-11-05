@@ -2717,6 +2717,25 @@ export default function Index() {
         <MarginStandardSection />
         <ControlSection />
 
+        {/* Workflows — How does Margin turn financial investigation into a controlled operating process? */}
+        <section className="relative overflow-hidden bg-[#F7F8F7] py-14 sm:py-18 md:py-24" aria-labelledby="landing-workflows-title">
+          <div className={containerClass}>
+            <div className="grid items-center gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
+              <motion.div {...revealProps} className="max-w-[560px]">
+                <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71808A]">Controlled workflows</p>
+                <h2 id="landing-workflows-title" className="mt-4 max-w-[620px] font-lora text-[34px] font-normal leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[54px]">Turn financial investigation into a controlled workflow.</h2>
+                <p className="mt-5 max-w-[520px] text-[16px] leading-7 text-[#4D5B66] md:text-[18px] md:leading-8">Margin connects the financial position, supporting evidence, authorized action and final reconciliation into one operating process—so Finance can see what is established, what needs a decision, and what remains unresolved.</p>
+                <Link to="/workflows" className={`${landingPrimaryCtaClass} mt-7 w-fit`}>Request Custom Workflow <ArrowRight className="h-4 w-4" /></Link>
+              </motion.div>
+              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="relative mx-auto w-full max-w-[560px]">
+                <div className="overflow-hidden bg-[#F1EFEB] shadow-[0_20px_55px_rgba(48,52,59,0.08)]">
+                  <img src="/margin-workflow-section.png" alt="Margin workflow connecting a financial position to authorized action and reconciled outcome" className="h-auto w-full" loading="lazy" />
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
         {/* Outcome — How does the position remain controlled through resolution? */}
         <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit")} />
         <RiskSection />
