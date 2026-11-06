@@ -1394,8 +1394,20 @@ html, body, #root {
     --landing-mobile-section-y: 48px;
     --landing-mobile-section-y-tight: 38px;
     --landing-mobile-copy-size: 16px;
-    --landing-mobile-copy-leading: 1.5;
+    --landing-mobile-copy-leading: 1.52;
     --landing-mobile-heading-leading: 1.06;
+    /* App.css gives #root a desktop-oriented padding. The route-scoped root
+       reset below removes that shell offset without changing other pages. */
+    width: 100%;
+    max-width: none;
+    overflow-x: clip;
+  }
+
+  body:has(.landing-page) #root {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
   }
 
   /* Predictable mobile gutter; keep the existing content, just give it a
@@ -1442,13 +1454,28 @@ html, body, #root {
     letter-spacing: -0.025em !important;
   }
 
-  /* Only prose copy is normalized here. Dense operational mini-interfaces keep
-     their deliberate compact labels and data density. */
-  .landing-page > main > section > div > div > div > p:not([class*="font-mono"]),
-  .landing-page > main > section > div > div > p:not([class*="font-mono"]),
-  .landing-page > main > section > div > p:not([class*="font-mono"]),
-  .landing-page > main > section > div > div > div > div > p:not([class*="font-mono"]) {
+  /* Legora-style mobile supporting copy: smaller than the display heading,
+     comfortably readable, and consistent across every editorial section.
+     Dense operational mini-interfaces retain their own compact labels. */
+  .landing-page > main > section p:not([class*="font-mono"]):not([class*="text-[9px]"]):not([class*="text-[10px]"]):not([class*="text-[11px]"]):not([class*="text-[12px]"]) {
+    font-size: var(--landing-mobile-copy-size) !important;
     line-height: var(--landing-mobile-copy-leading);
+  }
+
+  .landing-page > main > section p[class*="text-[14px]"],
+  .landing-page > main > section p[class*="text-[15px]"],
+  .landing-page > main > section p[class*="text-[16px]"],
+  .landing-page > main > section p[class*="text-[17px]"],
+  .landing-page > main > section p[class*="text-[18px]"] {
+    font-size: var(--landing-mobile-copy-size) !important;
+    line-height: var(--landing-mobile-copy-leading) !important;
+  }
+
+  /* The short emphasized takeaway under a section heading remains distinct,
+     but still follows the smaller mobile reading scale. */
+  .landing-page > main > section p.font-semibold,
+  .landing-page > main > section p.font-medium {
+    font-size: var(--landing-mobile-copy-size) !important;
   }
 
   /* Keep the hero focused: compact header, message, CTA, then visual. */
