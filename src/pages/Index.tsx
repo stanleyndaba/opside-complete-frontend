@@ -2863,18 +2863,17 @@ export default function Index() {
             <div className={containerClass}>
               <div className="flex flex-col items-start gap-8 pt-8 sm:pt-10 lg:pt-16">
 
-                <div className="flex w-full flex-col items-start gap-8 lg:flex-row lg:gap-10">
-
-                {/* Left label */}
-                <motion.div {...revealProps} className="w-full shrink-0 lg:w-[360px]">
-                  <p className="max-w-[360px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">The Initial Financial Position Review examines your available Amazon records, establishes what the evidence supports, identifies unresolved financial differences and determines whether further action is justified.</p>
-                  <p className="mt-4 max-w-[360px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">You decide whether to delegate a defined recovery, establish ongoing financial control or take no further action. You approve submissions and material decisions; Margin carries the authorized investigation, evidence work, follow-through and outcome verification.</p>
-                  <p className="mt-4 max-w-[360px] font-lora text-[21px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>Know who is responsible for what happens to the financial outcome.</p>
-
+                <motion.div {...revealProps} className="max-w-[820px]">
+                  <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
+                    Know what your Amazon financial records support—and what happens next.
+                  </h2>
+                  <p className="mt-5 max-w-[680px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">
+                    Establish the financial position, then choose the recovery or control work it justifies.
+                  </p>
                 </motion.div>
 
                 {/* Two editorial engagement cards */}
-                <div className="grid w-full flex-1 grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
 
                   {/* Card 1 — Initial Financial Position Review */}
                   <motion.article {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="group relative flex min-h-[680px] flex-col overflow-hidden rounded-[18px] bg-[#064C38] px-5 pb-5 pt-7 text-white sm:min-h-[760px] sm:px-7 sm:pb-7 sm:pt-9">
@@ -2884,8 +2883,8 @@ export default function Index() {
                     <p className="mt-6 max-w-[470px] text-[15px] leading-7 text-white/78 sm:text-[16px] sm:leading-7">
                       The Initial Financial Position Review examines the records you provide, traces the relevant financial activity and distinguishes explained transactions from unresolved differences and evidence-supported recovery opportunities.
                     </p>
-                    <div className="relative mt-8 flex min-h-[270px] flex-1 items-center justify-center overflow-hidden rounded-[12px] bg-white sm:mt-10 sm:min-h-[330px]">
-                      <img src="/journey-step-review.png" alt="Margin follows the evidence through a financial review" className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]" />
+                    <div className="relative mt-8 flex min-h-[270px] flex-1 items-center justify-center overflow-hidden rounded-[12px] bg-white p-3 sm:mt-10 sm:min-h-[330px] sm:p-5">
+                      <img src="/journey-step-review.png" alt="Margin follows the evidence through a financial review" className="h-full w-full object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]" />
                     </div>
                     <div className="flex justify-center pt-6 sm:pt-7">
                       <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable inline-flex h-12 items-center gap-3 rounded-full bg-white px-5 text-[14px] font-medium text-[#182026] shadow-none transition-transform hover:-translate-y-0.5 hover:bg-[#F5F7F4] sm:px-6">
@@ -2902,8 +2901,8 @@ export default function Index() {
                     <p className="mt-6 max-w-[470px] text-[15px] leading-7 text-[#24212B]/72 sm:text-[16px] sm:leading-7">
                       Margin keeps discrepancies, evidence requirements, submissions, Amazon responses and financial checks connected—with each outstanding item retaining its status, owner and next action.
                     </p>
-                    <div className="relative mt-8 flex min-h-[270px] flex-1 items-center justify-center overflow-hidden rounded-[12px] bg-white sm:mt-10 sm:min-h-[330px]">
-                      <img src="/journey-step-handoff.png" alt="Organized records handed into an ongoing recovery operation" className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]" />
+                    <div className="relative mt-8 flex min-h-[270px] flex-1 items-center justify-center overflow-hidden rounded-[12px] bg-white p-3 sm:mt-10 sm:min-h-[330px] sm:p-5">
+                      <img src="/journey-step-handoff.png" alt="Organized records handed into an ongoing recovery operation" className="h-full w-full object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]" />
                     </div>
                     <div className="flex justify-center pt-6 sm:pt-7">
                       <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_handled"); navigate("/contact"); }} className="landing-pressable inline-flex h-12 items-center gap-3 rounded-full bg-[#24212B] px-5 text-[14px] font-medium text-white shadow-none transition-transform hover:-translate-y-0.5 hover:bg-[#332F3C] sm:px-6">
@@ -2911,8 +2910,6 @@ export default function Index() {
                       </Button>
                     </div>
                   </motion.article>
-
-                </div>
 
                 </div>
 
