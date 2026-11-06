@@ -1782,9 +1782,8 @@ const Login = () => {
         </div>
 
         {/* Right Side: controlled Amazon-records handoff illustration */}
-        <div className="order-2 flex min-h-[290px] flex-1 items-center justify-center overflow-hidden bg-[#F5F6FF] px-5 py-8 sm:min-h-[360px] sm:px-10 lg:order-none lg:min-h-screen lg:px-12 lg:py-16">
+        <div className="order-2 flex min-h-[290px] flex-1 items-center justify-center overflow-hidden bg-white px-5 py-8 sm:min-h-[360px] sm:px-10 lg:order-none lg:min-h-screen lg:px-12 lg:py-16">
           <div className="relative flex w-full max-w-[650px] items-center justify-center">
-            <div className="pointer-events-none absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#635BFF]/[0.08] blur-3xl" />
             <img
               src={mode === 'signup' ? '/auth-recovery-team-final.png' : '/auth-financial-handoff-final.png'}
               alt={mode === 'signup' ? 'Sellers handing Amazon records to the Margin review team' : 'Sellers bringing overloaded Amazon records into Margin for financial investigation'}
