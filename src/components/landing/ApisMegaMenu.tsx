@@ -74,7 +74,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                                         key={group.label}
                                         className={cn(
                                             'p-5 lg:p-7',
-                                            index < apiMenuGroups.length - 1 && (variant === 'light' ? 'border-b border-white/12 lg:border-b-0 lg:border-r lg:border-white/12' : 'border-b border-[#E8EEF0] lg:border-b-0 lg:border-r lg:border-[#E8EEF0]')
+                                            ''
                                         )}
                                     >
                                         <h5 className={cn("mb-2.5 text-[11px] font-lora font-medium tracking-tight", variant === 'light' ? "text-white/65" : "text-[#94A3B8]")}>
@@ -136,7 +136,7 @@ export function ApiServiceItem({
         >
             <div className={cn(
                 'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] bg-[#F1F5F6] p-1 transition-colors',
-                isLight ? 'text-[#6B7280] group-hover:text-[#0B74DE]' : 'text-white/40 group-hover:text-white'
+                isLight ? 'text-[#6B7280] group-hover:text-[#0B74DE]' : 'border border-[#D9D7FF]/35 bg-[#D9D7FF]/15 text-[#E8E7FF] group-hover:border-[#D9D7FF]/60 group-hover:bg-[#635BFF]/55 group-hover:text-white'
             )}>
                 <Icon className="h-full w-full" strokeWidth={1.5} />
             </div>
