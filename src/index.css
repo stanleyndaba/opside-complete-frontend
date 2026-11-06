@@ -1393,8 +1393,8 @@ html, body, #root {
     --landing-mobile-gutter: 20px;
     --landing-mobile-section-y: 48px;
     --landing-mobile-section-y-tight: 38px;
-    --landing-mobile-copy-size: 16px;
-    --landing-mobile-copy-leading: 1.52;
+    --landing-mobile-copy-size: 13px;
+    --landing-mobile-copy-leading: 1.5;
     --landing-mobile-heading-leading: 1.06;
     /* App.css gives #root a desktop-oriented padding. The route-scoped root
        reset below removes that shell offset without changing other pages. */
@@ -1476,6 +1476,15 @@ html, body, #root {
   .landing-page > main > section p.font-semibold,
   .landing-page > main > section p.font-medium {
     font-size: var(--landing-mobile-copy-size) !important;
+  }
+
+  /* Secondary editorial statements sit one step below the explanatory copy.
+     Eyebrows and metadata are excluded above and keep their existing sizes. */
+  .landing-page > main > section p.font-lora,
+  .landing-page > main > section p.font-lora.font-semibold,
+  .landing-page > main > section p.font-lora.font-medium {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
   }
 
   /* Keep the hero focused: compact header, message, CTA, then visual. */
