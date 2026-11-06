@@ -196,29 +196,35 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                            className="relative z-50 mt-2 md:hidden">
-                            <div className={cn(
-                                "flex max-h-[calc(100vh-92px)] flex-col overflow-y-auto rounded-[3px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.22)]"
-                            )}>
+                            className="fixed inset-0 z-[60] md:hidden">
+                            <div className="flex h-[100dvh] flex-col overflow-y-auto bg-[rgba(118,124,130,0.97)] text-white shadow-[0_18px_48px_rgba(37,49,58,0.28)] backdrop-blur-2xl">
+                                <div className="flex min-h-[76px] shrink-0 items-center justify-between bg-white px-5 text-[#17212B] shadow-[0_4px_18px_rgba(37,49,58,0.10)]">
+                                    <button type="button" onClick={() => setMobileMenuOpen(false)} className="text-[12px] font-sans font-medium text-[#52616C] transition-colors hover:text-[#17212B]">Close</button>
+                                    <Link to="/" onClick={() => setMobileMenuOpen(false)} className="absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-2 text-[#182026]">
+                                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
+                                        <span className="brand-wordmark font-merriweather text-[17px] tracking-tight">Margin</span>
+                                    </Link>
+                                    <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="text-[12px] font-sans font-medium text-[#52616C] transition-colors hover:text-[#17212B]">Log in</Link>
+                                </div>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="teams" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal transition-colors",
-                                            "justify-between border-none text-[#17212B] outline-none hover:no-underline hover:text-[#17212B] data-[state=open]:bg-transparent"
+                                            "flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal transition-colors",
+                                            "justify-between text-white outline-none hover:no-underline hover:text-white data-[state=open]:bg-white/10"
                                         )}>
                                             For Teams
                                         </AccordionTrigger>
-                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
+                                        <AccordionContent className="overflow-visible border-none px-3 pb-5 pt-2 space-y-3">
                                             {productMenuGroups.map((group) => (
-                                                    <div key={group.label} className="space-y-3">
-                                                        <h5 className="pl-2 text-[13px] font-sans font-medium tracking-normal text-[#7B8794]">
+                                                    <div key={group.label} className="space-y-2 pt-3">
+                                                        <h5 className="px-2 text-[11px] font-sans font-medium tracking-normal text-white/60">
                                                             {group.label}
                                                         </h5>
                                                         <div className="grid gap-1">
                                                             {group.items.map((item) => (
                                                                 <ProductServiceItem
                                                                     key={item.title}
-                                                                    variant="light"
+                                                                    variant="dark"
                                                                     icon={item.icon}
                                                                     title={item.title}
                                                                     description={item.description}
@@ -231,23 +237,23 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     </AccordionItem>
                                     <AccordionItem value="api" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal transition-colors",
-                                            "justify-between border-none text-[#17212B] outline-none hover:no-underline hover:text-[#17212B] data-[state=open]:bg-transparent"
+                                            "flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal transition-colors",
+                                            "justify-between text-white outline-none hover:no-underline hover:text-white data-[state=open]:bg-white/10"
                                         )}>
                                             Workflows
                                         </AccordionTrigger>
-                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2">
+                                        <AccordionContent className="overflow-visible border-none px-3 pb-5 pt-2">
                                             <div className="space-y-6">
                                                 {apiMenuGroups.map((group) => (
-                                                    <div key={group.label} className="space-y-3">
-                                                        <h5 className="pl-2 text-[13px] font-sans font-medium tracking-normal text-[#7B8794]">
+                                                    <div key={group.label} className="space-y-2 pt-3">
+                                                        <h5 className="px-2 text-[11px] font-sans font-medium tracking-normal text-white/60">
                                                             {group.label}
                                                         </h5>
                                                         <div className="grid gap-1">
                                                             {group.items.map((item) => (
                                                                 <ApiServiceItem
                                                                     key={item.title}
-                                                                    variant="light"
+                                                                    variant="dark"
                                                                     icon={item.icon}
                                                                     title={item.title}
                                                                     description={item.description}
@@ -263,51 +269,51 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                 <Link
                                     to="/pricing"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
                                     Pricing
                                 </Link>
                                 <Link
                                     to="/security"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
                                     Security
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
                                     Enterprise
                                 </Link>
                                 <Link
                                     to="/about"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
                                     Company
                                 </Link>
                                 <Link
                                     to="/consumer-recovery"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
                                     B2C Recovery
                                 </Link>
-                                <div className="border-t border-[#E8EDF0] px-3.5 pb-3 pt-5">
-                                    <p className="font-sans text-[15px] font-medium leading-5 text-[#17212B]">Not sure where to start?</p>
-                                    <p className="mt-2 max-w-[30rem] font-sans text-[14px] leading-5 text-[#687684]">
-                                        Start with the free Recovery Audit. We&apos;ll show you what Margin finds and what happens next.
+                                <div className="mt-auto border-t border-white/15 px-5 pb-3 pt-7">
+                                    <p className="font-sans text-[13px] font-medium leading-5 text-white/80">Start with a controlled financial review.</p>
+                                    <p className="mt-1 max-w-[30rem] font-sans text-[12px] leading-5 text-white/55">
+                                        See what the records establish before deciding what work is justified.
                                     </p>
                                 </div>
-                                <div className="grid gap-2 px-3.5 pb-3.5 pt-2">
+                                <div className="grid gap-2 px-5 pb-5 pt-2">
                                     <Link
                                         to="/audit-start"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] w-full items-center justify-center gap-1 rounded-[8px] bg-[#635BFF] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(99,91,255,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#5148E5] hover:shadow-[0_12px_26px_rgba(99,91,255,0.32)]">
+                                        className="flex min-h-[46px] w-full items-center justify-center gap-1 rounded-full bg-[#064C38] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(6,76,56,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#075D45] hover:shadow-[0_12px_26px_rgba(6,76,56,0.32)]">
                                         Send records for review <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                                     </Link>
                                     <Link
                                         to="/contact"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] w-full items-center justify-center gap-1 rounded-[8px] border border-[#DCE3E8] bg-[#F8FAFB] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-[#191B20] transition-[background-color,border-color] duration-200 hover:border-[#C7D2D9] hover:bg-[#F0F3F5]">
-                                        Get Help Now <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
+                                        className="flex min-h-[46px] w-full items-center justify-center gap-1 rounded-full border border-white/25 bg-white/10 px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white transition-[background-color,border-color] duration-200 hover:border-white/40 hover:bg-white/15">
+                                        Talk to Margin <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                                     </Link>
                                 </div>
                             </div>
