@@ -67,7 +67,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                         Workflows
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className={cn("relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[16px] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[80px] lg:w-[94vw] lg:max-w-[1080px] lg:-translate-x-1/2", variant === 'light' ? "border border-white/20 bg-[#69737C]/90 shadow-[0_24px_70px_rgba(24,32,38,0.24),0_2px_8px_rgba(24,32,38,0.12)] backdrop-blur-2xl" : "border border-[#E2E8EB] bg-white shadow-[0_24px_70px_rgba(24,32,38,0.16),0_2px_8px_rgba(24,32,38,0.06)]")}>
+                        <div className={cn("relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[16px] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[80px] lg:w-[94vw] lg:max-w-[1080px] lg:-translate-x-1/2", variant === 'light' ? "border border-white/25 bg-[rgba(105,115,124,0.96)] shadow-[0_24px_70px_rgba(24,32,38,0.28),0_2px_8px_rgba(24,32,38,0.14)] backdrop-blur-2xl" : "border border-[#E2E8EB] bg-white shadow-[0_24px_70px_rgba(24,32,38,0.16),0_2px_8px_rgba(24,32,38,0.06)]")}>
                             <div className="grid grid-cols-1 lg:grid-cols-3">
                                 {apiMenuGroups.map((group, index) => (
                                     <div
