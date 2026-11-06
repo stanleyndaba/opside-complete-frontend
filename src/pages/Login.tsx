@@ -1424,7 +1424,7 @@ const Login = () => {
     <div className="relative min-h-screen overflow-y-auto bg-[#F7F7F4] text-[#182026] selection:bg-[#E8E8E3] scrollbar-hide [&_button]:rounded-[5px]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', fontFamily: 'var(--font-google-sans)' }}>
       <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Left Side: Form */}
-        <div className="flex flex-1 items-center justify-center border-b border-[#E5E5E0] bg-white px-5 py-8 sm:px-8 lg:border-b-0 lg:py-12">
+        <div className="order-2 flex flex-1 items-center justify-center bg-white px-5 py-8 sm:px-8 lg:order-none lg:py-12">
           <div className="w-full max-w-[420px] lg:max-w-[390px]">
             <div className="mb-9 flex justify-center sm:mb-12">
               <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
@@ -1782,7 +1782,7 @@ const Login = () => {
         </div>
 
         {/* Right Side: controlled Amazon-records handoff illustration */}
-        <div className="order-2 flex min-h-[290px] flex-1 items-center justify-center overflow-hidden bg-white px-5 py-8 sm:min-h-[360px] sm:px-10 lg:order-none lg:min-h-screen lg:px-12 lg:py-16">
+        <div className="order-1 flex min-h-[290px] flex-1 items-center justify-center overflow-hidden bg-white px-5 py-8 sm:min-h-[360px] sm:px-10 lg:order-none lg:min-h-screen lg:px-12 lg:py-16">
           <div className="relative flex w-full max-w-[650px] items-center justify-center">
             <img
               src={mode === 'signup' ? '/auth-recovery-team-final.png' : '/auth-financial-handoff-final.png'}
