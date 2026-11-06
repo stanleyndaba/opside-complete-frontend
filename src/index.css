@@ -1381,3 +1381,207 @@ html, body, #root {
     transform: rotate(7deg) scale(1.05, 0.95);
   }
 }
+
+/* ============================================================
+   LANDING MOBILE COMPOSITION — evidence-led, mobile-first layer
+   This layer changes only the landing page at mobile widths. It does
+   not remove content; it preserves the decision path while allowing
+   desktop compositions to become readable one-column mobile layouts.
+   ============================================================ */
+@media (max-width: 767px) {
+  .landing-page {
+    --landing-mobile-gutter: 20px;
+    --landing-mobile-section-y: 48px;
+    --landing-mobile-section-y-tight: 38px;
+    --landing-mobile-copy-size: 16px;
+    --landing-mobile-copy-leading: 1.5;
+    --landing-mobile-heading-leading: 1.06;
+  }
+
+  /* Predictable mobile gutter; keep the existing content, just give it a
+     consistent reading edge like the reference mobile composition. */
+  .landing-page > main > section > .mx-auto,
+  .landing-page > main > section > div > .mx-auto,
+  .landing-page > main > section > .w-full,
+  .landing-page > main > section > div > .w-full {
+    max-width: none;
+  }
+
+  .landing-page > main > section {
+    padding-top: var(--landing-mobile-section-y);
+    padding-bottom: var(--landing-mobile-section-y);
+  }
+
+  .landing-page > main > section[aria-label="Recovery operations demo"],
+  .landing-page > main > section.margin-standard-deliverable-section,
+  .landing-page > main > section.auto-submit-section,
+  .landing-page > main > section[aria-label="Connected operational view visual"] {
+    padding-top: var(--landing-mobile-section-y-tight);
+    padding-bottom: var(--landing-mobile-section-y-tight);
+  }
+
+  /* Legora-style responsive type steps: substantial headings, readable body,
+     and intentional wrapping instead of desktop text squeezed into a phone. */
+  .landing-page > main h1,
+  .landing-page > main #margin-hero-title {
+    font-size: 40px !important;
+    line-height: 1.04 !important;
+    letter-spacing: -0.035em !important;
+    max-width: 22ch;
+  }
+
+  .landing-page > main h2 {
+    font-size: 32px !important;
+    line-height: var(--landing-mobile-heading-leading) !important;
+    letter-spacing: -0.035em !important;
+  }
+
+  .landing-page > main h3 {
+    font-size: 22px !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.025em !important;
+  }
+
+  /* Only prose copy is normalized here. Dense operational mini-interfaces keep
+     their deliberate compact labels and data density. */
+  .landing-page > main > section > div > div > div > p:not([class*="font-mono"]),
+  .landing-page > main > section > div > div > p:not([class*="font-mono"]),
+  .landing-page > main > section > div > p:not([class*="font-mono"]),
+  .landing-page > main > section > div > div > div > div > p:not([class*="font-mono"]) {
+    line-height: var(--landing-mobile-copy-leading);
+  }
+
+  /* Keep the hero focused: compact header, message, CTA, then visual. */
+  .landing-page .landing-navbar-google-sans > div > div {
+    min-height: 56px;
+  }
+
+  .landing-page .hero-section {
+    gap: 0 !important;
+  }
+
+  .landing-page .hero-section .hero-gmail-visual {
+    height: 360px;
+    margin-top: 28px;
+  }
+
+  /* Every CTA remains readable and never breaks its action label. When two
+     actions cannot breathe, the existing flex layouts may stack naturally. */
+  .landing-page .landing-pressable,
+  .landing-page a[class*="bg-[#635BFF]"],
+  .landing-page button[class*="bg-[#635BFF]"] {
+    min-height: 44px;
+    font-size: 15px !important;
+    line-height: 1 !important;
+    white-space: nowrap;
+  }
+
+  .landing-page .landing-pressable {
+    max-width: 100%;
+  }
+
+  /* Desktop two-column editorial compositions become one decision path on
+     mobile; the content order already supplied by the component is retained. */
+  .landing-page > main > section > div > .grid,
+  .landing-page > main > section > div > div > .grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .landing-page > main > section > div > .grid,
+  .landing-page > main > section > div > div > .grid {
+    gap: 32px !important;
+  }
+
+  /* Preserve visual scale without allowing a mounted browser or dense preview
+     to dominate the entire mobile page. */
+  .landing-page iframe {
+    max-width: 100%;
+  }
+
+  .landing-page > main > section[aria-label="Recovery operations demo"] iframe {
+    height: 430px !important;
+  }
+
+  .landing-page .recognition-artifacts-visual,
+  .landing-page .recovery-mobile-orchestra,
+  .landing-page .recovery-mobile-orchestra + * {
+    max-width: 100%;
+  }
+
+  /* The closing editorial cards keep both offers and visuals, but become
+     compact, readable records instead of two desktop-height slabs. */
+  .landing-page > main > section[aria-label="Financial control handoff"] article {
+    min-height: 520px !important;
+    border-radius: 5px !important;
+    padding: 28px 20px 20px !important;
+  }
+
+  .landing-page > main > section[aria-label="Financial control handoff"] article > div[class*="min-h"] {
+    min-height: 190px !important;
+    margin-top: 24px !important;
+  }
+
+  /* Security proof cards should scan as a short sequence on a phone. */
+  .landing-page > main > section[aria-labelledby="security-section-title"] article {
+    min-height: 0 !important;
+    padding: 22px 20px !important;
+  }
+
+  /* Marketplace coverage remains complete, but its rows become a compact list. */
+  .landing-page > main > section[aria-labelledby="marketplace-scope-title"] > div > div {
+    gap: 28px !important;
+  }
+
+  .landing-page > main > section[aria-labelledby="marketplace-scope-title"] [class*="grid"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  /* FAQ and mobile accordions use the reference’s generous touch targets. */
+  .landing-page .faq-trigger {
+    min-height: 56px;
+    padding-top: 17px !important;
+    padding-bottom: 17px !important;
+    font-size: 17px !important;
+    line-height: 1.25 !important;
+  }
+
+  .landing-page .faq-answer {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Keep motion meaningful but quieter on mobile. */
+  .landing-page [class*="transition-transform"],
+  .landing-page [class*="transition-all"] {
+    transition-duration: 300ms !important;
+  }
+
+  .landing-page .recovery-mobile-signal {
+    animation-duration: 14s;
+  }
+}
+
+@media (max-width: 380px) {
+  .landing-page > main h1,
+  .landing-page > main #margin-hero-title {
+    font-size: 36px !important;
+    max-width: 20ch;
+  }
+
+  .landing-page > main h2 {
+    font-size: 29px !important;
+  }
+
+  .landing-page .landing-pressable,
+  .landing-page a[class*="bg-[#635BFF]"],
+  .landing-page button[class*="bg-[#635BFF]"] {
+    font-size: 14px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-page [class*="transition-transform"],
+  .landing-page [class*="transition-all"] {
+    transition: none !important;
+  }
+}
