@@ -1421,21 +1421,21 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-y-auto bg-white text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide [&_button]:rounded-[5px]" style={{ backgroundColor: '#FFFFFF', scrollbarWidth: 'none', msOverflowStyle: 'none', fontFamily: 'var(--font-google-sans)' }}>
+    <div className="relative min-h-screen overflow-y-auto bg-[#F7F7F4] text-[#182026] selection:bg-[#E8E8E3] scrollbar-hide [&_button]:rounded-[5px]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', fontFamily: 'var(--font-google-sans)' }}>
       <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Left Side: Form */}
-        <div className="flex flex-1 items-center justify-center bg-white px-5 py-7 sm:px-8 lg:py-12">
-          <div className="w-full max-w-[420px] lg:max-w-[380px]">
-            <div className="mb-7 flex justify-center sm:mb-10 sm:justify-start">
+        <div className="flex flex-1 items-center justify-center border-b border-[#E5E5E0] bg-white px-5 py-8 sm:px-8 lg:border-b-0 lg:border-r lg:py-12">
+          <div className="w-full max-w-[420px] lg:max-w-[390px]">
+            <div className="mb-9 flex justify-center sm:mb-12">
               <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
-                <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
-                <span className="brand-wordmark font-merriweather text-[22px] font-semibold tracking-tight text-[#182026]">Margin</span>
+                <img src="/logoimagetwo.png" alt="Margin" width="24" height="24" className="h-6 w-auto object-contain" />
+                <span className="brand-wordmark font-merriweather text-[25px] font-semibold tracking-[-0.025em] text-[#182026]">Margin</span>
               </Link>
             </div>
 
             <section>
               <div className="mb-6 lg:hidden">
-                <h1 className="font-google-sans text-center text-[28px] font-normal leading-[1.12] tracking-[-0.035em] text-[#37414A] sm:text-left sm:text-[30px]">
+                <h1 className="font-google-sans text-center text-[28px] font-normal leading-[1.12] tracking-[-0.035em] text-[#111111] sm:text-center sm:text-[30px]">
                   {heading}
                 </h1>
                 {mode === 'signup' && (
@@ -1448,11 +1448,11 @@ const Login = () => {
               </div>
 
               <div className="mt-4 sm:mt-0">
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={handleLogin} className="space-y-5">
                   {emailEntryVisible || mode === 'recovery' || showPasswordStep ? (
                     <>
                   <div className="space-y-1">
-                    <Label htmlFor="email" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
+                    <Label htmlFor="email" className="text-[11px] font-semibold tracking-tight text-[#171717]">
                       Email address
                     </Label>
                     <div className="relative">
@@ -1467,14 +1467,14 @@ const Login = () => {
                           resetLocalAuthError();
                         }}
                         placeholder="you@example.com"
-                        className="h-12 rounded-[5px] border-[#C8D6DF] bg-white px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
+                        className="h-11 rounded-[6px] border-transparent bg-[#F0F0EE] px-4 text-[15px] text-[#182026] placeholder:text-[#8A8A85] shadow-none transition-colors focus-visible:border-[#111111] focus-visible:ring-2 focus-visible:ring-[#111111]/10 disabled:opacity-50"
                       />
                     </div>
                   </div>
 
                   {showPasswordStep ? (
                     <div className="space-y-1">
-                      <Label htmlFor="password" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
+                      <Label htmlFor="password" className="text-[11px] font-semibold tracking-tight text-[#171717]">
                       {mode === 'recovery' ? 'New Password' : 'Password'}
                     </Label>
                     <div className="relative">
@@ -1488,7 +1488,7 @@ const Login = () => {
                           resetLocalAuthError();
                         }}
                         placeholder={mode === 'recovery' ? 'Enter new password' : mode === 'signup' ? 'Create a password' : 'Enter your password'}
-                        className="h-12 rounded-[5px] border-[#C8D6DF] bg-white px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                        className="h-11 rounded-[6px] border-transparent bg-[#F0F0EE] px-4 pr-12 text-[15px] text-[#182026] placeholder:text-[#8A8A85] shadow-none transition-colors focus-visible:border-[#111111] focus-visible:ring-2 focus-visible:ring-[#111111]/10"
                       />
                       <button
                         type="button"
@@ -1504,7 +1504,7 @@ const Login = () => {
 
                   {(mode === 'login' || mode === 'signup') && clerkVerificationStep ? (
                     <div className="space-y-2">
-                      <Label htmlFor="clerkVerificationCode" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
+                      <Label htmlFor="clerkVerificationCode" className="text-[11px] font-semibold tracking-tight text-[#171717]">
                         Verification Code
                       </Label>
                       <div className="relative">
@@ -1519,7 +1519,7 @@ const Login = () => {
                             setError('');
                           }}
                           placeholder="Enter verification code"
-                          className="h-12 rounded-[5px] border-[#C8D6DF] bg-white px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                          className="h-11 rounded-[6px] border-transparent bg-[#F0F0EE] px-4 text-[15px] text-[#182026] placeholder:text-[#8A8A85] shadow-none focus-visible:border-[#111111] focus-visible:ring-2 focus-visible:ring-[#111111]/10"
                         />
                       </div>
                       {clerkVerificationMessage ? (
@@ -1530,7 +1530,7 @@ const Login = () => {
 
                   {mode === 'recovery' ? (
                     <div className="space-y-2">
-                      <Label htmlFor="confirmPassword" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
+                      <Label htmlFor="confirmPassword" className="text-[11px] font-semibold tracking-tight text-[#171717]">
                         Confirm Password
                       </Label>
                       <div className="relative">
@@ -1544,7 +1544,7 @@ const Login = () => {
                             resetLocalAuthError();
                           }}
                           placeholder="Confirm your new password"
-                          className="h-12 rounded-[5px] border-[#C8D6DF] bg-white px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                          className="h-11 rounded-[6px] border-transparent bg-[#F0F0EE] px-4 pr-12 text-[15px] text-[#182026] placeholder:text-[#8A8A85] shadow-none focus-visible:border-[#111111] focus-visible:ring-2 focus-visible:ring-[#111111]/10"
                         />
                         <button
                           type="button"
@@ -1566,7 +1566,7 @@ const Login = () => {
                         variant="outline"
                         onClick={() => void startSocialOAuth('google')}
                         disabled={loading || !clerkAuthLoaded}
-                        className="h-14 w-full rounded-[5px] border-[#0B74DE] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] hover:bg-[#075EBA] lg:h-11 lg:rounded-[5px] lg:border-[#C8D6DF] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-[0_1px_2px_rgba(37,49,58,0.04)] lg:hover:bg-[#F3F6F8]"
+                        className="h-12 w-full rounded-[6px] border-[#111111] bg-[#111111] px-4 text-[14px] font-semibold text-white shadow-none hover:bg-[#2A2A28] lg:h-11 lg:rounded-[6px] lg:border-[#DADAD5] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-none lg:hover:bg-[#F5F5F2]"
                       >
                         <GoogleMark className="mr-2 h-7 w-7 shrink-0 rounded-full bg-white p-0.5 lg:h-4 lg:w-4 lg:bg-transparent lg:p-0" />
                         Continue with Google
@@ -1578,7 +1578,7 @@ const Login = () => {
                           setError('');
                         }}
                         disabled={loading || !clerkAuthLoaded}
-                        className="h-14 w-full rounded-[5px] border border-[#AEBBC4] bg-white px-5 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE]"
+                        className="h-12 w-full rounded-[6px] border border-[#DADAD5] bg-white px-5 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#111111] hover:bg-[#F5F5F2]"
                       >
                         <Mail aria-hidden="true" className="mr-3 h-5 w-5 text-[#52616C]" />
                         Sign in with Email
@@ -1639,7 +1639,7 @@ const Login = () => {
                           <Button
                             type="submit"
                             disabled={loading || !clerkAuthLoaded}
-                            className="h-12 w-full rounded-[5px] bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50 lg:h-11 lg:rounded-[5px] lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)]"
+                            className="h-12 w-full rounded-[6px] bg-[#111111] px-8 text-[14px] font-semibold text-white shadow-none transition-all hover:bg-[#2A2A28] disabled:opacity-50 lg:h-11 lg:rounded-[6px]"
                           >
                             {loading ? (
                               mode === 'signup'
@@ -1667,7 +1667,7 @@ const Login = () => {
                           type="button"
                           onClick={handleEmailContinue}
                           disabled={loading || !clerkAuthLoaded}
-                          className="h-12 w-full rounded-[5px] border border-[#AEBBC4] bg-white px-8 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#0B74DE] hover:bg-[#F8FBFE] disabled:opacity-50 lg:h-11 lg:rounded-[5px] lg:border-transparent lg:bg-[#0B74DE] lg:text-white lg:shadow-[0_1px_2px_rgba(11,116,222,0.18)] lg:hover:border-transparent lg:hover:bg-[#075EBA]"
+                          className="h-12 w-full rounded-[6px] border border-[#DADAD5] bg-white px-8 text-[14px] font-semibold text-[#182026] shadow-none transition-all hover:border-[#111111] hover:bg-[#F5F5F2] disabled:opacity-50 lg:h-11 lg:rounded-[6px] lg:border-[#111111] lg:bg-[#111111] lg:text-white lg:hover:border-[#2A2A28] lg:hover:bg-[#2A2A28]"
                         >
                           Continue
                         </Button>
@@ -1687,7 +1687,7 @@ const Login = () => {
                         variant="outline"
                         onClick={() => void startSocialOAuth('google')}
                         disabled={loading || !clerkAuthLoaded}
-                        className="h-14 w-full rounded-[5px] border-[#0B74DE] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white shadow-[0_8px_22px_rgba(11,116,222,0.18)] hover:bg-[#075EBA] lg:h-11 lg:rounded-[5px] lg:border-[#C8D6DF] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-[0_1px_2px_rgba(37,49,58,0.04)] lg:hover:bg-[#F3F6F8]"
+                        className="h-12 w-full rounded-[6px] border-[#111111] bg-[#111111] px-4 text-[14px] font-semibold text-white shadow-none hover:bg-[#2A2A28] lg:h-11 lg:rounded-[6px] lg:border-[#DADAD5] lg:bg-white lg:px-4 lg:text-[13px] lg:text-[#182026] lg:shadow-none lg:hover:bg-[#F5F5F2]"
                       >
                         <GoogleMark className="mr-2 h-7 w-7 shrink-0 rounded-full bg-white p-0.5 lg:h-4 lg:w-4 lg:bg-transparent lg:p-0" />
                         Continue with Google
@@ -1771,7 +1771,7 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="inline-flex h-9 items-center justify-center bg-[#0B74DE] px-4 text-[12px] font-semibold text-white shadow-[0_4px_14px_rgba(11,116,222,0.18)] transition-colors hover:bg-[#075EBA]"
+                    className="inline-flex h-9 items-center justify-center border border-[#DADAD5] bg-white px-4 text-[12px] font-semibold text-[#555550] shadow-none transition-colors hover:border-[#111111] hover:bg-[#F5F5F2]"
                   >
                     Back
                   </button>
