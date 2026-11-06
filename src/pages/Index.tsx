@@ -2865,10 +2865,10 @@ export default function Index() {
 
                 <motion.div {...revealProps} className="max-w-[820px]">
                   <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
-                    Know what your Amazon financial records support—and what happens next.
+                    Establish the financial position. Decide what the evidence justifies.
                   </h2>
                   <p className="mt-5 max-w-[680px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">
-                    Establish the financial position, then choose the recovery or control work it justifies.
+                    See the supported exposure, unresolved variance and next accountable action.
                   </p>
                 </motion.div>
 
