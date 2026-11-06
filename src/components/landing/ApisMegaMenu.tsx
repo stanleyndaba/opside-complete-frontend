@@ -67,17 +67,17 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                         Workflows
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[16px] bg-white shadow-[0_24px_70px_rgba(24,32,38,0.16),0_2px_8px_rgba(24,32,38,0.06)] border border-[#E2E8EB] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[80px] lg:w-[94vw] lg:max-w-[1080px] lg:-translate-x-1/2">
+                        <div className={cn("relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[16px] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[80px] lg:w-[94vw] lg:max-w-[1080px] lg:-translate-x-1/2", variant === 'light' ? "border border-white/20 bg-[#69737C]/90 shadow-[0_24px_70px_rgba(24,32,38,0.24),0_2px_8px_rgba(24,32,38,0.12)] backdrop-blur-2xl" : "border border-[#E2E8EB] bg-white shadow-[0_24px_70px_rgba(24,32,38,0.16),0_2px_8px_rgba(24,32,38,0.06)]")}>
                             <div className="grid grid-cols-1 lg:grid-cols-3">
                                 {apiMenuGroups.map((group, index) => (
                                     <div
                                         key={group.label}
                                         className={cn(
                                             'p-5 lg:p-7',
-                                            index < apiMenuGroups.length - 1 && 'border-b border-[#E8EEF0] lg:border-b-0 lg:border-r lg:border-[#E8EEF0]'
+                                            index < apiMenuGroups.length - 1 && (variant === 'light' ? 'border-b border-white/12 lg:border-b-0 lg:border-r lg:border-white/12' : 'border-b border-[#E8EEF0] lg:border-b-0 lg:border-r lg:border-[#E8EEF0]')
                                         )}
                                     >
-                                        <h5 className="mb-2.5 text-[11px] font-lora font-medium tracking-tight text-[#94A3B8]">
+                                        <h5 className={cn("mb-2.5 text-[11px] font-lora font-medium tracking-tight", variant === 'light' ? "text-white/65" : "text-[#94A3B8]")}>
                                             {group.label}
                                         </h5>
                                         <div className="grid grid-cols-1 gap-0">
@@ -87,17 +87,17 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                                                     title={item.title}
                                                     description={item.description}
                                                     icon={item.icon}
-                                                    variant="light"
+                                                    variant={variant === 'light' ? 'dark' : 'light'}
                                                 />
                                             ))}
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            <div className="border-t border-[#E5ECEF] bg-[#F6F9FA] px-6 py-4 lg:flex lg:items-center lg:justify-between lg:px-8">
+                            <div className={cn("border-t px-6 py-4 lg:flex lg:items-center lg:justify-between lg:px-8", variant === 'light' ? "border-white/12 bg-white/10" : "border-[#E5ECEF] bg-[#F6F9FA]")}>
                                 <div>
-                                    <p className="text-[14px] font-semibold tracking-tight text-[#182026]">From first signal to reconciled payout.</p>
-                                    <p className="mt-0.5 text-[11px] font-normal tracking-tight text-[#66737F]">See how Margin controls the complete recovery lifecycle.</p>
+                                    <p className={cn("text-[14px] font-semibold tracking-tight", variant === 'light' ? "text-white" : "text-[#182026]")}>From first signal to reconciled payout.</p>
+                                    <p className={cn("mt-0.5 text-[11px] font-normal tracking-tight", variant === 'light' ? "text-white/65" : "text-[#66737F]")}>See how Margin controls the complete recovery lifecycle.</p>
                                 </div>
                                 <Link to="/workflows" className="mt-4 inline-flex items-center gap-2 text-[12px] font-semibold tracking-tight text-[#0B74DE] transition-colors hover:text-[#0967C8] lg:mt-0">
                                     Explore the workflow

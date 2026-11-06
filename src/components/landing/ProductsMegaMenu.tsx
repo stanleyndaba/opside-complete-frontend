@@ -65,18 +65,18 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                         For Teams
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[16px] bg-white shadow-[0_24px_70px_rgba(24,32,38,0.16),0_2px_8px_rgba(24,32,38,0.06)] border border-[#E2E8EB] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[80px] lg:w-[94vw] lg:max-w-[1080px] lg:-translate-x-1/2">
+                        <div className={cn("relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[16px] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[80px] lg:w-[94vw] lg:max-w-[1080px] lg:-translate-x-1/2", variant === 'light' ? "border border-white/20 bg-[#69737C]/90 shadow-[0_24px_70px_rgba(24,32,38,0.24),0_2px_8px_rgba(24,32,38,0.12)] backdrop-blur-2xl" : "border border-[#E2E8EB] bg-white shadow-[0_24px_70px_rgba(24,32,38,0.16),0_2px_8px_rgba(24,32,38,0.06)]")}>
                             <div className="grid grid-cols-1 lg:grid-cols-3">
                                 {productMenuGroups.map((group, index) => (
                                     <div
                                         key={group.label}
                                         className={cn(
                                             'p-5 lg:p-7',
-                                            index < productMenuGroups.length - 1 && 'border-b border-[#E8EEF0] lg:border-b-0 lg:border-r lg:border-[#E8EEF0]'
+                                            index < productMenuGroups.length - 1 && (variant === 'light' ? 'border-b border-white/12 lg:border-b-0 lg:border-r lg:border-white/12' : 'border-b border-[#E8EEF0] lg:border-b-0 lg:border-r lg:border-[#E8EEF0]')
                                         )}
                                     >
                                         <div className="mb-2 flex items-center justify-between gap-3">
-                                            <h4 className="text-[11px] font-lora font-medium tracking-wide text-[#7B8790]">
+                                            <h4 className={cn("text-[11px] font-lora font-medium tracking-wide", variant === 'light' ? "text-white/65" : "text-[#7B8790]")}>
                                                 {group.label}
                                             </h4>
                                             {group.badge && (
@@ -92,17 +92,17 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                                     icon={item.icon}
                                                     title={item.title}
                                                     description={item.description}
-                                                    variant="light"
+                                                    variant={variant === 'light' ? 'dark' : 'light'}
                                                 />
                                             ))}
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            <div className="border-t border-[#E5ECEF] bg-[#F6F9FA] px-6 py-4 lg:flex lg:items-center lg:justify-between lg:px-8">
+                            <div className={cn("border-t px-6 py-4 lg:flex lg:items-center lg:justify-between lg:px-8", variant === 'light' ? "border-white/12 bg-white/10" : "border-[#E5ECEF] bg-[#F6F9FA]")}>
                                 <div>
-                                    <p className="text-[14px] font-semibold tracking-tight text-[#182026]">Built for serious FBA operations</p>
-                                    <p className="mt-0.5 max-w-[680px] text-[11px] font-normal tracking-tight text-[#66737F]">
+                                    <p className={cn("text-[14px] font-semibold tracking-tight", variant === 'light' ? "text-white" : "text-[#182026]")}>Built for serious FBA operations</p>
+                                    <p className={cn("mt-0.5 max-w-[680px] text-[11px] font-normal tracking-tight", variant === 'light' ? "text-white/65" : "text-[#66737F]")}>
                                         Margin is designed for businesses where recovery crosses multiple shipments, systems and people, and where missed windows, weak evidence or incorrect payouts materially affect margin.
                                     </p>
                                 </div>
