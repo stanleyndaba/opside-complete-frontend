@@ -324,7 +324,13 @@ const Login = () => {
   const isAuditIntent = intent === 'audit' || intent === 'upload-csv' || nextPath === '/audit' || nextPath.startsWith('/audit?') || nextPath === '/data-upload' || nextPath.startsWith('/data-upload?');
   const demoBypassAvailable = isDemoBypassAvailable();
 
-  const [mode, setMode] = useState<AuthMode>('login');
+  const [mode, setMode] = useState<AuthMode>(() => {
+    const urlType = searchParams.get('type');
+    const explicitMode = searchParams.get('mode');
+    if (urlType === 'recovery' || explicitMode === 'recovery') return 'recovery';
+    if (explicitMode === 'signup') return 'signup';
+    return 'login';
+  });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -1780,7 +1786,7 @@ const Login = () => {
           <div className="relative flex w-full max-w-[650px] items-center justify-center">
             <div className="pointer-events-none absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#635BFF]/[0.08] blur-3xl" />
             <img
-              src={mode === 'signup' ? '/auth-recovery-team.png' : '/auth-financial-handoff.png'}
+              src={mode === 'signup' ? '/auth-recovery-team-final.png' : '/auth-financial-handoff-final.png'}
               alt={mode === 'signup' ? 'Sellers handing Amazon records to the Margin review team' : 'Sellers bringing overloaded Amazon records into Margin for financial investigation'}
               className="relative z-10 h-auto w-full max-w-[680px] object-contain"
             />
