@@ -1424,7 +1424,7 @@ const Login = () => {
     <div className="relative min-h-screen overflow-y-auto bg-[#F7F7F4] text-[#182026] selection:bg-[#E8E8E3] scrollbar-hide [&_button]:rounded-[5px]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', fontFamily: 'var(--font-google-sans)' }}>
       <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Left Side: Form */}
-        <div className="flex flex-1 items-center justify-center border-b border-[#E5E5E0] bg-white px-5 py-8 sm:px-8 lg:border-b-0 lg:border-r lg:py-12">
+        <div className="flex flex-1 items-center justify-center border-b border-[#E5E5E0] bg-white px-5 py-8 sm:px-8 lg:border-b-0 lg:py-12">
           <div className="w-full max-w-[420px] lg:max-w-[390px]">
             <div className="mb-9 flex justify-center sm:mb-12">
               <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
