@@ -1612,3 +1612,29 @@ html, body, #root {
     transition: none !important;
   }
 }
+
+/* Indigo actions use the reference pill treatment: indigo field, white copy,
+   and a white inset arrow disc carrying the indigo arrow. Other CTA colors
+   remain intentionally untouched. */
+.landing-page .landing-indigo-cta {
+  border-radius: 999px !important;
+  color: #FFFFFF !important;
+}
+
+.landing-page .landing-indigo-cta > svg {
+  width: 28px !important;
+  height: 28px !important;
+  flex: 0 0 28px;
+  margin-left: 4px;
+  padding: 7px;
+  border-radius: 999px;
+  background: #FFFFFF;
+  color: #635BFF;
+  stroke-width: 2.4;
+}
+
+.landing-page .landing-indigo-cta:hover > svg,
+.landing-page .landing-indigo-cta:focus-visible > svg {
+  background: #F4F4FF;
+  color: #5148E5;
+}

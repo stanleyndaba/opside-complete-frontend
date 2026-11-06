@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { AtSign, Check, ChevronDown, ChevronRight, Copy, Paperclip, Search } from "lucide-react";
+import { ArrowRight, AtSign, Check, ChevronDown, ChevronRight, Copy, Paperclip, Search } from "lucide-react";
 
 const singlePrompt = "Explain the Amazon decision, the financial position it leaves open, and what evidence or action is needed next.";
 
@@ -72,7 +72,7 @@ export function PersonalRecoverySupportSection() {
           </h2>
           <p className="mt-5 max-w-[560px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">Margin makes the investigation, case history, evidence requirements, Amazon responses and outstanding actions accessible as one connected case position. Your team can ask about the status, the reason for a decision, the evidence supporting it or what is preventing progress, and receive an explanation grounded in the recorded financial work.</p>
           <p className="mt-4 max-w-[560px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>The answer should identify the next action and its accountable owner, not simply repeat a status label.</p>
-          <button type="button" className="landing-pressable mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-[7px] bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] transition-colors hover:bg-[#5148E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2" aria-label="Ask Margin about your recovery">Ask Margin about your recovery <span aria-hidden="true">→</span></button>
+          <button type="button" className="landing-indigo-cta landing-pressable mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] transition-colors hover:bg-[#5148E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2" aria-label="Ask Margin about your recovery">Ask Margin about your recovery <ArrowRight className="h-4 w-4" aria-hidden="true" /></button>
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
