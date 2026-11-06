@@ -306,7 +306,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     <Link
                                         to="/audit-start"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[46px] w-full items-center justify-center gap-1 rounded-full bg-[#064C38] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(6,76,56,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#075D45] hover:shadow-[0_12px_26px_rgba(6,76,56,0.32)]">
+                                        className="flex min-h-[46px] w-full items-center justify-center gap-1 rounded-full bg-[#635BFF] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(99,91,255,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#5148E5] hover:shadow-[0_12px_26px_rgba(99,91,255,0.32)]">
                                         Send records for review <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                                     </Link>
                                     <Link
