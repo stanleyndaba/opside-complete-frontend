@@ -1775,65 +1775,15 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Right Side: Information */}
-        <div className="hidden flex-1 items-center justify-center bg-white px-12 py-16 lg:flex">
-          <div className="w-full max-w-[520px]">
-            {isAuditIntent && (
-              <p className="mb-6 text-[12px] font-bold uppercase tracking-widest text-[#0B74DE]">
-                Connected Recovery Audit
-              </p>
-            )}
-            
-            <h1 className="font-google-sans text-left text-[36px] font-normal leading-[1.08] tracking-[-0.02em] text-[#37414A]">
-              {heading}
-            </h1>
-
-            {mode === 'signup' && (
-              <div className="mt-5 space-y-5">
-                <p className="text-[15px] leading-7 text-[#4D5B66]">
-                  Create your free Margin account and run a read-only Recovery Audit.
-                </p>
-                <p className="text-[15px] leading-7 text-[#4D5B66]">
-                  Margin examines your available Amazon records, shows you what the evidence supports, and makes clear what needs attention—and what doesn&apos;t.
-                </p>
-                
-                <div className="flex flex-col gap-2.5 border-t border-[#D8E3EA] pt-5">
-                  <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
-                    <div className="h-1.5 w-1.5 rounded-[5px] bg-[#0B74DE]" />
-                    <span>Free Margin account</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
-                    <div className="h-1.5 w-1.5 rounded-[5px] bg-[#0B74DE]" />
-                    <span>Read-only Recovery Audit</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
-                    <div className="h-1.5 w-1.5 rounded-[5px] bg-[#0B74DE]" />
-                    <span>See the result before deciding</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[13px] font-semibold text-[#182026]">
-                    <div className="h-1.5 w-1.5 rounded-[5px] bg-[#0B74DE]" />
-                    <span>Nothing is submitted without your approval</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {mode === 'login' && (
-              <div className="mt-5 space-y-4">
-                <p className="text-[15px] leading-7 text-[#4D5B66]">
-                  Your recovery work is right where you left it.
-                </p>
-                <p className="text-[15px] leading-7 text-[#4D5B66]">
-                  See what happened, what needs attention, what Margin is handling, and where each recovery stands.
-                </p>
-                <p className="text-[15px] leading-7 text-[#4D5B66]">
-                  Your records, evidence, decisions, and recovery progress stay connected—so you can come back without having to piece everything together again.
-                </p>
-                <p className="pt-1 font-google-sans text-[14px] font-semibold leading-6 tracking-tight text-[#182026]">
-                  Clear recovery work. You stay in control.
-                </p>
-              </div>
-            )}
+        {/* Right Side: Amazon records illustration */}
+        <div className="order-2 flex min-h-[290px] flex-1 items-center justify-center overflow-hidden bg-[#F5F6FF] px-5 py-8 sm:min-h-[360px] sm:px-10 lg:order-none lg:min-h-screen lg:px-12 lg:py-16">
+          <div className="relative flex w-full max-w-[650px] items-center justify-center">
+            <div className="pointer-events-none absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#635BFF]/[0.08] blur-3xl" />
+            <img
+              src={mode === 'signup' ? '/login-audit-archive.png' : '/login-audit-door.png'}
+              alt={mode === 'signup' ? 'Amazon records being organized for review' : 'Amazon records carried from a warehouse for review'}
+              className="relative z-10 h-auto w-full max-w-[620px] object-contain"
+            />
           </div>
         </div>
       </main>
