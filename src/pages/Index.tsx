@@ -205,7 +205,6 @@ const accountingSources = [
   { id: "googledrive", name: "Google Drive", context: "shared records", src: "/Driveboy.png", icon: null },
   { id: "dropbox", name: "Dropbox", context: "recovery records", src: "/Dropbox_Icon.svg.png", icon: null },
   { id: "microsoft365", name: "Microsoft 365", context: "workplace records", src: "/integration-icons/microsoft365.webp", icon: null },
-  { id: "imessage", name: "iMessage", context: "message history", src: "/integration-icons/imessage.svg", icon: null },
   { id: "box", name: "Box", context: "controlled files", src: "/integration-icons/box.svg", icon: null },
   { id: "copilot", name: "Microsoft Copilot", context: "AI systems", src: "/integration-icons/microsoft-copilot.png", icon: null },
   { id: "quickbooks", name: "QuickBooks", context: "accounting records", src: "/quickbooks.png", icon: null },
@@ -216,25 +215,23 @@ const accountingSources = [
   { id: "sftp", name: "S3 / SFTP", context: "controlled files", src: "/integration-icons/amazon-s3-logo.svg", icon: null },
 ];
 const integrationFieldLayout = [
-  ["amazon", 5, 8, true], ["microsoft365", 24, 6, true], ["chatgpt", 43, 7, true], ["gmail", 62, 6, true], ["googledrive", 81, 8, true],
-  ["outlook", 7, 31, true], ["copilot", 27, 31, false], ["slack", 47, 29, true], ["imessage", 67, 31, false], ["box", 87, 31, false],
-  ["sap", 15, 54, false], ["linear", 35, 53, true], ["excel", 55, 53, false], ["xero", 76, 54, true],
-  ["onedrive", 7, 77, false], ["quickbooks", 28, 77, true], ["dropbox", 49, 77, false], ["claude", 70, 78, true], ["netsuite", 90, 77, false],
-  ["settlements", 18, 94, false], ["sftp", 40, 94, true], ["edi", 62, 94, false], ["carrier", 82, 94, true],
+  ["amazon", true], ["microsoft365", true], ["chatgpt", true], ["gmail", true], ["googledrive", true],
+  ["outlook", true], ["copilot", false], ["slack", true], ["box", false], ["sap", false],
+  ["linear", true], ["excel", false], ["xero", true], ["onedrive", false], ["quickbooks", true],
+  ["dropbox", false], ["claude", true], ["netsuite", false], ["settlements", false], ["sftp", true],
+  ["edi", false], ["carrier", true],
 ] as const;
-
 function AccountingIntegrationField() {
   const sources = new Map(accountingSources.map((source) => [source.id, source]));
   return (
-    <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 lg:order-1">
-      <div className="relative h-[390px] overflow-hidden sm:h-[500px]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(246,248,250,0.78),transparent_55%)]" aria-hidden="true" />
-        {integrationFieldLayout.map(([id, left, top, tile], index) => {
+    <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-1 min-w-0 lg:order-2">
+      <div className="grid grid-cols-5 place-items-center gap-x-3 gap-y-5 py-2 sm:gap-x-5 sm:gap-y-8 sm:py-4">
+        {integrationFieldLayout.map(([id, tile], index) => {
           const source = sources.get(id);
           if (!source) return null;
           return (
-            <motion.div key={source.id} initial={{ opacity: 0, scale: 0.86 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ ...revealProps.transition, delay: 0.12 + index * 0.035 }} className={`absolute flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:h-16 sm:w-16 ${tile ? "rounded-[14px] bg-[#F8F7F4] shadow-[0_12px_28px_rgba(44,55,63,0.05)]" : "bg-transparent"}`} style={{ left: `${left}%`, top: `${top}%` }} title={source.name} aria-label={source.name}>
-              {source.src ? <img src={source.src} alt={source.name} className={`h-7 w-7 object-contain sm:h-10 sm:w-10 ${source.id === "linear" ? "rounded-[5px]" : ""}`} /> : source.icon === "edi" ? <FileInput className="h-7 w-7 text-[#0F9F9A] sm:h-9 sm:w-9" aria-hidden="true" /> : <Truck className="h-7 w-7 text-[#D97706] sm:h-9 sm:w-9" aria-hidden="true" />}
+            <motion.div key={source.id} initial={{ opacity: 0, scale: 0.86 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ ...revealProps.transition, delay: 0.12 + index * 0.035 }} className={`flex h-14 w-14 items-center justify-center sm:h-[72px] sm:w-[72px] ${tile ? "rounded-[14px] bg-[#F8F7F4] shadow-[0_10px_24px_rgba(44,55,63,0.05)]" : "bg-transparent"}`} title={source.name} aria-label={source.name}>
+              {source.src ? <img src={source.src} alt={source.name} className={`h-8 w-8 object-contain sm:h-10 sm:w-10 ${source.id === "linear" ? "rounded-[5px]" : ""}`} /> : source.icon === "edi" ? <FileInput className="h-8 w-8 text-[#0F9F9A] sm:h-9 sm:w-9" aria-hidden="true" /> : <Truck className="h-8 w-8 text-[#D97706] sm:h-9 sm:w-9" aria-hidden="true" />}
             </motion.div>
           );
         })}
@@ -247,16 +244,16 @@ function AccountingEvidenceSection() {
     <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F6F8F9] py-10 md:py-16" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-20 xl:gap-24">
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:pt-1">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-2 flex min-w-0 flex-col lg:order-2 lg:pt-1">
             <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71808A]">MCP and native integrations</p>
             <h2 id="accounting-section-title" className="mt-4 max-w-[620px] font-google-sans text-[39px] leading-[0.98] tracking-[-0.045em] text-[#182026] sm:text-[50px] md:text-[60px]" style={{ fontWeight: 500 }}>
               <span className="heading-tone-dark">Get the answers without replacing the systems your team already relies on.</span>
             </h2>
             <p className="mt-6 max-w-[650px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Margin brings relevant Amazon, ERP, warehouse, carrier and finance records into a connected examination while preserving their original systems as the sources of record. Integration and data-access paths can be designed around the records required for the engagement, allowing related events to be examined together without requiring your team to replace its existing operational stack.'} mobile={'Margin examines relevant Amazon, ERP, warehouse, carrier and finance records together while keeping each original system as the source of record. Your existing stack stays in place.'} /></p>
-            <Link to="/contact" className="landing-indigo-cta mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] no-underline transition-colors hover:bg-[#5148E5]">Discuss your integrations <ChevronRight className="h-4 w-4" /></Link>
             <div className="mt-12 max-w-[520px] border-t border-[#DDE3E6]">
               {["Records stay in their systems", "Read-only access by default, where supported by the connection.", "Integration paths designed around your operation."].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-[#DDE3E6] py-3 text-[13px] text-[#26353D]"><span className="flex h-6 w-6 shrink-0 items-center justify-center text-[#182026]">{index === 0 ? <SearchCheck className="h-4 w-4" /> : index === 1 ? <Landmark className="h-4 w-4" /> : <Database className="h-4 w-4" />}</span>{item}</div>)}
             </div>
+            <Link to="/contact" className="landing-indigo-cta mt-7 inline-flex h-11 w-fit items-center gap-2 rounded-full bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] no-underline transition-colors hover:bg-[#5148E5]">Discuss your integrations <ChevronRight className="h-4 w-4" /></Link>
           </motion.div>
           <AccountingIntegrationField />
         </div>
