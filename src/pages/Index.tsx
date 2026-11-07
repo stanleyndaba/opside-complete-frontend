@@ -1492,66 +1492,12 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       copy: "Margin keeps the relevant shipment, inventory, transaction, evidence, Amazon response and settlement references associated with the same underlying financial event. The investigation, case history and recorded outcome remain connected rather than scattered across separate operational records.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.98),transparent_38%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_54%,#F9FAF8_100%)]" />
-          <motion.div aria-hidden="true" className="absolute -right-12 -top-10 h-40 w-40 rounded-full bg-[#D8E8F4]/75 blur-2xl" animate={{ x: [0, -14, 0], y: [0, 12, 0], scale: [1, 1.1, 1] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
-          <motion.div aria-hidden="true" className="absolute -bottom-12 -left-8 h-36 w-36 rounded-full bg-[#D9EEE8]/70 blur-2xl" animate={{ x: [0, 16, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
-          <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
-          <motion.div
-            className="absolute left-[6%] right-[6%] top-[25%] -translate-y-1/2"
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="relative min-h-[190px]">
-              <div className="absolute left-0 right-[8%] top-0 rounded-[11px] border border-white/85 bg-white/62 px-2.5 py-2.5 shadow-[0_16px_34px_rgba(56,74,82,0.12),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-3 sm:py-3">
-                <div className="flex items-start justify-between gap-2 border-b border-[#D9E2E2]/80 pb-1.5">
-                  <div>
-                    <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Context</p>
-                    <p className="mt-0.5 text-[10px] font-semibold leading-3.5 tracking-[-0.02em] text-[#26333A] sm:text-[11px]">Northstar Commerce LLC · Amazon US</p>
-                  </div>
-                </div>
-                <div className="space-y-2 pt-2">
-                  <div>
-                    <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Status</p>
-                    <p className="mt-0.5 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Response under review</p>
-                  </div>
-                  <div>
-                    <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Next milestone</p>
-                    <p className="mt-0.5 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Submit reconciled recovery packet</p>
-                  </div>
-                </div>
-                <div className="mt-2 grid grid-cols-2 gap-1.5 border-t border-[#D9E2E2]/80 pt-2">
-                  <div className="rounded-[6px] bg-white/45 px-1.5 py-1">
-                    <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Reversal watch</p>
-                    <p className="mt-0.5 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Monitored</p>
-                  </div>
-                  <div className="rounded-[6px] bg-white/45 px-1.5 py-1">
-                    <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Appeal route</p>
-                    <p className="mt-0.5 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Available</p>
-                  </div>
-                </div>
-              </div>
-              <div className="relative z-10 ml-[22%] w-[78%] space-y-1.5 pt-3 sm:pt-4">
-                <p className="mb-1 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Next actions</p>
-                <div className="flex items-center gap-2 rounded-[8px] border border-white/80 bg-white/64 px-2 py-2 shadow-[0_10px_22px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.94)] backdrop-blur-lg sm:px-2.5">
-                  <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/70" aria-hidden="true" />
-                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#344149] sm:text-[10px]">Validate receiving evidence</span>
-                  <img src="/gd.png" alt="Google Drive" className="h-4 w-4 shrink-0 object-contain" />
-                </div>
-                <div className="flex items-center gap-2 rounded-[8px] border border-white/70 bg-white/54 px-2 py-2 shadow-[0_9px_20px_rgba(56,74,82,0.08)] backdrop-blur-lg sm:px-2.5">
-                  <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/64" aria-hidden="true" />
-                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#46535A] sm:text-[10px]">Reconcile Amazon response</span>
-                  <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 shrink-0 object-contain" />
-                </div>
-                <div className="flex items-center gap-2 rounded-[8px] border border-white/65 bg-white/46 px-2 py-2 shadow-[0_8px_18px_rgba(56,74,82,0.06)] backdrop-blur-md sm:px-2.5">
-                  <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/58" aria-hidden="true" />
-                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#566167] sm:text-[10px]">Prepare controlled submission</span>
-                  <img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto shrink-0 object-contain" />
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          <img
+            src="/recovery-thread-card-2.png"
+            alt="Connected recovery record for Northstar Commerce LLC showing linked receiving evidence, Amazon response, settlement references, and the controlled submission milestone"
+            className="block h-full w-full object-cover object-center"
+            loading="lazy"
+          />
         </div>
       ),
     },
