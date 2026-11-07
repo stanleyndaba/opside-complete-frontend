@@ -541,45 +541,17 @@ function BuyerRealitySection() {
 }
 
 function FinancialPositionOutputSection() {
-  const outputs = [
-    "Original financial event",
-    "Source records",
-    "Evidence basis",
-    "Supported exposure",
-    "Accounted-for value",
-    "Unresolved difference",
-    "Decision status",
-    "Approval status",
-    "Accountable owner",
-    "Next justified action",
-    "Settlement or accounting outcome",
-  ];
-
   return (
     <section className="relative overflow-hidden bg-[#F4FAFC] py-12 sm:py-16 md:py-20" aria-labelledby="position-output-title">
       <div className={containerClass}>
-        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start lg:gap-16">
-          <motion.div {...revealProps}>
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-14 xl:gap-20">
+          <motion.div {...revealProps} className="min-w-0">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">The deliverable</p>
             <h2 id="position-output-title" className="mt-4 max-w-[620px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>What Finance gets when the position is established.</h2>
-            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#48677A] sm:text-[17px] sm:leading-8">Margin does not merely find discrepancies. It produces a defensible, inspectable financial position—so Finance can see what the evidence supports, what remains unresolved and who owns the next justified action.</p>
+            <p className="mt-5 max-w-[620px] text-[15px] leading-7 text-[#48677A] sm:text-[17px] sm:leading-8">Margin does not merely find discrepancies. It produces a defensible, inspectable financial position—so Finance can see what the evidence supports, what remains unresolved and who owns the next justified action.</p>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="border border-[#C9DDE5] bg-white p-4 shadow-[0_18px_50px_rgba(37,85,104,0.08)] sm:p-6">
-            <div className="flex items-center justify-between border-b border-[#E0EAEE] pb-4">
-              <div>
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[#7A8994]">Financial position</p>
-                <p className="mt-1 text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Case 19822888381</p>
-              </div>
-              <span className="rounded-full bg-[#E8F3F8] px-2.5 py-1 text-[10px] font-semibold text-[#0B74DE]">Inspectable</span>
-            </div>
-            <div className="mt-4 grid gap-2 sm:grid-cols-2">
-              {outputs.map((output, index) => (
-                <div key={output} className={`flex items-start gap-2 rounded-[5px] px-3 py-2.5 ${index === 5 ? "bg-[#FFF4E8]" : index >= 8 ? "bg-[#F4F7F8]" : "bg-[#F8FAFB]"}`}>
-                  <span className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${index === 5 ? "bg-[#FE8500]" : "bg-[#0B74DE]"} text-white`}><Check className="h-2.5 w-2.5" strokeWidth={3} /></span>
-                  <span className="text-[12px] leading-5 text-[#344149]">{output}</span>
-                </div>
-              ))}
-            </div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex min-w-0 justify-center lg:justify-end">
+            <img src="/financial-position-record.png" alt="Financial Position Record connecting the original event, evidence, Amazon decision, adjustment, settlement treatment, and remaining responsibility" className="block h-auto w-full max-w-[760px] object-contain" loading="lazy" />
           </motion.div>
         </div>
       </div>
