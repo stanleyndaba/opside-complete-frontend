@@ -1357,6 +1357,23 @@ html, body, #root {
 .financial-position-indicator.is-generating {
   animation: financial-position-morph 2.2s ease-in-out infinite;
 }
+.landing-google-sans section.financial-work-proof-surface {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  background-image: none !important;
+  color: #182026 !important;
+}
+.landing-google-sans section.financial-work-proof-surface h2,
+.landing-google-sans section.financial-work-proof-surface h3,
+.landing-google-sans section.financial-work-proof-surface span {
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+.landing-google-sans section.financial-work-proof-surface p,
+.landing-google-sans section.financial-work-proof-surface li {
+  color: #5F6D77 !important;
+  -webkit-text-fill-color: #5F6D77 !important;
+}
 .financial-position-indicator.is-settled {
   border-radius: 50%;
 }
