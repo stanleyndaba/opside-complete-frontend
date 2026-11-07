@@ -1482,33 +1482,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       title: "See the population. Know its financial position.",
       copy: "Margin maintains a structured view of the recovery population, connecting each examined event to its source records, investigation status, supported exposure, accounted-for value and outstanding actions. Finance can distinguish active opportunities from resolved items and exceptions that still require attention.",
       visual: (
-        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_14%,rgba(255,255,255,0.98),transparent_36%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_54%,#F9FAF8_100%)]" />
-          <motion.div aria-hidden="true" className="absolute -left-10 -top-10 h-36 w-36 rounded-full bg-[#D9EEE8]/75 blur-2xl" animate={{ x: [0, 16, 0], y: [0, 12, 0], scale: [1, 1.1, 1] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
-          <motion.div aria-hidden="true" className="absolute -bottom-12 -right-10 h-40 w-40 rounded-full bg-[#D8E8F4]/75 blur-2xl" animate={{ x: [0, -14, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
-          <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
-          <motion.div
-            className="absolute left-[9%] right-[9%] top-[18%] -translate-y-1/2 lg:top-[7%]"
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="space-y-2.5">
-              {[
-                "Inbound receiving · supported exposure",
-                "Referral fee · expected rate variance",
-                "Return credit · settlement shortfall",
-                "Removal count · unresolved variance",
-                "Warehouse damage · evidence pending",
-              ].map((label, index) => (
-                <div key={label} className={`flex items-center gap-3 rounded-[10px] border border-white/70 px-3 py-2.5 shadow-[0_12px_28px_rgba(56,74,82,0.08),inset_0_1px_0_rgba(255,255,255,0.88)] backdrop-blur-lg sm:px-4 sm:py-3 ${index === 0 ? "bg-white/62" : index === 1 ? "bg-white/54" : index === 2 ? "bg-white/48" : "bg-white/42"}`}>
-                  <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border ${index === 0 || index === 2 ? "border-[#8DB8D0] bg-[#E8F3F8] text-[#0B74DE]" : "border-[#C8D0CD] bg-white/60"}`} aria-hidden="true">{(index === 0 || index === 2) && <Check className="h-3 w-3" strokeWidth={2.5} />}</span>
-                  <span className="min-w-0 flex-1 truncate font-sans text-[11px] font-medium tracking-[-0.02em] text-[#344149] sm:text-[13px]">{label}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F8F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
+          <img src="/recovery-population-trace.png" alt="Recovery population investigation trace showing source records, examined events, supported exposure and unresolved variance" className="block h-full w-full object-contain" loading="lazy" />
         </div>
       ),
     },
