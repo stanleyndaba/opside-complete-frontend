@@ -732,7 +732,7 @@ function FinancialWorkProofSection() {
   ];
 
   return (
-    <section aria-labelledby="financial-work-proof-title" className="financial-work-proof-surface relative overflow-hidden bg-[#F1F3F2] py-8 text-[#182026] sm:py-10 md:py-16">
+    <section aria-labelledby="financial-work-proof-title" className="financial-work-proof-surface relative overflow-hidden bg-white py-8 text-[#182026] sm:py-10 md:py-16">
       <div className={containerClass}>
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-20">
           <motion.div {...revealProps} className="max-w-[620px]">
@@ -745,21 +745,23 @@ function FinancialWorkProofSection() {
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[#D8E3E8]">
             {proofPoints.map((point) => (
-              <div key={point.title} className="grid gap-2 border-b border-[#D8E3E8] py-3 sm:grid-cols-[110px_minmax(0,0.9fr)_minmax(0,1.1fr)] sm:items-baseline sm:gap-5 sm:py-6">
+              <div key={point.title} className="grid grid-cols-[92px_minmax(0,1fr)] items-start gap-4 border-b border-[#D8E3E8] py-4 sm:grid-cols-[110px_minmax(0,1fr)] sm:gap-5 sm:py-6">
                 <span className={`${point.value === "SP-API" ? "text-[24px] sm:text-[28px]" : "text-[38px] sm:text-[44px]"} font-lora leading-none tracking-[-0.045em] text-[#182026]`} style={{ fontWeight: 500 }}>{point.value}</span>
-                <h3 className="text-[16px] font-semibold leading-5 tracking-tight text-[#182026] sm:text-[17px]">{point.title}</h3>
-                {point.details ? (
-                  <ul className="grid gap-1 text-[13px] leading-5 text-[#66737F] sm:text-[14px] sm:leading-6">
-                    {point.details.map((detail) => <li key={detail}>{detail}</li>)}
-                  </ul>
-                ) : (
-                  <p className="text-[13px] leading-5 text-[#66737F] sm:text-[14px] sm:leading-6">{point.description}</p>
-                )}
+                <div className="min-w-0">
+                  <h3 className="text-[16px] font-semibold leading-5 tracking-tight text-[#182026] sm:text-[17px]">{point.title}</h3>
+                  {point.details ? (
+                    <ul className="mt-2 grid gap-1 text-[13px] leading-5 text-[#5F6D77] sm:text-[14px] sm:leading-6">
+                      {point.details.map((detail) => <li key={detail}>{detail}</li>)}
+                    </ul>
+                  ) : (
+                    <p className="mt-2 text-[13px] leading-5 text-[#5F6D77] sm:text-[14px] sm:leading-6">{point.description}</p>
+                  )}
+                </div>
               </div>
             ))}
           </motion.div>
         </div>
-        <button type="button" className={`${landingSecondaryCtaClass} mt-5 md:mt-8`} aria-label="See what the operating record contains">See what the operating record contains <ChevronRight className="h-4 w-4" /></button>
+        <button type="button" className={`${landingPrimaryCtaClass} mt-5 md:mt-8`} aria-label="See what the operating record contains">See what the operating record contains <ChevronRight className="h-4 w-4" /></button>
       </div>
     </section>
   );

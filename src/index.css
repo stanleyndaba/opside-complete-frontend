@@ -1263,29 +1263,26 @@ html, body, #root {
 }
 
 
+/* Financial work proof uses a pure-white editorial surface with a charcoal hierarchy. */
 .landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface {
-  background: #F1F3F2 !important;
-  background-color: #F1F3F2 !important;
-}
-
-/* Financial work proof — preserve the existing layout while moving the surface into the
-   indigo network treatment and keeping every piece of section copy pure white. */
-.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface {
-  background-color: #17265D !important;
-  background-image: url('/assets/financial-work-proof-indigo-field.png') !important;
-  background-position: center !important;
-  background-size: cover !important;
-  color: #FFFFFF !important;
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  background-image: none !important;
+  color: #182026 !important;
 }
 
 .landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface h2,
 .landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface h2 *,
 .landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface h3,
-.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface p,
-.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface li,
 .landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface span {
-  color: #FFFFFF !important;
-  -webkit-text-fill-color: #FFFFFF !important;
+  color: #182026 !important;
+  -webkit-text-fill-color: #182026 !important;
+}
+
+.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface p,
+.landing-google-sans.landing-google-sans > main > section.financial-work-proof-surface li {
+  color: #5F6D77 !important;
+  -webkit-text-fill-color: #5F6D77 !important;
 }
 
 /* Margin Standard deliverable must remain a pure-white inspection surface after positional surface rules. */
