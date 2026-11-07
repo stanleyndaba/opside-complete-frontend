@@ -598,7 +598,7 @@ function BuildObjectionSection() {
             <p className="mt-8 max-w-[620px] border-l-2 border-[#635BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">AI-assisted analysis remains bounded by evidence, validation and approval.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex min-w-0 justify-center lg:justify-end">
-            <img src="/manus-storage/financial-resolution-workflow_199bbc12.png" alt="Financial Resolution Workflow showing Margin connecting source records, testing supported exposure, and preserving the Finance approval boundary" className="block h-auto w-full max-w-[760px] object-contain" loading="lazy" />
+            <img src="/financial-resolution-workflow.png" alt="Financial Resolution Workflow showing Margin connecting source records, testing supported exposure, and preserving the Finance approval boundary" className="block h-auto w-full max-w-[760px] object-contain" loading="lazy" />
           </motion.div>
         </div>
       </div>
