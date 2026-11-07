@@ -1506,48 +1506,12 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       copy: "Each open position carries its current status, outstanding requirement, responsible owner and next justified action. Margin preserves the financial context as work moves between investigators, approvers and existing business systems, so handoffs do not lose the reason the action exists.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.96),transparent_36%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_52%,#F9FAF8_100%)]" />
-          <motion.div
-            aria-hidden="true"
-            className="absolute -left-8 -top-10 h-36 w-36 rounded-full bg-[#D9EEE8]/75 blur-2xl"
-            animate={{ x: [0, 18, 0], y: [0, 12, 0], scale: [1, 1.12, 1] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          <img
+            src="/recovery-thread-card-3.png"
+            alt="Accountable recovery handoff showing Gmail, Google Drive, Outlook, and Slack actions with owners and workflow status"
+            className="block h-full w-full object-cover object-center"
+            loading="lazy"
           />
-          <motion.div
-            aria-hidden="true"
-            className="absolute -bottom-12 -right-8 h-40 w-40 rounded-full bg-[#DCE7F4]/80 blur-2xl"
-            animate={{ x: [0, -16, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }}
-            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          />
-          <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
-          <motion.div
-            className="absolute left-[9%] right-[9%] top-[17%] -translate-y-1/2 lg:top-[3%]"
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="relative flex items-center gap-3 rounded-[10px] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_14px_32px_rgba(56,74,82,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl sm:px-4 sm:py-2.5">
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/70" aria-hidden="true" />
-              <span className="min-w-0 flex-1"><span className="block truncate font-sans text-[12px] font-medium leading-tight tracking-[-0.02em] text-[#26333A] sm:text-[14px]">Reconcile Amazon response</span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">Response basis recorded</span></span>
-              <img src="/gmailicon.png" alt="Gmail" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
-            </div>
-            <div className="mt-2.5 flex items-center gap-3 rounded-[10px] border border-white/70 bg-white/48 px-3 py-1.5 shadow-[0_12px_28px_rgba(56,74,82,0.08),inset_0_1px_0_rgba(255,255,255,0.88)] backdrop-blur-lg sm:px-4 sm:py-2">
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/62" aria-hidden="true" />
-              <span className="min-w-0 flex-1"><span className="flex items-center gap-2 truncate font-sans text-[11px] font-medium leading-tight tracking-[-0.02em] text-[#3A474D] sm:text-[13px]">Validate receiving evidence <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#87949A]/35 border-t-[#66757C]" aria-label="Fetching in progress" /></span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">BOL, POD, and 3PL receipt matched</span></span>
-              <img src="/gd.png" alt="Google Drive" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
-            </div>
-            <div className="mt-2.5 flex items-center gap-3 rounded-[10px] border border-white/70 bg-white/42 px-3 py-1.5 shadow-[0_10px_24px_rgba(56,74,82,0.06),inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-md sm:px-4 sm:py-2">
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/56" aria-hidden="true" />
-              <span className="min-w-0 flex-1"><span className="flex items-center gap-2 truncate font-sans text-[11px] font-medium leading-tight tracking-[-0.02em] text-[#4A555B] sm:text-[13px]">Validate product-to-event lineage <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#87949A]/35 border-t-[#66757C]" aria-label="Validation in progress" /></span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">ASIN/FNSKU and inventory identity tied out</span></span>
-              <img src="/outlookicon.webp" alt="Outlook" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
-            </div>
-            <div className="mt-2.5 flex items-center gap-3 rounded-[10px] border border-white/70 bg-white/38 px-3 py-1.5 shadow-[0_8px_20px_rgba(56,74,82,0.05),inset_0_1px_0_rgba(255,255,255,0.78)] backdrop-blur-md sm:px-4 sm:py-2">
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/52" aria-hidden="true" />
-              <span className="min-w-0 flex-1"><span className="block truncate font-sans text-[11px] font-medium leading-tight tracking-[-0.02em] text-[#566167] sm:text-[13px]">Route controlled action</span><span className="mt-0.5 block truncate font-sans text-[10px] leading-tight tracking-[-0.01em] text-[#667177] sm:text-[11px]">Finance owner and decision state recorded</span></span>
-              <img src="/slack-icon-2019.png" alt="Slack" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
-            </div>
-          </motion.div>
         </div>
       ),
     },
