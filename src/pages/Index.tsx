@@ -204,6 +204,10 @@ const accountingSources = [
   { id: "onedrive", name: "OneDrive", context: "evidence files", src: "/onedriive.png", icon: null },
   { id: "googledrive", name: "Google Drive", context: "shared records", src: "/Driveboy.png", icon: null },
   { id: "dropbox", name: "Dropbox", context: "recovery records", src: "/Dropbox_Icon.svg.png", icon: null },
+  { id: "microsoft365", name: "Microsoft 365", context: "workplace records", src: "/integration-icons/microsoft365.webp", icon: null },
+  { id: "imessage", name: "iMessage", context: "message history", src: "/integration-icons/imessage.svg", icon: null },
+  { id: "box", name: "Box", context: "controlled files", src: "/integration-icons/box.svg", icon: null },
+  { id: "copilot", name: "Microsoft Copilot", context: "AI systems", src: "/integration-icons/microsoft-copilot.png", icon: null },
   { id: "quickbooks", name: "QuickBooks", context: "accounting records", src: "/quickbooks.png", icon: null },
   { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png", icon: null },
   { id: "sap", name: "SAP", context: "enterprise records", src: "/integration-icons/sap-standalone.png", icon: null },
@@ -211,32 +215,26 @@ const accountingSources = [
   { id: "excel", name: "Excel", context: "finance workbooks", src: "/excel-icon-margin.png", icon: null },
   { id: "sftp", name: "S3 / SFTP", context: "controlled files", src: "/integration-icons/amazon-s3-logo.svg", icon: null },
 ];
-const accountingIntegrationGroups = [
-  { label: "Marketplace and settlement", sourceIds: ["amazon", "settlements"] },
-  { label: "AI systems", sourceIds: ["chatgpt", "claude"] },
-  { label: "Accounting and ERP", sourceIds: ["quickbooks", "xero", "sap", "netsuite", "excel"] },
-  { label: "Communication and inboxes", sourceIds: ["gmail", "outlook", "slack", "linear"] },
-  { label: "Files and collaboration", sourceIds: ["onedrive", "googledrive", "dropbox"] },
-  { label: "Operations and logistics", sourceIds: ["edi", "carrier"] },
-  { label: "Controlled data access", sourceIds: ["sftp"] },
+const integrationFieldLayout = [
+  ["amazon", 5, 8, true], ["microsoft365", 24, 6, true], ["chatgpt", 43, 7, true], ["gmail", 62, 6, true], ["googledrive", 81, 8, true],
+  ["outlook", 7, 31, true], ["copilot", 27, 31, false], ["slack", 47, 29, true], ["imessage", 67, 31, false], ["box", 87, 31, false],
+  ["sap", 15, 54, false], ["linear", 35, 53, true], ["excel", 55, 53, false], ["xero", 76, 54, true],
+  ["onedrive", 7, 77, false], ["quickbooks", 28, 77, true], ["dropbox", 49, 77, false], ["claude", 70, 78, true], ["netsuite", 90, 77, false],
+  ["settlements", 18, 94, false], ["sftp", 40, 94, true], ["edi", 62, 94, false], ["carrier", 82, 94, true],
 ] as const;
 
-function AccountingIntegrationGrid() {
+function AccountingIntegrationField() {
+  const sources = new Map(accountingSources.map((source) => [source.id, source]));
   return (
     <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 lg:order-1">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {accountingIntegrationGroups.map((group, groupIndex) => {
-          const sources = group.sourceIds.map((id) => accountingSources.find((source) => source.id === id)).filter(Boolean);
+      <div className="relative h-[390px] overflow-hidden sm:h-[500px]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(246,248,250,0.78),transparent_55%)]" aria-hidden="true" />
+        {integrationFieldLayout.map(([id, left, top, tile], index) => {
+          const source = sources.get(id);
+          if (!source) return null;
           return (
-            <motion.div key={group.label} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.14 + groupIndex * 0.08 }} className="min-h-[142px] border border-[#DDE3E6] bg-white p-4 sm:min-h-[158px] sm:p-5">
-              <p className="inline-block bg-[#F3F5F6] px-2 py-1 font-google-sans text-[9px] font-semibold uppercase tracking-tight text-[#71808A]">{group.label}</p>
-              <div className="mt-5 flex flex-wrap items-center gap-2.5">
-                {sources.map((source) => source && (
-                  <div key={source.id} className="flex h-12 w-12 items-center justify-center border border-[#E3E8EA] bg-white p-2" title={source.name} aria-label={source.name}>
-                    {source.src ? <img src={source.src} alt={source.name} className={`h-full w-full object-contain ${source.id === "linear" ? "rounded-[5px]" : ""}`} /> : source.icon === "edi" ? <FileInput className="h-6 w-6 text-[#7C3AED]" aria-hidden="true" /> : <Truck className="h-6 w-6 text-[#D97706]" aria-hidden="true" />}
-                  </div>
-                ))}
-              </div>
+            <motion.div key={source.id} initial={{ opacity: 0, scale: 0.86 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ ...revealProps.transition, delay: 0.12 + index * 0.035 }} className={`absolute flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:h-16 sm:w-16 ${tile ? "rounded-[14px] bg-[#F8F7F4] shadow-[0_12px_28px_rgba(44,55,63,0.05)]" : "bg-transparent"}`} style={{ left: `${left}%`, top: `${top}%` }} title={source.name} aria-label={source.name}>
+              {source.src ? <img src={source.src} alt={source.name} className={`h-7 w-7 object-contain sm:h-10 sm:w-10 ${source.id === "linear" ? "rounded-[5px]" : ""}`} /> : source.icon === "edi" ? <FileInput className="h-7 w-7 text-[#0F9F9A] sm:h-9 sm:w-9" aria-hidden="true" /> : <Truck className="h-7 w-7 text-[#D97706] sm:h-9 sm:w-9" aria-hidden="true" />}
             </motion.div>
           );
         })}
@@ -260,7 +258,7 @@ function AccountingEvidenceSection() {
               {["Records stay in their systems", "Read-only access by default, where supported by the connection.", "Integration paths designed around your operation."].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-[#DDE3E6] py-3 text-[13px] text-[#26353D]"><span className="flex h-6 w-6 shrink-0 items-center justify-center text-[#182026]">{index === 0 ? <SearchCheck className="h-4 w-4" /> : index === 1 ? <Landmark className="h-4 w-4" /> : <Database className="h-4 w-4" />}</span>{item}</div>)}
             </div>
           </motion.div>
-          <AccountingIntegrationGrid />
+          <AccountingIntegrationField />
         </div>
       </div>
     </section>
