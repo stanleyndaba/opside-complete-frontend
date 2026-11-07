@@ -591,21 +591,14 @@ function BuildObjectionSection() {
   return (
     <section className="relative overflow-hidden bg-white py-12 text-[#182026] sm:py-16 md:py-20" aria-labelledby="build-objection-title">
       <div className={containerClass}>
-        <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-16">
-          <motion.div {...revealProps}>
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-14 xl:gap-20">
+          <motion.div {...revealProps} className="min-w-0">
             <h2 id="build-objection-title" className="mt-4 max-w-[640px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You can build an AI that explains a case. Margin keeps the case financially accountable after the explanation.</h2>
+            <p className="mt-7 max-w-[650px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">AI can summarize. Internal engineering can connect APIs. A recovery tool can submit claims. A spreadsheet can record a result. Margin maintains the ongoing chain from evidence to decision, approval, response, outcome and remaining responsibility.</p>
+            <p className="mt-8 max-w-[620px] border-l-2 border-[#635BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">AI-assisted analysis remains bounded by evidence, validation and approval.</p>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
-            <p className="max-w-[650px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">AI can summarize. Internal engineering can connect APIs. A recovery tool can submit claims. A spreadsheet can record a result. Margin maintains the ongoing chain from evidence to decision, approval, response, outcome and remaining responsibility.</p>
-            <div className="mt-8 grid gap-3 sm:grid-cols-2">
-              {["Evidence", "Decision", "Approval", "Response", "Outcome", "Remaining responsibility"].map((step, index) => (
-                <div key={step} className="flex items-center gap-3 border border-[#DDE3E6] bg-[#F8FAFA] px-4 py-3">
-                  <span className="font-mono text-[10px] text-[#635BFF]">0{index + 1}</span>
-                  <span className="text-[13px] font-semibold text-[#182026]">{step}</span>
-                </div>
-              ))}
-            </div>
-            <p className="mt-8 border-l-2 border-[#635BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">AI-assisted analysis remains bounded by evidence, validation and approval.</p>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex min-w-0 justify-center lg:justify-end">
+            <img src="/manus-storage/financial-resolution-workflow_199bbc12.png" alt="Financial Resolution Workflow showing Margin connecting source records, testing supported exposure, and preserving the Finance approval boundary" className="block h-auto w-full max-w-[760px] object-contain" loading="lazy" />
           </motion.div>
         </div>
       </div>
