@@ -505,13 +505,6 @@ function KineticHeroSection({
 }
 
 function BuyerRealitySection() {
-  const contrasts = [
-    { title: "Not another connector", copy: "Moving data is not the same as establishing what the data proves.", icon: Database },
-    { title: "Not another claim engine", copy: "A claim is one action in the financial position—not the position itself.", icon: FileInput },
-    { title: "Not a chatbot over spreadsheets", copy: "An answer is not source lineage, approval history or outcome verification.", icon: MessagesSquare },
-    { title: "Not a replacement ERP", copy: "Margin preserves the investigation and control context across the systems you already use.", icon: ShieldCheck },
-  ];
-
   return (
     <section className="relative overflow-hidden bg-white py-12 sm:py-16 md:py-20" aria-labelledby="buyer-reality-title">
       <div className={containerClass}>
@@ -520,18 +513,10 @@ function BuyerRealitySection() {
           <h2 id="buyer-reality-title" className="mt-4 max-w-[760px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>You already have the tools. That is why Margin exists.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">Amazon provides the records. Recovery tools find claim opportunities. ERPs record entries. AI can summarize the evidence. But when the financial position changes, none of those systems owns the complete history.</p>
         </motion.div>
-        <div className="mt-10 max-w-[940px] border-t border-[#DDE3E6]">
-          {contrasts.map(({ title, copy, icon: Icon }, index) => (
-            <motion.article key={title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.07 }} className="grid gap-4 border-b border-[#DDE3E6] py-7 sm:grid-cols-[minmax(250px,0.72fr)_minmax(0,1.28fr)] sm:items-start sm:gap-10 sm:py-8">
-              <div className="flex items-center gap-3">
-                <Icon className="h-5 w-5 shrink-0 text-[#635BFF]" strokeWidth={1.8} aria-hidden="true" />
-                <h3 className="text-[18px] font-semibold leading-6 tracking-[-0.02em] text-[#182026] sm:text-[21px] sm:leading-7">{title}</h3>
-              </div>
-              <p className="max-w-[620px] text-[15px] leading-7 text-[#66737F] sm:text-[16px] sm:leading-8">{copy}</p>
-            </motion.article>
-          ))}
-        </div>
-        <motion.p {...revealProps} className="mt-8 max-w-[800px] border-l-2 border-[#635BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">Your existing systems remain sources of record. Margin carries the cross-system financial position.</motion.p>
+        <motion.div {...revealProps} className="mt-10 w-full max-w-[1120px] overflow-hidden">
+          <img src="/mg-platform-hero-integrations.png" alt="Mg platform connecting Amazon, finance, operations and collaboration systems" className="block h-auto w-full object-contain" loading="lazy" />
+        </motion.div>
+        <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#52616A] sm:hidden">Helping Finance identify and investigate discrepancies before they become months-old reconciliation problems—preserving the evidence, establishing what is owed, and pursuing justified recovery while the financial trail is still actionable.</p>
       </div>
     </section>
   );
