@@ -279,8 +279,8 @@ function IngestedDocumentsOutcomeSection() {
             <p className="mt-6 max-w-[570px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Margin examines the underlying records behind a financial figure, tracing its contributing transactions, adjustments and downstream activity. It distinguishes directly supported matches from inferred relationships and unresolved differences, so a reported balance can be accompanied by the evidence and calculation that explain it.</p>
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See what the review produces">See what the review produces <ArrowRight className="h-4 w-4" /></button>
           </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="min-w-0">
-            <FinalDelegationPreview compactMobile mobileHeight="h-[390px]" src="/document-ingestion" title="Document Ingestion page preview" />
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="flex min-w-0 justify-center lg:justify-end">
+            <img src="/finding-evidence-register.png" alt="Finding Evidence Register showing source-backed findings with verified, review, hold, and unresolved states" className="block h-auto w-full max-w-[760px] object-contain" loading="lazy" />
           </motion.div>
         </div>
       </div>
