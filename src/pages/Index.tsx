@@ -243,19 +243,21 @@ function AccountingEvidenceSection() {
   return (
     <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F6F8F9] py-10 md:py-16" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
-        <div className="grid min-w-0 items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-20 xl:gap-24">
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-2 flex min-w-0 flex-col lg:order-2 lg:pt-1">
+        <div className="grid min-w-0 items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-x-20 lg:gap-y-10 xl:gap-x-24">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:col-start-1 lg:row-start-1 lg:pt-1">
             <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71808A]">MCP and native integrations</p>
             <h2 id="accounting-section-title" className="mt-4 max-w-[620px] font-google-sans text-[39px] leading-[0.98] tracking-[-0.045em] text-[#182026] sm:text-[50px] md:text-[60px]" style={{ fontWeight: 500 }}>
               <span className="heading-tone-dark">Get the answers without replacing the systems your team already relies on.</span>
             </h2>
             <p className="mt-6 max-w-[650px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Margin brings relevant Amazon, ERP, warehouse, carrier and finance records into a connected examination while preserving their original systems as the sources of record. Integration and data-access paths can be designed around the records required for the engagement, allowing related events to be examined together without requiring your team to replace its existing operational stack.'} mobile={'Margin examines relevant Amazon, ERP, warehouse, carrier and finance records together while keeping each original system as the source of record. Your existing stack stays in place.'} /></p>
+          </motion.div>
+          <AccountingIntegrationField />
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.24 }} className="order-3 min-w-0 lg:col-start-1 lg:row-start-2">
             <div className="mt-12 max-w-[520px] border-t border-[#DDE3E6]">
               {["Records stay in their systems", "Read-only access by default, where supported by the connection.", "Integration paths designed around your operation."].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-[#DDE3E6] py-3 text-[13px] text-[#26353D]"><span className="flex h-6 w-6 shrink-0 items-center justify-center text-[#182026]">{index === 0 ? <SearchCheck className="h-4 w-4" /> : index === 1 ? <Landmark className="h-4 w-4" /> : <Database className="h-4 w-4" />}</span>{item}</div>)}
             </div>
             <Link to="/contact" className="landing-indigo-cta mt-7 inline-flex h-11 w-fit items-center gap-2 rounded-full bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] no-underline transition-colors hover:bg-[#5148E5]">Discuss your integrations <ChevronRight className="h-4 w-4" /></Link>
           </motion.div>
-          <AccountingIntegrationField />
         </div>
       </div>
     </section>
