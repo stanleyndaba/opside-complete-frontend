@@ -1807,10 +1807,8 @@ function MarginStandardDeliverableSection() {
             <button type="button" className={landingPrimaryCtaClass} aria-label="See the recovery operation model">See the recovery operation model <ChevronRight className="h-4 w-4" /></button>
           </div>
         </motion.div>
-        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 w-full max-w-[1040px] sm:mt-10 lg:mt-12">
-          <div className="h-[456px] overflow-hidden rounded-[10px] border border-[#D0D5D7] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[800px] lg:h-[min(72vh,820px)]">
-            <iframe title="Representative Margin Audit deliverable" src="/margin-standard-deliverable" className="h-full w-full border-0 bg-[#E7E9EB]" style={{ backgroundColor: "#E7E9EB" }} loading="lazy" />
-          </div>
+        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 flex w-full max-w-[1040px] justify-center sm:mt-10 lg:mt-12">
+          <img src="/finding-evidence-register.png" alt="Finding Evidence Register showing source-backed findings with verified, review, hold, and unresolved states" className="block h-auto w-full max-w-[900px] rounded-[10px] object-contain shadow-[0_20px_55px_rgba(37,73,91,0.12)]" loading="lazy" />
         </motion.div>
       </div>
     </section>
