@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Archive, CalendarDays, Check, Database, FileInput, Layers3, MousePointer2, Search, SearchCheck } from "lucide-react";
+import { Archive, CalendarDays, Check, Database, Layers3, MousePointer2, Search } from "lucide-react";
 
 const routineItems = [
   "Drafted 18 review agendas",
@@ -13,28 +13,26 @@ const routineItems = [
 ];
 
 const routineCards = [
-  { title: "Schedule", body: "Runs nightly at 2:00 AM UTC.", meta: "Collects", value: "Trigger", icon: CalendarDays, color: "text-[#5483A7]" },
+  { title: "Schedule", body: "Runs every Monday at 09:00 UTC.", meta: "Collects", value: "Trigger", icon: CalendarDays, color: "text-[#5483A7]" },
   { title: "Sources", body: "", sourceLogos: [{ name: "Gmail", src: "/gmailicon.png" }, { name: "Amazon", src: "/amazon-logo-transparent-circle.png" }, { name: "Outlook", src: "/outlookicon.webp" }, { name: "OneDrive", src: "/onedriive.png" }, { name: "QuickBooks", src: "/quickbooks.png" }], meta: "Collects", value: "Connected records", icon: Database, color: "text-[#5483A7]" },
-  { title: "Instructions", body: "Reconcile analyst notes against the deviation register. Flag any excursion without a filed deviation.", meta: "Collects", value: "Findings", icon: Layers3, color: "text-[#8068A9]" },
-  { title: "Deliver", body: "Post findings to #stability-ops with sources attached.", meta: "Collects", value: "Message", image: "/slack-icon-2019.png", color: "text-[#5C9A75]" },
+  { title: "Instructions", body: "Reconcile settlement variance and deliver findings with sources attached.", meta: "Collects", value: "Findings", icon: Layers3, color: "text-[#8068A9]" },
+  { title: "Deliver", body: "Deliver findings with the supporting source records attached.", meta: "Collects", value: "Message", image: "/slack-icon-2019.png", color: "text-[#5C9A75]" },
 ];
 
 function RoutineWorkspace() {
-  const builds = [
-    ["Excursion watch", "Runs nightly at 2:00 AM UTC", "Active", "🟦  🟨  🟢  🟣"],
-    ["Deviation register digest", "Runs every Monday at 7:00 AM UTC", "Active", "🟨  🟣"],
-    ["Literature sweep", "Runs weekdays at 6:00 AM UTC", "Paused", "▮"],
-    ["Parity check", "Runs once on Jul 26, 2026, 3:06 AM UTC", "Completed", ""],
-  ];
-  return <motion.main key="routine-workspace" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen bg-white px-5 py-8 font-google-sans text-[#182026] sm:px-10 sm:py-12 lg:px-16 lg:py-16"><div className="mx-auto max-w-[1420px]">
-    <div className="flex items-start justify-between gap-6"><div><h1 className="text-[28px] font-medium tracking-[-0.045em] sm:text-[38px]">Routines</h1><p className="mt-2 max-w-[680px] text-[12px] leading-5 text-[#77716B] sm:text-[15px] sm:leading-6">Work that runs on a schedule. Share one with your organization and colleagues can take their own copy of it.</p></div><button type="button" className="shrink-0 rounded-[7px] bg-[#111111] px-4 py-2.5 text-[10px] font-semibold text-white sm:px-5 sm:text-[12px]">New routine⌄</button></div>
-    <nav className="mt-9 flex items-center gap-6 border-b border-[#E7E5E2] text-[11px] text-[#77716B] sm:mt-12 sm:gap-9 sm:text-[13px]" aria-label="Routine views"><span className="border-b-2 border-[#182026] pb-3 font-semibold text-[#182026]">My builds</span><span className="pb-3">Discovery</span><span className="pb-3">Runs</span><span className="pb-3">Monitor</span><span className="pb-3">Builder</span></nav>
-    <div className="mt-5 flex h-9 items-center gap-2 border-b border-[#EEECE9] text-[10px] text-[#96908A] sm:mt-7 sm:text-[12px]"><SearchCheck className="h-3.5 w-3.5" />Search by name or creator</div>
-    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">{builds.map(([title, body, status, marks]) => <article key={title} className="min-h-[132px] rounded-[10px] border border-[#E2DFDB] bg-white p-5 shadow-[0_5px_16px_rgba(73,62,52,0.035)] sm:p-6"><div className="flex items-center justify-between gap-4"><h2 className="text-[14px] font-semibold tracking-[-0.02em] sm:text-[16px]">{title}</h2><span className="text-[16px] text-[#8D8781]">⋮</span></div><p className="mt-5 text-[11px] text-[#77716B] sm:text-[13px]">{body}</p><div className="mt-5 flex items-center justify-between gap-3 text-[10px] text-[#8B857F] sm:text-[11px]"><span>◌ {status}</span><span>{marks}</span></div></article>)}</div>
-    <section className="mt-14 sm:mt-20" aria-labelledby="routine-more-ideas"><h2 id="routine-more-ideas" className="text-[12px] font-medium text-[#77716B] sm:text-[14px]">More ideas</h2><div className="mt-5 grid grid-cols-1 gap-x-12 gap-y-7 sm:grid-cols-2 sm:gap-y-9 lg:gap-x-24">{[["Morning results digest", "Summarize files added or changed in the project's data and outputs folders overnight; flag anomalies and failed runs."], ["Weekly portfolio review", "Monday review across every program in the workspace: what moved, what stalled, and which decisions are waiting on someone."], ["Weekly validation sweep", "Run validation checks on the current SDTM/ADaM datasets; flag new issues against last week and propose fixes."], ["Competitor watch", "Weekly sweep of named competitors: new trial registrations, press, and publications, with what each means for this program."]].map(([title, body]) => <article key={title} className="border-l border-[#E5E2DE] pl-4"><h3 className="text-[12px] font-semibold sm:text-[14px]">{title}</h3><p className="mt-2 max-w-[520px] text-[10px] leading-5 text-[#77716B] sm:text-[12px] sm:leading-6">{body}</p></article>)}</div></section>
+  return <motion.main key="routine-workspace" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen bg-[#FFFFFF] px-5 py-8 font-google-sans text-[#182026] sm:px-10 sm:py-12 lg:px-16 lg:py-16"><div className="mx-auto max-w-[980px]">
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38 }}>
+      <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#77716B] sm:text-[11px]">Routines</p>
+      <div className="mt-3 flex items-start justify-between gap-5"><div><h1 className="text-[29px] font-medium tracking-[-0.045em] sm:text-[42px]">Saved routine</h1><p className="mt-2 max-w-[600px] text-[12px] leading-5 text-[#77716B] sm:text-[15px] sm:leading-6">The operation is now preserved and ready to run against connected financial records.</p></div><span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#EAF5EF] px-2.5 py-1.5 text-[10px] font-semibold text-[#2E7650] sm:px-3 sm:text-[11px]"><span className="h-1.5 w-1.5 rounded-full bg-[#3E9A68]" />Active</span></div>
+    </motion.div>
+    <motion.article initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22, duration: 0.46, ease: [0.22, 1, 0.36, 1] }} className="relative mt-8 overflow-hidden rounded-[10px] bg-[#F1F2F2] px-5 py-5 shadow-[0_12px_28px_rgba(73,62,52,0.055)] sm:mt-10 sm:px-8 sm:py-7">
+      <div className="flex items-start justify-between gap-4"><div><p className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#8B857F] sm:text-[10px]">Financial control · Amazon settlements</p><h2 className="mt-2 text-[22px] font-semibold tracking-[-0.035em] sm:text-[30px]">Settlement Variance Control</h2></div><span className="text-[18px] leading-none text-[#8D8781]">⋮</span></div>
+      <div className="mt-6 grid grid-cols-2 gap-x-5 gap-y-5 border-t border-[#D9DDDD] pt-5 sm:grid-cols-4 sm:gap-x-8 sm:gap-y-0"><div><p className="text-[10px] text-[#8B857F] sm:text-[11px]">Schedule</p><p className="mt-1.5 text-[12px] font-medium sm:text-[14px]">Every Monday</p></div><div><p className="text-[10px] text-[#8B857F] sm:text-[11px]">Scope</p><p className="mt-1.5 text-[12px] font-medium sm:text-[14px]">Settlement activity</p></div><div><p className="text-[10px] text-[#8B857F] sm:text-[11px]">Last run</p><p className="mt-1.5 text-[12px] font-medium text-[#6D6863] sm:text-[14px]">Not yet run</p></div><div><p className="text-[10px] text-[#8B857F] sm:text-[11px]">Next run</p><p className="mt-1.5 text-[12px] font-medium sm:text-[14px]">Monday, 09:00</p></div></div>
+      <div className="mt-6 flex flex-col gap-4 border-t border-[#D9DDDD] pt-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[10px] text-[#8B857F] sm:text-[11px]">Created just now</p><p className="mt-1 text-[11px] leading-5 text-[#77716B] sm:text-[12px]">Sources: Gmail, Amazon, Outlook, OneDrive, QuickBooks</p><p className="text-[11px] leading-5 text-[#77716B] sm:text-[12px]">Instruction: reconcile settlement variance and deliver findings with sources attached.</p></div><button type="button" className="inline-flex h-9 shrink-0 items-center justify-center rounded-[6px] bg-[#111111] px-4 text-[11px] font-semibold text-white sm:h-10 sm:px-5 sm:text-[12px]">View routine <span className="ml-2">→</span></button></div>
+      <motion.div aria-hidden="true" initial={{ opacity: 0, x: 10 }} animate={{ opacity: [0, 1, 1, 0], x: [10, 0, 0, 16] }} transition={{ delay: 1.35, duration: 1.15, times: [0, 0.2, 0.72, 1] }} className="pointer-events-none absolute right-[18%] top-[44%] text-[#182026] drop-shadow-[0_3px_4px_rgba(24,32,38,0.14)]"><MousePointer2 className="h-6 w-6 fill-white stroke-[1.8]" /></motion.div>
+    </motion.article>
   </div></motion.main>;
 }
-
 function FinancialResolutionWorkflow() {
   const searches = ["Inbound quantity variance", "Settlement credit attribution", "Receiving and custody trail"];
   const records = ["Shipment Receiving Register", "Carrier Custody Record", "Amazon Case Correspondence", "Settlement Transaction Detail", "Inventory Movement Ledger"];
