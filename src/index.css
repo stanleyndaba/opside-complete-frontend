@@ -14,9 +14,9 @@
 
 .hero-atmosphere {
   background:
-    radial-gradient(ellipse at 57% 88%, color-mix(in srgb, var(--margin-bubblegum-pink) 28%, transparent), transparent 42%),
-    radial-gradient(ellipse at 70% 72%, rgba(16, 91, 255, 0.20), transparent 50%),
-    radial-gradient(circle at 93% 78%, rgba(254, 133, 0, 0.05), transparent 25%);
+    radial-gradient(ellipse at 57% 88%, rgba(240, 90, 60, 0.08), transparent 42%),
+    radial-gradient(ellipse at 70% 72%, rgba(24, 32, 38, 0.06), transparent 50%),
+    radial-gradient(circle at 93% 78%, rgba(240, 90, 60, 0.04), transparent 25%);
 }
 
 .hero-inbox-frame {
@@ -54,9 +54,9 @@
 
   .hero-atmosphere {
     background:
-      radial-gradient(ellipse at 16% 86%, color-mix(in srgb, var(--margin-bubblegum-pink) 34%, transparent), transparent 43%),
-      radial-gradient(ellipse at 38% 76%, rgba(16, 91, 255, 0.22), transparent 50%),
-      radial-gradient(circle at 92% 83%, rgba(254, 133, 0, 0.04), transparent 22%);
+      radial-gradient(ellipse at 16% 86%, rgba(240, 90, 60, 0.09), transparent 43%),
+      radial-gradient(ellipse at 38% 76%, rgba(24, 32, 38, 0.07), transparent 50%),
+      radial-gradient(circle at 92% 83%, rgba(240, 90, 60, 0.04), transparent 22%);
   }
 
   .hero-inbox-frame {
@@ -1636,15 +1636,14 @@ html, body, #root {
   }
 }
 
-/* Indigo actions use the reference pill treatment: indigo field, white copy,
-   and a white inset arrow disc carrying the indigo arrow. Other CTA colors
-   remain intentionally untouched. */
-.landing-page .landing-indigo-cta {
+/* Primary actions use one deliberate signal color: orange field, white copy,
+   and a white inset arrow disc carrying the orange arrow. */
+.landing-page .landing-action-cta {
   border-radius: 999px !important;
   color: #FFFFFF !important;
 }
 
-.landing-page .landing-indigo-cta > svg {
+.landing-page .landing-action-cta > svg {
   width: 28px !important;
   height: 28px !important;
   flex: 0 0 28px;
@@ -1652,12 +1651,12 @@ html, body, #root {
   padding: 7px;
   border-radius: 999px;
   background: #FFFFFF;
-  color: #635BFF;
+  color: #F05A3C;
   stroke-width: 2.4;
 }
 
-.landing-page .landing-indigo-cta:hover > svg,
-.landing-page .landing-indigo-cta:focus-visible > svg {
-  background: #F4F4FF;
-  color: #5148E5;
+.landing-page .landing-action-cta:hover > svg,
+.landing-page .landing-action-cta:focus-visible > svg {
+  background: #FFF1ED;
+  color: #D9472D;
 }

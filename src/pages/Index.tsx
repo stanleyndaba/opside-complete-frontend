@@ -57,8 +57,8 @@ import { HeroInboxVisual } from "@/components/landing/HeroInboxVisual";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
-const landingPrimaryCtaClass = "landing-indigo-cta landing-pressable inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] transition-colors hover:bg-[#5148E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2";
-const landingSecondaryCtaClass = "landing-pressable flex w-fit h-11 items-center justify-start gap-2 rounded-[7px] bg-white px-5 text-left text-[13px] font-semibold text-[#635BFF] transition-colors hover:bg-[#F1F0FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2 sm:inline-flex sm:justify-center";
+const landingPrimaryCtaClass = "landing-action-cta landing-pressable inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2";
+const landingSecondaryCtaClass = "landing-pressable flex w-fit h-11 items-center justify-start gap-2 rounded-[7px] bg-white px-5 text-left text-[13px] font-semibold text-[#182026] transition-colors hover:bg-[#F7F7F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2 sm:inline-flex sm:justify-center";
 
 const faqs = [
   {
@@ -254,7 +254,7 @@ function AccountingEvidenceSection() {
             <div className="mt-12 max-w-[520px] border-t border-[#DDE3E6]">
               {["Records stay in their systems", "Read-only access by default, where supported by the connection.", "Integration paths designed around your operation."].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-[#DDE3E6] py-3 text-[13px] text-[#26353D]"><span className="flex h-6 w-6 shrink-0 items-center justify-center text-[#182026]">{index === 0 ? <SearchCheck className="h-4 w-4" /> : index === 1 ? <Landmark className="h-4 w-4" /> : <Database className="h-4 w-4" />}</span>{item}</div>)}
             </div>
-            <Link to="/contact" className="landing-indigo-cta mt-7 inline-flex h-11 w-fit items-center gap-2 rounded-full bg-[#635BFF] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] no-underline transition-colors hover:bg-[#5148E5]">Discuss your integrations <ChevronRight className="h-4 w-4" /></Link>
+            <Link to="/contact" className="landing-action-cta mt-7 inline-flex h-11 w-fit items-center gap-2 rounded-full bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] no-underline transition-colors hover:bg-[#D9472D]">Discuss your integrations <ChevronRight className="h-4 w-4" /></Link>
           </motion.div>
         </div>
       </div>
@@ -400,7 +400,7 @@ function KineticHeroSection({
     <motion.section
       style={{ scale: reduceMotion ? 1 : heroScale, opacity: reduceMotion ? 1 : heroOpacity }}
       data-navbar-theme="light"
-      className="hero-section relative isolate flex min-h-svh overflow-hidden bg-[#F0F0F0] px-4 pb-16 pt-36 text-[#182026] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
+      className="hero-section relative isolate flex min-h-svh overflow-hidden bg-[#FAFAF7] px-4 pb-16 pt-36 text-[#182026] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
       aria-labelledby="margin-hero-title"
     >
       <div aria-hidden="true" className="hero-atmosphere pointer-events-none absolute inset-0 z-0" />
@@ -481,13 +481,13 @@ function KineticHeroSection({
       </div>
       <div className="relative z-10 flex w-full items-center pt-6 sm:pt-0">
         <div className="max-w-[860px]">
-          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, delay: 0.02, ease: [0.22, 1, 0.36, 1] }} className="relative z-20 block min-h-[10px] font-google-sans text-[7px] font-medium normal-case leading-[1.2] tracking-tight text-[#5148E5]">Complex Amazon Fin-Ops, done for you.</motion.p>
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, delay: 0.02, ease: [0.22, 1, 0.36, 1] }} className="relative z-20 block min-h-[10px] font-google-sans text-[10px] font-semibold uppercase leading-[1.2] tracking-[0.08em] text-[#52616A]">Complex Amazon Fin-Ops, done for you.</motion.p>
           <h1 id="margin-hero-title" className="mt-5 max-w-[820px] font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[46px] sm:mt-7 sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>
-            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}><span className="text-[#635BFF]">Your stack</span> shows the activity. Margin establishes the <span className="text-[#635BFF]">financial position.</span></motion.span>
+          <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}><span className="font-semibold text-[#182026]">Your stack</span> shows the activity. Margin establishes the <span className="font-semibold text-[#182026]">financial position.</span></motion.span>
           </h1>
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Amazon records, recovery tools, ERPs, warehouse systems and AI assistants each show part of the picture. Margin connects the event, evidence, decision, settlement outcome and remaining responsibility—so Finance gets a defensible position without rebuilding the investigation internally.</motion.p>
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-stretch gap-3 font-google-sans sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
-            <Button onClick={onAuditCta} aria-label="Start the financial review" className="landing-indigo-cta landing-pressable group relative h-[54px] min-w-0 w-full justify-center overflow-hidden rounded-full bg-[#635BFF] px-2 font-google-sans text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(99,91,255,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#5148E5] sm:h-[56px] sm:w-auto sm:flex-none sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" /><span className="whitespace-nowrap">Start the financial review</span> <ArrowRight className="ml-2 h-5 w-5 shrink-0" /></Button>
+            <Button onClick={onAuditCta} aria-label="Start the financial review" className="landing-action-cta landing-pressable group relative h-[54px] min-w-0 w-full justify-center overflow-hidden rounded-full bg-[#F05A3C] px-2 font-google-sans text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(240,90,60,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#D9472D] sm:h-[56px] sm:w-auto sm:flex-none sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" /><span className="whitespace-nowrap">Start the financial review</span> <ArrowRight className="ml-2 h-5 w-5 shrink-0" /></Button>
             <Link to="/contact" className="inline-flex h-[54px] w-full min-w-0 self-center items-center justify-center gap-1 rounded-[8px] bg-[#E5E8EA] px-2 text-[15px] font-semibold text-[#30343B] transition-colors hover:bg-[#D9DEE1] sm:h-[56px] sm:w-auto sm:shrink-0 sm:self-auto sm:justify-center sm:gap-2 sm:rounded-none sm:bg-transparent sm:px-2 sm:text-[16px] sm:hover:bg-transparent sm:hover:text-[#52616A]"><img src="/outlookicon.webp" alt="" aria-hidden="true" className="h-6 w-6 shrink-0 object-contain sm:h-7 sm:w-7" /><span className="whitespace-nowrap">Talk to our team</span><ChevronRight className="h-5 w-5 shrink-0" /></Link>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1 }} className="mt-4 flex w-full max-w-[780px] flex-col items-start justify-start gap-2 text-left font-google-sans text-[10px] font-medium text-[#66737F] sm:mt-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-1 sm:text-[11px]">
@@ -1730,7 +1730,7 @@ function FooterNestedRecoveryVisual() {
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a free review. Margin establishes what the records explain, what remains unresolved and whether further action is justified.</p>
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">If a material opportunity exists, choose a defined recovery or ongoing financial control.</p>
           <div className="mt-5 flex flex-col gap-3">
-            <Button type="button" onClick={() => navigate('/context-review')} className="landing-indigo-cta h-10 w-full rounded-full bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">See what your records establish <ArrowRight className="h-4 w-4" /></Button>
+            <Button type="button" onClick={() => navigate('/context-review')} className="landing-action-cta h-10 w-full rounded-full bg-[#F05A3C] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(240,90,60,0.18)] hover:bg-[#D9472D]">See what your records establish <ArrowRight className="h-4 w-4" /></Button>
             <p className="text-[11px] leading-5 text-[#66737F]">See the financial position before committing to paid recovery work.</p>
             <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Discuss Enterprise Control</Button>
           </div>
@@ -2143,7 +2143,7 @@ function RiskSection() {
             <p className="mt-6 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><LandingResponsiveCopy desktop={'Margin captures Amazon correspondence and connects each response to the relevant case, original evidence and financial event. It identifies requests for additional information, decisions, changed recovery values and outstanding actions, then updates the investigation to reflect what the response actually establishes.'} mobile={'Margin links Amazon’s correspondence to the original case and evidence, identifying new requirements, decisions, changed recovery values and actions still outstanding.'} /></p>
             <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8"><LandingResponsiveCopy desktop={'The correspondence advances the case. The financial records establish the outcome.'} mobile={'Amazon’s response advances the case. The financial records establish the outcome.'} /></p>
             <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8"></p>
-            <Link to="/privacy" className="landing-indigo-cta mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-[#4F46E5] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_12px_26px_rgba(79,70,229,0.18)] transition-colors hover:bg-[#4338CA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]/35 focus-visible:ring-offset-2">Data Privacy &amp; Security <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+            <Link to="/privacy" className="landing-action-cta mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-[#F05A3C] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2">Data Privacy &amp; Security <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 overflow-hidden">
             <iframe title="Amazon Thread Review page preview" src="/amazon-thread-review" className="block h-[520px] w-full rounded-b-[8px] border-0 bg-[#FBFAF7] sm:h-[600px]" loading="lazy" />
@@ -2707,8 +2707,8 @@ export default function Index() {
                       <img src="/journey-step-review.png" alt="Margin follows the evidence through a financial review" className="h-full w-full object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]" />
                     </div>
                     <div className="flex justify-center pt-6 sm:pt-7">
-                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable inline-flex h-12 items-center gap-3 rounded-full bg-white px-5 text-[14px] font-medium text-[#182026] shadow-none transition-transform hover:-translate-y-0.5 hover:bg-[#F5F7F4] sm:px-6">
-                        Establish the financial position <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#E7ECE8]"><ArrowRight className="h-4 w-4 text-[#064C38]" /></span>
+                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable inline-flex h-12 items-center gap-3 rounded-full bg-[#F05A3C] px-5 text-[14px] font-medium text-white shadow-none transition-transform hover:-translate-y-0.5 hover:bg-[#D9472D] sm:px-6">
+                        Establish the financial position <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20"><ArrowRight className="h-4 w-4 text-white" /></span>
                       </Button>
                     </div>
                   </motion.article>
@@ -2725,8 +2725,8 @@ export default function Index() {
                       <img src="/journey-step-handoff.png" alt="Organized records handed into an ongoing recovery operation" className="h-full w-full object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]" />
                     </div>
                     <div className="flex justify-center pt-6 sm:pt-7">
-                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_handled"); navigate("/contact"); }} className="landing-pressable inline-flex h-12 items-center gap-3 rounded-full bg-[#24212B] px-5 text-[14px] font-medium text-white shadow-none transition-transform hover:-translate-y-0.5 hover:bg-[#332F3C] sm:px-6">
-                        Put recovery under control <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15"><ArrowRight className="h-4 w-4 text-white" /></span>
+                      <Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_handled"); navigate("/contact"); }} className="landing-pressable inline-flex h-12 items-center gap-3 rounded-full bg-[#F05A3C] px-5 text-[14px] font-medium text-white shadow-none transition-transform hover:-translate-y-0.5 hover:bg-[#D9472D] sm:px-6">
+                        Put recovery under control <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20"><ArrowRight className="h-4 w-4 text-white" /></span>
                       </Button>
                     </div>
                   </motion.article>
@@ -2741,7 +2741,7 @@ export default function Index() {
                         <p className="mt-3 text-[14px] leading-6 text-[#66737F]">Start with the Amazon records you have. No diagnosis or account connection is required to begin.</p>
                         <p className="mt-3 text-[14px] leading-6 text-[#66737F]">If a material opportunity exists, decide whether to delegate a defined recovery or establish ongoing financial control.</p>
                         <div className="mt-5 space-y-3">
-                          <Button type="button" onClick={() => navigate('/context-review')} className="landing-indigo-cta h-10 w-full rounded-full bg-[#635BFF] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(99,91,255,0.18)] hover:bg-[#5148E5]">See what your records establish <ArrowRight className="h-4 w-4" /></Button>
+                          <Button type="button" onClick={() => navigate('/context-review')} className="landing-action-cta h-10 w-full rounded-full bg-[#F05A3C] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(240,90,60,0.18)] hover:bg-[#D9472D]">See what your records establish <ArrowRight className="h-4 w-4" /></Button>
                           <p className="text-[11px] leading-5 text-[#66737F]">See the financial position before committing to paid recovery work.</p>
                           <Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Discuss Enterprise Control</Button>
                         </div>
