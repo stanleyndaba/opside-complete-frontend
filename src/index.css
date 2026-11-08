@@ -1694,7 +1694,13 @@ html, body, #root {
 .landing-page .hero-financial-position {
   font-family: 'Shadows Into Light', cursive !important;
   font-weight: 400 !important;
+  font-style: normal !important;
   letter-spacing: 0 !important;
+}
+#margin-hero-title .hero-financial-position {
+  font-family: 'Shadows Into Light', cursive !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
 }
 
 /* Mobile navigation is a clean white dropdown, including its expanded groups. */
