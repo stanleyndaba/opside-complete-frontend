@@ -20,20 +20,16 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
-  CalendarDays,
   Check,
   ChevronRight,
   Landmark,
   Database,
   FileInput,
-  MessagesSquare,
   Monitor,
-  MousePointer2,
   PlayCircle,
   ReceiptText,
   SearchCheck,
   ShieldCheck,
-  Sparkles,
   Truck,
   UserCheck,
   Square,
@@ -1235,44 +1231,6 @@ function ControlSection() {
 }
 
 function RepeatableRoutineSection() {
-  const reduceMotion = useReducedMotion();
-  const [routineStep, setRoutineStep] = useState(0);
-  const routineItems = [
-    "Drafted 18 review agendas",
-    "Spot clients showing signs of attrition risk",
-    "Generate the agenda for a quarterly review",
-    "Build a review deck for a client’s annual meeting",
-    "Find referral opportunities in my book",
-    "Drafting scheduling emails  •  14 of 18",
-    "Checked review dates across 8 clients",
-  ];
-
-  const routineCards = [
-    { title: "Schedule", body: "Runs nightly at 2:00 AM UTC.", meta: "Collects", value: "Trigger", icon: CalendarDays, color: "text-[#5483A7]" },
-    { title: "Sources", body: "🟦 🟨 🟢 LabWare LIMS, Veeva Vault QMS, SharePoint.", meta: "Collects", value: "Stability records", icon: Database, color: "text-[#5483A7]" },
-    { title: "Instructions", body: "Reconcile analyst notes against the deviation register. Flag any excursion without a filed deviation.", meta: "Collects", value: "Findings", icon: Sparkles, color: "text-[#8068A9]" },
-    { title: "Deliver", body: "Post findings to #stability-ops with sources attached.", meta: "Collects", value: "Message", icon: MessagesSquare, color: "text-[#5C9A75]" },
-  ];
-
-  useEffect(() => {
-    if (reduceMotion) return;
-    const timer = window.setInterval(() => {
-      setRoutineStep((step) => (step >= 31 ? 0 : step + 1));
-    }, 760);
-    return () => window.clearInterval(timer);
-  }, [reduceMotion]);
-
-  const listBuilding = routineStep < 5;
-  const listVisible = !reduceMotion && routineStep < 11;
-  const buttonVisible = !reduceMotion && routineStep >= 11 && routineStep < 13;
-  const routineTapped = routineStep === 12;
-  const cardsVisible = !reduceMotion && routineStep >= 13 && routineStep < 17;
-  const dashboardVisible = !reduceMotion && routineStep >= 17 && routineStep < 22;
-  const workflowVisible = reduceMotion || routineStep >= 22;
-  const visibleCardCount = reduceMotion ? routineCards.length : Math.min(routineCards.length, Math.max(0, routineStep - 12));
-  const activeRoutineItem = reduceMotion ? 3 : Math.floor(Math.max(0, routineStep - 4) / 1) % routineItems.length;
-  const stackSlots = [-2, -1, 0, 1, 2];
-
   return (
     <section className="relative overflow-hidden bg-white py-14 sm:py-20 md:py-24" aria-labelledby="repeatable-routine-title">
       <div className={containerClass}>
@@ -1286,113 +1244,14 @@ function RepeatableRoutineSection() {
             </p>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative flex min-h-[300px] items-center justify-center overflow-hidden bg-white sm:min-h-[380px]" aria-label="Routine creation visual">
-            <div className="relative flex min-h-[280px] w-full max-w-[610px] items-center justify-center overflow-hidden bg-[#F5F2EE] px-4 py-8 sm:min-h-[360px] sm:px-8">
-              <div className="relative flex h-[250px] w-full max-w-[560px] items-center justify-center sm:h-[300px]" aria-live="polite">
-                <AnimatePresence mode="wait">
-                  {listVisible ? (
-                    <motion.div key="routine-stack" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.42 }} className="absolute inset-x-0 top-1/2 h-[218px] -translate-y-1/2">
-                      {stackSlots.map((slot) => {
-                        const itemIndex = (activeRoutineItem + slot + routineItems.length) % routineItems.length;
-                        const item = routineItems[itemIndex];
-                        const isActive = slot === 0;
-                        const isVisible = reduceMotion || !listBuilding || Math.abs(slot) <= routineStep;
-                        const width = isActive ? "w-full" : Math.abs(slot) === 1 ? "w-[86%]" : "w-[70%]";
-                        const opacity = isActive ? 1 : Math.abs(slot) === 1 ? 0.58 : 0.2;
-                    return (
-                      <motion.div
-                        key={`${item}-${slot}`}
-                        initial={{ opacity: 0, scale: 0.96 }}
-                        animate={{ opacity: isVisible ? opacity : 0, scale: isActive ? 1 : 0.98 }}
-                        transition={{ duration: reduceMotion ? 0 : 0.48, ease: "easeOut" }}
-                        style={{ top: `calc(50% + ${slot * 41}px)`, transform: "translateY(-50%)" }}
-                        className={`absolute left-1/2 flex min-h-[39px] -translate-x-1/2 items-center gap-3 px-4 text-[13px] tracking-[-0.015em] transition-[width] duration-500 sm:min-h-[45px] sm:px-7 sm:text-[16px] ${width} ${isActive ? "z-10 bg-white text-[#182026] shadow-[0_8px_22px_rgba(73,62,52,0.05)]" : "text-[#77716B]"}`}
-                      >
-                        <span className="relative h-[13px] w-[15px] shrink-0" aria-hidden="true">
-                          <span className="absolute left-0 top-[2px] h-[5px] w-[5px] rounded-full border border-current" />
-                          <span className="absolute left-[9px] top-[3px] h-px w-[6px] bg-current" />
-                          <span className="absolute left-0 top-[9px] h-[5px] w-[5px] rounded-full border border-current" />
-                          <span className="absolute left-[9px] top-[10px] h-px w-[6px] bg-current" />
-                        </span>
-                        <span className="min-w-0 truncate">{item}</span>
-                      </motion.div>
-                    );
-                  })}
-                    </motion.div>
-                  ) : null}
-
-                  {buttonVisible ? (
-                    <motion.div key="routine-button" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }} transition={{ duration: 0.38 }} className="absolute inset-0 z-20 flex items-center justify-center">
-                      <button type="button" aria-label="Create Routine" className="relative inline-flex h-12 items-center justify-center rounded-[20px] bg-[#111111] px-6 text-[14px] font-semibold text-white shadow-[0_12px_24px_rgba(17,17,17,0.12)]">
-                        + Create Routine
-                      </button>
-                      <motion.div aria-hidden="true" className="pointer-events-none absolute left-[calc(50%+48px)] top-[calc(50%+24px)] text-[#182026] drop-shadow-[0_4px_5px_rgba(24,32,38,0.16)]" animate={{ x: routineTapped ? -10 : 0, y: routineTapped ? -8 : 0 }} transition={{ duration: 0.26 }}>
-                        {routineTapped ? <><motion.span initial={{ opacity: 0.9, scale: 0.65 }} animate={{ opacity: 0, scale: 1.55 }} transition={{ duration: 0.7 }} className="absolute -left-5 -top-5 h-12 w-12 rounded-full border-[3px] border-[#635BFF]/75" /><motion.span initial={{ opacity: 0.7, scale: 0.55 }} animate={{ opacity: 0, scale: 1.45 }} transition={{ delay: 0.08, duration: 0.7 }} className="absolute -left-9 -top-9 h-20 w-20 rounded-full border-2 border-[#B0AAFF]/80" /></> : null}
-                        <MousePointer2 className="relative h-7 w-7 fill-white stroke-[1.8]" />
-                      </motion.div>
-                    </motion.div>
-                  ) : null}
-
-                  {cardsVisible ? (
-                    <motion.div key="routine-cards" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.42 }} className="absolute inset-0 flex flex-col items-center justify-center gap-2 overflow-hidden bg-[radial-gradient(#D9D5D0_0.8px,transparent_0.8px)] bg-[size:16px_16px] py-2 sm:gap-3">
-                      {routineCards.map((card, index) => {
-                        const Icon = card.icon;
-                        return (
-                          <AnimatePresence key={card.title}>
-                            {index < visibleCardCount ? <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: "easeOut" }} className="relative w-full max-w-[510px] rounded-[12px] border border-[#E4E0DC] bg-white px-4 py-3 shadow-[0_10px_24px_rgba(73,62,52,0.06)] sm:px-6 sm:py-4">
-                              <div className="flex items-start gap-3"><Icon className={`mt-0.5 h-4 w-4 shrink-0 ${card.color}`} strokeWidth={1.7} /><div className="min-w-0 flex-1"><div className="flex items-center justify-between gap-3"><h3 className="text-[13px] font-semibold tracking-[-0.015em] text-[#182026] sm:text-[15px]">{card.title}</h3><span className="text-[15px] tracking-tight text-[#6D6863]">···</span></div><p className="mt-2 text-[10px] leading-4 text-[#5E5954] sm:text-[11px] sm:leading-5">{card.body}</p><p className="mt-2 text-[9px] text-[#8A847E] sm:text-[10px]"><span className="mr-2">{card.meta}</span><span className="text-[#5E5954]">{card.value}</span></p></div></div>
-                            </motion.div> : null}
-                          </AnimatePresence>
-                        );
-                      })}
-                    </motion.div>
-                  ) : null}
-
-                  {dashboardVisible ? (
-                    <motion.div key="routine-dashboard" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.55 }} className="absolute inset-0 overflow-hidden bg-white px-3 py-3 text-[#182026] sm:px-5 sm:py-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0"><h3 className="text-[16px] font-semibold tracking-[-0.035em] sm:text-[19px]">Routines</h3><p className="mt-1 max-w-[430px] truncate text-[7px] leading-3 text-[#77716B] sm:text-[8px]">Work that runs on a schedule. Share one with your organization and colleagues can take their own copy of it.</p></div>
-                        <button type="button" className="shrink-0 rounded-[5px] bg-[#111111] px-2 py-1 text-[7px] font-semibold text-white sm:px-3 sm:py-1.5 sm:text-[8px]">New routine⌄</button>
-                      </div>
-                      <div className="mt-4 flex items-center gap-3 border-b border-[#ECEAE7] text-[7px] text-[#77716B] sm:mt-5 sm:gap-5 sm:text-[8px]"><span className="border-b-2 border-[#182026] pb-2 font-semibold text-[#182026]">My builds</span><span>Discovery</span><span>Runs</span><span>Monitor</span><span>Builder</span></div>
-                      <div className="mt-3 flex h-6 items-center gap-2 border-b border-[#F0EEEB] text-[7px] text-[#96908A] sm:text-[8px]"><SearchCheck className="h-2.5 w-2.5" />Search by name or creator</div>
-                      <div className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
-                        {[
-                          ["Excursion watch", "Runs nightly at 2:00 AM UTC", "Active", "🟦 🟨 🟢 🟣"],
-                          ["Deviation register digest", "Runs every Monday at 7:00 AM UTC", "Active", "🟨 🟣"],
-                          ["Literature sweep", "Runs weekdays at 6:00 AM UTC", "Paused", "▮"],
-                          ["Parity check", "Runs once on Jul 26, 2026 3:06 AM UTC", "Completed", ""],
-                        ].map(([title, body, status, marks]) => <div key={title} className="min-h-[58px] border border-[#E2DFDB] bg-white p-2 shadow-[0_2px_7px_rgba(73,62,52,0.035)] sm:min-h-[72px] sm:p-3"><div className="flex items-center justify-between gap-1"><h4 className="truncate text-[8px] font-semibold sm:text-[9px]">{title}</h4><span className="text-[10px] text-[#8D8781]">⋮</span></div><p className="mt-2 truncate text-[6px] text-[#77716B] sm:text-[7px]">{body}</p><div className="mt-2 flex items-center justify-between gap-1 text-[6px] text-[#8B857F] sm:text-[7px]"><span>◌ {status}</span><span className="truncate">{marks}</span></div></div>)}
-                      </div>
-                      <div className="mt-4 sm:mt-5"><p className="text-[8px] font-medium text-[#77716B] sm:text-[9px]">More ideas</p><div className="mt-2 grid grid-cols-2 gap-x-5 gap-y-3 sm:gap-x-7"><div className="flex gap-2"><span className="text-[9px] text-[#7F72A8]">☼</span><div><h4 className="text-[7px] font-semibold sm:text-[8px]">Morning results digest</h4><p className="mt-0.5 text-[6px] leading-3 text-[#77716B] sm:text-[7px]">Summarize files added or changed in the project&apos;s data and outputs folders overnight; flag anomalies and failed runs.</p></div></div><div className="flex gap-2"><span className="text-[9px] text-[#7F72A8]">⌁</span><div><h4 className="text-[7px] font-semibold sm:text-[8px]">Weekly portfolio review</h4><p className="mt-0.5 text-[6px] leading-3 text-[#77716B] sm:text-[7px]">Monday review across every program in the workspace: what moved, what stalled, and which decisions are waiting on someone.</p></div></div><div className="flex gap-2"><span className="text-[9px] text-[#7F72A8]">♙</span><div><h4 className="text-[7px] font-semibold sm:text-[8px]">Weekly validation sweep</h4><p className="mt-0.5 text-[6px] leading-3 text-[#77716B] sm:text-[7px]">Run validation checks on the current SDTM/ADaM datasets; flag new issues against last week and propose fixes.</p></div></div><div className="flex gap-2"><span className="text-[9px] text-[#7F72A8]">◉</span><div><h4 className="text-[7px] font-semibold sm:text-[8px]">Competitor watch</h4><p className="mt-0.5 text-[6px] leading-3 text-[#77716B] sm:text-[7px]">Weekly sweep of named competitors: new trial registrations, press, and publications, with what each means for this program.</p></div></div></div></div>
-                    </motion.div>
-                  ) : null}
-
-                  {workflowVisible ? (
-                    <motion.div key="financial-resolution-workflow" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.58 }} className="absolute inset-0 overflow-y-auto bg-[#FBFCFC] px-3 py-3 text-[#182026] sm:px-5 sm:py-4">
-                      <div className="flex items-center gap-3 border-b border-[#E5E7E7] pb-3 text-[#6D7478] sm:gap-4 sm:pb-4"><span className="flex flex-col gap-1" aria-hidden="true"><span className="h-[2px] w-5 bg-current" /><span className="h-[2px] w-5 bg-current" /><span className="h-[2px] w-5 bg-current" /></span><h3 className="text-[15px] font-normal tracking-[-0.03em] sm:text-[21px]">Financial Resolution Workflow</h3></div>
-                      <div className="mt-3 rounded-[16px] border border-[#E4E7E7] bg-white px-3 py-4 sm:mt-4 sm:px-6 sm:py-6">
-                        <div className="relative pl-7 sm:pl-9">
-                          <span className="absolute left-[9px] top-5 bottom-5 w-px bg-[#D8DDDE] sm:left-[12px]" aria-hidden="true" />
-                          <div className="relative flex items-center gap-3 pb-5 sm:pb-6"><span className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#4B5358] text-white sm:h-7 sm:w-7"><Check className="h-3.5 w-3.5" strokeWidth={3} /></span><h4 className="text-[14px] font-medium tracking-[-0.025em] sm:text-[19px]">Establishing financial position</h4></div>
-                          <div className="relative pb-5 sm:pb-6"><div className="flex items-center gap-3"><span className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#4B5358] text-white sm:h-7 sm:w-7"><Check className="h-3.5 w-3.5" strokeWidth={3} /></span><h4 className="text-[14px] font-medium tracking-[-0.025em] sm:text-[19px]">Reconciling source records</h4><span className="hidden items-center gap-2 text-[11px] text-[#7E8589] sm:inline-flex sm:text-[16px]"><Database className="h-4 w-4" />Amazon SP-API · Settlement Ledger · ERP</span></div><p className="mt-3 max-w-[500px] text-[11px] leading-5 text-[#747C80] sm:ml-9 sm:text-[15px] sm:leading-6">The shipment, receiving, inventory, case, and settlement records resolve to one governed financial event.</p></div>
-                          <div className="relative pb-5 sm:pb-6"><div className="flex items-center gap-3"><span className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#4169D7] text-white sm:h-7 sm:w-7"><Check className="h-3.5 w-3.5" strokeWidth={3} /></span><h4 className="text-[14px] font-medium tracking-[-0.025em] sm:text-[19px]">Testing the supported position</h4></div><div className="mt-3 sm:ml-9"><p className="text-[11px] text-[#747C80] sm:text-[15px]">Searching connected records</p><div className="mt-2 flex flex-wrap gap-2"><span className="inline-flex items-center gap-2 rounded-[8px] bg-[#F3F5F6] px-2.5 py-2 text-[9px] text-[#6D7478] sm:px-3 sm:text-[13px]"><SearchCheck className="h-3.5 w-3.5" />Inbound quantity variance</span><span className="inline-flex items-center gap-2 rounded-[8px] bg-[#F3F5F6] px-2.5 py-2 text-[9px] text-[#6D7478] sm:px-3 sm:text-[13px]"><SearchCheck className="h-3.5 w-3.5" />Settlement credit attribution</span><span className="inline-flex items-center gap-2 rounded-[8px] bg-[#F3F5F6] px-2.5 py-2 text-[9px] text-[#6D7478] sm:px-3 sm:text-[13px]"><SearchCheck className="h-3.5 w-3.5" />Receiving and custody trail</span></div><p className="mt-4 text-[11px] text-[#747C80] sm:text-[15px]">Reading source records</p><div className="mt-2 space-y-2 text-[10px] text-[#667075] sm:text-[14px]"><div className="flex items-center gap-3"><FileInput className="h-4 w-4 text-[#647B8C]" />Shipment Receiving Register</div><div className="flex items-center gap-3"><FileInput className="h-4 w-4 text-[#647B8C]" />Carrier Custody Record</div><div className="flex items-center gap-3"><FileInput className="h-4 w-4 text-[#647B8C]" />Amazon Case Correspondence</div><div className="flex items-center gap-3"><FileInput className="h-4 w-4 text-[#647B8C]" />Settlement Transaction Detail</div><div className="flex items-center gap-3"><FileInput className="h-4 w-4 text-[#647B8C]" />Inventory Movement Ledger</div><div className="flex items-center gap-3"><Database className="h-4 w-4 text-[#647B8C]" />3 additional source records</div></div></div></div>
-                          <div className="relative flex items-center gap-3 pb-5 text-[#A4AAAC] sm:pb-6"><span className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-[3px] border-[#B9BFC1] bg-white sm:h-7 sm:w-7" /><h4 className="text-[14px] font-medium tracking-[-0.025em] sm:text-[19px]">Financial determination</h4></div>
-                          <div className="relative flex items-start gap-3 text-[#A4AAAC]"><span className="relative z-10 mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-[3px] border-[#B9BFC1] bg-white sm:h-7 sm:w-7" /><div><h4 className="text-[14px] font-medium tracking-[-0.025em] sm:text-[19px]">Approval boundary</h4><p className="mt-2 text-[10px] leading-4 sm:text-[14px] sm:leading-5">Finance review required before consequential action.</p></div></div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
-              </div>
-            </div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative overflow-hidden bg-white" aria-label="Routine creation visual">
+            <iframe title="Margin Routine workflow preview" src="/routine" className="block h-[440px] w-full border-0 bg-[#F5F2EE] sm:h-[620px]" loading="lazy" />
           </motion.div>
         </div>
       </div>
     </section>
   );
 }
-
 function MarginStandardSection() {
   const reduceMotion = useReducedMotion();
   const standardSteps = [

@@ -20,6 +20,7 @@ import { AnalyticsRouteTracker } from "@/components/AnalyticsRouteTracker";
 import { PublicSiteInstrumentation } from "@/components/analytics/PublicSiteInstrumentation";
 import Index from "./pages/Index";
 import DuplicatePipelinePreviewPage from "./pages/DuplicatePipelinePreview";
+import Routine from "./pages/Routine";
 
 // Route-level code splitting
 const Dashboard = lazy(() => import("@/components/layout/Dashboard").then(m => ({ default: m.Dashboard })));
@@ -316,6 +317,7 @@ const App = () => (
                         <Route path='/talk-to-sales' element={<SpeakToSales />} />
                         <Route path='/filing-pipeline-preview' element={<FilingPipelinePreview />} />
                         <Route path='/duplicate-pipeline-preview' element={<DuplicatePipelinePreviewPage />} />
+                        <Route path='/routine' element={<Routine />} />
                         <Route path='/evidence-required' element={<EvidenceRequired />} />
                         <Route path='/amazon-thread-review' element={<AmazonThreadReview />} />
                         <Route path='/progress-review' element={<ProgressReview />} />
