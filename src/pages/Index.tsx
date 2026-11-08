@@ -1233,6 +1233,29 @@ function ControlSection() {
 }
 
 function RepeatableRoutineSection() {
+  const reduceMotion = useReducedMotion();
+  const [routineStep, setRoutineStep] = useState(0);
+  const routineItems = [
+    "Drafted 18 review agendas",
+    "Spot clients showing signs of attrition risk",
+    "Generate the agenda for a quarterly review",
+    "Build a review deck for a client’s annual meeting",
+    "Find referral opportunities in my book",
+    "Drafting scheduling emails  •  14 of 18",
+    "Checked review dates across 8 clients",
+  ];
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const timer = window.setInterval(() => {
+      setRoutineStep((step) => (step >= routineItems.length + 1 ? 0 : step + 1));
+    }, 820);
+    return () => window.clearInterval(timer);
+  }, [reduceMotion, routineItems.length]);
+
+  const listComplete = reduceMotion || routineStep >= routineItems.length;
+  const routineTapped = !reduceMotion && routineStep === routineItems.length + 1;
+
   return (
     <section className="relative overflow-hidden bg-white py-14 sm:py-20 md:py-24" aria-labelledby="repeatable-routine-title">
       <div className={containerClass}>
@@ -1247,14 +1270,50 @@ function RepeatableRoutineSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative flex min-h-[300px] items-center justify-center overflow-hidden bg-white sm:min-h-[380px]" aria-label="Routine creation visual">
-            <div className="relative flex h-full min-h-[260px] w-full items-center justify-center sm:min-h-[330px]">
-              <button type="button" aria-label="Create Routine" className="relative z-10 inline-flex h-12 items-center justify-center rounded-[20px] bg-[#111111] px-6 text-[14px] font-semibold text-white shadow-[0_12px_24px_rgba(17,17,17,0.12)]">
-                + Create Routine
-              </button>
-              <div aria-hidden="true" className="pointer-events-none absolute left-[calc(50%+48px)] top-[calc(50%+24px)] z-20 text-[#182026] drop-shadow-[0_4px_5px_rgba(24,32,38,0.16)]">
-                <span className="absolute -left-3 -top-3 h-8 w-8 rounded-full border-[3px] border-[#635BFF]/75" />
-                <span className="absolute -left-6 -top-6 h-14 w-14 rounded-full border-2 border-[#B0AAFF]/80" />
-                <MousePointer2 className="relative h-7 w-7 fill-white stroke-[1.8]" />
+            <div className="relative flex min-h-[280px] w-full max-w-[610px] items-center justify-center bg-[#F5F2EE] px-4 py-8 sm:min-h-[360px] sm:px-8">
+              <div className="relative h-[222px] w-full max-w-[520px] overflow-hidden sm:h-[250px]" aria-live="polite">
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
+                  {routineItems.map((item, index) => {
+                    const distance = index - 3;
+                    const isVisible = reduceMotion || routineStep >= index;
+                    const isActive = index === 3;
+                    return (
+                      <motion.div
+                        key={item}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{
+                          opacity: isVisible ? (isActive ? 1 : Math.max(0.1, 0.62 - Math.abs(distance) * 0.13)) : 0,
+                          y: distance * 41,
+                          scale: isActive ? 1 : 0.98,
+                        }}
+                        transition={{ duration: reduceMotion ? 0 : 0.48, ease: "easeOut" }}
+                        className={`absolute inset-x-0 flex min-h-[38px] items-center gap-3 px-4 text-[13px] tracking-[-0.015em] sm:min-h-[44px] sm:px-7 sm:text-[16px] ${isActive ? "z-10 bg-white text-[#182026] shadow-[0_8px_22px_rgba(73,62,52,0.05)]" : "text-[#77716B]"}`}
+                      >
+                        <span className="relative h-[13px] w-[15px] shrink-0" aria-hidden="true">
+                          <span className="absolute left-0 top-[2px] h-[5px] w-[5px] rounded-full border border-current" />
+                          <span className="absolute left-[9px] top-[3px] h-px w-[6px] bg-current" />
+                          <span className="absolute left-0 top-[9px] h-[5px] w-[5px] rounded-full border border-current" />
+                          <span className="absolute left-[9px] top-[10px] h-px w-[6px] bg-current" />
+                        </span>
+                        <span className="min-w-0 truncate">{item}</span>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                <AnimatePresence mode="wait">
+                  {listComplete ? (
+                    <motion.div key="routine-button" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }} transition={{ duration: 0.38 }} className="absolute inset-0 z-20 flex items-center justify-center">
+                      <button type="button" aria-label="Create Routine" className="relative inline-flex h-12 items-center justify-center rounded-[20px] bg-[#111111] px-6 text-[14px] font-semibold text-white shadow-[0_12px_24px_rgba(17,17,17,0.12)]">
+                        + Create Routine
+                      </button>
+                      <motion.div aria-hidden="true" className="pointer-events-none absolute left-[calc(50%+48px)] top-[calc(50%+24px)] text-[#182026] drop-shadow-[0_4px_5px_rgba(24,32,38,0.16)]" animate={{ x: routineTapped ? -10 : 0, y: routineTapped ? -8 : 0 }} transition={{ duration: 0.26 }}>
+                        {routineTapped ? <><motion.span initial={{ opacity: 0.9, scale: 0.65 }} animate={{ opacity: 0, scale: 1.55 }} transition={{ duration: 0.7 }} className="absolute -left-5 -top-5 h-12 w-12 rounded-full border-[3px] border-[#635BFF]/75" /><motion.span initial={{ opacity: 0.7, scale: 0.55 }} animate={{ opacity: 0, scale: 1.45 }} transition={{ delay: 0.08, duration: 0.7 }} className="absolute -left-9 -top-9 h-20 w-20 rounded-full border-2 border-[#B0AAFF]/80" /></> : null}
+                        <MousePointer2 className="relative h-7 w-7 fill-white stroke-[1.8]" />
+                      </motion.div>
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
               </div>
             </div>
           </motion.div>
