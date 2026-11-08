@@ -19,6 +19,22 @@ const routineCards = [
   { title: "Deliver", body: "Post findings to #stability-ops with sources attached.", meta: "Collects", value: "Message", image: "/slack-icon-2019.png", color: "text-[#5C9A75]" },
 ];
 
+function RoutineWorkspace() {
+  const builds = [
+    ["Excursion watch", "Runs nightly at 2:00 AM UTC", "Active", "🟦  🟨  🟢  🟣"],
+    ["Deviation register digest", "Runs every Monday at 7:00 AM UTC", "Active", "🟨  🟣"],
+    ["Literature sweep", "Runs weekdays at 6:00 AM UTC", "Paused", "▮"],
+    ["Parity check", "Runs once on Jul 26, 2026, 3:06 AM UTC", "Completed", ""],
+  ];
+  return <motion.main key="routine-workspace" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen bg-white px-5 py-8 font-google-sans text-[#182026] sm:px-10 sm:py-12 lg:px-16 lg:py-16"><div className="mx-auto max-w-[1420px]">
+    <div className="flex items-start justify-between gap-6"><div><h1 className="text-[28px] font-medium tracking-[-0.045em] sm:text-[38px]">Routines</h1><p className="mt-2 max-w-[680px] text-[12px] leading-5 text-[#77716B] sm:text-[15px] sm:leading-6">Work that runs on a schedule. Share one with your organization and colleagues can take their own copy of it.</p></div><button type="button" className="shrink-0 rounded-[7px] bg-[#111111] px-4 py-2.5 text-[10px] font-semibold text-white sm:px-5 sm:text-[12px]">New routine⌄</button></div>
+    <nav className="mt-9 flex items-center gap-6 border-b border-[#E7E5E2] text-[11px] text-[#77716B] sm:mt-12 sm:gap-9 sm:text-[13px]" aria-label="Routine views"><span className="border-b-2 border-[#182026] pb-3 font-semibold text-[#182026]">My builds</span><span className="pb-3">Discovery</span><span className="pb-3">Runs</span><span className="pb-3">Monitor</span><span className="pb-3">Builder</span></nav>
+    <div className="mt-5 flex h-9 items-center gap-2 border-b border-[#EEECE9] text-[10px] text-[#96908A] sm:mt-7 sm:text-[12px]"><SearchCheck className="h-3.5 w-3.5" />Search by name or creator</div>
+    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">{builds.map(([title, body, status, marks]) => <article key={title} className="min-h-[132px] rounded-[10px] border border-[#E2DFDB] bg-white p-5 shadow-[0_5px_16px_rgba(73,62,52,0.035)] sm:p-6"><div className="flex items-center justify-between gap-4"><h2 className="text-[14px] font-semibold tracking-[-0.02em] sm:text-[16px]">{title}</h2><span className="text-[16px] text-[#8D8781]">⋮</span></div><p className="mt-5 text-[11px] text-[#77716B] sm:text-[13px]">{body}</p><div className="mt-5 flex items-center justify-between gap-3 text-[10px] text-[#8B857F] sm:text-[11px]"><span>◌ {status}</span><span>{marks}</span></div></article>)}</div>
+    <section className="mt-14 sm:mt-20" aria-labelledby="routine-more-ideas"><h2 id="routine-more-ideas" className="text-[12px] font-medium text-[#77716B] sm:text-[14px]">More ideas</h2><div className="mt-5 grid grid-cols-1 gap-x-12 gap-y-7 sm:grid-cols-2 sm:gap-y-9 lg:gap-x-24">{[["Morning results digest", "Summarize files added or changed in the project's data and outputs folders overnight; flag anomalies and failed runs."], ["Weekly portfolio review", "Monday review across every program in the workspace: what moved, what stalled, and which decisions are waiting on someone."], ["Weekly validation sweep", "Run validation checks on the current SDTM/ADaM datasets; flag new issues against last week and propose fixes."], ["Competitor watch", "Weekly sweep of named competitors: new trial registrations, press, and publications, with what each means for this program."]].map(([title, body]) => <article key={title} className="border-l border-[#E5E2DE] pl-4"><h3 className="text-[12px] font-semibold sm:text-[14px]">{title}</h3><p className="mt-2 max-w-[520px] text-[10px] leading-5 text-[#77716B] sm:text-[12px] sm:leading-6">{body}</p></article>)}</div></section>
+  </div></motion.main>;
+}
+
 function FinancialResolutionWorkflow() {
   return <motion.div key="financial-resolution-workflow" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="relative min-h-screen w-full bg-white px-4 py-5 font-google-sans text-[#182026] sm:px-8 sm:py-8 lg:px-16 lg:py-12">
     <div className="mx-auto max-w-[1580px]"><div className="flex items-center gap-4 border-b border-[#E5E7E7] pb-5 text-[#6D7478] sm:gap-6 sm:pb-7"><span className="flex flex-col gap-1.5" aria-hidden="true"><span className="h-[3px] w-7 bg-current" /><span className="h-[3px] w-7 bg-current" /><span className="h-[3px] w-7 bg-current" /></span><h3 className="text-[22px] font-normal tracking-[-0.03em] sm:text-[32px] lg:text-[38px]">Financial Resolution Workflow</h3></div>
@@ -53,6 +69,7 @@ export default function Routine() {
   const activeRoutineItem = reduceMotion ? 3 : Math.floor(Math.max(0, routineStep - 4)) % routineItems.length;
   const stackSlots = [-2, -1, 0, 1, 2];
 
+  if (dashboardVisible) return <RoutineWorkspace />;
   if (workflowVisible) return <main className="min-h-screen bg-white font-google-sans"><FinancialResolutionWorkflow /></main>;
 
   return <main className="min-h-screen bg-white p-3 font-google-sans sm:p-8"><div className="relative mx-auto flex min-h-[440px] w-full max-w-[920px] items-center justify-center overflow-hidden bg-white px-4 py-8 sm:min-h-[620px] sm:px-8"><div className="relative flex h-[390px] w-full max-w-[820px] items-center justify-center sm:h-[540px]" aria-label="Routine creation visual" aria-live="polite"><AnimatePresence mode="wait">
