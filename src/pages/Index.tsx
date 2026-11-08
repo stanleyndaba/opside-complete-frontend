@@ -402,7 +402,7 @@ function KineticHeroSection({
     <motion.section
       style={{ scale: reduceMotion ? 1 : heroScale, opacity: reduceMotion ? 1 : heroOpacity }}
       data-navbar-theme="light"
-      className="hero-section relative isolate flex min-h-svh overflow-hidden bg-[#F0F0F0] px-4 pb-16 pt-28 text-[#182026] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
+      className="hero-section relative isolate flex min-h-svh overflow-hidden bg-[#F0F0F0] px-4 pb-16 pt-36 text-[#182026] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
       aria-labelledby="margin-hero-title"
     >
       <div aria-hidden="true" className="hero-atmosphere pointer-events-none absolute inset-0 z-0" />
@@ -483,9 +483,9 @@ function KineticHeroSection({
       </div>
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[860px]">
-          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, delay: 0.02, ease: [0.22, 1, 0.36, 1] }} className="font-google-sans text-[11px] font-semibold uppercase tracking-tight text-[#635BFF] sm:text-[12px]">Complex Amazon Fin-Ops, done for you.</motion.p>
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, delay: 0.02, ease: [0.22, 1, 0.36, 1] }} className="relative z-20 block min-h-[10px] font-google-sans text-[7px] font-medium normal-case leading-[1.2] tracking-tight text-[#5148E5]">Complex Amazon Fin-Ops, done for you.</motion.p>
           <h1 id="margin-hero-title" className="mt-5 max-w-[820px] font-google-sans text-[40px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[46px] sm:mt-7 sm:text-[60px] md:text-[74px] lg:text-[84px]" style={{ fontWeight: 400 }}>
-            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Your stack shows the activity. <span className="text-[#635BFF]">Margin establishes the financial position.</span></motion.span>
+            <motion.span className="block text-[#182026]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}><span className="text-[#635BFF]">Your stack</span> shows the activity. Margin establishes the <span className="text-[#635BFF]">financial position.</span></motion.span>
           </h1>
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">Amazon records, recovery tools, ERPs, warehouse systems and AI assistants each show part of the picture. Margin connects the event, evidence, decision, settlement outcome and remaining responsibility—so Finance gets a defensible position without rebuilding the investigation internally.</motion.p>
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-stretch gap-3 font-google-sans sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
