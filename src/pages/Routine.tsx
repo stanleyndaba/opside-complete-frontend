@@ -59,7 +59,6 @@ function FinancialResolutionWorkflow() {
       </header>
       <section aria-label="Financial Resolution Workflow steps" className="mt-2 bg-white px-2 py-4 sm:mt-3 sm:px-5 sm:py-6 lg:px-8 lg:py-7">
         <div className="relative pl-8 sm:pl-10 lg:pl-12">
-          <span className="absolute bottom-1 left-[3px] top-6 w-px bg-[#D8DDDE] sm:left-[3px] lg:left-[3px]" aria-hidden="true" />
           <AnimatePresence initial={false} mode="sync">
           {workflowStep >= 0 ? <motion.div key="position" {...reveal} className="relative flex items-center gap-2 pb-5 sm:pb-6"><span className={completedNode}><Check className="h-[5px] w-[5px]" strokeWidth={3} /></span><h4 className={heading}>Establishing financial position</h4></motion.div> : null}
           {workflowStep >= 1 ? <motion.div key="reconcile" {...reveal} className="relative pb-5 sm:pb-6"><div className="flex flex-wrap items-center gap-x-4 gap-y-1.5"><span className={completedNode}><Check className="h-[5px] w-[5px]" strokeWidth={3} /></span><h4 className={heading}>Reconciling source records</h4><span className="inline-flex items-center gap-1.5 text-[11px] text-[#7E8589] sm:text-[14px]"><Database className="h-4 w-4" />Amazon SP-API · Settlement Ledger · ERP</span></div>{workflowStep >= 2 ? <motion.p {...reveal} className="mt-2.5 max-w-[1120px] text-[12px] leading-5 text-[#747C80] sm:ml-9 sm:text-[15px] sm:leading-6">The shipment, receiving, inventory, case, and settlement records resolve to one governed financial event.</motion.p> : null}</motion.div> : null}
