@@ -198,13 +198,13 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
                             className="fixed inset-0 z-[60] md:hidden">
                             <div className="flex h-[100dvh] flex-col overflow-y-auto bg-[rgba(132,136,145,0.72)] text-white shadow-[0_24px_80px_rgba(22,28,34,0.30)] backdrop-blur-[14px] saturate-[115%]">
-                                <div className="flex min-h-[76px] shrink-0 items-center justify-between bg-white px-5 text-[#17212B] shadow-[0_4px_18px_rgba(37,49,58,0.10)]">
-                                    <button type="button" onClick={() => setMobileMenuOpen(false)} className="text-[12px] font-sans font-medium text-[#52616C] transition-colors hover:text-[#17212B]">Close</button>
+                                <div className="flex min-h-[76px] shrink-0 items-center justify-between bg-white text-[#17212B] shadow-[0_4px_18px_rgba(37,49,58,0.10)]">
+                                    <button type="button" onClick={() => setMobileMenuOpen(false)} className="inline-flex h-[76px] min-w-[132px] items-center justify-center rounded-br-[28px] bg-[#9B9B9B] px-7 text-[12px] font-sans font-medium text-white transition-colors hover:bg-[#8F8F8F]">Close</button>
                                     <Link to="/" onClick={() => setMobileMenuOpen(false)} className="absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-2 text-[#182026]">
                                         <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
                                         <span className="brand-wordmark font-merriweather text-[17px] tracking-tight">Margin</span>
                                     </Link>
-                                    <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="text-[12px] font-sans font-medium text-[#52616C] transition-colors hover:text-[#17212B]">Log in</Link>
+                                    <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="px-5 text-[12px] font-sans font-medium text-[#52616C] transition-colors hover:text-[#17212B]">Log in</Link>
                                 </div>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="teams" className="border-none">
