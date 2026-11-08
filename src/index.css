@@ -377,7 +377,7 @@ html, body, #root {
   font-family: 'Merriweather', Georgia, serif !important;
 }
 
-#margin-hero-title, #margin-hero-title * {
+#margin-hero-title, #margin-hero-title *:not(.hero-financial-position) {
   font-family: var(--font-google-sans) !important;
   font-weight: 850 !important;
 }
@@ -1664,7 +1664,7 @@ html, body, #root {
 
 /* Final hero-only correction: Inter and a 15% increase apply only to the main hero headline. */
 .landing-page > main #margin-hero-title,
-.landing-page > main #margin-hero-title * {
+.landing-page > main #margin-hero-title *:not(.hero-financial-position) {
   font-family: 'Inter', system-ui, sans-serif !important;
 }
 .landing-page > main #margin-hero-title {
