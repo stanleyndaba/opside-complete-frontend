@@ -1257,16 +1257,17 @@ function RepeatableRoutineSection() {
   useEffect(() => {
     if (reduceMotion) return;
     const timer = window.setInterval(() => {
-      setRoutineStep((step) => (step >= 16 ? 0 : step + 1));
+      setRoutineStep((step) => (step >= 21 ? 0 : step + 1));
     }, 760);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
   const listBuilding = routineStep < 5;
-  const listVisible = routineStep < 11;
-  const buttonVisible = routineStep >= 11 && routineStep < 13;
+  const listVisible = !reduceMotion && routineStep < 11;
+  const buttonVisible = !reduceMotion && routineStep >= 11 && routineStep < 13;
   const routineTapped = routineStep === 12;
-  const cardsVisible = routineStep >= 13;
+  const cardsVisible = !reduceMotion && routineStep >= 13 && routineStep < 17;
+  const dashboardVisible = reduceMotion || routineStep >= 17;
   const visibleCardCount = reduceMotion ? routineCards.length : Math.min(routineCards.length, Math.max(0, routineStep - 12));
   const activeRoutineItem = reduceMotion ? 3 : Math.floor(Math.max(0, routineStep - 4) / 1) % routineItems.length;
   const stackSlots = [-2, -1, 0, 1, 2];
@@ -1343,6 +1344,26 @@ function RepeatableRoutineSection() {
                           </AnimatePresence>
                         );
                       })}
+                    </motion.div>
+                  ) : null}
+
+                  {dashboardVisible ? (
+                    <motion.div key="routine-dashboard" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.55 }} className="absolute inset-0 overflow-hidden bg-white px-3 py-3 text-[#182026] sm:px-5 sm:py-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0"><h3 className="text-[16px] font-semibold tracking-[-0.035em] sm:text-[19px]">Routines</h3><p className="mt-1 max-w-[430px] truncate text-[7px] leading-3 text-[#77716B] sm:text-[8px]">Work that runs on a schedule. Share one with your organization and colleagues can take their own copy of it.</p></div>
+                        <button type="button" className="shrink-0 rounded-[5px] bg-[#111111] px-2 py-1 text-[7px] font-semibold text-white sm:px-3 sm:py-1.5 sm:text-[8px]">New routine⌄</button>
+                      </div>
+                      <div className="mt-4 flex items-center gap-3 border-b border-[#ECEAE7] text-[7px] text-[#77716B] sm:mt-5 sm:gap-5 sm:text-[8px]"><span className="border-b-2 border-[#182026] pb-2 font-semibold text-[#182026]">My builds</span><span>Discovery</span><span>Runs</span><span>Monitor</span><span>Builder</span></div>
+                      <div className="mt-3 flex h-6 items-center gap-2 border-b border-[#F0EEEB] text-[7px] text-[#96908A] sm:text-[8px]"><SearchCheck className="h-2.5 w-2.5" />Search by name or creator</div>
+                      <div className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
+                        {[
+                          ["Excursion watch", "Runs nightly at 2:00 AM UTC", "Active", "🟦 🟨 🟢 🟣"],
+                          ["Deviation register digest", "Runs every Monday at 7:00 AM UTC", "Active", "🟨 🟣"],
+                          ["Literature sweep", "Runs weekdays at 6:00 AM UTC", "Paused", "▮"],
+                          ["Parity check", "Runs once on Jul 26, 2026 3:06 AM UTC", "Completed", ""],
+                        ].map(([title, body, status, marks]) => <div key={title} className="min-h-[58px] border border-[#E2DFDB] bg-white p-2 shadow-[0_2px_7px_rgba(73,62,52,0.035)] sm:min-h-[72px] sm:p-3"><div className="flex items-center justify-between gap-1"><h4 className="truncate text-[8px] font-semibold sm:text-[9px]">{title}</h4><span className="text-[10px] text-[#8D8781]">⋮</span></div><p className="mt-2 truncate text-[6px] text-[#77716B] sm:text-[7px]">{body}</p><div className="mt-2 flex items-center justify-between gap-1 text-[6px] text-[#8B857F] sm:text-[7px]"><span>◌ {status}</span><span className="truncate">{marks}</span></div></div>)}
+                      </div>
+                      <div className="mt-4 sm:mt-5"><p className="text-[8px] font-medium text-[#77716B] sm:text-[9px]">More ideas</p><div className="mt-2 grid grid-cols-2 gap-x-5 gap-y-3 sm:gap-x-7"><div className="flex gap-2"><span className="text-[9px] text-[#7F72A8]">☼</span><div><h4 className="text-[7px] font-semibold sm:text-[8px]">Morning results digest</h4><p className="mt-0.5 text-[6px] leading-3 text-[#77716B] sm:text-[7px]">Summarize files added or changed in the project&apos;s data and outputs folders overnight; flag anomalies and failed runs.</p></div></div><div className="flex gap-2"><span className="text-[9px] text-[#7F72A8]">⌁</span><div><h4 className="text-[7px] font-semibold sm:text-[8px]">Weekly portfolio review</h4><p className="mt-0.5 text-[6px] leading-3 text-[#77716B] sm:text-[7px]">Monday review across every program in the workspace: what moved, what stalled, and which decisions are waiting on someone.</p></div></div><div className="flex gap-2"><span className="text-[9px] text-[#7F72A8]">♙</span><div><h4 className="text-[7px] font-semibold sm:text-[8px]">Weekly validation sweep</h4><p className="mt-0.5 text-[6px] leading-3 text-[#77716B] sm:text-[7px]">Run validation checks on the current SDTM/ADaM datasets; flag new issues against last week and propose fixes.</p></div></div><div className="flex gap-2"><span className="text-[9px] text-[#7F72A8]">◉</span><div><h4 className="text-[7px] font-semibold sm:text-[8px]">Competitor watch</h4><p className="mt-0.5 text-[6px] leading-3 text-[#77716B] sm:text-[7px]">Weekly sweep of named competitors: new trial registrations, press, and publications, with what each means for this program.</p></div></div></div></div>
                     </motion.div>
                   ) : null}
                 </AnimatePresence>
