@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
+  CalendarDays,
   Check,
   ChevronRight,
   Landmark,
@@ -32,6 +33,7 @@ import {
   ReceiptText,
   SearchCheck,
   ShieldCheck,
+  Sparkles,
   Truck,
   UserCheck,
   Square,
@@ -1245,16 +1247,29 @@ function RepeatableRoutineSection() {
     "Checked review dates across 8 clients",
   ];
 
+  const routineCards = [
+    { title: "Schedule", body: "Runs nightly at 2:00 AM UTC.", meta: "Collects", value: "Trigger", icon: CalendarDays, color: "text-[#5483A7]" },
+    { title: "Sources", body: "🟦 🟨 🟢 LabWare LIMS, Veeva Vault QMS, SharePoint.", meta: "Collects", value: "Stability records", icon: Database, color: "text-[#5483A7]" },
+    { title: "Instructions", body: "Reconcile analyst notes against the deviation register. Flag any excursion without a filed deviation.", meta: "Collects", value: "Findings", icon: Sparkles, color: "text-[#8068A9]" },
+    { title: "Deliver", body: "Post findings to #stability-ops with sources attached.", meta: "Collects", value: "Message", icon: MessagesSquare, color: "text-[#5C9A75]" },
+  ];
+
   useEffect(() => {
     if (reduceMotion) return;
     const timer = window.setInterval(() => {
-      setRoutineStep((step) => (step >= routineItems.length + 1 ? 0 : step + 1));
-    }, 820);
+      setRoutineStep((step) => (step >= 16 ? 0 : step + 1));
+    }, 760);
     return () => window.clearInterval(timer);
-  }, [reduceMotion, routineItems.length]);
+  }, [reduceMotion]);
 
-  const listComplete = reduceMotion || routineStep >= routineItems.length;
-  const routineTapped = !reduceMotion && routineStep === routineItems.length + 1;
+  const listBuilding = routineStep < 5;
+  const listVisible = routineStep < 11;
+  const buttonVisible = routineStep >= 11 && routineStep < 13;
+  const routineTapped = routineStep === 12;
+  const cardsVisible = routineStep >= 13;
+  const visibleCardCount = reduceMotion ? routineCards.length : Math.min(routineCards.length, Math.max(0, routineStep - 12));
+  const activeRoutineItem = reduceMotion ? 3 : Math.floor(Math.max(0, routineStep - 4) / 1) % routineItems.length;
+  const stackSlots = [-2, -1, 0, 1, 2];
 
   return (
     <section className="relative overflow-hidden bg-white py-14 sm:py-20 md:py-24" aria-labelledby="repeatable-routine-title">
@@ -1270,24 +1285,26 @@ function RepeatableRoutineSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative flex min-h-[300px] items-center justify-center overflow-hidden bg-white sm:min-h-[380px]" aria-label="Routine creation visual">
-            <div className="relative flex min-h-[280px] w-full max-w-[610px] items-center justify-center bg-[#F5F2EE] px-4 py-8 sm:min-h-[360px] sm:px-8">
-              <div className="relative h-[222px] w-full max-w-[520px] overflow-hidden sm:h-[250px]" aria-live="polite">
-                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
-                  {routineItems.map((item, index) => {
-                    const distance = index - 3;
-                    const isVisible = reduceMotion || routineStep >= index;
-                    const isActive = index === 3;
+            <div className="relative flex min-h-[280px] w-full max-w-[610px] items-center justify-center overflow-hidden bg-[#F5F2EE] px-4 py-8 sm:min-h-[360px] sm:px-8">
+              <div className="relative flex h-[250px] w-full max-w-[560px] items-center justify-center sm:h-[300px]" aria-live="polite">
+                <AnimatePresence mode="wait">
+                  {listVisible ? (
+                    <motion.div key="routine-stack" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.42 }} className="absolute inset-x-0 top-1/2 h-[218px] -translate-y-1/2">
+                      {stackSlots.map((slot) => {
+                        const itemIndex = (activeRoutineItem + slot + routineItems.length) % routineItems.length;
+                        const item = routineItems[itemIndex];
+                        const isActive = slot === 0;
+                        const isVisible = reduceMotion || !listBuilding || Math.abs(slot) <= routineStep;
+                        const width = isActive ? "w-full" : Math.abs(slot) === 1 ? "w-[86%]" : "w-[70%]";
+                        const opacity = isActive ? 1 : Math.abs(slot) === 1 ? 0.58 : 0.2;
                     return (
                       <motion.div
-                        key={item}
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{
-                          opacity: isVisible ? (isActive ? 1 : Math.max(0.1, 0.62 - Math.abs(distance) * 0.13)) : 0,
-                          y: distance * 41,
-                          scale: isActive ? 1 : 0.98,
-                        }}
+                        key={`${item}-${slot}`}
+                        initial={{ opacity: 0, scale: 0.96 }}
+                        animate={{ opacity: isVisible ? opacity : 0, scale: isActive ? 1 : 0.98 }}
                         transition={{ duration: reduceMotion ? 0 : 0.48, ease: "easeOut" }}
-                        className={`absolute inset-x-0 flex min-h-[38px] items-center gap-3 px-4 text-[13px] tracking-[-0.015em] sm:min-h-[44px] sm:px-7 sm:text-[16px] ${isActive ? "z-10 bg-white text-[#182026] shadow-[0_8px_22px_rgba(73,62,52,0.05)]" : "text-[#77716B]"}`}
+                        style={{ top: `calc(50% + ${slot * 41}px)`, transform: "translateY(-50%)" }}
+                        className={`absolute left-1/2 flex min-h-[39px] -translate-x-1/2 items-center gap-3 px-4 text-[13px] tracking-[-0.015em] transition-[width] duration-500 sm:min-h-[45px] sm:px-7 sm:text-[16px] ${width} ${isActive ? "z-10 bg-white text-[#182026] shadow-[0_8px_22px_rgba(73,62,52,0.05)]" : "text-[#77716B]"}`}
                       >
                         <span className="relative h-[13px] w-[15px] shrink-0" aria-hidden="true">
                           <span className="absolute left-0 top-[2px] h-[5px] w-[5px] rounded-full border border-current" />
@@ -1299,10 +1316,10 @@ function RepeatableRoutineSection() {
                       </motion.div>
                     );
                   })}
-                </div>
+                    </motion.div>
+                  ) : null}
 
-                <AnimatePresence mode="wait">
-                  {listComplete ? (
+                  {buttonVisible ? (
                     <motion.div key="routine-button" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }} transition={{ duration: 0.38 }} className="absolute inset-0 z-20 flex items-center justify-center">
                       <button type="button" aria-label="Create Routine" className="relative inline-flex h-12 items-center justify-center rounded-[20px] bg-[#111111] px-6 text-[14px] font-semibold text-white shadow-[0_12px_24px_rgba(17,17,17,0.12)]">
                         + Create Routine
@@ -1311,6 +1328,21 @@ function RepeatableRoutineSection() {
                         {routineTapped ? <><motion.span initial={{ opacity: 0.9, scale: 0.65 }} animate={{ opacity: 0, scale: 1.55 }} transition={{ duration: 0.7 }} className="absolute -left-5 -top-5 h-12 w-12 rounded-full border-[3px] border-[#635BFF]/75" /><motion.span initial={{ opacity: 0.7, scale: 0.55 }} animate={{ opacity: 0, scale: 1.45 }} transition={{ delay: 0.08, duration: 0.7 }} className="absolute -left-9 -top-9 h-20 w-20 rounded-full border-2 border-[#B0AAFF]/80" /></> : null}
                         <MousePointer2 className="relative h-7 w-7 fill-white stroke-[1.8]" />
                       </motion.div>
+                    </motion.div>
+                  ) : null}
+
+                  {cardsVisible ? (
+                    <motion.div key="routine-cards" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.42 }} className="absolute inset-0 flex flex-col items-center justify-center gap-2 overflow-hidden bg-[radial-gradient(#D9D5D0_0.8px,transparent_0.8px)] bg-[size:16px_16px] py-2 sm:gap-3">
+                      {routineCards.map((card, index) => {
+                        const Icon = card.icon;
+                        return (
+                          <AnimatePresence key={card.title}>
+                            {index < visibleCardCount ? <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: "easeOut" }} className="relative w-full max-w-[510px] rounded-[12px] border border-[#E4E0DC] bg-white px-4 py-3 shadow-[0_10px_24px_rgba(73,62,52,0.06)] sm:px-6 sm:py-4">
+                              <div className="flex items-start gap-3"><Icon className={`mt-0.5 h-4 w-4 shrink-0 ${card.color}`} strokeWidth={1.7} /><div className="min-w-0 flex-1"><div className="flex items-center justify-between gap-3"><h3 className="text-[13px] font-semibold tracking-[-0.015em] text-[#182026] sm:text-[15px]">{card.title}</h3><span className="text-[15px] tracking-tight text-[#6D6863]">···</span></div><p className="mt-2 text-[10px] leading-4 text-[#5E5954] sm:text-[11px] sm:leading-5">{card.body}</p><p className="mt-2 text-[9px] text-[#8A847E] sm:text-[10px]"><span className="mr-2">{card.meta}</span><span className="text-[#5E5954]">{card.value}</span></p></div></div>
+                            </motion.div> : null}
+                          </AnimatePresence>
+                        );
+                      })}
                     </motion.div>
                   ) : null}
                 </AnimatePresence>
