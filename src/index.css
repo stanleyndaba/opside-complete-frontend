@@ -1660,3 +1660,51 @@ html, body, #root {
   background: #FFF1ED;
   color: #D9472D;
 }
+
+
+/* Final hero-only correction: Inter and a 15% increase apply only to the main hero headline. */
+.landing-page > main #margin-hero-title,
+.landing-page > main #margin-hero-title * {
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
+.landing-page > main #margin-hero-title {
+  font-size: 46px !important;
+}
+@media (min-width: 390px) {
+  .landing-page > main #margin-hero-title {
+    font-size: 53px !important;
+  }
+}
+@media (min-width: 640px) {
+  .landing-page > main #margin-hero-title {
+    font-size: 69px !important;
+  }
+}
+@media (min-width: 768px) {
+  .landing-page > main #margin-hero-title {
+    font-size: 85px !important;
+  }
+}
+@media (min-width: 1024px) {
+  .landing-page > main #margin-hero-title {
+    font-size: 97px !important;
+  }
+}
+
+/* Mobile navigation is a clean white dropdown, including its expanded groups. */
+.mobile-menu-panel {
+  background: #FFFFFF !important;
+  color: #182026 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.mobile-menu-panel [class*="text-white"] {
+  color: #182026 !important;
+}
+.mobile-menu-panel [class*="border-white"] {
+  border-color: #E5E7EB !important;
+}
+.mobile-menu-panel .landing-action-cta,
+.mobile-menu-panel .landing-action-cta [class*="text-white"] {
+  color: #FFFFFF !important;
+}
