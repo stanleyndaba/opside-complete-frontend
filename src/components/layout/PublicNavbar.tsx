@@ -197,7 +197,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
                             className="fixed inset-0 z-[60] md:hidden">
-                            <div className="flex h-[100dvh] flex-col overflow-y-auto bg-[rgba(88,94,101,0.78)] text-white shadow-[0_24px_80px_rgba(22,28,34,0.30)] backdrop-blur-2xl">
+                            <div className="flex h-[100dvh] flex-col overflow-y-auto bg-[rgba(132,136,145,0.72)] text-white shadow-[0_24px_80px_rgba(22,28,34,0.30)] backdrop-blur-[14px] saturate-[115%]">
                                 <div className="flex min-h-[76px] shrink-0 items-center justify-between bg-white px-5 text-[#17212B] shadow-[0_4px_18px_rgba(37,49,58,0.10)]">
                                     <button type="button" onClick={() => setMobileMenuOpen(false)} className="text-[12px] font-sans font-medium text-[#52616C] transition-colors hover:text-[#17212B]">Close</button>
                                     <Link to="/" onClick={() => setMobileMenuOpen(false)} className="absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-2 text-[#182026]">
@@ -209,7 +209,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="teams" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal transition-colors",
+                                            "flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors",
                                             "justify-between text-white outline-none hover:no-underline hover:text-white data-[state=open]:bg-white/10"
                                         )}>
                                             For Teams
@@ -237,7 +237,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     </AccordionItem>
                                     <AccordionItem value="api" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal transition-colors",
+                                            "flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors",
                                             "justify-between text-white outline-none hover:no-underline hover:text-white data-[state=open]:bg-white/10"
                                         )}>
                                             Workflows
@@ -269,34 +269,34 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                 <Link
                                     to="/pricing"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
+                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
                                     Pricing
                                 </Link>
                                 <Link
                                     to="/security"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
+                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
                                     Security
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
+                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
                                     Enterprise
                                 </Link>
                                 <Link
                                     to="/about"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
+                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
                                     Company
                                 </Link>
                                 <Link
                                     to="/consumer-recovery"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[14px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
+                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
                                     B2C Recovery
                                 </Link>
-                                <div className="mt-auto border-t border-white/15 px-5 pb-3 pt-7">
+                                <div className="mt-auto px-5 pb-3 pt-7">
                                     <p className="font-sans text-[13px] font-medium leading-5 text-white/80">Start with a controlled financial review.</p>
                                     <p className="mt-1 max-w-[30rem] font-sans text-[12px] leading-5 text-white/55">
                                         See what the records establish before deciding what work is justified.
@@ -306,14 +306,14 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     <Link
                                         to="/audit-start"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="landing-indigo-cta flex min-h-[46px] w-full items-center justify-center gap-1 rounded-full bg-[#635BFF] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(99,91,255,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#5148E5] hover:shadow-[0_12px_26px_rgba(99,91,255,0.32)]">
-                                        Send records for review <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
+                                        className="landing-indigo-cta relative flex min-h-[46px] w-full items-center justify-center rounded-full bg-[#635BFF] px-12 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(99,91,255,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#5148E5] hover:shadow-[0_12px_26px_rgba(99,91,255,0.32)]">
+                                        Send records for review <span aria-hidden="true" className="absolute right-2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#30343B] shadow-[0_3px_8px_rgba(33,43,55,0.16)]"><ChevronRight className="h-4 w-4" strokeWidth={2.2} /></span>
                                     </Link>
                                     <Link
                                         to="/contact"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[46px] w-full items-center justify-center gap-1 rounded-full border border-white/25 bg-white/10 px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white transition-[background-color,border-color] duration-200 hover:border-white/40 hover:bg-white/15">
-                                        Talk to Margin <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
+                                        className="flex min-h-[46px] w-full items-center justify-center gap-3 rounded-full border border-white/25 bg-white/10 px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white transition-[background-color,border-color] duration-200 hover:border-white/40 hover:bg-white/15">
+                                        Talk to Margin <ChevronRight aria-hidden="true" className="h-4 w-4" />
                                     </Link>
                                 </div>
                             </div>
