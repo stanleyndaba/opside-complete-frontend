@@ -1493,7 +1493,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#171512] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <img
-            src="/margin-recovery-record-connected-clean.png"
+            src="/margin-recovery-record-connected-no-star.png"
             alt="Recovery record connected with evidence, Amazon response, and settlement references"
             className="block h-full w-full object-cover object-center"
             loading="lazy"
