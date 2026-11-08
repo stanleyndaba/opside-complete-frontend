@@ -1483,7 +1483,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       copy: "Margin maintains a structured view of the recovery population, connecting each examined event to its source records, investigation status, supported exposure, accounted-for value and outstanding actions. Finance can distinguish active opportunities from resolved items and exceptions that still require attention.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F8F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
-          <img src="/recovery-population-trace.png" alt="Recovery population investigation trace showing source records, examined events, supported exposure and unresolved variance" className="block h-full w-full object-contain" loading="lazy" />
+          <img src="/recovery-population-trace-card-wide.png" alt="Recovery population investigation trace showing source records, examined events, supported exposure and unresolved variance" className="block h-full w-full object-cover object-center" loading="lazy" />
         </div>
       ),
     },
