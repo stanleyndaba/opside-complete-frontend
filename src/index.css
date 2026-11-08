@@ -1707,8 +1707,7 @@ html, body, #root {
   display: inline-block;
   z-index: 0;
 }
-#margin-hero-title .hero-financial-position::before,
-#margin-hero-title .hero-financial-position::after {
+#margin-hero-title .hero-financial-position::before {
   content: "";
   position: absolute;
   left: -2%;
@@ -1725,15 +1724,6 @@ html, body, #root {
   opacity: 0.92;
   transform: rotate(-1.6deg) skewX(-14deg);
   clip-path: polygon(0 42%, 12% 20%, 28% 48%, 45% 16%, 63% 42%, 79% 24%, 100% 36%, 98% 74%, 80% 60%, 62% 82%, 45% 55%, 28% 78%, 12% 55%, 0 69%);
-}
-#margin-hero-title .hero-financial-position::after {
-  left: 7%;
-  bottom: -0.16em;
-  width: 82%;
-  height: 0.06em;
-  background: #F05A3C;
-  opacity: 0.42;
-  transform: rotate(1.8deg) skewX(-18deg);
 }
 
 /* Mobile navigation is a clean white dropdown, including its expanded groups. */
