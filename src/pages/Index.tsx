@@ -1491,10 +1491,10 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       title: "The recovery record stays connected.",
       copy: "Margin keeps the relevant shipment, inventory, transaction, evidence, Amazon response and settlement references associated with the same underlying financial event. The investigation, case history and recorded outcome remain connected rather than scattered across separate operational records.",
       visual: (
-        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
+        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#171512] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <img
-            src="/recovery-thread-card-2.png"
-            alt="Connected recovery record for Northstar Commerce LLC showing linked receiving evidence, Amazon response, settlement references, and the controlled submission milestone"
+            src="/margin-recovery-record-connected.png"
+            alt="Recovery record connected with evidence, Amazon response, and settlement references"
             className="block h-full w-full object-cover object-center"
             loading="lazy"
           />
