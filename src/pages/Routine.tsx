@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Archive, CalendarDays, Check, ChevronDown, Database, Layers3, MousePointer2, Search } from "lucide-react";
+import { Archive, CalendarDays, Check, ChevronDown, Database, Files, Layers3, ListChecks, MousePointer2, Search, SlidersHorizontal } from "lucide-react";
 import EvidenceRequired from "./EvidenceRequired";
 import RecoverOnce from "./RecoverOnce";
 
@@ -134,6 +134,71 @@ function ImplementingRoutine({ reduceMotion }: { reduceMotion: boolean }) {
   </motion.main>;
 }
 
+const analysisParagraphs = [
+  "Financial position established · controlled recovery ready to transfer. Margin reconstructed the financial event across operational, inventory, settlement, and ledger records, then connected the affected populations into a single evidence-backed recovery stance with clear boundaries around what is supported, what is already accounted for, and what remains unresolved. Amazon Fulfilment Network Inventory Adjustment and Disposition Ledger · Seller Evidence Intake and Shipment Support Folder · Settlement Period Reconciliation and Clearing Workbook. The result separates supported exposure from amounts already accounted for and items that remain unresolved. Control conclusion: Delegable supported exposure: $121,840. The position is evidenced, material, and bounded for controlled recovery action. This is an exposure conclusion, not a guaranteed Amazon reimbursement.",
+  "Reconciliation bridge: From identified variance to supported action. Gross identified variance: $184,260. All detected signals. Already accounted for: ($42,300). Credits and cleared outcomes. Insufficient basis: ($20,120). Held pending reconciliation. Supported exposure: $121,840. Actionable position. Margin does not convert a gross signal into a claim. The bridge isolates what the records support, what later activity cleared, and what remains outside the current decision basis. Evidence sufficiency: Source lineage behind the conclusion. Shipment movement: 18,420 records, matched, supported. FC receiving events: 17,982 records, 96.8% matched, exception review. Inventory ledger: 6,104 adjustments, matched to SAP, supported. Settlement activity: 2.8M rows, reconciled, supported. Returns and reimbursements: 42,610 events, partial match, held. General ledger clearing: NetSuite postings, 3 open items, review.",
+  "Materiality and economics: Is the supported position worth pursuing? Supported exposure: $121,840. Modeled recovery likelihood: 82%. Expected recovery value: $99,909. Operating fee: $4,800. Expected net value: $95,109. The modeled likelihood is an operating estimate, not a promise. The recommendation reflects materiality, evidence sufficiency, expected value, and the cost of carrying the case through response and settlement verification. Recommended disposition: Pursue through Recover Once. Controlled execution: The recovery remains accountable until the outcome is verified. Financial position established. Evidence sufficiency assessed. Recovery case assembled. Seller approval required. Margin responsibility begins. Settlement verification required. After approval, Margin owns case administration, prepares the Amazon response, records the response basis, manages follow-up and escalation, checks the settlement credit, and keeps the position open until the outcome can be classified as recovered, partially recovered, or unresolved.",
+];
+
+const analysisRail = [
+  { label: "Decision record", icon: ListChecks },
+  { label: "Reconciliation bridge", icon: Layers3 },
+  { label: "Evidence position", icon: Files },
+  { label: "Decision boundary", icon: SlidersHorizontal },
+  { label: "Next step", icon: Search },
+];
+
+function FinancialAnalysisWorkspace({ reduceMotion }: { reduceMotion: boolean }) {
+  const [paragraphIndex, setParagraphIndex] = useState(0);
+  const [visibleText, setVisibleText] = useState("");
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setParagraphIndex(analysisParagraphs.length - 1);
+      setVisibleText(analysisParagraphs[analysisParagraphs.length - 1]);
+      return;
+    }
+    let current = 0;
+    let interval: number | undefined;
+    const startParagraph = (index: number) => {
+      current = 0;
+      setParagraphIndex(index);
+      setVisibleText("");
+      interval = window.setInterval(() => {
+        current += 2;
+        setVisibleText(analysisParagraphs[index].slice(0, current));
+        if (current >= analysisParagraphs[index].length) {
+          if (interval) window.clearInterval(interval);
+          if (index < analysisParagraphs.length - 1) window.setTimeout(() => startParagraph(index + 1), 650);
+        }
+      }, 18);
+    };
+    const start = window.setTimeout(() => startParagraph(0), 420);
+    return () => {
+      window.clearTimeout(start);
+      if (interval) window.clearInterval(interval);
+    };
+  }, [reduceMotion]);
+
+  return <div className="min-h-screen overflow-x-auto bg-white font-sans text-[#191B20]">
+    <header aria-label="Financial Analysis Workspace header" className="h-12 bg-white/95 backdrop-blur-sm" />
+    <main className="font-google-sans mx-auto min-w-[900px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6">
+      <div className="flex items-start gap-3 lg:gap-4">
+        <aside aria-label="Financial Analysis Workspace controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
+          {analysisRail.map(({ label, icon: Icon }, index) => <a key={label} href={`#analysis-workspace-${index}`} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}
+        </aside>
+        <article className="min-w-0 flex-1 bg-white px-0 py-5 sm:px-6 sm:py-5" aria-labelledby="financial-analysis-workspace-title">
+          <div className="mx-auto max-w-[900px] space-y-8">
+            <h1 id="financial-analysis-workspace-title" className="font-google-sans text-[28px] font-normal leading-tight tracking-[-0.03em] text-[#191B20] sm:text-[36px]">Analysis Workspace</h1>
+            {analysisParagraphs.map((paragraph, index) => <motion.p id={`analysis-workspace-${index}`} key={paragraph} initial={{ opacity: 0 }} animate={{ opacity: index <= paragraphIndex ? 1 : 0.08 }} transition={{ duration: reduceMotion ? 0 : 0.35 }} className="text-[14px] leading-6 text-[#595E68] sm:text-[15px] sm:leading-7">{index < paragraphIndex ? paragraph : index === paragraphIndex ? <>{visibleText}{!reduceMotion && visibleText.length < paragraph.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</> : paragraph}</motion.p>)}
+            <section className="border-t border-[#E8E7E1] pt-5" aria-label="Progressive recovery stance"><p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]">Progressive recovery stance</p><div className="mt-3 space-y-2.5 text-[14px] leading-6 text-[#595E68]">{["Financial position established", "Evidence coverage established", "Shipment and receiving delta confirmed", "Inventory and settlement delta reconciled", "Supported exposure separated from unresolved signal", "Recovery stance confirmed for controlled action"].map((statement) => <div key={statement} className="flex items-center gap-2.5"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#26734D] text-[12px] font-bold leading-none text-white" aria-hidden="true">✓</span><span>{statement}</span></div>)}</div></section>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>;
+}
+
 function FinancialResolutionWorkflow() {
   const searches = ["Inbound quantity variance", "Settlement credit attribution", "Receiving and custody trail"];
   const records = ["Shipment Receiving Register", "Carrier Custody Record", "Amazon Case Correspondence", "Settlement Transaction Detail", "Inventory Movement Ledger"];
@@ -203,7 +268,7 @@ export default function Routine() {
   if (routineLibraryVisible) return <RoutineLibrary reduceMotion={Boolean(reduceMotion)} />;
   if (evidenceRequiredVisible) return <EvidenceRequired showSearch={false} showSidebar={false} flat />;
   if (implementingRoutineVisible) return <ImplementingRoutine reduceMotion={Boolean(reduceMotion)} />;
-  if (financialAnalysisWorkspaceVisible) return <main aria-label="Financial Analysis Workspace" className="min-h-screen bg-white font-google-sans"><RecoverOnce /></main>;
+  if (financialAnalysisWorkspaceVisible) return <FinancialAnalysisWorkspace reduceMotion={Boolean(reduceMotion)} />;
   if (workflowVisible) return <main className="bg-white font-google-sans"><FinancialResolutionWorkflow /></main>;
 
   return <main className="min-h-screen bg-[#FFFFFF] p-3 font-google-sans sm:p-8"><div className="relative mx-auto flex min-h-[620px] w-full items-center justify-center bg-white px-4 py-8 sm:min-h-[760px] sm:px-8"><div className="relative flex min-h-[580px] w-full max-w-[1100px] items-center justify-center sm:min-h-[680px]" aria-label="Routine creation visual" aria-live="polite"><AnimatePresence mode="wait">
