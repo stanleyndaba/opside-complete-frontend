@@ -100,6 +100,39 @@ function RoutineWorkspace() {
     </div>
   </div></motion.main>;
 }
+
+function ImplementingRoutine({ reduceMotion }: { reduceMotion: boolean }) {
+  const implementationSteps = [
+    "Establishing financial position",
+    "Reviewing files",
+    "Checking variance",
+    "Reconciling source records",
+    "Validating supporting evidence",
+    "Preparing routine controls",
+  ];
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setStep(implementationSteps.length - 1);
+      return;
+    }
+    setStep(0);
+    const timers = implementationSteps.map((_, index) => window.setTimeout(() => setStep(index), 420 + index * 720));
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [reduceMotion]);
+
+  return <motion.main key="implementing-routine" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: reduceMotion ? 0 : 0.42 }} className="flex min-h-screen items-center justify-center bg-white px-5 py-12 font-google-sans text-[#182026] sm:px-10">
+    <div className="flex w-full max-w-[520px] flex-col items-center text-center">
+      <motion.div className="h-5 w-5 rounded-full bg-[radial-gradient(circle_at_32%_28%,#A9E9FF_0%,#78D8F5_28%,#F59ACB_72%,#F277B8_100%)] shadow-[0_0_10px_rgba(143,207,246,0.64),0_0_16px_rgba(242,119,184,0.28)]" animate={{ x: [0, -3, 3, -2, 0], y: [0, 2, -2, 1, 0], scale: [1, 0.94, 1.07, 0.97, 1], rotate: [0, -6, 6, -3, 0] }} transition={{ duration: 1.15, repeat: Infinity, ease: "easeInOut" }} />
+      <h1 className="mt-4 text-[20px] font-medium tracking-[-0.035em] sm:text-[28px]">Implementing Routine</h1>
+      <AnimatePresence mode="wait">
+        <motion.p key={implementationSteps[step]} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: reduceMotion ? 0 : 0.28 }} className="mt-2 text-[11px] text-[#77716B] sm:text-[13px]">{implementationSteps[step]}</motion.p>
+      </AnimatePresence>
+    </div>
+  </motion.main>;
+}
+
 function FinancialResolutionWorkflow() {
   const searches = ["Inbound quantity variance", "Settlement credit attribution", "Receiving and custody trail"];
   const records = ["Shipment Receiving Register", "Carrier Custody Record", "Amazon Case Correspondence", "Settlement Transaction Detail", "Inventory Movement Ledger"];
@@ -144,7 +177,7 @@ export default function Routine() {
   const [routineStep, setRoutineStep] = useState(0);
   useEffect(() => {
     if (reduceMotion) return;
-  const timer = window.setInterval(() => setRoutineStep((step) => (step >= 61 ? 0 : step + 1)), 760);
+  const timer = window.setInterval(() => setRoutineStep((step) => (step >= 69 ? 0 : step + 1)), 760);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
@@ -158,7 +191,8 @@ export default function Routine() {
   const allRoutinesVisible = !reduceMotion && routineStep >= 44 && routineStep < 53;
   const dashboardVisible = !reduceMotion && routineStep >= 53 && routineStep < 59;
   const evidenceRequiredVisible = !reduceMotion && routineStep >= 11 && routineStep < 27;
-  const workflowVisible = reduceMotion || routineStep >= 59;
+  const implementingRoutineVisible = !reduceMotion && routineStep >= 59 && routineStep < 67;
+  const workflowVisible = reduceMotion || routineStep >= 67;
   const activeRoutineItem = reduceMotion ? 3 : ((3 - Math.floor(Math.max(0, routineStep - 4))) % routineItems.length + routineItems.length) % routineItems.length;
   const stackSlots = [-3, -2, -1, 0, 1, 2, 3];
 
@@ -166,6 +200,7 @@ export default function Routine() {
   if (allRoutinesVisible) return <AllRoutines reduceMotion={Boolean(reduceMotion)} />;
   if (routineLibraryVisible) return <RoutineLibrary reduceMotion={Boolean(reduceMotion)} />;
   if (evidenceRequiredVisible) return <EvidenceRequired showSearch={false} showSidebar={false} flat />;
+  if (implementingRoutineVisible) return <ImplementingRoutine reduceMotion={Boolean(reduceMotion)} />;
   if (workflowVisible) return <main className="bg-white font-google-sans"><FinancialResolutionWorkflow /></main>;
 
   return <main className="min-h-screen bg-[#FFFFFF] p-3 font-google-sans sm:p-8"><div className="relative mx-auto flex min-h-[620px] w-full items-center justify-center bg-white px-4 py-8 sm:min-h-[760px] sm:px-8"><div className="relative flex min-h-[580px] w-full max-w-[1100px] items-center justify-center sm:min-h-[680px]" aria-label="Routine creation visual" aria-live="polite"><AnimatePresence mode="wait">
