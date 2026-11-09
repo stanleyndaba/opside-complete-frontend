@@ -76,19 +76,19 @@ export default function Routine() {
   const [routineStep, setRoutineStep] = useState(0);
   useEffect(() => {
     if (reduceMotion) return;
-    const timer = window.setInterval(() => setRoutineStep((step) => (step >= 33 ? 0 : step + 1)), 760);
+    const timer = window.setInterval(() => setRoutineStep((step) => (step >= 47 ? 0 : step + 1)), 760);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
   const listBuilding = routineStep < 5;
   const listVisible = !reduceMotion && routineStep < 11;
-  const buttonVisible = !reduceMotion && routineStep >= 15 && routineStep < 17;
-  const routineTapped = routineStep === 16;
-  const generatingPlanVisible = !reduceMotion && routineStep >= 17 && routineStep < 19;
-  const cardsVisible = !reduceMotion && routineStep >= 19 && routineStep < 23;
-  const dashboardVisible = !reduceMotion && routineStep >= 23 && routineStep < 29;
-  const evidenceRequiredVisible = !reduceMotion && routineStep >= 11 && routineStep < 15;
-  const workflowVisible = reduceMotion || routineStep >= 29;
+  const buttonVisible = !reduceMotion && routineStep >= 31 && routineStep < 33;
+  const routineTapped = routineStep === 32;
+  const generatingPlanVisible = !reduceMotion && routineStep >= 33 && routineStep < 35;
+  const cardsVisible = !reduceMotion && routineStep >= 35 && routineStep < 39;
+  const dashboardVisible = !reduceMotion && routineStep >= 39 && routineStep < 45;
+  const evidenceRequiredVisible = !reduceMotion && routineStep >= 11 && routineStep < 31;
+  const workflowVisible = reduceMotion || routineStep >= 45;
   const activeRoutineItem = reduceMotion ? 3 : ((3 - Math.floor(Math.max(0, routineStep - 4))) % routineItems.length + routineItems.length) % routineItems.length;
   const stackSlots = [-3, -2, -1, 0, 1, 2, 3];
 
