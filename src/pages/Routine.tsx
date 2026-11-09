@@ -20,6 +20,50 @@ const routineCards = [
   { title: "Deliver", body: "Deliver findings with the supporting source records attached.", meta: "Collects", value: "Message", image: "/slack-icon-2019.png", color: "text-[#5C9A75]" },
 ];
 
+const routineTypes = [
+  "Settlement variance control",
+  "Inbound shortage and receiving variance",
+  "Reimbursement eligibility and duplicate recovery",
+  "Return and refund reconciliation",
+  "FBA fee and surcharge validation",
+  "Inventory movement and ledger reconciliation",
+  "Removal and disposal reimbursement watch",
+  "Amazon case response and residual follow-up",
+  "Payout attribution and clearing control",
+  "Evidence sufficiency and exception monitoring",
+];
+
+function RoutineLibrary({ reduceMotion }: { reduceMotion: boolean }) {
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [createdCount, setCreatedCount] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setVisibleCount(routineTypes.length);
+      setCreatedCount(routineTypes.length);
+      return;
+    }
+    setVisibleCount(0);
+    setCreatedCount(0);
+    const timers: number[] = [];
+    routineTypes.forEach((_, index) => {
+      timers.push(window.setTimeout(() => setVisibleCount(index + 1), 280 + index * 620));
+      timers.push(window.setTimeout(() => setCreatedCount(index + 1), 700 + index * 620));
+    });
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [reduceMotion]);
+
+  return <motion.main key="routine-library" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen bg-white px-5 py-8 font-google-sans text-[#182026] sm:px-10 sm:py-12 lg:px-16 lg:py-16">
+    <div className="mx-auto max-w-[980px]">
+      <div className="mb-8 sm:mb-10"><p className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#8B857F] sm:text-[10px]">Routine library</p><h1 className="mt-2 text-[20px] font-medium tracking-[-0.045em] sm:text-[30px]">Building recurring financial controls</h1><p className="mt-2 max-w-[620px] text-[11px] leading-5 text-[#77716B] sm:text-[14px] sm:leading-6">Margin is preparing the control routines that keep settlement activity, supporting evidence, and unresolved exceptions under review.</p></div>
+      <div className="grid grid-cols-[minmax(0,1fr)_112px] border-b border-[#E5E7E7] pb-3 text-[9px] font-semibold uppercase tracking-[0.08em] text-[#8B857F] sm:grid-cols-[minmax(0,1fr)_140px] sm:text-[10px]"><span>Routine type</span><span>Routine state</span></div>
+      <div className="divide-y divide-[#ECEEEE]">
+        {routineTypes.map((routine, index) => index < visibleCount ? <motion.div key={routine} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3 }} className="grid min-h-[48px] grid-cols-[minmax(0,1fr)_112px] items-center gap-4 py-3 text-[11px] sm:grid-cols-[minmax(0,1fr)_140px] sm:py-3.5 sm:text-[13px]"><span className="min-w-0 pr-3 text-[#36404A]">{routine}</span>{index < createdCount ? <span className="inline-flex w-fit items-center rounded-full bg-[#EAF5EF] px-2.5 py-1 text-[9px] font-semibold normal-case tracking-normal text-[#2E7650] sm:text-[10px]">Created</span> : <span className="text-[10px] text-[#8B857F] sm:text-[11px]">Creating...</span>}</motion.div> : null)}
+      </div>
+    </div>
+  </motion.main>;
+}
+
 function RoutineWorkspace() {
   return <motion.main key="routine-workspace" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen bg-[#FFFFFF] px-5 py-8 font-google-sans text-[#182026] sm:px-10 sm:py-12 lg:px-16 lg:py-16"><div className="mx-auto max-w-[980px]">
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38 }}>
@@ -76,7 +120,7 @@ export default function Routine() {
   const [routineStep, setRoutineStep] = useState(0);
   useEffect(() => {
     if (reduceMotion) return;
-    const timer = window.setInterval(() => setRoutineStep((step) => (step >= 43 ? 0 : step + 1)), 760);
+  const timer = window.setInterval(() => setRoutineStep((step) => (step >= 52 ? 0 : step + 1)), 760);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
@@ -86,13 +130,15 @@ export default function Routine() {
   const routineTapped = routineStep === 28;
   const generatingPlanVisible = !reduceMotion && routineStep >= 29 && routineStep < 31;
   const cardsVisible = !reduceMotion && routineStep >= 31 && routineStep < 35;
-  const dashboardVisible = !reduceMotion && routineStep >= 35 && routineStep < 41;
+  const routineLibraryVisible = !reduceMotion && routineStep >= 35 && routineStep < 44;
+  const dashboardVisible = !reduceMotion && routineStep >= 44 && routineStep < 50;
   const evidenceRequiredVisible = !reduceMotion && routineStep >= 11 && routineStep < 27;
-  const workflowVisible = reduceMotion || routineStep >= 41;
+  const workflowVisible = reduceMotion || routineStep >= 50;
   const activeRoutineItem = reduceMotion ? 3 : ((3 - Math.floor(Math.max(0, routineStep - 4))) % routineItems.length + routineItems.length) % routineItems.length;
   const stackSlots = [-3, -2, -1, 0, 1, 2, 3];
 
   if (dashboardVisible) return <RoutineWorkspace />;
+  if (routineLibraryVisible) return <RoutineLibrary reduceMotion={Boolean(reduceMotion)} />;
   if (evidenceRequiredVisible) return <EvidenceRequired showSearch={false} showSidebar={false} flat />;
   if (workflowVisible) return <main className="bg-white font-google-sans"><FinancialResolutionWorkflow /></main>;
 
