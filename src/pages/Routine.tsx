@@ -55,8 +55,8 @@ function RoutineLibrary({ reduceMotion }: { reduceMotion: boolean }) {
 
   return <motion.main key="routine-library" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen bg-white px-5 py-8 font-google-sans text-[#182026] sm:px-10 sm:py-12 lg:px-16 lg:py-16">
     <div className="mx-auto max-w-[980px]">
-      <div className="mb-8 sm:mb-10"><p className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#8B857F] sm:text-[10px]">Routine library</p><h1 className="mt-2 text-[20px] font-medium tracking-[-0.045em] sm:text-[30px]">Building recurring financial controls</h1><p className="mt-2 max-w-[620px] text-[11px] leading-5 text-[#77716B] sm:text-[14px] sm:leading-6">Margin is preparing the control routines that keep settlement activity, supporting evidence, and unresolved exceptions under review.</p></div>
-      <div className="grid grid-cols-[minmax(0,1fr)_112px] border-b border-[#E5E7E7] pb-3 text-[9px] font-semibold uppercase tracking-[0.08em] text-[#8B857F] sm:grid-cols-[minmax(0,1fr)_140px] sm:text-[10px]"><span>Routine type</span><span>Routine state</span></div>
+      <div className="mb-8 sm:mb-10"><h1 className="text-[20px] font-medium tracking-[-0.045em] sm:text-[30px]">Building recurring financial controls</h1><p className="mt-2 max-w-[620px] text-[11px] leading-5 text-[#77716B] sm:text-[14px] sm:leading-6">Prepared control routines</p></div>
+      <div className="grid grid-cols-[minmax(0,1fr)_112px] border-b border-[#E5E7E7] pb-3 text-[10px] font-medium tracking-tight text-[#8B857F] sm:grid-cols-[minmax(0,1fr)_140px] sm:text-[11px]"><span>Routine type</span><span>Routine state</span></div>
       <div className="divide-y divide-[#ECEEEE]">
         {routineTypes.map((routine, index) => index < visibleCount ? <motion.div key={routine} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3 }} className="grid min-h-[48px] grid-cols-[minmax(0,1fr)_112px] items-center gap-4 py-3 text-[11px] sm:grid-cols-[minmax(0,1fr)_140px] sm:py-3.5 sm:text-[13px]"><span className="min-w-0 pr-3 text-[#36404A]">{routine}</span>{index < createdCount ? <span className="inline-flex w-fit items-center rounded-full bg-[#EAF5EF] px-2.5 py-1 text-[9px] font-semibold normal-case tracking-normal text-[#2E7650] sm:text-[10px]">Created</span> : <span className="text-[10px] text-[#8B857F] sm:text-[11px]">Creating...</span>}</motion.div> : null)}
       </div>
@@ -128,9 +128,9 @@ export default function Routine() {
   const listVisible = !reduceMotion && routineStep < 11;
   const buttonVisible = !reduceMotion && routineStep >= 27 && routineStep < 29;
   const routineTapped = routineStep === 28;
-  const generatingPlanVisible = !reduceMotion && routineStep >= 29 && routineStep < 31;
-  const cardsVisible = !reduceMotion && routineStep >= 31 && routineStep < 35;
-  const routineLibraryVisible = !reduceMotion && routineStep >= 35 && routineStep < 44;
+  const routineLibraryVisible = !reduceMotion && routineStep >= 29 && routineStep < 38;
+  const generatingPlanVisible = !reduceMotion && routineStep >= 38 && routineStep < 40;
+  const cardsVisible = !reduceMotion && routineStep >= 40 && routineStep < 44;
   const dashboardVisible = !reduceMotion && routineStep >= 44 && routineStep < 50;
   const evidenceRequiredVisible = !reduceMotion && routineStep >= 11 && routineStep < 27;
   const workflowVisible = reduceMotion || routineStep >= 50;
