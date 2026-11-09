@@ -140,7 +140,11 @@ const documentSourceIcons = [
   { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
 ] as const;
 
-export default function EvidenceRequired() {
+type EvidenceRequiredProps = {
+  showSearch?: boolean;
+};
+
+export default function EvidenceRequired({ showSearch = true }: EvidenceRequiredProps) {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const showDocument = (item: EvidenceItem) => {
@@ -163,13 +167,13 @@ export default function EvidenceRequired() {
         </button>
       </aside>
       <div className="min-w-0 flex-1">
-        <nav aria-label="Evidence preview search" className="mb-3 rounded-[10px] border border-[#DCE3E7] bg-white p-1.5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
+        {showSearch ? <nav aria-label="Evidence preview search" className="mb-3 rounded-[10px] border border-[#DCE3E7] bg-white p-1.5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
           <label className="flex h-9 items-center gap-2 rounded-[10px] bg-[#FBFCFC] px-3 focus-within:ring-2 focus-within:ring-[#0B74DE]/10">
             <img src="/logoimagetwo.png" alt="Margin" className="h-3.5 w-auto shrink-0 object-contain" />
             <Search className="h-3.5 w-3.5 shrink-0 text-[#8A99A3]" strokeWidth={1.8} aria-hidden="true" />
             <input aria-label="Margin Search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Margin Search" className="min-w-0 flex-1 bg-transparent text-[12px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A99A3]" />
           </label>
-        </nav>
+        </nav> : <div aria-hidden="true" className="mb-3 h-[51px]" />}
         <section className="overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
         <header className="border-b border-[#E7EEF2] px-5 pb-4 pt-5 sm:px-6">
           <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Governed evidence control record</p>
