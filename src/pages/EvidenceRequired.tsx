@@ -159,10 +159,10 @@ export default function EvidenceRequired({ showSearch = true, showSidebar = true
       return;
     }
     setRevealStep(0);
-    let delay = 650;
+    let delay = 450;
     const timers = Array.from({ length: totalRevealSteps }, (_, index) => {
       const timer = window.setTimeout(() => setRevealStep(index + 1), delay);
-      delay += index < matchedDocuments.length - 1 ? 780 : 690;
+      delay += index < matchedDocuments.length - 1 ? 540 : 480;
       return timer;
     });
     return () => timers.forEach((timer) => window.clearTimeout(timer));
