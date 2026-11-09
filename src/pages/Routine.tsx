@@ -64,6 +64,30 @@ function RoutineLibrary({ reduceMotion }: { reduceMotion: boolean }) {
   </motion.main>;
 }
 
+function AllRoutines({ reduceMotion }: { reduceMotion: boolean }) {
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setVisibleCount(routineTypes.length);
+      return;
+    }
+    setVisibleCount(0);
+    const timers = routineTypes.map((_, index) => window.setTimeout(() => setVisibleCount(index + 1), 180 + index * 180));
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [reduceMotion]);
+
+  return <motion.main key="all-routines" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.34, ease: [0.22, 1, 0.36, 1] }} className="min-h-screen bg-white px-5 py-8 font-google-sans text-[#182026] sm:px-10 sm:py-12 lg:px-16 lg:py-16">
+    <div className="mx-auto max-w-[980px]">
+      <div className="mb-8 sm:mb-10"><h1 className="text-[20px] font-medium tracking-[-0.045em] sm:text-[30px]">All Routines</h1></div>
+      <div className="grid grid-cols-[minmax(0,1fr)_148px] border-b border-[#E5E7E7] pb-3 text-[10px] font-medium tracking-tight text-[#8B857F] sm:grid-cols-[minmax(0,1fr)_172px] sm:text-[11px]"><span>Routine Type</span><span>Saved Routine</span></div>
+      <div className="divide-y divide-[#ECEEEE]">
+        {routineTypes.map((routine, index) => index < visibleCount ? <motion.div key={routine} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }} className="grid min-h-[52px] grid-cols-[minmax(0,1fr)_148px] items-center gap-4 py-3 text-[11px] sm:grid-cols-[minmax(0,1fr)_172px] sm:py-3.5 sm:text-[13px]"><span className="min-w-0 pr-3 text-[#36404A]">{routine}</span><button type="button" className="inline-flex w-fit items-center gap-1.5 rounded-[6px] bg-[#F05A3C] px-3 py-2 text-[10px] font-semibold tracking-tight text-white transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2 sm:px-3.5 sm:text-[11px]">Review Routine <span aria-hidden="true">→</span></button></motion.div> : null)}
+      </div>
+    </div>
+  </motion.main>;
+}
+
 function RoutineWorkspace() {
   return <motion.main key="routine-workspace" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen bg-[#FFFFFF] px-5 py-8 font-google-sans text-[#182026] sm:px-10 sm:py-12 lg:px-16 lg:py-16"><div className="mx-auto max-w-[980px]">
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38 }}>
@@ -120,7 +144,7 @@ export default function Routine() {
   const [routineStep, setRoutineStep] = useState(0);
   useEffect(() => {
     if (reduceMotion) return;
-  const timer = window.setInterval(() => setRoutineStep((step) => (step >= 52 ? 0 : step + 1)), 760);
+  const timer = window.setInterval(() => setRoutineStep((step) => (step >= 61 ? 0 : step + 1)), 760);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
@@ -131,13 +155,15 @@ export default function Routine() {
   const routineLibraryVisible = !reduceMotion && routineStep >= 29 && routineStep < 38;
   const generatingPlanVisible = !reduceMotion && routineStep >= 38 && routineStep < 40;
   const cardsVisible = !reduceMotion && routineStep >= 40 && routineStep < 44;
-  const dashboardVisible = !reduceMotion && routineStep >= 44 && routineStep < 50;
+  const allRoutinesVisible = !reduceMotion && routineStep >= 44 && routineStep < 53;
+  const dashboardVisible = !reduceMotion && routineStep >= 53 && routineStep < 59;
   const evidenceRequiredVisible = !reduceMotion && routineStep >= 11 && routineStep < 27;
-  const workflowVisible = reduceMotion || routineStep >= 50;
+  const workflowVisible = reduceMotion || routineStep >= 59;
   const activeRoutineItem = reduceMotion ? 3 : ((3 - Math.floor(Math.max(0, routineStep - 4))) % routineItems.length + routineItems.length) % routineItems.length;
   const stackSlots = [-3, -2, -1, 0, 1, 2, 3];
 
   if (dashboardVisible) return <RoutineWorkspace />;
+  if (allRoutinesVisible) return <AllRoutines reduceMotion={Boolean(reduceMotion)} />;
   if (routineLibraryVisible) return <RoutineLibrary reduceMotion={Boolean(reduceMotion)} />;
   if (evidenceRequiredVisible) return <EvidenceRequired showSearch={false} showSidebar={false} flat />;
   if (workflowVisible) return <main className="bg-white font-google-sans"><FinancialResolutionWorkflow /></main>;
