@@ -297,7 +297,7 @@ export default function Routine() {
   const [routineStep, setRoutineStep] = useState(0);
   useEffect(() => {
     if (reduceMotion) return;
-  const timer = window.setInterval(() => setRoutineStep((step) => (step >= 90 ? 0 : step + 1)), 760);
+  const timer = window.setInterval(() => setRoutineStep((step) => (step >= 130 ? 0 : step + 1)), 760);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
@@ -312,8 +312,8 @@ export default function Routine() {
   const dashboardVisible = !reduceMotion && routineStep >= 53 && routineStep < 59;
   const evidenceRequiredVisible = !reduceMotion && routineStep >= 11 && routineStep < 27;
   const implementingRoutineVisible = !reduceMotion && routineStep >= 59 && routineStep < 67;
-  const financialAnalysisWorkspaceVisible = !reduceMotion && routineStep >= 67 && routineStep < 84;
-  const workflowVisible = reduceMotion || routineStep >= 84;
+  const financialAnalysisWorkspaceVisible = !reduceMotion && routineStep >= 67 && routineStep < 125;
+  const workflowVisible = reduceMotion || routineStep >= 125;
   const activeRoutineItem = reduceMotion ? 3 : ((3 - Math.floor(Math.max(0, routineStep - 4))) % routineItems.length + routineItems.length) % routineItems.length;
   const stackSlots = [-3, -2, -1, 0, 1, 2, 3];
 
