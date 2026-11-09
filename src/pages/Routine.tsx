@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Archive, CalendarDays, Check, ChevronDown, Database, Layers3, MousePointer2, Search } from "lucide-react";
 import EvidenceRequired from "./EvidenceRequired";
+import RecoverOnce from "./RecoverOnce";
 
 const routineItems = [
   "Drafted 18 review agendas",
@@ -177,7 +178,7 @@ export default function Routine() {
   const [routineStep, setRoutineStep] = useState(0);
   useEffect(() => {
     if (reduceMotion) return;
-  const timer = window.setInterval(() => setRoutineStep((step) => (step >= 69 ? 0 : step + 1)), 760);
+  const timer = window.setInterval(() => setRoutineStep((step) => (step >= 83 ? 0 : step + 1)), 760);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
@@ -192,7 +193,8 @@ export default function Routine() {
   const dashboardVisible = !reduceMotion && routineStep >= 53 && routineStep < 59;
   const evidenceRequiredVisible = !reduceMotion && routineStep >= 11 && routineStep < 27;
   const implementingRoutineVisible = !reduceMotion && routineStep >= 59 && routineStep < 67;
-  const workflowVisible = reduceMotion || routineStep >= 67;
+  const financialAnalysisWorkspaceVisible = !reduceMotion && routineStep >= 67 && routineStep < 75;
+  const workflowVisible = reduceMotion || routineStep >= 75;
   const activeRoutineItem = reduceMotion ? 3 : ((3 - Math.floor(Math.max(0, routineStep - 4))) % routineItems.length + routineItems.length) % routineItems.length;
   const stackSlots = [-3, -2, -1, 0, 1, 2, 3];
 
@@ -201,6 +203,7 @@ export default function Routine() {
   if (routineLibraryVisible) return <RoutineLibrary reduceMotion={Boolean(reduceMotion)} />;
   if (evidenceRequiredVisible) return <EvidenceRequired showSearch={false} showSidebar={false} flat />;
   if (implementingRoutineVisible) return <ImplementingRoutine reduceMotion={Boolean(reduceMotion)} />;
+  if (financialAnalysisWorkspaceVisible) return <main aria-label="Financial Analysis Workspace" className="min-h-screen bg-white font-google-sans"><RecoverOnce /></main>;
   if (workflowVisible) return <main className="bg-white font-google-sans"><FinancialResolutionWorkflow /></main>;
 
   return <main className="min-h-screen bg-[#FFFFFF] p-3 font-google-sans sm:p-8"><div className="relative mx-auto flex min-h-[620px] w-full items-center justify-center bg-white px-4 py-8 sm:min-h-[760px] sm:px-8"><div className="relative flex min-h-[580px] w-full max-w-[1100px] items-center justify-center sm:min-h-[680px]" aria-label="Routine creation visual" aria-live="polite"><AnimatePresence mode="wait">
