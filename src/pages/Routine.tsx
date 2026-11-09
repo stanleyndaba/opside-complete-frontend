@@ -34,7 +34,7 @@ const routineTypes = [
   "Evidence sufficiency and exception monitoring",
 ];
 
-function RoutineLibrary({ reduceMotion }: { reduceMotion: boolean }) {
+export function RoutineLibrary({ reduceMotion }: { reduceMotion: boolean }) {
   const [visibleCount, setVisibleCount] = useState(0);
   const [createdCount, setCreatedCount] = useState(0);
 
@@ -65,7 +65,7 @@ function RoutineLibrary({ reduceMotion }: { reduceMotion: boolean }) {
   </motion.main>;
 }
 
-function AllRoutines({ reduceMotion }: { reduceMotion: boolean }) {
+export function AllRoutines({ reduceMotion }: { reduceMotion: boolean }) {
   const [visibleCount, setVisibleCount] = useState(0);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ function AllRoutines({ reduceMotion }: { reduceMotion: boolean }) {
   </motion.main>;
 }
 
-function RoutineWorkspace() {
+export function RoutineWorkspace() {
   return <motion.main key="routine-workspace" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen bg-[#FFFFFF] px-5 py-8 font-google-sans text-[#182026] sm:px-10 sm:py-12 lg:px-16 lg:py-16"><div className="mx-auto max-w-[980px]">
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38 }}>
       <div className="mt-3 flex items-start justify-between gap-5"><div><h1 className="text-[16px] font-medium tracking-[-0.045em] sm:text-[23px]">Saved routine</h1><p className="mt-2 max-w-[600px] text-[12px] leading-5 text-[#77716B] sm:text-[15px] sm:leading-6">The operation is now preserved and ready to run against connected financial records.</p></div><span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#EAF5EF] px-2.5 py-1.5 text-[10px] font-semibold text-[#2E7650] sm:px-3 sm:text-[11px]"><span className="h-1.5 w-1.5 rounded-full bg-[#3E9A68]" />Active</span></div>
@@ -102,7 +102,7 @@ function RoutineWorkspace() {
   </div></motion.main>;
 }
 
-function ImplementingRoutine({ reduceMotion }: { reduceMotion: boolean }) {
+export function ImplementingRoutine({ reduceMotion }: { reduceMotion: boolean }) {
   const implementationSteps = [
     "Establishing financial position",
     "Reviewing files",
@@ -185,7 +185,7 @@ const analysisRail = [
   { label: "Next step", icon: Search },
 ];
 
-function FinancialAnalysisWorkspace({ reduceMotion }: { reduceMotion: boolean }) {
+export function FinancialAnalysisWorkspace({ reduceMotion }: { reduceMotion: boolean }) {
   const [paragraphIndex, setParagraphIndex] = useState(0);
   const [visibleText, setVisibleText] = useState("");
   const [analysisComplete, setAnalysisComplete] = useState(reduceMotion);
@@ -252,7 +252,7 @@ function FinancialAnalysisWorkspace({ reduceMotion }: { reduceMotion: boolean })
   </div>;
 }
 
-function FinancialResolutionWorkflow() {
+export function FinancialResolutionWorkflow() {
   const searches = ["Inbound quantity variance", "Settlement credit attribution", "Receiving and custody trail"];
   const records = ["Shipment Receiving Register", "Carrier Custody Record", "Amazon Case Correspondence", "Settlement Transaction Detail", "Inventory Movement Ledger"];
   const determinationRecords = ["Settlement Valuation Summary", "Expected vs Approved Credit Schedule", "Fee and Cost-Basis Reconciliation", "Payout and Clearing Ledger", "Recovery Economics Worksheet", "Entity Allocation Register", "Financial Determination Evidence Index"];

@@ -267,7 +267,7 @@ function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
 }
 
 
-function AuditFindingsStage({ onComplete }: { onComplete: () => void }) {
+export function AuditFindingsStage({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
   const [activeFinding, setActiveFinding] = useState(0);
   const findingsComplete = reduceMotion || activeFinding >= auditFindings.length;
@@ -309,7 +309,7 @@ function AuditFindingsStage({ onComplete }: { onComplete: () => void }) {
   </motion.div>;
 }
 
-function IssuesFoundStage({ onComplete }: { onComplete: () => void }) {
+export function IssuesFoundStage({ onComplete }: { onComplete: () => void }) {
   return (
     <section aria-label="Issues found and discrepancy register">
       <DiscrepanciesPresentation onComplete={onComplete} />
@@ -317,11 +317,11 @@ function IssuesFoundStage({ onComplete }: { onComplete: () => void }) {
   );
 }
 
-function ProofRequiredStage({ onComplete }: { onComplete: () => void }) {
+export function ProofRequiredStage({ onComplete }: { onComplete: () => void }) {
   return <ProofRequiredVisual onComplete={onComplete} />;
 }
 
-function PlatformSimulationStage({ onComplete }: { onComplete: () => void }) {
+export function PlatformSimulationStage({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
   const speed = 1.5;
 
@@ -333,7 +333,7 @@ function PlatformSimulationStage({ onComplete }: { onComplete: () => void }) {
   return <PlatformSimulate speed={speed} tokenSpeed={3} />;
 }
 
-function DocumentOrbitStage({ onComplete }: { onComplete: () => void }) {
+export function DocumentOrbitStage({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -440,7 +440,7 @@ function HighlightedDescription({ description, highlight, highlightComplete = tr
   return <>{parts}</>;
 }
 
-function EvidenceRegisterStage({ workspaceMode = false }: { workspaceMode?: boolean }) {
+export function EvidenceRegisterStage({ workspaceMode = false }: { workspaceMode?: boolean }) {
   return <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} className={workspaceMode ? "px-0 pb-5" : "px-5 pb-5 sm:px-6"}>
     <div className={workspaceMode ? "rounded-none border-0 bg-transparent p-0" : "rounded-[10px] border border-[#D8E3E8] bg-white p-4 sm:p-5"}>
       <div className={workspaceMode ? "flex items-end justify-between gap-4 pb-3" : "flex items-end justify-between gap-4 border-b border-[#E3ECEF] pb-3"}><div><p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Evidence register</p><h2 className="mt-1 text-[16px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[18px]">Source records assembled for review</h2></div><span className="text-[10px] font-semibold tracking-tight text-[#527284]">17 records linked</span></div>
@@ -521,7 +521,7 @@ const artifactAnalysisChecks = [
   ['Decision package ready', 'The supported exposure is separated from unresolved items and ready for governed review.'],
 ] as const;
 
-function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
+export function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
   const [activeItem, setActiveItem] = useState(0);
   const analysisComplete = reduceMotion || activeItem >= artifactAnalysisItems.length;
@@ -563,7 +563,7 @@ function ArtifactAnalysisStage({ onComplete }: { onComplete: () => void }) {
   </motion.div>;
 }
 
-function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
+export function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
   const reduceMotion = useReducedMotion();
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-5 py-5 sm:px-6">
@@ -621,7 +621,7 @@ function EvidenceIntakeStage({ stage }: { stage: 'dropzone' | 'documents' }) {
   );
 }
 
-function TeamHandoffStage() {
+export function TeamHandoffStage() {
   const reduceMotion = useReducedMotion();
   const handoffMessages = [
     { role: 'Finance Operations', subject: 'Investigation packet is ready', preview: 'The source population, affected units, valuation basis, and next action are assembled. No manual record chase is required to begin review.', avatar: '/recovery-finance-avatar.png', highlight: 'bg-[#F7E7CF]', documents: [{ name: 'Evidence Register', icon: '/excel-icon-margin.png' }, { name: 'Unit Cost Basis', icon: '/gd.png' }] },
@@ -670,11 +670,11 @@ function TeamHandoffStage() {
   </motion.div>;
 }
 
-function EvidenceMatchStage() {
+export function EvidenceMatchStage() {
   return <div><div className="px-5 pt-5 sm:px-6"><p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Evidence reconciliation</p><h2 className="mt-1 font-google-sans text-[18px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[22px]">Connected records resolve to one financial position</h2></div><EvidenceMatchContent embedded /></div>;
 }
 
-function AmazonCorrespondenceStage() {
+export function AmazonCorrespondenceStage() {
   const [toast, setToast] = useState<string | null>(null);
   const documentIcons = ["/outlookicon.webp", "/pdf-file-icon.webp", "/onedriive.png", "/gmailicon.png", "/excel-icon-margin.png", "/amazon-logo-transparent-circle.png"];
   const messages = [
@@ -705,7 +705,7 @@ function AmazonCorrespondenceStage() {
   </motion.section>;
 }
 
-function AccuracyLearningStage() {
+export function AccuracyLearningStage() {
   return <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} aria-label="Recovery learning and benchmark evaluation" className="bg-white">
     <AccuracyGraphContent />
   </motion.section>;
@@ -751,7 +751,7 @@ function highlightAnomalyDetail(detail: string) {
   return detail.split(pattern).map((part, index) => terms.some((term) => term.toLowerCase() === part.toLowerCase()) ? <mark key={`${part}-${index}`} className="rounded-[3px] bg-[#E6F0FF] px-1 py-0.5 font-semibold text-[#285A86]">{part}</mark> : part);
 }
 
-function ReconciledAnomalies({ cards: anomalyCards }: { cards: RecordCard[] }) {
+export function ReconciledAnomalies({ cards: anomalyCards }: { cards: RecordCard[] }) {
   const [selectedOutcome, setSelectedOutcome] = useState<string | null>(null);
   return <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} aria-label="Recovered and reconciled outcomes" className="w-full px-0 py-7 sm:py-10">
     <div className="mb-8 space-y-1"><p className="text-[10px] font-medium uppercase tracking-tight text-[#7B8A97]">Verified recovery outcomes</p><h2 className="font-google-sans text-[20px] font-normal tracking-tight text-[#182026] sm:text-[24px]">Recovered and reconciled</h2><p className="max-w-none text-[12px] leading-5 tracking-tight text-[#66737F]">Margin has completed the reconciliation and verified the financial outcome. Finance can review the recovered value, supporting record, and final disposition for each position.</p></div>
@@ -763,7 +763,7 @@ function ReconciledAnomalies({ cards: anomalyCards }: { cards: RecordCard[] }) {
   </motion.section>;
 }
 
-function RecoveryPositionStage() {
+export function RecoveryPositionStage() {
   const reduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
   const [completedIndex, setCompletedIndex] = useState(-1);
@@ -840,7 +840,7 @@ export function RecoveryPipelineSequence({ workspaceMode = false }: { workspaceM
   </section>;
 }
 
-function QueryStage({ onComplete }: { onComplete: () => void }) {
+export function QueryStage({ onComplete }: { onComplete: () => void }) {
   return (
     <section aria-label="Query explanation event" className="px-5 py-5 sm:px-6">
       <PersonalRecoverySupportVisual progressive onComplete={onComplete} />
