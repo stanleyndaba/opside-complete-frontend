@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check, Files, Layers3, ListChecks, Search } from "lucide-react";
 
 type EvidenceItem = {
@@ -149,14 +150,33 @@ type EvidenceRequiredProps = {
 export default function EvidenceRequired({ showSearch = true, showSidebar = true, flat = false }: EvidenceRequiredProps) {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const reduceMotion = useReducedMotion();
+  const [revealStep, setRevealStep] = useState(0);
+  const totalRevealSteps = matchedDocuments.length + evidenceLog.length;
+  useEffect(() => {
+    if (reduceMotion) {
+      setRevealStep(totalRevealSteps);
+      return;
+    }
+    setRevealStep(0);
+    let delay = 650;
+    const timers = Array.from({ length: totalRevealSteps }, (_, index) => {
+      const timer = window.setTimeout(() => setRevealStep(index + 1), delay);
+      delay += index < matchedDocuments.length - 1 ? 780 : 690;
+      return timer;
+    });
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [reduceMotion, totalRevealSteps]);
   const showDocument = (item: EvidenceItem) => {
     setToast(`${item.file} opened for review`);
     window.setTimeout(() => setToast(null), 2600);
   };
   const getDocumentIcon = (index: number) => documentSourceIcons[index % documentSourceIcons.length];
+  const visibleDocumentCount = Math.min(matchedDocuments.length, revealStep);
+  const visibleLogCount = Math.max(0, Math.min(evidenceLog.length, revealStep - matchedDocuments.length));
   return <main className={`preview-google-sans min-h-screen overflow-x-auto text-[#182026] ${flat ? "bg-white" : "bg-[#FAFAF7]"}`}>
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
-    <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
+    <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-2 sm:min-w-0 sm:px-6 sm:py-4">
       {showSidebar ? <aside aria-label="Evidence preview controls" className="sticky top-4 flex w-[52px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1.5">
         <button type="button" title="Evidence record" aria-label="Evidence record" onClick={() => setToast("Evidence record selected")} className="flex h-9 w-9 items-center justify-center rounded-[5px] bg-[#D9E0E3] text-[#26333A] hover:bg-[#D1DADD] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
           <ListChecks className="h-4 w-4" strokeWidth={1.8} />
@@ -177,16 +197,11 @@ export default function EvidenceRequired({ showSearch = true, showSidebar = true
           </label>
         </nav> : <div aria-hidden="true" className="mb-3 h-[51px]" />}
         <section className={flat ? "overflow-hidden bg-white" : "overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]"}>
-        <header className="border-b border-[#E7EEF2] px-5 pb-4 pt-5 sm:px-6">
-          <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Governed evidence control record</p>
-          <h1 className="mt-1 font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Evidence control for EVT-FBA-2026-0001847</h1>
-          <p className="mt-2 text-[12px] leading-5 tracking-tight text-[#66737F]">Northstar Commerce LLC · Legal entity NTH-US-01 · Amazon US · FBA · Review period: 01 Jan–31 Mar 2026 · Source run: NTH-US-Q1-2026-0904 · Materiality: operational exception · USD. Each record establishes a different part of the governed position; no document is treated as proof in isolation.</p>
-        </header>
         <div>
-        <section className="px-5 pb-5 pt-4 sm:px-6">
+        <section className="px-5 pb-5 pt-3 sm:px-6 sm:pt-4">
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Governed evidence population</h2><span className="text-[11px] font-medium text-[#9AA7B0]">12 required · 10 available · 2 outstanding</span><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
           <div className="relative">
-            {matchedDocuments.map((item, index) => <article key={item.file} className="relative pl-5 sm:pl-6">
+            {matchedDocuments.map((item, index) => index < visibleDocumentCount ? <motion.article key={item.file} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.34 }} className="relative pl-5 sm:pl-6">
               {index < matchedDocuments.length - 1 ? <div className="absolute bottom-0 left-[1px] top-0 w-px bg-[#C9D6DE]" aria-hidden="true" /> : null}
               <span className="absolute left-0 top-[22px] z-10 h-[2px] w-[2px] rounded-full bg-[#0B74DE] ring-2 ring-white" aria-hidden="true" />
               {index === matchedDocuments.length - 1 ? <span className="absolute bottom-0 left-[-3px] h-1 w-2 bg-white" aria-hidden="true" /> : null}
@@ -197,18 +212,18 @@ export default function EvidenceRequired({ showSearch = true, showSidebar = true
                   <div className="min-w-0 flex-1"><div className="flex min-w-0 items-center gap-3"><p className="min-w-0 truncate text-[11px] font-semibold tracking-tight text-[#36404A]">{item.file}</p><span className="shrink-0 text-[11px] font-semibold tracking-tight text-[#4D5B66]">{item.confidence}</span><button type="button" onClick={() => showDocument(item)} className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium tracking-tight text-[#36404A] hover:text-[#0B74DE]">Open<ArrowRight className="h-3.5 w-3.5" /></button></div><p className="mt-0.5 truncate text-[10px] tracking-tight text-[#66737F]">{item.title}</p></div>
                 </div>
               </div>
-            </article>)}
+            </motion.article> : null)}
           </div>
         </section>
         <section className="border-t border-[#E7EEF2] px-5 pb-6 pt-5 sm:px-6">
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Evidence sufficiency log</h2><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
           <div className="space-y-3">
-            {evidenceLog.map((entry, index) => <div key={entry.file} className="relative grid grid-cols-[58px_24px_minmax(0,1fr)] gap-3 px-3 py-3 sm:grid-cols-[70px_26px_minmax(0,1fr)] sm:gap-4 sm:px-4">
-              {index < evidenceLog.length - 1 ? <span className="absolute bottom-[-14px] left-[68px] hidden h-3 w-px bg-[#C9D6DE] sm:block" aria-hidden="true" /> : null}
+            {evidenceLog.map((entry, index) => index < visibleLogCount ? <motion.div key={entry.file} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.34 }} className="relative grid grid-cols-[58px_24px_minmax(0,1fr)] gap-3 px-3 py-3 sm:grid-cols-[70px_26px_minmax(0,1fr)] sm:gap-4 sm:px-4">
+              {index < visibleLogCount - 1 ? <span className="absolute bottom-[-14px] left-[96px] h-3 w-px bg-[#C9D6DE] sm:left-[115px]" aria-hidden="true" /> : null}
               <time className="pt-1 font-mono text-[10px] tracking-tight text-[#7B8991]">{entry.time}</time>
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#4F8067]" aria-label="Recorded check"><Check className="h-3 w-3 text-white" strokeWidth={3} /></span>
               <div className="min-w-0"><p className="text-[11px] font-semibold tracking-tight text-[#36404A]">{entry.label}</p><p className="mt-1 text-[11px] leading-4 tracking-tight text-[#66737F]">{entry.detail}</p><p className="mt-1 truncate text-[10px] tracking-tight text-[#9AA7B0]">{entry.file}</p></div>
-            </div>)}
+            </motion.div> : null)}
           </div>
         </section>
         </div>
