@@ -188,14 +188,20 @@ const analysisRail = [
 function FinancialAnalysisWorkspace({ reduceMotion }: { reduceMotion: boolean }) {
   const [paragraphIndex, setParagraphIndex] = useState(0);
   const [visibleText, setVisibleText] = useState("");
+  const [analysisComplete, setAnalysisComplete] = useState(reduceMotion);
+  const [visibleChecks, setVisibleChecks] = useState(reduceMotion ? 6 : 0);
   const plainText = (parts: AnalysisPart[]) => parts.map((part) => part.text ?? part.badge?.name ?? "").join("");
 
   useEffect(() => {
     if (reduceMotion) {
       setParagraphIndex(analysisBlocks.length - 1);
       setVisibleText(plainText(analysisBlocks[analysisBlocks.length - 1]));
+      setAnalysisComplete(true);
+      setVisibleChecks(6);
       return;
     }
+    setAnalysisComplete(false);
+    setVisibleChecks(0);
     let current = 0;
     let interval: number | undefined;
     const startParagraph = (index: number) => {
@@ -209,8 +215,9 @@ function FinancialAnalysisWorkspace({ reduceMotion }: { reduceMotion: boolean })
         if (current >= text.length) {
           if (interval) window.clearInterval(interval);
           if (index < analysisBlocks.length - 1) window.setTimeout(() => startParagraph(index + 1), 650);
+          else window.setTimeout(() => setAnalysisComplete(true), 500);
         }
-      }, 18);
+      }, 8);
     };
     const start = window.setTimeout(() => startParagraph(0), 420);
     return () => {
@@ -218,6 +225,13 @@ function FinancialAnalysisWorkspace({ reduceMotion }: { reduceMotion: boolean })
       if (interval) window.clearInterval(interval);
     };
   }, [reduceMotion]);
+
+  useEffect(() => {
+    if (!analysisComplete || reduceMotion) return;
+    setVisibleChecks(0);
+    const timers = Array.from({ length: 6 }, (_, index) => window.setTimeout(() => setVisibleChecks(index + 1), 320 + index * 360));
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [analysisComplete, reduceMotion]);
 
   return <div className="min-h-screen overflow-x-auto bg-white font-sans text-[#191B20]">
     <header aria-label="Financial Analysis Workspace header" className="h-12 bg-white/95 backdrop-blur-sm" />
@@ -230,7 +244,7 @@ function FinancialAnalysisWorkspace({ reduceMotion }: { reduceMotion: boolean })
           <div className="mx-auto max-w-[900px] space-y-8">
             <h1 id="financial-analysis-workspace-title" className="font-google-sans text-[28px] font-normal leading-tight tracking-[-0.03em] text-[#191B20] sm:text-[36px]">Analysis Workspace</h1>
             {analysisBlocks.map((parts, index) => { const complete = index < paragraphIndex || reduceMotion; const active = index === paragraphIndex; let offset = 0; const content = parts.map((part, partIndex) => { const text = part.text ?? part.badge?.name ?? ""; const start = offset; offset += text.length; const shown = complete ? text : active ? visibleText.slice(start, Math.min(offset, visibleText.length)) : ""; if (part.badge && (complete || (active && visibleText.length >= offset))) return <span key={`${part.badge.name}-${partIndex}`} className="mx-1 inline-flex max-w-full translate-y-[0.12em] items-center gap-1.5 rounded-[4px] bg-[#F1F3F4] px-2 py-1 align-baseline text-[11px] leading-4 tracking-[-0.01em] text-[#3B4650]" title={`${part.badge.source}: ${part.badge.name}`}><img src={part.badge.icon} alt={part.badge.source} className="h-4 w-4 shrink-0 object-contain" /><span className="font-semibold">{part.badge.name}</span></span>; return shown ? <span key={`${start}-${partIndex}`} className={part.mark ? `rounded-[2px] px-0.5 text-[#30343B] [box-decoration-break:clone] ${part.mark}` : ""}>{shown}</span> : null; }); return <motion.p id={`analysis-workspace-${index}`} key={index} initial={{ opacity: 0 }} animate={{ opacity: index <= paragraphIndex ? 1 : 0.08 }} transition={{ duration: reduceMotion ? 0 : 0.35 }} className="text-[14px] leading-6 text-[#595E68] sm:text-[15px] sm:leading-7">{content}{active && !complete && visibleText.length < plainText(parts).length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</motion.p>; })}
-            <section className="border-t border-[#E8E7E1] pt-5" aria-label="Progressive recovery stance"><p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]">Progressive recovery stance</p><div className="mt-3 space-y-2.5 text-[14px] leading-6 text-[#595E68]">{["Financial position established", "Evidence coverage established", "Shipment and receiving delta confirmed", "Inventory and settlement delta reconciled", "Supported exposure separated from unresolved signal", "Recovery stance confirmed for controlled action"].map((statement) => <div key={statement} className="flex items-center gap-2.5"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#26734D] text-[12px] font-bold leading-none text-white" aria-hidden="true">✓</span><span>{statement}</span></div>)}</div></section>
+            <section className="border-t border-[#E8E7E1] pt-5" aria-label="Progressive recovery stance"><p className="text-[11px] font-normal uppercase tracking-tight text-[#777A82]">Progressive recovery stance</p><div className="mt-3 space-y-2.5 text-[14px] leading-6 text-[#595E68]">{["Financial position established", "Evidence coverage established", "Shipment and receiving delta confirmed", "Inventory and settlement delta reconciled", "Supported exposure separated from unresolved signal", "Recovery stance confirmed for controlled action"].map((statement, index) => <motion.div key={statement} initial={{ opacity: 0, y: 5 }} animate={{ opacity: index < visibleChecks ? 1 : 0, y: index < visibleChecks ? 0 : 5 }} transition={{ duration: reduceMotion ? 0 : 0.3 }} className="flex items-center gap-2.5"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#26734D] text-[12px] font-bold leading-none text-white" aria-hidden="true">✓</span><span>{statement}</span></motion.div>)}</div></section>
           </div>
         </article>
       </div>
