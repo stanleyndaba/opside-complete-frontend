@@ -142,9 +142,11 @@ const documentSourceIcons = [
 
 type EvidenceRequiredProps = {
   showSearch?: boolean;
+  showSidebar?: boolean;
+  flat?: boolean;
 };
 
-export default function EvidenceRequired({ showSearch = true }: EvidenceRequiredProps) {
+export default function EvidenceRequired({ showSearch = true, showSidebar = true, flat = false }: EvidenceRequiredProps) {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const showDocument = (item: EvidenceItem) => {
@@ -152,10 +154,10 @@ export default function EvidenceRequired({ showSearch = true }: EvidenceRequired
     window.setTimeout(() => setToast(null), 2600);
   };
   const getDocumentIcon = (index: number) => documentSourceIcons[index % documentSourceIcons.length];
-  return <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] text-[#182026]">
+  return <main className={`preview-google-sans min-h-screen overflow-x-auto text-[#182026] ${flat ? "bg-white" : "bg-[#FAFAF7]"}`}>
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
     <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
-      <aside aria-label="Evidence preview controls" className="sticky top-4 flex w-[52px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1.5">
+      {showSidebar ? <aside aria-label="Evidence preview controls" className="sticky top-4 flex w-[52px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1.5">
         <button type="button" title="Evidence record" aria-label="Evidence record" onClick={() => setToast("Evidence record selected")} className="flex h-9 w-9 items-center justify-center rounded-[5px] bg-[#D9E0E3] text-[#26333A] hover:bg-[#D1DADD] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
           <ListChecks className="h-4 w-4" strokeWidth={1.8} />
         </button>
@@ -165,7 +167,7 @@ export default function EvidenceRequired({ showSearch = true }: EvidenceRequired
         <button type="button" title="Control layers" aria-label="Control layers" onClick={() => setToast("Control layers selected")} className="mt-12 flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
           <Layers3 className="h-4 w-4" strokeWidth={1.8} />
         </button>
-      </aside>
+      </aside> : <div aria-hidden="true" className="w-[52px] shrink-0" />}
       <div className="min-w-0 flex-1">
         {showSearch ? <nav aria-label="Evidence preview search" className="mb-3 rounded-[10px] border border-[#DCE3E7] bg-white p-1.5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
           <label className="flex h-9 items-center gap-2 rounded-[10px] bg-[#FBFCFC] px-3 focus-within:ring-2 focus-within:ring-[#0B74DE]/10">
@@ -174,7 +176,7 @@ export default function EvidenceRequired({ showSearch = true }: EvidenceRequired
             <input aria-label="Margin Search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Margin Search" className="min-w-0 flex-1 bg-transparent text-[12px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A99A3]" />
           </label>
         </nav> : <div aria-hidden="true" className="mb-3 h-[51px]" />}
-        <section className="overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+        <section className={flat ? "overflow-hidden bg-white" : "overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]"}>
         <header className="border-b border-[#E7EEF2] px-5 pb-4 pt-5 sm:px-6">
           <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Governed evidence control record</p>
           <h1 className="mt-1 font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Evidence control for EVT-FBA-2026-0001847</h1>

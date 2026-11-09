@@ -93,7 +93,7 @@ export default function Routine() {
   const stackSlots = [-3, -2, -1, 0, 1, 2, 3];
 
   if (dashboardVisible) return <RoutineWorkspace />;
-  if (evidenceRequiredVisible) return <EvidenceRequired showSearch={false} />;
+  if (evidenceRequiredVisible) return <EvidenceRequired showSearch={false} showSidebar={false} flat />;
   if (workflowVisible) return <main className="bg-white font-google-sans"><FinancialResolutionWorkflow /></main>;
 
   return <main className="min-h-screen bg-[#FFFFFF] p-3 font-google-sans sm:p-8"><div className="relative mx-auto flex min-h-[620px] w-full items-center justify-center bg-white px-4 py-8 sm:min-h-[760px] sm:px-8"><div className="relative flex min-h-[580px] w-full max-w-[1100px] items-center justify-center sm:min-h-[680px]" aria-label="Routine creation visual" aria-live="polite"><AnimatePresence mode="wait">
