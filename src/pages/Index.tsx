@@ -592,22 +592,17 @@ function DuplicatePipelineDemoSection() {
 
 function BuiltForSection() {
   const audiences = [
-    { title: "Finance Teams & Controllers", src: "/built-for-finance-teams.png", alt: "Finance Teams and Controllers — Keep the financial picture accountable." },
-    { title: "Founder-led Amazon Businesses", src: "/built-for-founders.png", alt: "Founder-led Amazon Businesses — Run the business without carrying every financial investigation yourself." },
-    { title: "Marketplace Operations Teams", src: "/built-for-operations.png", alt: "Marketplace Operations Teams — Connect operational events to their financial consequences." },
-    { title: "Aggregators & Multi-brand Operators", src: "/built-for-aggregators.png", alt: "Aggregators and Multi-brand Operators — Maintain financial oversight across an entire portfolio." },
-    { title: "Enterprise & Multi-marketplace Businesses", src: "/built-for-enterprise.png", alt: "Enterprise and Multi-marketplace Businesses — Establish financial control across greater complexity." },
+    { title: "Finance Teams & Controllers", src: "/built-for-finance-teams-landscape.png", alt: "Finance Teams and Controllers — Keep the financial picture accountable." },
+    { title: "Founder-led Amazon Businesses", src: "/built-for-founders-landscape.png", alt: "Founder-led Amazon Businesses — Run the business without carrying every financial investigation yourself." },
+    { title: "Marketplace Operations Teams", src: "/built-for-operations-landscape.png", alt: "Marketplace Operations Teams — Connect operational events to their financial consequences." },
+    { title: "Aggregators & Multi-brand Operators", src: "/built-for-aggregators-landscape.png", alt: "Aggregators and Multi-brand Operators — Maintain financial oversight across an entire portfolio." },
+    { title: "Enterprise & Multi-marketplace Businesses", src: "/built-for-enterprise-landscape.png", alt: "Enterprise and Multi-marketplace Businesses — Establish financial control across greater complexity." },
   ];
 
-  const renderAudience = (audience: (typeof audiences)[number], index: number) => (
-    <motion.div
-      key={audience.title}
-      {...revealProps}
-      transition={{ ...revealProps.transition, delay: index * 0.08 }}
-      className="overflow-hidden rounded-[16px] bg-[#F4F3EF] shadow-[0_16px_44px_rgba(34,40,43,0.08)]"
-    >
-      <img src={audience.src} alt={audience.alt} className="block h-auto w-full" loading="lazy" />
-    </motion.div>
+  const renderAudience = (audience: (typeof audiences)[number]) => (
+    <div key={audience.title} className="built-for-marquee-card shrink-0 overflow-hidden rounded-[16px] bg-[#F4F3EF] shadow-[0_16px_44px_rgba(34,40,43,0.08)]">
+      <img src={audience.src} alt={audience.alt} className="block aspect-[3/2] h-auto w-full object-cover" loading="lazy" />
+    </div>
   );
 
   return (
@@ -621,11 +616,15 @@ function BuiltForSection() {
             Whether you manage the finances yourself, lead a dedicated Finance team or oversee an entire portfolio of brands, Margin helps establish what happened financially, what remains unresolved and what deserves action.
           </p>
         </motion.div>
-        <div className="mx-auto mt-10 grid max-w-[1180px] gap-5 md:grid-cols-3 md:gap-6 sm:mt-14">
-          {audiences.slice(0, 3).map(renderAudience)}
-        </div>
-        <div className="mx-auto mt-5 grid max-w-[790px] gap-5 md:grid-cols-2 md:gap-6">
-          {audiences.slice(3).map((audience, index) => renderAudience(audience, index + 3))}
+        <div className="built-for-marquee-viewport mt-10 sm:mt-14" aria-label="Built for audience profiles">
+          <div className="built-for-marquee-track">
+            <div className="flex shrink-0 gap-5 pr-5 md:gap-6 md:pr-6">
+              {audiences.map(renderAudience)}
+            </div>
+            <div className="flex shrink-0 gap-5 pr-5 md:gap-6 md:pr-6" aria-hidden="true">
+              {audiences.map(renderAudience)}
+            </div>
+          </div>
         </div>
       </div>
     </section>
