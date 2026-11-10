@@ -603,11 +603,13 @@ function BuiltForSection() {
     <article key={audience.title} className="built-for-marquee-card group relative aspect-[4/5] shrink-0 overflow-hidden rounded-[6px] bg-[#E9E9E5]">
       <img src={audience.src} alt={`${audience.title} — ${audience.lead}`} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]" loading="lazy" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/80" aria-hidden="true" />
-      <div className="absolute left-5 top-5 rounded-[3px] bg-white/75 px-3 py-1.5 text-[11px] font-semibold text-[#273036] backdrop-blur-sm sm:left-6 sm:top-6">
-        {audience.label}
+      <div className="absolute inset-x-5 top-5 text-white sm:inset-x-6 sm:top-6">
+        <h3 className="font-google-sans text-[20px] font-semibold leading-[1.08] tracking-[-0.03em] text-white sm:text-[23px]">{audience.title}</h3>
       </div>
       <div className="absolute inset-x-5 bottom-5 text-white sm:inset-x-6 sm:bottom-6">
-        <h3 className="font-google-sans text-[20px] font-semibold leading-[1.08] tracking-[-0.03em] sm:text-[23px]">{audience.title}</h3>
+        <div className="inline-flex rounded-[3px] bg-white/75 px-3 py-1.5 text-[11px] font-semibold text-[#273036] backdrop-blur-sm">
+          {audience.label}
+        </div>
         <p className="mt-3 max-w-[31rem] text-[14px] font-medium leading-5 text-white/95">{audience.lead}</p>
         <p className="mt-2 max-w-[34rem] text-[12px] leading-[1.45] text-white/75">{audience.description}</p>
         <Link to={audience.href} className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-[#FF7A5C] no-underline transition-colors hover:text-[#FFB09B]">
