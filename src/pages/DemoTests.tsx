@@ -141,7 +141,7 @@ export default function DemoTests() {
         if (next === 0) setActive("Workflows");
         return next;
       });
-    }, 1050);
+    }, 1350);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
@@ -155,7 +155,7 @@ export default function DemoTests() {
     <main className="min-h-screen overflow-x-hidden bg-[#5d7880] px-3 py-3 text-[#18191a] sm:px-6 sm:py-6 lg:px-10 lg:py-10">
       <section className="mx-auto flex min-h-[calc(100vh-1.5rem)] w-full max-w-[1420px] overflow-hidden rounded-[34px] bg-[#fafafa] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-3rem)] lg:min-h-[calc(100vh-5rem)]">
         <aside className="relative flex w-[37%] min-w-[285px] shrink-0 flex-col border-r border-[#e1e1e1] px-5 py-9 sm:px-9 sm:py-12 lg:w-[40%] lg:px-12 xl:w-[39%] xl:px-16">
-          {!reduceMotion ? <motion.div aria-hidden="true" className="pointer-events-none absolute z-20 hidden text-[#182026] drop-shadow-[0_3px_4px_rgba(24,32,38,0.18)] md:block" initial={{ left: "42px", top: "150px", opacity: 0 }} animate={{ left: demoPhase >= 1 ? "92px" : "42px", top: demoPhase >= 1 ? "548px" : "150px", opacity: demoPhase === 6 ? 0 : 1 }} transition={{ duration: 0.82, ease: [0.22, 1, 0.36, 1] }}><MousePointer2 className="h-7 w-7 fill-white stroke-[1.8]" />{demoPhase === 2 ? <motion.span initial={{ opacity: 0.8, scale: 0.5 }} animate={{ opacity: 0, scale: 1.6 }} transition={{ duration: 0.6 }} className="absolute -left-3 -top-3 h-9 w-9 rounded-full border-2 border-[#0B74DE]/70" /> : null}</motion.div> : null}
+          {!reduceMotion ? <motion.div aria-hidden="true" className="pointer-events-none absolute z-30 text-[#182026] drop-shadow-[0_3px_4px_rgba(24,32,38,0.22)]" initial={{ left: "42px", top: "150px", opacity: 0 }} animate={{ left: demoPhase >= 1 ? "92px" : "42px", top: demoPhase >= 1 ? "548px" : "150px", opacity: demoPhase === 6 ? 0 : 1 }} transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}><MousePointer2 className="h-8 w-8 fill-white stroke-[2]" />{demoPhase === 2 ? <motion.span initial={{ opacity: 0.9, scale: 0.45 }} animate={{ opacity: 0, scale: 1.9 }} transition={{ duration: 0.75 }} className="absolute -left-3 -top-3 h-10 w-10 rounded-full border-2 border-[#0B74DE]" /> : null}</motion.div> : null}
           <div className="flex items-center justify-between">
             <h1 className="text-[29px] font-semibold tracking-[-0.055em] sm:text-[36px] lg:text-[39px]">Library</h1>
             <button type="button" className="rounded-full p-2 text-[#8b8c8c] hover:bg-[#f0f0f0] lg:hidden" aria-label="Open library menu"><Menu className="h-5 w-5" /></button>
