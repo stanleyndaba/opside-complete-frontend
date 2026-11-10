@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Check,
   List,
   Menu,
   MessageSquare,
+  MousePointer2,
   MoreHorizontal,
   Plus,
   Search,
@@ -34,7 +36,7 @@ const navigation: LibraryItem[] = [
 ];
 
 const filters: LibraryItem[] = [
-  { label: "Favorites", count: 20, icon: "favorites" },
+  { label: "Favourites", count: 20, icon: "favorites" },
   { label: "My workflows", count: 13, icon: "mine" },
 ];
 
@@ -109,9 +111,39 @@ function PromptCard({ prompt }: { prompt: Prompt }) {
   );
 }
 
+function AmazonThreadPeek() {
+  return (
+    <motion.div key="amazon-thread-peek" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="max-w-[900px] pb-12">
+      <div className="border-b border-[#e5e5e5] pb-7"><p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#929393]">Governed Amazon response record</p><h2 className="mt-3 text-[32px] font-semibold leading-[1.02] tracking-[-0.06em] text-[#171819] sm:text-[48px]">What Amazon changed in the financial position</h2><p className="mt-5 max-w-[760px] text-[16px] leading-[1.5] tracking-[-0.02em] text-[#77797a] sm:text-[19px]">EVT-FBA-2026-0001847 · Case 19822888381. Amazon correspondence remains attached to the governed event; communication alone does not establish settlement or financial closure.</p></div>
+      <div className="mt-7 flex flex-wrap items-center gap-3"><img src="/gmailicon.png" alt="Amazon thread" className="h-6 w-6 object-contain" /><h3 className="text-[19px] font-semibold tracking-[-0.03em]">Amazon Thread</h3><span className="rounded-full bg-[#efefef] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#555757]">Partial approval · residual open</span></div>
+      <p className="mt-4 text-[13px] leading-6 text-[#77797a]">Supported exposure <strong className="font-semibold text-[#252727]">$38,850</strong> · Amazon approved <strong className="font-semibold text-[#252727]">$26,000</strong> · Residual position <strong className="font-semibold text-[#252727]">$12,850</strong> · Settlement verification pending.</p>
+      <div className="mt-7 space-y-4"><article className="rounded-[16px] border border-[#dbe7ee] bg-[#f5f8fc] p-5 sm:p-7"><div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#6b7c88]"><span className="rounded-full bg-white px-2.5 py-1">Inbound</span><span>05/09/26, 11:16</span><span className="rounded-full bg-white px-2.5 py-1">Amazon decision · partial approval</span></div><h4 className="mt-4 text-[16px] font-semibold leading-6 tracking-[-0.02em] text-[#07111a] sm:text-[19px]">Partial approval issued — $26,000 | $12,850 residual</h4><p className="mt-3 text-[13px] leading-6 text-[#4d5b66]">Amazon approved and issued $26,000 against the supported $38,850 exposure. The remaining $12,850 remains unresolved and subject to settlement verification.</p><div className="mt-4 flex flex-wrap gap-2 text-[10px] font-semibold text-[#4d5b66]"><span className="border border-[#d8e3e8] bg-white px-2.5 py-2">AmazonResponse-19822888381.html</span><span className="border border-[#d8e3e8] bg-white px-2.5 py-2">Settlement-Partial-Reimbursement.csv</span></div></article><article className="rounded-[16px] border border-[#dcefe3] bg-[#f4faf6] p-5 sm:p-7"><div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#4b946f]"><span className="rounded-full bg-white px-2.5 py-1">Outbound</span><span className="text-[#6b7c88]">13:24:17</span><span className="rounded-full bg-white px-2.5 py-1">Targeted residual response</span></div><h4 className="mt-4 text-[16px] font-semibold leading-6 tracking-[-0.02em] text-[#07111a] sm:text-[19px]">Residual evidence response prepared | $12,850</h4><p className="mt-3 text-[13px] leading-6 text-[#4d5b66]">Margin mapped Amazon’s request to the existing governed event record rather than restarting the case. Accepted evidence and settled value remain attached; only the residual position requires action.</p><div className="mt-4 flex items-center gap-2 text-[11px] font-semibold text-[#4b946f]"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#4b946f] text-white"><Check className="h-3 w-3" strokeWidth={3} /></span>Seller approval required before the next controlled action</div></article></div>
+    </motion.div>
+  );
+}
+
 export default function DemoTests() {
+  const reduceMotion = useReducedMotion();
   const [active, setActive] = useState("Workflows");
   const [search, setSearch] = useState("");
+  const [demoPhase, setDemoPhase] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setActive("Favourites");
+      setDemoPhase(3);
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setDemoPhase((current) => {
+        const next = current >= 6 ? 0 : current + 1;
+        if (next >= 2 && next <= 5) setActive("Favourites");
+        if (next === 0) setActive("Workflows");
+        return next;
+      });
+    }, 1050);
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
 
   const visibleCards = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -122,7 +154,8 @@ export default function DemoTests() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#5d7880] px-3 py-3 text-[#18191a] sm:px-6 sm:py-6 lg:px-10 lg:py-10">
       <section className="mx-auto flex min-h-[calc(100vh-1.5rem)] w-full max-w-[1420px] overflow-hidden rounded-[34px] bg-[#fafafa] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-3rem)] lg:min-h-[calc(100vh-5rem)]">
-        <aside className="flex w-[37%] min-w-[285px] shrink-0 flex-col border-r border-[#e1e1e1] px-5 py-9 sm:px-9 sm:py-12 lg:w-[40%] lg:px-12 xl:w-[39%] xl:px-16">
+        <aside className="relative flex w-[37%] min-w-[285px] shrink-0 flex-col border-r border-[#e1e1e1] px-5 py-9 sm:px-9 sm:py-12 lg:w-[40%] lg:px-12 xl:w-[39%] xl:px-16">
+          {!reduceMotion ? <motion.div aria-hidden="true" className="pointer-events-none absolute z-20 hidden text-[#182026] drop-shadow-[0_3px_4px_rgba(24,32,38,0.18)] md:block" initial={{ left: "42px", top: "150px", opacity: 0 }} animate={{ left: demoPhase >= 1 ? "92px" : "42px", top: demoPhase >= 1 ? "548px" : "150px", opacity: demoPhase === 6 ? 0 : 1 }} transition={{ duration: 0.82, ease: [0.22, 1, 0.36, 1] }}><MousePointer2 className="h-7 w-7 fill-white stroke-[1.8]" />{demoPhase === 2 ? <motion.span initial={{ opacity: 0.8, scale: 0.5 }} animate={{ opacity: 0, scale: 1.6 }} transition={{ duration: 0.6 }} className="absolute -left-3 -top-3 h-9 w-9 rounded-full border-2 border-[#0B74DE]/70" /> : null}</motion.div> : null}
           <div className="flex items-center justify-between">
             <h1 className="text-[29px] font-semibold tracking-[-0.055em] sm:text-[36px] lg:text-[39px]">Library</h1>
             <button type="button" className="rounded-full p-2 text-[#8b8c8c] hover:bg-[#f0f0f0] lg:hidden" aria-label="Open library menu"><Menu className="h-5 w-5" /></button>
@@ -163,6 +196,8 @@ export default function DemoTests() {
             <button type="button" aria-label="Account" className="hidden h-12 w-12 items-center justify-center rounded-full bg-[#25292a] text-white sm:flex"><UserRound className="h-5 w-5" /></button>
           </div>
 
+          <AnimatePresence mode="wait">
+          {active === "Favourites" ? <AmazonThreadPeek /> : <motion.div key="library-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="mt-12 max-w-[760px] sm:mt-16">
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -180,6 +215,8 @@ export default function DemoTests() {
               <div className="rounded-[22px] border border-dashed border-[#d2d2d2] px-6 py-12 text-center text-[17px] text-[#77797a]">No prompts match “{search}”.</div>
             )}
           </div>
+          </motion.div>}
+          </AnimatePresence>
         </section>
       </section>
     </main>
