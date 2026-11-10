@@ -592,40 +592,39 @@ function DuplicatePipelineDemoSection() {
 
 function BuiltForSection() {
   const audiences = [
-    { title: "Finance Teams & Controllers", src: "/built-for-finance-teams-landscape.png", alt: "Finance Teams and Controllers — Keep the financial picture accountable." },
-    { title: "Founder-led Amazon Businesses", src: "/built-for-founders-landscape.png", alt: "Founder-led Amazon Businesses — Run the business without carrying every financial investigation yourself." },
-    { title: "Marketplace Operations Teams", src: "/built-for-operations-landscape.png", alt: "Marketplace Operations Teams — Connect operational events to their financial consequences." },
-    { title: "Aggregators & Multi-brand Operators", src: "/built-for-aggregators-landscape.png", alt: "Aggregators and Multi-brand Operators — Maintain financial oversight across an entire portfolio." },
-    { title: "Enterprise & Multi-marketplace Businesses", src: "/built-for-enterprise-landscape.png", alt: "Enterprise and Multi-marketplace Businesses — Establish financial control across greater complexity." },
+    { title: "Finance Teams & Controllers", src: "/built-for-finance-gallery.png", description: "For finance teams responsible for marketplace reconciliation, financial reporting and recovery. Establish what happened, what has been accounted for and what still needs attention.", lead: "Keep the financial picture accountable.", href: "/sales" },
+    { title: "Founder-led Amazon Businesses", src: "/built-for-founder-gallery.png", description: "For founders managing marketplace finances without a dedicated recovery or financial-control department. Margin helps establish the financial position and takes on justified work.", lead: "Run the business without carrying every financial investigation yourself.", href: "/audit-start" },
+    { title: "Marketplace Operations Teams", src: "/built-for-operations-gallery.png", description: "For teams managing shipments, returns, inventory, fees and marketplace performance. Understand which operational events create financial issues and what requires follow-through.", lead: "Connect operational events to their financial consequences.", href: "/workflows" },
+    { title: "Aggregators & Multi-brand Operators", src: "/built-for-aggregators-gallery.png", description: "For operators managing multiple Amazon brands, businesses and product portfolios. Bring consistency to financial investigations, recovery oversight and unresolved work across operations.", lead: "Maintain financial oversight across an entire portfolio.", href: "/sales" },
+    { title: "Enterprise & Multi-marketplace Businesses", src: "/built-for-enterprise-gallery.png", description: "For businesses operating across marketplaces, entities, currencies and large transaction volumes. Maintain traceability, controlled workflows and accountable financial outcomes across the agreed scope.", lead: "Establish financial control across greater complexity.", href: "/sales" },
   ];
 
-  const renderAudience = (audience: (typeof audiences)[number]) => (
-    <div key={audience.title} className="built-for-marquee-card shrink-0 overflow-hidden rounded-[16px] bg-[#F4F3EF] shadow-[0_16px_44px_rgba(34,40,43,0.08)]">
-      <img src={audience.src} alt={audience.alt} className="block aspect-[3/2] h-auto w-full object-cover" loading="lazy" />
-    </div>
-  );
-
   return (
-    <section className="relative overflow-hidden bg-[#FAFAF7] py-14 sm:py-18 md:py-24" aria-labelledby="built-for-title">
+    <section className="relative overflow-hidden bg-white py-14 sm:py-18 md:py-24" aria-labelledby="built-for-title">
       <div className={containerClass}>
-        <motion.div {...revealProps} className="mx-auto max-w-[840px] text-center">
-          <h2 id="built-for-title" className="font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
+        <motion.div {...revealProps} className="max-w-[900px]">
+          <h2 id="built-for-title" className="max-w-[840px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
             Built for Amazon businesses where financial complexity has outgrown manual oversight.
           </h2>
-          <p className="mx-auto mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">
+          <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">
             Whether you manage the finances yourself, lead a dedicated Finance team or oversee an entire portfolio of brands, Margin helps establish what happened financially, what remains unresolved and what deserves action.
           </p>
         </motion.div>
-        <div className="built-for-marquee-viewport mt-10 sm:mt-14" aria-label="Built for audience profiles">
-          <div className="built-for-marquee-track">
-            <div className="flex shrink-0 gap-5 pr-5 md:gap-6 md:pr-6">
-              {audiences.map(renderAudience)}
-            </div>
-            <div className="flex shrink-0 gap-5 pr-5 md:gap-6 md:pr-6" aria-hidden="true">
-              {audiences.map(renderAudience)}
-            </div>
+        <div className="mt-10 grid gap-x-5 gap-y-12 sm:mt-14 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-5 lg:gap-x-6 lg:gap-y-0" aria-label="Built for audience profiles">
+          {audiences.map((audience, index) => (
+            <motion.article key={audience.title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.06 }} className="min-w-0">
+              <div className="overflow-hidden bg-[#F1F2F3]">
+                <img src={audience.src} alt={`${audience.title} — ${audience.lead}`} className="block aspect-[4/3] h-auto w-full object-cover" loading="lazy" />
+              </div>
+              <h3 className="mt-5 font-google-sans text-[18px] font-semibold leading-[1.12] tracking-[-0.03em] text-[#182026]">{audience.title}</h3>
+              <p className="mt-3 text-[14px] font-medium leading-6 text-[#182026]">{audience.lead}</p>
+              <p className="mt-2 text-[13px] leading-5 text-[#66737F]">{audience.description}</p>
+              <Link to={audience.href} className="mt-4 inline-flex items-center gap-1 text-[13px] font-medium text-[#182026] no-underline transition-colors hover:text-[#635BFF]">
+                Learn more <ChevronRight className="h-3.5 w-3.5" />
+              </Link>
+            </motion.article>
+          ))}
           </div>
-        </div>
       </div>
     </section>
   );
