@@ -375,7 +375,7 @@ html, body, #root {
 }
 
 .built-for-marquee-card {
-  width: clamp(310px, 38vw, 560px);
+  width: clamp(280px, 26vw, 380px);
 }
 
 @media (max-width: 640px) {

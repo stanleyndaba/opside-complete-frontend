@@ -592,12 +592,30 @@ function DuplicatePipelineDemoSection() {
 
 function BuiltForSection() {
   const audiences = [
-    { title: "Finance Teams & Controllers", src: "/built-for-finance-gallery.png", description: "For finance teams responsible for marketplace reconciliation, financial reporting and recovery. Establish what happened, what has been accounted for and what still needs attention.", lead: "Keep the financial picture accountable.", href: "/sales" },
-    { title: "Founder-led Amazon Businesses", src: "/built-for-founder-gallery.png", description: "For founders managing marketplace finances without a dedicated recovery or financial-control department. Margin helps establish the financial position and takes on justified work.", lead: "Run the business without carrying every financial investigation yourself.", href: "/audit-start" },
-    { title: "Marketplace Operations Teams", src: "/built-for-operations-gallery.png", description: "For teams managing shipments, returns, inventory, fees and marketplace performance. Understand which operational events create financial issues and what requires follow-through.", lead: "Connect operational events to their financial consequences.", href: "/workflows" },
-    { title: "Aggregators & Multi-brand Operators", src: "/built-for-aggregators-gallery.png", description: "For operators managing multiple Amazon brands, businesses and product portfolios. Bring consistency to financial investigations, recovery oversight and unresolved work across operations.", lead: "Maintain financial oversight across an entire portfolio.", href: "/sales" },
-    { title: "Enterprise & Multi-marketplace Businesses", src: "/built-for-enterprise-gallery.png", description: "For businesses operating across marketplaces, entities, currencies and large transaction volumes. Maintain traceability, controlled workflows and accountable financial outcomes across the agreed scope.", lead: "Establish financial control across greater complexity.", href: "/sales" },
+    { label: "Finance", title: "Finance Teams & Controllers", src: "/built-for-finance-gallery.png", description: "For finance teams responsible for marketplace reconciliation, financial reporting and recovery. Establish what happened, what has been accounted for and what still needs attention.", lead: "Keep the financial picture accountable.", href: "/sales" },
+    { label: "Founder-led", title: "Founder-led Amazon Businesses", src: "/built-for-founder-gallery.png", description: "For founders managing marketplace finances without a dedicated recovery or financial-control department. Margin helps establish the financial position and takes on justified work.", lead: "Run the business without carrying every financial investigation yourself.", href: "/audit-start" },
+    { label: "Marketplace operations", title: "Marketplace Operations Teams", src: "/built-for-operations-gallery.png", description: "For teams managing shipments, returns, inventory, fees and marketplace performance. Understand which operational events create financial issues and what requires follow-through.", lead: "Connect operational events to their financial consequences.", href: "/workflows" },
+    { label: "Multi-brand", title: "Aggregators & Multi-brand Operators", src: "/built-for-aggregators-gallery.png", description: "For operators managing multiple Amazon brands, businesses and product portfolios. Bring consistency to financial investigations, recovery oversight and unresolved work across operations.", lead: "Maintain financial oversight across an entire portfolio.", href: "/sales" },
+    { label: "Enterprise", title: "Enterprise & Multi-marketplace Businesses", src: "/built-for-enterprise-gallery.png", description: "For businesses operating across marketplaces, entities, currencies and large transaction volumes. Maintain traceability, controlled workflows and accountable financial outcomes across the agreed scope.", lead: "Establish financial control across greater complexity.", href: "/sales" },
   ];
+
+  const renderAudience = (audience: (typeof audiences)[number]) => (
+    <article key={audience.title} className="built-for-marquee-card group relative aspect-[4/5] shrink-0 overflow-hidden rounded-[6px] bg-[#E9E9E5]">
+      <img src={audience.src} alt={`${audience.title} — ${audience.lead}`} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]" loading="lazy" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/80" aria-hidden="true" />
+      <div className="absolute left-5 top-5 rounded-[3px] bg-white/75 px-3 py-1.5 text-[11px] font-semibold text-[#273036] backdrop-blur-sm sm:left-6 sm:top-6">
+        {audience.label}
+      </div>
+      <div className="absolute inset-x-5 bottom-5 text-white sm:inset-x-6 sm:bottom-6">
+        <h3 className="font-google-sans text-[20px] font-semibold leading-[1.08] tracking-[-0.03em] sm:text-[23px]">{audience.title}</h3>
+        <p className="mt-3 max-w-[31rem] text-[14px] font-medium leading-5 text-white/95">{audience.lead}</p>
+        <p className="mt-2 max-w-[34rem] text-[12px] leading-[1.45] text-white/75">{audience.description}</p>
+        <Link to={audience.href} className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-[#FF7A5C] no-underline transition-colors hover:text-[#FFB09B]">
+          Learn More <ChevronRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+    </article>
+  );
 
   return (
     <section className="relative overflow-hidden bg-white py-14 sm:py-18 md:py-24" aria-labelledby="built-for-title">
@@ -610,21 +628,16 @@ function BuiltForSection() {
             Whether you manage the finances yourself, lead a dedicated Finance team or oversee an entire portfolio of brands, Margin helps establish what happened financially, what remains unresolved and what deserves action.
           </p>
         </motion.div>
-        <div className="mt-10 grid gap-x-5 gap-y-12 sm:mt-14 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-5 lg:gap-x-6 lg:gap-y-0" aria-label="Built for audience profiles">
-          {audiences.map((audience, index) => (
-            <motion.article key={audience.title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.06 }} className="min-w-0">
-              <div className="overflow-hidden bg-[#F1F2F3]">
-                <img src={audience.src} alt={`${audience.title} — ${audience.lead}`} className="block aspect-[4/3] h-auto w-full object-cover" loading="lazy" />
-              </div>
-              <h3 className="mt-5 font-google-sans text-[18px] font-semibold leading-[1.12] tracking-[-0.03em] text-[#182026]">{audience.title}</h3>
-              <p className="mt-3 text-[14px] font-medium leading-6 text-[#182026]">{audience.lead}</p>
-              <p className="mt-2 text-[13px] leading-5 text-[#66737F]">{audience.description}</p>
-              <Link to={audience.href} className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-[#E05A3F] no-underline transition-colors hover:text-[#B8432D]">
-                Learn More <ChevronRight className="h-3.5 w-3.5" />
-              </Link>
-            </motion.article>
-          ))}
+        <div className="built-for-marquee-viewport mt-10 sm:mt-14" aria-label="Built for audience profiles">
+          <div className="built-for-marquee-track">
+            <div className="flex shrink-0 gap-5 pr-5 md:gap-6 md:pr-6">
+              {audiences.map(renderAudience)}
+            </div>
+            <div className="flex shrink-0 gap-5 pr-5 md:gap-6 md:pr-6" aria-hidden="true">
+              {audiences.map(renderAudience)}
+            </div>
           </div>
+        </div>
       </div>
     </section>
   );
