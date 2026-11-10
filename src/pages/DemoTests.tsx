@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  Check,
   List,
   Menu,
   MessageSquare,
@@ -111,17 +110,6 @@ function PromptCard({ prompt }: { prompt: Prompt }) {
   );
 }
 
-function AmazonThreadPeek() {
-  return (
-    <motion.div key="amazon-thread-peek" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="max-w-[760px] pb-6">
-      <div className="border-b border-[#e5e5e5] pb-7"><p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#929393]">Governed Amazon response record</p><h2 className="mt-3 text-[21px] font-semibold leading-[1.02] tracking-[-0.06em] text-[#171819] sm:text-[30px]">What Amazon changed in the financial position</h2><p className="mt-5 max-w-[760px] text-[11px] leading-[1.5] tracking-[-0.02em] text-[#77797a] sm:text-[13px]">EVT-FBA-2026-0001847 · Case 19822888381. Amazon correspondence remains attached to the governed event; communication alone does not establish settlement or financial closure.</p></div>
-      <div className="mt-4 flex flex-wrap items-center gap-2"><img src="/gmailicon.png" alt="Amazon thread" className="h-4 w-4 object-contain" /><h3 className="text-[13px] font-semibold tracking-[-0.03em]">Amazon Thread</h3><span className="rounded-full bg-[#efefef] px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.08em] text-[#555757]">Partial approval · residual open</span></div>
-      <p className="mt-4 text-[10px] leading-5 text-[#77797a]">Supported exposure <strong className="font-semibold text-[#252727]">$38,850</strong> · Amazon approved <strong className="font-semibold text-[#252727]">$26,000</strong> · Residual position <strong className="font-semibold text-[#252727]">$12,850</strong> · Settlement verification pending.</p>
-      <div className="mt-4 space-y-2.5"><article className="rounded-[9px] border border-[#dbe7ee] bg-[#f5f8fc] p-3 sm:p-4"><div className="flex flex-wrap items-center gap-2 text-[8px] font-bold uppercase tracking-[0.1em] text-[#6b7c88]"><span className="rounded-full bg-white px-2.5 py-1">Inbound</span><span>05/09/26, 11:16</span><span className="rounded-full bg-white px-2.5 py-1">Amazon decision · partial approval</span></div><h4 className="mt-4 text-[12px] font-semibold leading-5 tracking-[-0.02em] text-[#07111a] sm:text-[14px]">Partial approval issued — $26,000 | $12,850 residual</h4><p className="mt-3 text-[13px] leading-6 text-[#4d5b66]">Amazon approved and issued $26,000 against the supported $38,850 exposure. The remaining $12,850 remains unresolved and subject to settlement verification.</p><div className="mt-4 flex flex-wrap gap-2 text-[10px] font-semibold text-[#4d5b66]"><span className="border border-[#d8e3e8] bg-white px-2 py-1.5">AmazonResponse-19822888381.html</span><span className="border border-[#d8e3e8] bg-white px-2 py-1.5">Settlement-Partial-Reimbursement.csv</span></div></article><article className="rounded-[9px] border border-[#dcefe3] bg-[#f4faf6] p-3 sm:p-4"><div className="flex flex-wrap items-center gap-2 text-[8px] font-bold uppercase tracking-[0.1em] text-[#4b946f]"><span className="rounded-full bg-white px-2.5 py-1">Outbound</span><span className="text-[#6b7c88]">13:24:17</span><span className="rounded-full bg-white px-2.5 py-1">Targeted residual response</span></div><h4 className="mt-4 text-[12px] font-semibold leading-5 tracking-[-0.02em] text-[#07111a] sm:text-[14px]">Residual evidence response prepared | $12,850</h4><p className="mt-3 text-[13px] leading-6 text-[#4d5b66]">Margin mapped Amazon’s request to the existing governed event record rather than restarting the case. Accepted evidence and settled value remain attached; only the residual position requires action.</p><div className="mt-3 flex items-center gap-2 text-[9px] font-semibold text-[#4b946f]"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#4b946f] text-white"><Check className="h-3 w-3" strokeWidth={3} /></span>Seller approval required before the next controlled action</div></article></div>
-    </motion.div>
-  );
-}
-
 export default function DemoTests() {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState("Workflows");
@@ -197,7 +185,11 @@ export default function DemoTests() {
           </div>
 
           <AnimatePresence mode="wait">
-          {active === "Favourites" ? <AmazonThreadPeek /> : <motion.div key="library-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          {active === "Favourites" ? (
+            <motion.div key="case-detail-demo" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="-mx-3 mt-4 overflow-hidden rounded-[10px] border border-[#D8E3E8] bg-[#FAFAF7] sm:-mx-6 lg:-mx-8 xl:-mx-10">
+              <iframe title="ACME-CASE-2005 Case Detail" src="/demo-case-detail" className="block h-[calc(100vh-5rem)] min-h-[760px] w-full border-0" />
+            </motion.div>
+          ) : <motion.div key="library-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="mt-7 max-w-[760px] sm:mt-9">
             <div className="flex items-center justify-between gap-4">
               <div>
