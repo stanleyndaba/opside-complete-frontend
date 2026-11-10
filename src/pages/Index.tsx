@@ -1760,10 +1760,10 @@ function FooterNestedRecoveryVisual() {
   const navigate = useNavigate();
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof nestedRecoveryBrowsers>('progress');
   return (
-    <section className="relative overflow-hidden bg-white py-10 sm:py-14 md:py-16" aria-label="Connected operational view visual">
+    <section className="relative overflow-hidden bg-white pb-10 pt-5 sm:pb-14 sm:pt-8 md:pb-16 md:pt-10" aria-labelledby="footer-nested-recovery-title">
       <div className={containerClass}>
-        <h2 className="mb-8 max-w-[720px] font-google-sans text-[34px] font-medium leading-[0.98] tracking-[-0.045em] text-[#182026] sm:text-[48px] md:mb-10 md:text-[64px]">
-          Complex Amazon Fin-Ops, Done For You.
+        <h2 id="footer-nested-recovery-title" className="mb-6 max-w-[980px] font-google-sans text-[34px] font-medium leading-[1.02] tracking-[-0.045em] text-[#182026] sm:mb-8 sm:text-[48px] md:mb-9 md:text-[64px]">
+          Complex Amazon <span className="whitespace-nowrap">Fin-Ops</span>, Done For You.
         </h2>
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Keep the next financial action from getting lost between people.</span></h2>
         <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} backgroundImage="/visual-english-landscape-3.jpg" />
