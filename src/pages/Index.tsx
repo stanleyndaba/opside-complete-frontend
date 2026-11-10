@@ -590,6 +590,48 @@ function DuplicatePipelineDemoSection() {
   );
 }
 
+function BuiltForSection() {
+  const audiences = [
+    { title: "Finance Teams & Controllers", src: "/built-for-finance-teams.png", alt: "Finance Teams and Controllers — Keep the financial picture accountable." },
+    { title: "Founder-led Amazon Businesses", src: "/built-for-founders.png", alt: "Founder-led Amazon Businesses — Run the business without carrying every financial investigation yourself." },
+    { title: "Marketplace Operations Teams", src: "/built-for-operations.png", alt: "Marketplace Operations Teams — Connect operational events to their financial consequences." },
+    { title: "Aggregators & Multi-brand Operators", src: "/built-for-aggregators.png", alt: "Aggregators and Multi-brand Operators — Maintain financial oversight across an entire portfolio." },
+    { title: "Enterprise & Multi-marketplace Businesses", src: "/built-for-enterprise.png", alt: "Enterprise and Multi-marketplace Businesses — Establish financial control across greater complexity." },
+  ];
+
+  const renderAudience = (audience: (typeof audiences)[number], index: number) => (
+    <motion.div
+      key={audience.title}
+      {...revealProps}
+      transition={{ ...revealProps.transition, delay: index * 0.08 }}
+      className="overflow-hidden rounded-[16px] bg-[#F4F3EF] shadow-[0_16px_44px_rgba(34,40,43,0.08)]"
+    >
+      <img src={audience.src} alt={audience.alt} className="block h-auto w-full" loading="lazy" />
+    </motion.div>
+  );
+
+  return (
+    <section className="relative overflow-hidden bg-[#FAFAF7] py-14 sm:py-18 md:py-24" aria-labelledby="built-for-title">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="mx-auto max-w-[840px] text-center">
+          <h2 id="built-for-title" className="font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
+            Built for Amazon businesses where financial complexity has outgrown manual oversight.
+          </h2>
+          <p className="mx-auto mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">
+            Whether you manage the finances yourself, lead a dedicated Finance team or oversee an entire portfolio of brands, Margin helps establish what happened financially, what remains unresolved and what deserves action.
+          </p>
+        </motion.div>
+        <div className="mx-auto mt-10 grid max-w-[1180px] gap-5 md:grid-cols-3 md:gap-6 sm:mt-14">
+          {audiences.slice(0, 3).map(renderAudience)}
+        </div>
+        <div className="mx-auto mt-5 grid max-w-[790px] gap-5 md:grid-cols-2 md:gap-6">
+          {audiences.slice(3).map((audience, index) => renderAudience(audience, index + 3))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 function OneRecoverySection() {
   return (
@@ -2545,6 +2587,7 @@ export default function Index() {
         {/* Phase 1 — Make the prospect care: problem recognition */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
         <DuplicatePipelineDemoSection />
+        <BuiltForSection />
         <BuyerRealitySection />
         <RealityCheckSection />
         <NestedRecoveryBrowsers />
