@@ -102,7 +102,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
         >
             <div className="w-full px-0 py-0">
                     <div className={cn(
-                        "relative grid min-h-[56px] grid-cols-[1fr_auto] items-center gap-3 transition-all duration-300 md:min-h-[68px] md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:gap-6 md:px-5 md:py-3 lg:px-7",
+                        "relative grid min-h-[56px] grid-cols-[1fr_auto] items-center gap-3 transition-all duration-300 md:min-h-[68px] md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:gap-6 md:px-5 md:py-3 lg:flex lg:px-7",
                         isLight
                             ? "rounded-none bg-white/[0.94] px-4 py-2.5 shadow-[0_12px_42px_rgba(37,49,58,0.10)] backdrop-blur-xl"
                             : "rounded-none bg-white/[0.08] px-4 py-2.5 shadow-[0_18px_55px_rgba(0,0,0,0.24)] backdrop-blur-xl saturate-[160%]"
@@ -111,7 +111,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         <Link
                             to="/"
                             className={cn(
-                                "inline-flex items-center gap-2.5 px-1 py-1 transition-colors md:gap-3 md:px-2 md:py-1.5",
+                                "inline-flex items-center gap-2.5 px-1 py-1 transition-colors md:gap-3 md:px-2 md:py-1.5 lg:absolute lg:left-1/2 lg:top-1/2 lg:z-10 lg:-translate-x-1/2 lg:-translate-y-1/2",
                                 isLight ? "rounded-[6px] hover:bg-[#F3F6F8]" : "rounded-[6px] hover:bg-white/5"
                             )}
                         >
@@ -129,7 +129,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         </Link>
                     </div>
 
-                    <nav className="col-start-2 hidden items-center justify-center gap-2 md:flex">
+                    <nav className="col-start-2 hidden items-center justify-center gap-1 md:flex lg:order-first lg:flex-1 lg:justify-start lg:gap-0.5">
                         <div className="hidden lg:block">
                             <ApisMegaMenu variant={effectiveVariant} />
                         </div>
@@ -150,7 +150,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         </Link>
                     </nav>
 
-                    <div className="col-start-2 flex items-center justify-end gap-2 sm:gap-3 md:col-start-3 md:gap-4">
+                    <div className="col-start-2 flex items-center justify-end gap-2 sm:gap-3 md:col-start-3 md:gap-4 lg:order-last lg:flex-1">
                                 <Link
                                     to="/login"
                                     className={cn(
