@@ -43,6 +43,7 @@ const SellerAuditHandoff = lazy(() => import("./pages/SellerAuditHandoff"));
 const AmazonAuditIntro = lazy(() => import("./pages/AmazonAuditIntro"));
 const ReviewConsent = lazy(() => import("./pages/ReviewConsent"));
 const EvidenceLocker = lazy(() => import("./pages/EvidenceLocker"));
+const DemoTests = lazy(() => import("./pages/DemoTests"));
 const DocumentDetail = lazy(() => import("./pages/DocumentDetail"));
 const Billing = lazy(() => import("./pages/Billing"));
 const InvoiceDetail = lazy(() => import("./pages/InvoiceDetail"));
@@ -439,6 +440,7 @@ const App = () => (
                         <Route path="/review-consent" element={<ReviewConsent />} />
                         <Route path="/audit-start" element={<AmazonAuditIntro />} />
                         <Route path="/amazon-audit" element={<AmazonAuditIntro />} />
+                        <Route path="/demo-tests" element={<DemoTests />} />
                         <Route path="/issues-found" element={<Discrepancies />} />
                         <Route path="/discrepancies" element={<Discrepancies />} />
                         {/* TENANT-SCOPED ROUTES - Require :tenantSlug */}
