@@ -562,9 +562,9 @@ function DuplicatePipelineDemoSection() {
     <section aria-label="Recovery operations demo" className="relative overflow-hidden bg-white pb-12 pt-10 sm:pb-16 sm:pt-12 md:pb-20 md:pt-16">
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-center sm:mb-10">
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>A recovery isn't complete just because Amazon has made a decision.</h2>
-          <p className="mt-5 max-w-[780px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Margin follows a recovery from its originating transaction through the supporting evidence, Amazon&apos;s decision, the resulting reimbursement or adjustment, and its appearance in subsequent financial records. See which events have been connected, what outcome was recorded, and whether any part of the original discrepancy remains unresolved.'} mobile={'Margin traces each recovery from its originating transaction through evidence, Amazon&apos;s decision, the resulting credit and its settlement treatment—showing what was resolved and what remains outstanding.'} /></p>
-          <button type="button" className={`${landingPrimaryCtaClass} mt-5`} aria-label="Inspect the financial position">Inspect the financial position <ChevronRight className="h-4 w-4" /></button>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>From incoming Amazon activity to an established financial position.</h2>
+          <p className="mt-5 max-w-[780px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">As new transactions and settlements accumulate, Margin connects the underlying events and financial records to show what has been accounted for, what remains unresolved and what needs attention.</p>
+          <button type="button" className={`${landingPrimaryCtaClass} mt-5`} aria-label="Send records for review">Send records for review <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div
           {...revealProps}
@@ -2544,6 +2544,7 @@ export default function Index() {
       <main>
         {/* Phase 1 — Make the prospect care: problem recognition */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <DuplicatePipelineDemoSection />
         <BuyerRealitySection />
         <RealityCheckSection />
         <NestedRecoveryBrowsers />
@@ -2552,7 +2553,6 @@ export default function Index() {
 
         {/* Phase 2 — Show the outcome they actually want: desired state */}
         <FinancialPositionOutputSection />
-        <DuplicatePipelineDemoSection />
         <IngestedDocumentsOutcomeSection />
         <ReconstructionGapSection />
         <AccountingEvidenceSection />
