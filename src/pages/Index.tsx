@@ -619,8 +619,8 @@ function BuiltForSection() {
               <h3 className="mt-5 font-google-sans text-[18px] font-semibold leading-[1.12] tracking-[-0.03em] text-[#182026]">{audience.title}</h3>
               <p className="mt-3 text-[14px] font-medium leading-6 text-[#182026]">{audience.lead}</p>
               <p className="mt-2 text-[13px] leading-5 text-[#66737F]">{audience.description}</p>
-              <Link to={audience.href} className="mt-4 inline-flex items-center gap-1 text-[13px] font-medium text-[#182026] no-underline transition-colors hover:text-[#635BFF]">
-                Learn more <ChevronRight className="h-3.5 w-3.5" />
+              <Link to={audience.href} className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-[#E05A3F] no-underline transition-colors hover:text-[#B8432D]">
+                Learn More <ChevronRight className="h-3.5 w-3.5" />
               </Link>
             </motion.article>
           ))}
