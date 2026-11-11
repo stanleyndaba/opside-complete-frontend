@@ -93,7 +93,7 @@ function CountedItem({ item, active, onClick }: { item: LibraryItem; active?: bo
 
 function PromptCard({ prompt }: { prompt: Prompt }) {
   return (
-    <article className="rounded-[10px] border border-[#dedede] bg-white px-3.5 py-3 shadow-[0_1px_1px_rgba(0,0,0,0.02)] sm:px-4 sm:py-4">
+    <article className="rounded-[8px] border border-[#dedede] bg-white px-3.5 py-3 shadow-[0_1px_1px_rgba(0,0,0,0.02)] sm:px-4 sm:py-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h3 className="text-[15px] font-semibold leading-[1.12] tracking-[-0.035em] text-[#171819] sm:text-[17px]">{prompt.title}</h3>
@@ -145,8 +145,8 @@ export default function DemoTests() {
     <main className="min-h-screen overflow-x-hidden bg-white px-3 py-3 text-[#18191a] sm:px-6 sm:py-6 lg:px-10 lg:py-10">
       <section className="mx-auto flex min-h-[calc(100vh-0.75rem)] w-full max-w-[1420px] overflow-hidden rounded-[16px] bg-[#fafafa] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]">
         <aside className="relative flex w-[56px] min-w-[56px] shrink-0 flex-col items-center border-r border-[#e1e1e1] px-2 py-5 sm:py-6">
-          {!reduceMotion ? <motion.div aria-hidden="true" className="pointer-events-none absolute z-30 text-[#182026] drop-shadow-[0_3px_4px_rgba(24,32,38,0.22)]" initial={{ left: "12px", top: "92px", opacity: 0 }} animate={{ left: demoPhase >= 1 ? "15px" : "12px", top: demoPhase >= 1 ? "52px" : "92px", opacity: demoPhase === 6 ? 0 : 1 }} transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}><MousePointer2 className="h-7 w-7 fill-white stroke-[2]" />{demoPhase === 2 ? <motion.span initial={{ opacity: 0.9, scale: 0.45 }} animate={{ opacity: 0, scale: 1.9 }} transition={{ duration: 0.75 }} className="absolute -left-3 -top-3 h-10 w-10 rounded-full border-2 border-[#0B74DE]" /> : null}</motion.div> : null}
-          <button type="button" onClick={() => setActive("Favourites")} className="mt-4 flex h-10 w-10 items-center justify-center rounded-[10px] text-[#25292a] transition-colors hover:bg-[#efefef]" aria-label="Open Favourites case detail"><Menu className="h-5 w-5" /></button>
+          {!reduceMotion ? <motion.div aria-hidden="true" className="pointer-events-none absolute z-30 text-[#182026] drop-shadow-[0_3px_4px_rgba(24,32,38,0.22)]" initial={{ left: "12px", top: "92px", opacity: 0 }} animate={{ left: demoPhase >= 1 ? "15px" : "12px", top: demoPhase >= 1 ? "52px" : "92px", opacity: demoPhase === 6 ? 0 : 1 }} transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}><MousePointer2 className="h-7 w-7 fill-white stroke-[2]" />{demoPhase === 2 ? <motion.span initial={{ opacity: 0.9, scale: 0.45 }} animate={{ opacity: 0, scale: 1.9 }} transition={{ duration: 0.75 }} className="absolute -left-3 -top-3 h-10 w-10 rounded-full border-2 border-[#182026]" /> : null}</motion.div> : null}
+          <button type="button" onClick={() => setActive("Favourites")} className="mt-4 flex h-10 w-10 items-center justify-center rounded-[8px] text-[#25292a] transition-colors hover:bg-[#efefef]" aria-label="Open Favourites case detail"><Menu className="h-5 w-5" /></button>
         </aside>
 
         <section className="min-w-0 flex-1 overflow-y-auto bg-[#fbfbfb] px-3 py-5 sm:px-6 sm:py-6 lg:px-8 xl:px-10">
@@ -178,7 +178,7 @@ export default function DemoTests() {
 
           <div className="mt-9 grid max-w-[760px] gap-3 pb-12 sm:mt-11 sm:gap-6">
             {visibleCards.length > 0 ? visibleCards.map((prompt) => <PromptCard key={prompt.title} prompt={prompt} />) : (
-              <div className="rounded-[10px] border border-dashed border-[#d2d2d2] px-6 py-12 text-center text-[17px] text-[#77797a]">No prompts match “{search}”.</div>
+              <div className="rounded-[8px] border border-dashed border-[#d2d2d2] px-6 py-12 text-center text-[17px] text-[#77797a]">No prompts match “{search}”.</div>
             )}
           </div>
           </motion.div>}

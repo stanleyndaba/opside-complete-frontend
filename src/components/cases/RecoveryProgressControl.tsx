@@ -33,9 +33,9 @@ type Tone = 'neutral' | 'attention' | 'warning' | 'danger' | 'success';
 const toneClasses: Record<Tone, string> = {
   neutral: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#182026]',
   attention: 'border-blue-200 bg-blue-50 text-blue-950',
-  warning: 'border-amber-200 bg-amber-50 text-amber-950',
-  danger: 'border-red-200 bg-red-50 text-red-950',
-  success: 'border-emerald-200 bg-emerald-50 text-emerald-950',
+  warning: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#182026]',
+  danger: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#182026]',
+  success: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#182026]',
 };
 
 const toneFromTruth = (tone: CaseTruthTone): Tone => tone;
@@ -70,7 +70,7 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
             <h2 className="mt-3 font-lora text-[24px] font-normal tracking-tight">{props.truthPresentation.label}</h2>
             <p className="mt-2 text-[13px] leading-6">{props.truthPresentation.explanation}</p>
           </div>
-          <div className="max-w-xs border border-current/15 bg-white/60 p-3 text-[11px] leading-5">
+          <div className="max-w-xs rounded-[8px] border border-current/15 bg-white/60 p-3 text-[11px] leading-5">
             <p className="font-semibold uppercase tracking-tight">Closure condition</p>
             <p className="mt-1 opacity-85">{progress.closureCondition}</p>
           </div>
@@ -83,16 +83,16 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
           <h3 className="mt-0.5 font-lora text-[18px] font-normal tracking-tight text-[#182026]">What happens next</h3>
         </div>
         <div className="grid gap-3 lg:grid-cols-3">
-          <div className="border border-[#DCE8EE] bg-[#F7FAFC] p-3">
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-[#F7FAFC] p-3">
             <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Responsible now</p>
             <p className="mt-2 text-[13px] font-semibold tracking-tight text-[#182026]">{progress.resolution.owner}</p>
             <p className="mt-1 text-[11px] leading-5 text-[#66737F]">{progress.resolution.ownerDetail}</p>
           </div>
-          <div className="border border-[#DCE8EE] bg-white p-3">
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-white p-3">
             <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Seller action</p>
             <p className="mt-2 text-[13px] font-semibold tracking-tight text-[#182026]">{progress.resolution.sellerAction}</p>
           </div>
-          <div className="border border-[#DCE8EE] bg-white p-3">
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-white p-3">
             <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Next action</p>
             <p className="mt-2 text-[13px] font-semibold leading-5 tracking-tight text-[#182026]">{progress.resolution.nextAction}</p>
             {props.nextStep?.title ? <p className="mt-2 text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Recorded step: {props.nextStep.title}</p> : null}
@@ -106,10 +106,10 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
           <h3 className="mt-0.5 font-lora text-[18px] font-normal tracking-tight text-[#182026]">What remains before closure</h3>
         </div>
         <div className="grid gap-3 lg:grid-cols-4">
-          <div className="border border-[#DCE8EE] bg-[#F7FAFC] p-3"><p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Current</p><p className="mt-2 text-[13px] font-semibold text-[#182026]">{props.truthPresentation.label}</p></div>
-          <div className="border border-[#DCE8EE] bg-white p-3"><p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Remaining</p><p className="mt-2 text-[13px] font-semibold text-[#182026]">{progress.remaining}</p></div>
-          <div className="border border-[#DCE8EE] bg-white p-3"><p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Required before closure</p><p className="mt-2 text-[13px] font-semibold leading-5 text-[#182026]">{progress.closureCondition}</p></div>
-          <div className="border border-[#DCE8EE] bg-white p-3"><p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Final</p><p className="mt-2 text-[13px] font-semibold text-[#182026]">Financially closed</p></div>
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-[#F7FAFC] p-3"><p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Current</p><p className="mt-2 text-[13px] font-semibold text-[#182026]">{props.truthPresentation.label}</p></div>
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-white p-3"><p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Remaining</p><p className="mt-2 text-[13px] font-semibold text-[#182026]">{progress.remaining}</p></div>
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-white p-3"><p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Required before closure</p><p className="mt-2 text-[13px] font-semibold leading-5 text-[#182026]">{progress.closureCondition}</p></div>
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-white p-3"><p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Final</p><p className="mt-2 text-[13px] font-semibold text-[#182026]">Financially closed</p></div>
         </div>
       </section>
 
@@ -131,13 +131,13 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
         </div>
         <div className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
           {progress.checklist.map((step) => (
-            <div key={step.label} className="flex gap-2 border border-[#E7EEF2] bg-[#F8FAFB] p-2.5">
-              {step.complete ? <CheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-700" /> : <Clock3 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#8A97A2]" />}
+            <div key={step.label} className="flex gap-2 rounded-[8px] border border-[#E7EEF2] bg-[#F8FAFB] p-2.5">
+              {step.complete ? <CheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#66737F]" /> : <Clock3 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#8A97A2]" />}
               <div><p className="text-[11px] font-semibold text-[#182026]">{step.label}</p><p className="mt-0.5 text-[10px] leading-4 text-[#66737F]">{step.detail}</p></div>
             </div>
           ))}
         </div>
-        <div className="mt-4 flex gap-3 border border-[#DCE8EE] bg-[#F7FAFC] p-3">
+        <div className="mt-4 flex gap-3 rounded-[8px] border border-[#DCE8EE] bg-[#F7FAFC] p-3">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#66737F]" />
           <p className="text-[11px] leading-5 text-[#66737F]">Payment verification, accounting reconciliation, reversal review, and financial closure are separate conditions. A completed milestone does not by itself establish the next condition.</p>
         </div>

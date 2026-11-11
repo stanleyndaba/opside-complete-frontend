@@ -78,18 +78,18 @@ const formatStatus = (value?: string | null) => {
 
 const toneClasses: Record<CaseTruthTone, string> = {
   neutral: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#182026]',
-  attention: 'border-blue-200 bg-blue-50 text-blue-900',
-  warning: 'border-amber-200 bg-amber-50 text-amber-950',
-  danger: 'border-red-200 bg-red-50 text-red-950',
-  success: 'border-emerald-200 bg-emerald-50 text-emerald-950',
+  attention: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#182026]',
+  warning: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#182026]',
+  danger: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#182026]',
+  success: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#182026]',
 };
 
 const toneIconClasses: Record<CaseTruthTone, string> = {
   neutral: 'text-[#66737F]',
-  attention: 'text-[#0B74DE]',
-  warning: 'text-amber-700',
-  danger: 'text-red-700',
-  success: 'text-emerald-700',
+  attention: 'text-[#182026]',
+  warning: 'text-[#66737F]',
+  danger: 'text-[#66737F]',
+  success: 'text-[#66737F]',
 };
 
 function TruthSection({
@@ -106,7 +106,7 @@ function TruthSection({
   return (
     <section className="rounded-[8px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
       <div className="mb-4 flex items-start gap-3 border-b border-[#E7EEF2] pb-3">
-        <span className="mt-0.5 inline-flex h-6 min-w-6 items-center justify-center rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-1 font-sans text-[10px] font-semibold text-[#66737F]">{number}</span>
+        <span className="mt-0.5 inline-flex h-6 min-w-6 items-center justify-center rounded-[8px] border border-[#DCE8EE] bg-[#F7FAFC] px-1 font-sans text-[10px] font-semibold text-[#66737F]">{number}</span>
         <div>
           <p className="text-[11px] font-medium tracking-tight text-[#66737F]">{eyebrow}</p>
           <h3 className="mt-0.5 font-lora text-[18px] font-normal tracking-tight text-[#182026]">{title}</h3>
@@ -146,7 +146,7 @@ function TruthRow({
 
 function Limitation({ title, children, tone = 'attention' }: { title: string; children: React.ReactNode; tone?: CaseTruthTone }) {
   return (
-    <div className={cn('flex gap-3 border p-3', toneClasses[tone])}>
+    <div className={cn('flex gap-3 rounded-[8px] border p-3', toneClasses[tone])}>
       <Info className={cn('mt-0.5 h-4 w-4 shrink-0', toneIconClasses[tone])} />
       <div>
         <p className="text-[12px] font-semibold tracking-tight">{title}</p>
@@ -254,7 +254,7 @@ export function RecoveryTruthRecord({
             <h2 className="mt-3 font-lora text-[24px] font-normal tracking-tight">{truthPresentation.label}</h2>
             <p className="mt-2 text-[13px] leading-6">{truthPresentation.explanation}</p>
           </div>
-          <div className="max-w-xs border border-current/15 bg-white/60 p-3 text-[11px] leading-5">
+          <div className="max-w-xs rounded-[8px] border border-current/15 bg-white/60 p-3 text-[11px] leading-5">
             <p className="font-semibold uppercase tracking-tight">Claim boundary</p>
             <p className="mt-1 opacity-85">{truthPresentation.prohibitedImplication}</p>
           </div>
@@ -277,7 +277,7 @@ export function RecoveryTruthRecord({
       <TruthSection number="02" title="Why Margin can currently conclude this" eyebrow="Conditions that establish or limit the current recovery judgment">
         <div className="grid gap-3 lg:grid-cols-2">
           {truthPresentation.conditions.length > 0 ? truthPresentation.conditions.map((condition) => (
-            <div key={`${condition.label}-${condition.detail}`} className={cn('border p-3', toneClasses[condition.tone])}>
+            <div key={`${condition.label}-${condition.detail}`} className={cn('rounded-[8px] border p-3', toneClasses[condition.tone])}>
               <div className="flex items-center gap-2">
                 {condition.tone === 'success' ? <CheckCircle className={cn('h-4 w-4', toneIconClasses[condition.tone])} /> : <AlertCircle className={cn('h-4 w-4', toneIconClasses[condition.tone])} />}
                 <p className="text-[12px] font-semibold tracking-tight">{condition.label}</p>
@@ -295,22 +295,22 @@ export function RecoveryTruthRecord({
 
       <TruthSection number="03" title="Proof record" eyebrow="Claim → establishing fact → relationship → proof → limitation">
         <div className="grid gap-3 lg:grid-cols-2">
-          <div className="border border-[#DCE8EE] bg-[#F7FAFC] p-4">
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-[#F7FAFC] p-4">
             <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Audit finding</p>
             <p className="mt-2 text-[13px] font-semibold leading-5 tracking-tight text-[#182026]">{findingNarrative || NOT_AVAILABLE}</p>
             {generatedNarrative && <p className="mt-2 text-[10px] leading-5 text-[#66737F]">This is generated explanatory context from the current case fields; it is not independent evidence or outcome proof.</p>}
           </div>
-          <div className="border border-[#DCE8EE] bg-white p-4">
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-white p-4">
             <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Evidence relationship</p>
             <p className="mt-2 text-[13px] font-semibold leading-5 tracking-tight text-[#182026]">{sellerSummary?.evidence_summary || `${evidenceSummary?.linked_document_count ?? evidenceSummary?.matched_document_count ?? 0} linked document(s) are available for this recovery record.`}</p>
             <p className="mt-2 text-[11px] leading-5 text-[#66737F]">Match basis: {evidenceSummary?.match_type ? String(evidenceSummary.match_type).replace(/_/g, ' ') : NOT_AVAILABLE}</p>
           </div>
-          <div className="border border-[#DCE8EE] bg-white p-4">
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-white p-4">
             <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Evidence sufficiency</p>
             <p className="mt-2 text-[13px] font-semibold leading-5 tracking-tight text-[#182026]">Proof status: {proofStatus ? formatStatus(proofStatus) : NOT_AVAILABLE}</p>
             <p className="mt-2 text-[11px] leading-5 text-[#66737F]">{missingRequirements.length ? `Still required: ${missingRequirements.join(', ')}.` : 'No missing evidence requirements are recorded for the current decision.'}</p>
           </div>
-          <div className="border border-[#DCE8EE] bg-white p-4">
+          <div className="rounded-[8px] border border-[#DCE8EE] bg-white p-4">
             <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Filing and payment proof</p>
             <p className="mt-2 text-[13px] font-semibold leading-5 tracking-tight text-[#182026]">Filing: {filingStatus}</p>
             <p className="mt-2 text-[11px] leading-5 text-[#66737F]">{filingTruthLine}</p>
@@ -336,7 +336,7 @@ export function RecoveryTruthRecord({
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           {safetyRows.map(([label, state]) => (
-            <div key={label} className="border border-[#DCE8EE] bg-[#F7FAFC] p-3">
+            <div key={label} className="rounded-[8px] border border-[#DCE8EE] bg-[#F7FAFC] p-3">
               <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p>
               <p className="mt-2 text-[12px] font-semibold tracking-tight text-[#182026]">{state ? formatStatus(state) : 'Not assessed'}</p>
             </div>
@@ -345,7 +345,7 @@ export function RecoveryTruthRecord({
       </TruthSection>
 
       <TruthSection number="05" title="What happens next" eyebrow="The next action is separate from the recovery conclusion">
-        <div className="border border-[#DCE8EE] bg-[#F7FAFC] p-4">
+        <div className="rounded-[8px] border border-[#DCE8EE] bg-[#F7FAFC] p-4">
           <p className="text-[13px] font-semibold tracking-tight text-[#182026]">{nextStep?.title || 'No next step has been established'}</p>
           <p className="mt-2 max-w-3xl text-[12px] leading-5 text-[#66737F]">{nextStep?.description || 'Margin cannot state a next action until the current case truth is available.'}</p>
         </div>
@@ -374,7 +374,7 @@ export function RecoveryTruthRecord({
 
       <TruthSection number="07" title="Supporting documents" eyebrow="Artifacts that support observations, relationships, and action proof">
         {matchedDocuments.length > 0 ? (
-          <div className="divide-y divide-[#E7EEF2] border border-[#DCE8EE]">
+          <div className="divide-y divide-[#E7EEF2] rounded-[8px] border border-[#DCE8EE]">
             {matchedDocuments.map((document, index: number) => {
               const documentId = String(document?.id || '').trim();
               const label = String(document?.name || document?.filename || document?.title || `Evidence document ${index + 1}`);
@@ -396,7 +396,7 @@ export function RecoveryTruthRecord({
             })}
           </div>
         ) : (
-          <div className="flex items-start gap-3 border border-dashed border-[#D8E3E8] bg-[#F8FAFB] p-4">
+          <div className="flex items-start gap-3 rounded-[8px] border border-dashed border-[#D8E3E8] bg-[#F8FAFB] p-4">
             <Database className="mt-0.5 h-4 w-4 text-[#8A97A2]" />
             <p className="text-[11px] leading-5 text-[#66737F]">No linked evidence artifacts are available on this record. Margin must not imply evidence sufficiency from document count alone.</p>
           </div>
