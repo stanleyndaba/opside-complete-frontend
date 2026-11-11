@@ -3,6 +3,7 @@ import { ArrowRight, Check, ChevronRight, FileCheck2, ShieldCheck } from "lucide
 import { Link } from "react-router-dom";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { AudienceFaqSection } from "@/components/landing/AudienceFaqSection";
+import { AudienceAlignmentSections } from "@/components/landing/AudienceAlignmentSections";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { SITE_META } from "@/config/site";
@@ -69,6 +70,7 @@ export default function FinanceTeams() {
       <section className="relative overflow-hidden bg-white py-14 sm:py-20 md:py-24"><div className={containerClass}><Heading eyebrow="05 / What Finance receives" title="A position your team can inspect, challenge and carry forward."><p className="mt-6 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">Margin helps distinguish established findings, potential recovery opportunities, apparently resolved matters, unresolved questions and recommended next steps. The output is not a longer list of claims. It is a clearer basis for deciding what deserves attention.</p></Heading><div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{["Source-backed findings", "Supported exposure", "Accounted-for value", "Open exceptions"].map((item, index) => <div key={item} className="border border-[#DCE3E1] bg-[#F7F8F7] p-5"><Check className="h-5 w-5 text-[#26734D]" /><p className="mt-7 font-lora text-[22px] leading-[1.08] tracking-[-0.025em] text-[#182026]">{item}</p><span className="mt-4 block font-mono text-[10px] text-[#8B857F]">Finance review point 0{index + 1}</span></div>)}</div></div></section>
 
       <section className="relative overflow-hidden bg-[#F5F6F4] py-16 sm:py-24 md:py-32"><div className={`${containerClass} text-center`}><h2 className="mx-auto max-w-[820px] font-lora text-[38px] font-normal leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[54px] md:text-[68px]">Give Finance a defensible position—not another investigation to rebuild.</h2><p className="mx-auto mt-6 max-w-[680px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">Start with the available records. Establish what happened, what is supported and what still needs attention. Then decide what should happen next.</p><div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"><Link to="/review-consent" className={primaryCtaClass}>Start a Free Financial Position Review <ArrowRight className="h-4 w-4" /></Link><Link to="/contact" className={secondaryCtaClass}>Talk to Margin <ChevronRight className="h-4 w-4" /></Link></div></div></section>
+      <AudienceAlignmentSections audience="finance" />
       <AudienceFaqSection audience="finance" />
     </main>
     <BrandFooter wide />

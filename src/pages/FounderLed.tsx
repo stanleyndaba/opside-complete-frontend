@@ -3,6 +3,7 @@ import { ArrowRight, Check, ChevronRight, CircleAlert, ShieldCheck } from "lucid
 import { Link } from "react-router-dom";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { AudienceFaqSection } from "@/components/landing/AudienceFaqSection";
+import { AudienceAlignmentSections } from "@/components/landing/AudienceAlignmentSections";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { SITE_META } from "@/config/site";
@@ -88,6 +89,7 @@ export default function FounderLed() {
       <section className="relative overflow-hidden bg-[#F5F6F4] py-14 sm:py-20 md:py-24"><div className={containerClass}><SectionHeading eyebrow="08 / Start without committing to paid work" title="First, find out whether there&apos;s anything worth pursuing." /><div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">{process.map(([title, body], index) => <div key={title} className="relative border-t border-[#C9D4D0] pt-5"><span className="font-mono text-[10px] text-[#8B857F]">0{index + 1}</span><h3 className="mt-5 font-lora text-[23px] leading-[1.08] tracking-[-0.025em] text-[#182026]">{title}</h3><p className="mt-4 text-[14px] leading-6 text-[#667177]">{body}</p></div>)}</div><p className="mt-9 max-w-[720px] text-[15px] font-semibold leading-7 text-[#294B61] sm:text-[17px] sm:leading-8">There is no obligation to purchase a paid service after the audit.</p></div></section>
 
       <section className="relative overflow-hidden bg-white py-16 sm:py-24 md:py-32"><div className={`${containerClass} text-center`}><CircleAlert className="mx-auto h-8 w-8 text-[#F05A3C]" /><h2 className="mx-auto mt-5 max-w-[820px] font-lora text-[38px] font-normal leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[54px] md:text-[68px]">You have a business to grow. Let Margin take on the investigation.</h2><p className="mx-auto mt-6 max-w-[680px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">Unresolved Amazon financial questions shouldn&apos;t have to compete indefinitely with the responsibilities that move your business forward.</p><p className="mx-auto mt-5 max-w-[680px] font-lora text-[22px] leading-[1.12] tracking-[-0.03em] text-[#294B61] sm:text-[28px]">Start with the records. Understand the findings. Decide what happens next.</p><div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"><Link to="/review-consent" className={primaryCtaClass}>Get My Free Financial Position Review <ArrowRight className="h-4 w-4" /></Link><a href="#investigates" className={secondaryCtaClass}>See What Margin Investigates <ChevronRight className="h-4 w-4" /></a></div></div></section>
+      <AudienceAlignmentSections audience="founder" />
       <AudienceFaqSection audience="founder" />
     </main>
     <BrandFooter wide />
