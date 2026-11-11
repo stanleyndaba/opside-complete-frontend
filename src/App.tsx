@@ -94,6 +94,7 @@ const FounderLed = lazy(() => import('./pages/FounderLed'));
 const FinanceTeams = lazy(() => import('./pages/FinanceTeams'));
 const MarketplaceOperations = lazy(() => import('./pages/MarketplaceOperations'));
 const AggregatorsMultiBrand = lazy(() => import('./pages/AggregatorsMultiBrand'));
+const EnterpriseMultiMarketplace = lazy(() => import('./pages/EnterpriseMultiMarketplace'));
 const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
 const DocumentIngestion = lazy(() => import('./pages/DocumentIngestion'));
 const SpeakToSales = lazy(() => import('./pages/SpeakToSales'));
@@ -321,6 +322,7 @@ const App = () => (
                         <Route path='/finance-teams' element={<FinanceTeams />} />
                         <Route path='/marketplace-operations' element={<MarketplaceOperations />} />
                         <Route path='/aggregators-multi-brand' element={<AggregatorsMultiBrand />} />
+                        <Route path='/enterprise-multi-marketplace' element={<EnterpriseMultiMarketplace />} />
                         <Route path='/recovery-workspace' element={<RecoveryWorkspace />} />
                         <Route path='/document-ingestion' element={<DocumentIngestion />} />
                         <Route path='/speak-to-sales' element={<SpeakToSales />} />
