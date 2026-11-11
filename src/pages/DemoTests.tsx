@@ -120,18 +120,19 @@ export default function DemoTests() {
   useEffect(() => {
     if (reduceMotion) {
       setActive("Favourites");
-      setDemoPhase(3);
       return;
     }
-    const timer = window.setInterval(() => {
-      setDemoPhase((current) => {
-        const next = current >= 6 ? 0 : current + 1;
-        if (next >= 2 && next <= 5) setActive("Favourites");
-        if (next === 0) setActive("Workflows");
-        return next;
-      });
-    }, 1350);
-    return () => window.clearInterval(timer);
+    const moveTimer = window.setTimeout(() => setDemoPhase(1), 450);
+    const tapTimer = window.setTimeout(() => {
+      setDemoPhase(2);
+      setActive("Favourites");
+    }, 1550);
+    const settleTimer = window.setTimeout(() => setDemoPhase(3), 2350);
+    return () => {
+      window.clearTimeout(moveTimer);
+      window.clearTimeout(tapTimer);
+      window.clearTimeout(settleTimer);
+    };
   }, [reduceMotion]);
 
   const visibleCards = useMemo(() => {
