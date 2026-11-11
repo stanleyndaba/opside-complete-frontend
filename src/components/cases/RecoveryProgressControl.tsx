@@ -1,4 +1,4 @@
-import { CheckCircle, Clock3, ShieldCheck } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { CaseTruthTone, RecoveryTruthPresentation } from '@/lib/caseDetailTruthPresentation';
@@ -123,7 +123,7 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
           <div className="relative z-10 grid grid-cols-5 gap-2">
             {props.lifecycleSteps.map((step, index) => (
               <div key={step.label} className="flex min-w-0 flex-col items-center gap-2 text-center">
-                <div className={cn('flex h-7 w-7 items-center justify-center rounded-full border text-[10px] font-semibold', step.active ? 'border-[#0B74DE] bg-[#0B74DE] text-white' : 'border-[#0B74DE] bg-[#0B74DE] text-white')}>{step.active ? <CheckCircle className="h-3.5 w-3.5" /> : <span className="h-2.5 w-2.5 rounded-full bg-white" />}</div>
+                <span className="mt-2 h-2 w-2 rounded-full bg-[#8A97A2]" aria-hidden="true" />
                 <span className={cn('text-[10px] font-medium leading-4 tracking-tight', step.active ? 'text-[#182026]' : 'text-[#66737F]')}>{step.label}</span>
               </div>
             ))}
@@ -132,13 +132,13 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
         <div className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
           {progress.checklist.map((step) => (
             <div key={step.label} className="flex gap-2 rounded-[8px] border border-[#E7EEF2] bg-[#F8FAFB] p-2.5">
-              {step.complete ? <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#0B74DE] text-white"><CheckCircle className="h-3 w-3" strokeWidth={3} /></span> : <Clock3 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#8A97A2]" />}
+              <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[#8A97A2]" aria-hidden="true" />
               <div><p className="text-[11px] font-semibold text-[#182026]">{step.label}</p><p className="mt-0.5 text-[10px] leading-4 text-[#66737F]">{step.detail}</p></div>
             </div>
           ))}
         </div>
         <div className="mt-4 flex gap-3 rounded-[8px] border border-[#DCE8EE] bg-[#F7FAFC] p-3">
-          <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#66737F]" />
+          <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[#8A97A2]" aria-hidden="true" />
           <p className="text-[11px] leading-5 text-[#66737F]">Payment verification, accounting reconciliation, reversal review, and financial closure are separate conditions. A completed milestone does not by itself establish the next condition.</p>
         </div>
       </section>
