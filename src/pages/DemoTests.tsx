@@ -12,6 +12,7 @@ import {
   UserRound,
   UsersRound,
 } from "lucide-react";
+import CaseDetailDemo from "./CaseDetailDemo";
 
 type LibraryItem = {
   label: string;
@@ -142,37 +143,9 @@ export default function DemoTests() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#5d7880] px-3 py-3 text-[#18191a] sm:px-6 sm:py-6 lg:px-10 lg:py-10">
       <section className="mx-auto flex min-h-[calc(100vh-0.75rem)] w-full max-w-[1420px] overflow-hidden rounded-[16px] bg-[#fafafa] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]">
-        <aside className="relative flex w-[30%] min-w-[210px] shrink-0 flex-col border-r border-[#e1e1e1] px-3 py-5 sm:px-5 sm:py-6 lg:w-[32%] lg:px-6 xl:w-[30%] xl:px-8">
-          {!reduceMotion ? <motion.div aria-hidden="true" className="pointer-events-none absolute z-30 text-[#182026] drop-shadow-[0_3px_4px_rgba(24,32,38,0.22)]" initial={{ left: "30px", top: "150px", opacity: 0 }} animate={{ left: demoPhase >= 1 ? "58px" : "30px", top: demoPhase >= 1 ? "385px" : "150px", opacity: demoPhase === 6 ? 0 : 1 }} transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}><MousePointer2 className="h-8 w-8 fill-white stroke-[2]" />{demoPhase === 2 ? <motion.span initial={{ opacity: 0.9, scale: 0.45 }} animate={{ opacity: 0, scale: 1.9 }} transition={{ duration: 0.75 }} className="absolute -left-3 -top-3 h-10 w-10 rounded-full border-2 border-[#0B74DE]" /> : null}</motion.div> : null}
-          <div className="flex items-center justify-between">
-            <h1 className="text-[20px] font-semibold tracking-[-0.055em] sm:text-[24px] lg:text-[26px]">Library</h1>
-            <button type="button" className="rounded-full p-2 text-[#8b8c8c] hover:bg-[#f0f0f0] lg:hidden" aria-label="Open library menu"><Menu className="h-4 w-4" /></button>
-          </div>
-
-          <button type="button" className="mt-5 flex h-[42px] items-center gap-3 rounded-[10px] border border-[#d8d8d8] bg-white px-3 text-left shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition-colors hover:bg-[#f7f7f7] sm:mt-11">
-            <Plus className="h-4 w-4 stroke-[1.5] text-[#3f4141]" />
-            <span className="text-[13px] font-medium tracking-[-0.035em] sm:text-[15px]">Create new</span>
-          </button>
-
-          <div className="mt-6 sm:mt-7">
-            <p className="mb-5 px-4 text-[11px] font-medium text-[#888989] sm:px-3 sm:text-[13px]">Type</p>
-            <div className="space-y-1.5">
-              {navigation.map((item) => <CountedItem key={item.label} item={item} active={active === item.label} onClick={() => setActive(item.label)} />)}
-            </div>
-          </div>
-
-          <div className="mt-7 sm:mt-8">
-            <p className="mb-5 px-4 text-[11px] font-medium text-[#888989] sm:px-3 sm:text-[13px]">Filters</p>
-            <div className="space-y-1.5">
-              {filters.map((item) => <CountedItem key={item.label} item={item} active={active === item.label} onClick={() => setActive(item.label)} />)}
-            </div>
-          </div>
-
-          <div className="mt-auto hidden items-center gap-2 border-t border-[#e6e6e6] pt-4 text-[#242626] sm:flex">
-            <UsersRound className="h-4 w-4 stroke-[1.7]" />
-            <span className="min-w-0 flex-1 truncate text-[12px] font-medium">Junestrand &amp; Labor</span>
-            <span className="text-[12px] text-[#969797]">180</span>
-          </div>
+        <aside className="relative flex w-[56px] min-w-[56px] shrink-0 flex-col items-center border-r border-[#e1e1e1] px-2 py-5 sm:py-6">
+          {!reduceMotion ? <motion.div aria-hidden="true" className="pointer-events-none absolute z-30 text-[#182026] drop-shadow-[0_3px_4px_rgba(24,32,38,0.22)]" initial={{ left: "12px", top: "92px", opacity: 0 }} animate={{ left: demoPhase >= 1 ? "15px" : "12px", top: demoPhase >= 1 ? "52px" : "92px", opacity: demoPhase === 6 ? 0 : 1 }} transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}><MousePointer2 className="h-7 w-7 fill-white stroke-[2]" />{demoPhase === 2 ? <motion.span initial={{ opacity: 0.9, scale: 0.45 }} animate={{ opacity: 0, scale: 1.9 }} transition={{ duration: 0.75 }} className="absolute -left-3 -top-3 h-10 w-10 rounded-full border-2 border-[#0B74DE]" /> : null}</motion.div> : null}
+          <button type="button" onClick={() => setActive("Favourites")} className="mt-4 flex h-10 w-10 items-center justify-center rounded-[10px] text-[#25292a] transition-colors hover:bg-[#efefef]" aria-label="Open Favourites case detail"><Menu className="h-5 w-5" /></button>
         </aside>
 
         <section className="min-w-0 flex-1 overflow-y-auto bg-[#fbfbfb] px-3 py-5 sm:px-6 sm:py-6 lg:px-8 xl:px-10">
@@ -187,7 +160,7 @@ export default function DemoTests() {
           <AnimatePresence mode="wait">
           {active === "Favourites" ? (
             <motion.div key="case-detail-demo" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="-mx-3 mt-4 overflow-hidden rounded-[10px] border border-[#D8E3E8] bg-[#FAFAF7] sm:-mx-6 lg:-mx-8 xl:-mx-10">
-              <iframe title="ACME-CASE-2005 Case Detail" src="/demo-case-detail" className="block h-[calc(100vh-5rem)] min-h-[760px] w-full border-0" />
+              <CaseDetailDemo />
             </motion.div>
           ) : <motion.div key="library-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="mt-7 max-w-[760px] sm:mt-9">
