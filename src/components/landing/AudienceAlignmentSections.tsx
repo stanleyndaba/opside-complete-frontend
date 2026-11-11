@@ -47,6 +47,32 @@ function SectionShell({ children, tone = "soft" }: { children: ReactNode; tone?:
 
 export function AudienceAlignmentSections({ audience }: { audience: Audience }) {
   const content = audienceContent[audience];
+  const commercialPaths = audience === "enterprise"
+    ? [
+        ["01 / Defined engagement", "Defined Recovery Engagement", "For a specific, established recovery opportunity that needs investigation, evidence preparation and authorised follow-through."],
+        ["02 / Control pilot", "Financial Control Pilot", "For a defined area of activity where the business wants a repeatable investigation, ownership and approval workflow."],
+        ["03 / Ongoing control", "Ongoing Financial Control", "For continuing examination, recovery management and outcome reconciliation across the agreed scope."],
+      ]
+    : audience === "aggregator"
+      ? [
+          ["01 / Defined engagement", "Defined Recovery Engagement", "For a specific, established recovery opportunity that needs investigation, evidence preparation and authorised follow-through."],
+          ["02 / Portfolio pilot", "Financial Control Pilot", "Begin with selected accounts or brands, establish the operating standard and use the findings to decide whether to expand."],
+          ["03 / Ongoing control", "Ongoing Financial Control", "For continuing examination, recovery management and outcome reconciliation across the agreed portfolio scope."],
+        ]
+      : audience === "founder"
+        ? [
+            ["01 / Defined engagement", "Defined Recovery Engagement", "For a specific, established recovery opportunity where you want Margin to carry the investigation and agreed follow-through."],
+            ["02 / First step", "Free Financial Position Review", "Start by establishing what the available records explain before deciding whether any paid recovery work is justified."],
+          ]
+        : audience === "operations"
+          ? [
+              ["01 / Defined engagement", "Defined Recovery Engagement", "For an established operational issue that needs evidence preparation, financial investigation and authorised follow-through."],
+              ["02 / First step", "Free Financial Position Review", "Start with the event population and establish which operational exceptions warrant further financial investigation."],
+            ]
+          : [
+              ["01 / Defined engagement", "Defined Recovery Engagement", "For a specific, established recovery opportunity that needs investigation, evidence preparation and authorised follow-through."],
+              ["02 / First step", "Free Financial Position Review", "Start by establishing what the available records explain before deciding whether any paid recovery work is justified."],
+            ];
 
   return <>
     <SectionShell tone="white">
@@ -90,10 +116,10 @@ export function AudienceAlignmentSections({ audience }: { audience: Audience }) 
         <div className="max-w-[850px]">
           <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8B857F]">10 / Commercial journey</p>
           <h2 className="mt-3 font-lora text-[34px] font-normal leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]">Start with the position. Choose only the work it justifies.</h2>
-          <p className="mt-5 max-w-[780px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">The Free Financial Position Review establishes what the available records explain, what appears to have been accounted for, what potential exposure warrants further investigation and what remains unresolved. You decide whether the next step is defined recovery work, a control pilot, ongoing financial control or no further action.</p>
+          <p className="mt-5 max-w-[780px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">The Free Financial Position Review establishes what the available records explain, what appears to have been accounted for, what potential exposure warrants further investigation and what remains unresolved. You decide whether the next step is defined recovery work, a scoped control engagement, ongoing financial control or no further action.</p>
         </div>
         <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {[["01 / Defined engagement", "Defined Recovery Engagement", "For a specific, established recovery opportunity that needs investigation, evidence preparation and authorised follow-through."], ["02 / Control pilot", "Financial Control Pilot", "For a defined area of activity where the business wants a repeatable investigation, ownership and approval workflow."], ["03 / Ongoing control", "Ongoing Financial Control", "For continuing examination, recovery management and outcome reconciliation across the agreed scope."]].map(([label, title, body]) => <article key={label} className="border-t-2 border-[#F05A3C] bg-[#F7F8F7] p-5"><p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8B857F]">{label}</p><h3 className="mt-6 font-lora text-[25px] leading-[1.08] tracking-[-0.025em] text-[#182026]">{title}</h3><p className="mt-4 text-[14px] leading-6 text-[#52616A]">{body}</p><a href="/contact" className="mt-6 inline-flex items-center gap-2 text-[13px] font-semibold text-[#635BFF] underline decoration-[#B8B0FF] underline-offset-4">Discuss the right scope <ArrowRight className="h-4 w-4" /></a></article>)}
+          {commercialPaths.map(([label, title, body]) => <article key={label} className="border-t-2 border-[#F05A3C] bg-[#F7F8F7] p-5"><p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8B857F]">{label}</p><h3 className="mt-6 font-lora text-[25px] leading-[1.08] tracking-[-0.025em] text-[#182026]">{title}</h3><p className="mt-4 text-[14px] leading-6 text-[#52616A]">{body}</p><a href="/contact" className="mt-6 inline-flex items-center gap-2 text-[13px] font-semibold text-[#635BFF] underline decoration-[#B8B0FF] underline-offset-4">Discuss the right scope <ArrowRight className="h-4 w-4" /></a></article>)}
         </div>
       </div>
     </SectionShell>
