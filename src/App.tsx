@@ -90,6 +90,7 @@ const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
 const AuditFirst = lazy(() => import("./pages/AuditFirst"));
 const InformationRequired = lazy(() => import("./pages/InformationRequired"));
 const RecoverOnce = lazy(() => import('./pages/RecoverOnce'));
+const FounderLed = lazy(() => import('./pages/FounderLed'));
 const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
 const DocumentIngestion = lazy(() => import('./pages/DocumentIngestion'));
 const SpeakToSales = lazy(() => import('./pages/SpeakToSales'));
@@ -313,6 +314,7 @@ const App = () => (
                         <Route path="/" element={<Index />} />
                         <Route path="/information-required" element={<InformationRequired />} />
                         <Route path='/recover-once' element={<RecoverOnce />} />
+                        <Route path='/founder-led' element={<FounderLed />} />
                         <Route path='/recovery-workspace' element={<RecoveryWorkspace />} />
                         <Route path='/document-ingestion' element={<DocumentIngestion />} />
                         <Route path='/speak-to-sales' element={<SpeakToSales />} />
