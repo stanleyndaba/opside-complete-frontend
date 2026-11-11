@@ -30,7 +30,7 @@ export interface RecoveryProgressControlProps {
 
 function TimelineMarker({ complete = false, muted = false }: { complete?: boolean; muted?: boolean }) {
   if (complete) {
-    return <span className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#182026] text-white"><Check className="h-3 w-3" strokeWidth={3} /></span>;
+    return <span className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#182026] text-white"><Check className="h-2.5 w-2.5" strokeWidth={3} /></span>;
   }
   return <span className={cn('relative z-10 mt-0.5 h-4 w-4 shrink-0 rounded-full border-2 bg-white', muted ? 'border-[#C9D1D5]' : 'border-[#8A97A2]')} aria-hidden="true" />;
 }
