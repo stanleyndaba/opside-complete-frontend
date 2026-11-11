@@ -60,7 +60,7 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
 
   return (
     <div className="space-y-4">
-      <section className={cn('rounded-[10px] border p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5', toneClasses[toneFromTruth(props.truthPresentation.tone)])}>
+      <section className={cn('rounded-[8px] border p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5', toneClasses[toneFromTruth(props.truthPresentation.tone)])}>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
             <div className="flex flex-wrap items-center gap-2">
@@ -77,7 +77,7 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
         </div>
       </section>
 
-      <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+      <section className="rounded-[8px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
         <div className="mb-4 border-b border-[#E7EEF2] pb-3">
           <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Resolution control</p>
           <h3 className="mt-0.5 font-lora text-[18px] font-normal tracking-tight text-[#182026]">What happens next</h3>
@@ -100,7 +100,7 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
         </div>
       </section>
 
-      <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+      <section className="rounded-[8px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
         <div className="mb-4 border-b border-[#E7EEF2] pb-3">
           <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Resolution path</p>
           <h3 className="mt-0.5 font-lora text-[18px] font-normal tracking-tight text-[#182026]">What remains before closure</h3>
@@ -113,7 +113,7 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
         </div>
       </section>
 
-      <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+      <section className="rounded-[8px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
         <div className="mb-5 border-b border-[#E7EEF2] pb-3">
           <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Recovery progress</p>
           <h3 className="mt-0.5 font-lora text-[18px] font-normal tracking-tight text-[#182026]">Certified operational milestones</h3>

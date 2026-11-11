@@ -104,7 +104,7 @@ function TruthSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+    <section className="rounded-[8px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
       <div className="mb-4 flex items-start gap-3 border-b border-[#E7EEF2] pb-3">
         <span className="mt-0.5 inline-flex h-6 min-w-6 items-center justify-center rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-1 font-sans text-[10px] font-semibold text-[#66737F]">{number}</span>
         <div>
@@ -244,7 +244,7 @@ export function RecoveryTruthRecord({
 
   return (
     <div className="space-y-4">
-      <section className={cn('rounded-[10px] border p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5', toneClasses[truthPresentation.tone])}>
+      <section className={cn('rounded-[8px] border p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5', toneClasses[truthPresentation.tone])}>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
             <div className="flex items-center gap-2">
