@@ -59,6 +59,13 @@ interface SupportingDocumentView {
   matchType?: string | null;
 }
 
+const documentIconForType = (type: string) => {
+  const normalized = type.toLowerCase();
+  if (normalized.includes('invoice')) return '/gmailicon.png';
+  if (normalized.includes('purchase') || normalized.includes('order')) return '/onedrive-icon.png';
+  if (normalized.includes('ledger') || normalized.includes('account')) return '/outlookicon.webp';
+  return '/Amazon-logo.png';
+};
 const formatCurrency = (amount: number | null | undefined, currency = 'USD') => (
   typeof amount === 'number' && Number.isFinite(amount)
     ? new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)
@@ -382,7 +389,7 @@ export function RecoveryTruthRecord({
               return (
                 <div key={documentId || `${label}-${index}`} className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex min-w-0 items-start gap-3">
-                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-[#66737F]" />
+                    <span className="relative mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center"><img src={documentIconForType(type)} alt="" className="h-6 w-6 object-contain" /><span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#4B946F] text-white ring-2 ring-white"><CheckCircle className="h-2.5 w-2.5" strokeWidth={3} /></span></span>
                     <div>
                       <p className="truncate text-[12px] font-semibold tracking-tight text-[#182026]" title={label}>{label}</p>
                       <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Artifact type: {type}. Its role is inspectable supporting evidence, not automatic proof of every case conclusion.</p>

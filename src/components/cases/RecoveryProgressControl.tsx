@@ -123,7 +123,7 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
           <div className="relative z-10 grid grid-cols-5 gap-2">
             {props.lifecycleSteps.map((step, index) => (
               <div key={step.label} className="flex min-w-0 flex-col items-center gap-2 text-center">
-                <div className={cn('flex h-7 w-7 items-center justify-center rounded-full border text-[10px] font-semibold', step.active ? 'border-[#66737F] bg-[#F1F3F4] text-[#182026]' : 'border-[#DCE8EE] bg-white text-[#8A97A2]')}>{step.active ? <CheckCircle className="h-3.5 w-3.5" /> : index + 1}</div>
+                <div className={cn('flex h-7 w-7 items-center justify-center rounded-full border text-[10px] font-semibold', step.active ? 'border-[#0B74DE] bg-[#0B74DE] text-white' : 'border-[#0B74DE] bg-[#0B74DE] text-white')}>{step.active ? <CheckCircle className="h-3.5 w-3.5" /> : <span className="h-2.5 w-2.5 rounded-full bg-white" />}</div>
                 <span className={cn('text-[10px] font-medium leading-4 tracking-tight', step.active ? 'text-[#182026]' : 'text-[#66737F]')}>{step.label}</span>
               </div>
             ))}
@@ -132,7 +132,7 @@ export function RecoveryProgressControl(props: RecoveryProgressControlProps) {
         <div className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
           {progress.checklist.map((step) => (
             <div key={step.label} className="flex gap-2 rounded-[8px] border border-[#E7EEF2] bg-[#F8FAFB] p-2.5">
-              {step.complete ? <CheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#66737F]" /> : <Clock3 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#8A97A2]" />}
+              {step.complete ? <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#0B74DE] text-white"><CheckCircle className="h-3 w-3" strokeWidth={3} /></span> : <Clock3 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#8A97A2]" />}
               <div><p className="text-[11px] font-semibold text-[#182026]">{step.label}</p><p className="mt-0.5 text-[10px] leading-4 text-[#66737F]">{step.detail}</p></div>
             </div>
           ))}
