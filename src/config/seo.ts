@@ -293,6 +293,16 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/amazon-discrepancy-recovery-detection'),
     image: SITE_META.image,
   },
+  '/recovery-eligibility-timing': {
+    path: '/recovery-eligibility-timing',
+    title: 'Recovery Eligibility & Timing | Margin',
+    description: 'Understand what Amazon recovery opportunities may still qualify, which evidence is required, and when action needs to be prioritised.',
+    canonical: routeUrl('/recovery-eligibility-timing'),
+    ogTitle: 'Recovery Eligibility & Timing | Margin',
+    ogDescription: 'Assess Amazon recovery opportunities against eligibility requirements, available evidence, and applicable timing constraints.',
+    ogUrl: routeUrl('/recovery-eligibility-timing'),
+    image: SITE_META.image,
+  },
   '/terms': {
     path: '/terms',
     title: 'Terms of Service | Margin',
