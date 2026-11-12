@@ -76,6 +76,7 @@ const ReversalAccountingReconciliation = lazy(() => import("./pages/ReversalAcco
 const RecoveryEvidence = lazy(() => import("./pages/RecoveryEvidence"));
 const SellerApprovalFiling = lazy(() => import("./pages/SellerApprovalFiling"));
 const EvidenceBackedRecoveryCasePreparation = lazy(() => import("./pages/EvidenceBackedRecoveryCasePreparation"));
+const IntegrationConnectors = lazy(() => import("./pages/IntegrationConnectors"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
@@ -366,6 +367,7 @@ const App = () => (
                         <Route path="/recovery-evidence" element={<RecoveryEvidence />} />
                         <Route path="/seller-approval-filing" element={<SellerApprovalFiling />} />
                         <Route path="/evidence-backed-recovery-case-preparation" element={<EvidenceBackedRecoveryCasePreparation />} />
+                        <Route path="/integration-connectors" element={<IntegrationConnectors />} />
                         <Route path="/terms" element={<Terms />} />
                         <Route path="/refund-policy" element={<RefundPolicy />} />
                         <Route path="/contact" element={<Contact />} />
