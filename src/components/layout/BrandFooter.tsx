@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Globe } from 'lucide-react';
+import { ChevronDown, ChevronRight, Globe } from 'lucide-react';
 import { COOKIE_SETTINGS_OPEN_EVENT } from '@/lib/cookieConsent';
 
 type Props = {
@@ -306,21 +306,21 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                   className="h-10 w-full min-w-0 rounded-[7px] border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#94A3B8] focus:border-[#F05A3C] focus:ring-2 focus:ring-[#F05A3C]/15"
                 />
                 <div className="flex min-w-0 gap-2">
-                  <label htmlFor="footer-contact-route" className="sr-only">Choose a contact route</label>
-                  <select
-                    id="footer-contact-route"
-                    value={contactRoute}
-                    onChange={(event) => setContactRoute(event.target.value)}
-                    className="h-10 min-w-0 flex-1 rounded-[7px] border border-[#D8E3EA] bg-white px-3 text-[12px] text-[#52616A] outline-none focus:border-[#F05A3C] focus:ring-2 focus:ring-[#F05A3C]/15"
-                  >
-                    {contactLinks.map(({ label, email }) => <option key={email} value={email}>{label}</option>)}
-                  </select>
+                  <div className="relative min-w-0 flex-1">
+                    <label htmlFor="footer-contact-route" className="sr-only">Choose a contact route</label>
+                    <select
+                      id="footer-contact-route"
+                      value={contactRoute}
+                      onChange={(event) => setContactRoute(event.target.value)}
+                      className="h-10 w-full min-w-0 appearance-none rounded-[7px] border border-[#D8E3EA] bg-white px-3 pr-9 text-[12px] text-[#52616A] outline-none focus:border-[#F05A3C] focus:ring-2 focus:ring-[#F05A3C]/15"
+                    >
+                      {contactLinks.map(({ label, email }) => <option key={email} value={email}>{label}</option>)}
+                    </select>
+                    <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#52616A]" />
+                  </div>
                   <button type="submit" className="h-10 shrink-0 rounded-[7px] bg-[#F05A3C] px-3 text-[12px] font-medium text-white transition-colors hover:bg-[#D9472D]">Email Margin <ChevronRight className="-ml-[0.5px] inline-block h-3.5 w-3.5 align-[-2px]" /></button>
                 </div>
               </form>
-              <div className="mt-5 grid min-w-0 grid-cols-1 gap-y-2 text-[11px] leading-4 text-[#66737F]">
-                {contactLinks.map(({ label, email }) => <a key={email} href={`mailto:${email}`} className="min-w-0 break-all transition-colors hover:text-[#182026]">{label}: {email}</a>)}
-              </div>
             </div>
           </div>
 
