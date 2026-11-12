@@ -17,6 +17,13 @@ const capabilityContent = {
         points: ["Source lineage stays attached", "Supported and unresolved remain separate", "Approval boundaries stay visible", "Follow-through remains open until verified"],
         icon: ShieldCheck,
       },
+      {
+        eyebrow: "Recovery stages",
+        title: "Move from financial difference to verified outcome without skipping the middle.",
+        body: "Finance needs more than a detected variance or a case decision. Margin carries the position through investigation, evidence, determination, approval, action, recovery and reconciliation so the final number can be challenged and understood.",
+        points: ["Detect and investigate", "Establish evidence and determine", "Approve and act", "Recover and reconcile"],
+        icon: GitBranch,
+      },
     ],
   },
   founder: {
