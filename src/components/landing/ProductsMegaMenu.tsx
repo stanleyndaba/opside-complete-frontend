@@ -8,7 +8,6 @@ import {
     NavigationMenuTrigger
 } from '@/components/ui/navigation-menu';
 import {
-    ArrowRight,
     Building2,
     Briefcase,
     FileCheck2,
@@ -109,10 +108,6 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                         Margin is designed for businesses where recovery crosses multiple shipments, systems and people, and where missed windows, weak evidence or incorrect payouts materially affect margin.
                                     </p>
                                 </div>
-                                <span className="mt-4 inline-flex cursor-pointer items-center gap-2 text-[12px] font-semibold tracking-tight text-[#0B74DE] transition-colors hover:text-[#0967C8] lg:mt-0">
-                                    See who Margin is for
-                                    <ArrowRight className="h-3.5 w-3.5" />
-                                </span>
                             </div>
                         </div>
                     </NavigationMenuContent>
