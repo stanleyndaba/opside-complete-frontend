@@ -1484,7 +1484,7 @@ html, body, #root {
      and intentional wrapping instead of desktop text squeezed into a phone. */
   .landing-page > main h1,
   .landing-page > main #margin-hero-title {
-    font-size: 40px !important;
+    font-size: 34px !important;
     line-height: 1.04 !important;
     letter-spacing: -0.035em !important;
     max-width: 22ch;
@@ -1701,28 +1701,29 @@ html, body, #root {
 .landing-page > main #margin-hero-title,
 .landing-page > main #margin-hero-title *:not(.hero-financial-position) {
   font-family: 'Lora', Georgia, serif !important;
+  font-weight: 450 !important;
 }
 .landing-page > main #margin-hero-title {
-  font-size: 40px !important;
+  font-size: 34px !important;
 }
 @media (min-width: 390px) {
   .landing-page > main #margin-hero-title {
-    font-size: 46px !important;
+    font-size: 39px !important;
   }
 }
 @media (min-width: 640px) {
   .landing-page > main #margin-hero-title {
-    font-size: 60px !important;
+    font-size: 51px !important;
   }
 }
 @media (min-width: 768px) {
   .landing-page > main #margin-hero-title {
-    font-size: 74px !important;
+    font-size: 63px !important;
   }
 }
 @media (min-width: 1024px) {
   .landing-page > main #margin-hero-title {
-    font-size: 84px !important;
+    font-size: 71px !important;
   }
 }
 
