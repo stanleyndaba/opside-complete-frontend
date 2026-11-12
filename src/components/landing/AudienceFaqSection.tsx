@@ -125,7 +125,7 @@ export function AudienceFaqSection({ audience }: { audience: Audience }) {
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">Margin’s approach to evidence, access, authorization and financial closure should remain clear regardless of who owns the problem inside the business.</p>
         </div>
         <Accordion type="single" collapsible className="mt-10 max-w-[980px] border-t border-[#D8DEDA] md:mt-14">
-          {items.map(([question, answer], index) => (
+          {items.map(({ question, answer }, index) => (
             <AccordionItem key={question} value={`${audience}-faq-${index}`} className="border-b border-[#D8DEDA]">
               <AccordionTrigger className="py-6 text-left text-[17px] font-semibold tracking-[-0.025em] text-[#182026] hover:no-underline sm:text-[20px]">{question}</AccordionTrigger>
               <AccordionContent className="pr-10 text-[14px] leading-7 text-[#52616A] sm:text-[16px] sm:leading-8">{answer}</AccordionContent>
