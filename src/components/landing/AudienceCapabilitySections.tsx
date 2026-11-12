@@ -120,10 +120,10 @@ function CapabilityBlock({
   reverse: boolean;
 }) {
   return (
-    <section className={`relative overflow-hidden py-14 sm:py-20 md:py-24 ${reverse ? "bg-[#F5F6F4]" : "bg-white"}`}>
-      <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-5 sm:px-6 md:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-20 lg:px-10 2xl:px-12">
+    <section className={`relative overflow-hidden py-10 sm:py-16 md:py-22 ${reverse ? "bg-[#F5F6F4]" : "bg-white"}`}>
+      <div className="mx-auto grid w-full max-w-[1280px] gap-10 px-4 sm:px-6 md:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-20 lg:px-10 2xl:px-12">
         <div className="max-w-[650px]">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8B857F]">{eyebrow}</p>
+          <p className="font-mono text-[5.5px] leading-tight font-semibold uppercase tracking-tight text-[#F05A3C]">{eyebrow}</p>
           <h2 className="mt-3 font-lora text-[34px] font-normal leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]">{title}</h2>
         </div>
         <div className="max-w-[720px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">
