@@ -65,8 +65,8 @@ export default function FounderLed() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"><Link to="/review-consent" className={primaryCtaClass}>Get My Free Financial Position Review <ArrowRight className="h-4 w-4" /></Link><a href="#investigates" className={secondaryCtaClass}>See What Margin Investigates <ChevronRight className="h-4 w-4" /></a></div>
             <p className="mt-5 max-w-[620px] text-[12px] leading-5 text-[#7A858A]">Start with your existing Amazon records. Understand what needs attention before deciding whether further work is worthwhile.</p>
           </div>
-          <div className="relative min-h-[300px] overflow-hidden rounded-[8px] bg-[#E9E9E5] sm:min-h-[440px]">
-            <img src="/abstract-object-02.png" alt="Founder-led Amazon business financial oversight" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="relative w-full min-w-0 max-w-full min-h-[300px] overflow-hidden rounded-[8px] bg-[#E9E9E5] sm:min-h-[440px]">
+            <img src="/abstract-object-02.png" alt="Founder-led Amazon business financial oversight" className="absolute inset-0 h-full w-full max-w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/10 to-black/75" />
             <div className="absolute inset-x-6 bottom-6 text-white sm:inset-x-8 sm:bottom-8"><span className="inline-flex rounded-[3px] bg-white/80 px-3 py-1.5 text-[11px] font-semibold text-[#273036]">Founder-led</span><p className="mt-4 max-w-[360px] font-lora text-[27px] leading-[1.06] tracking-[-0.035em] sm:text-[34px]">Run the business without carrying every financial investigation yourself.</p></div>
           </div>
