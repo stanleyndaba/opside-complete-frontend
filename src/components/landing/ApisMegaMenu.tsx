@@ -118,12 +118,14 @@ export function ApiServiceItem({
     title,
     description,
     to,
+    onClick,
     variant = 'light'
 }: {
     icon: LucideIcon;
     title: string;
     description: string;
     to?: string;
+    onClick?: () => void;
     variant?: 'dark' | 'light';
 }) {
     const isLight = variant === 'light';
@@ -160,5 +162,5 @@ export function ApiServiceItem({
         </div>
     );
 
-    return to ? <Link to={to} className="block">{item}</Link> : item;
+    return to ? <Link to={to} onClick={onClick} className="block">{item}</Link> : item;
 }

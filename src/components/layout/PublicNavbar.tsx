@@ -257,6 +257,8 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                                                     icon={item.icon}
                                                                     title={item.title}
                                                                     description={item.description}
+                                                                    to={item.to}
+                                                                    onClick={() => setMobileMenuOpen(false)}
                                                                 />
                                                             ))}
                                                         </div>
