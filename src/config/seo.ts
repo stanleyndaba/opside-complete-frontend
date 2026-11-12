@@ -303,6 +303,16 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/recovery-eligibility-timing'),
     image: SITE_META.image,
   },
+  '/response-appeals-management': {
+    path: '/response-appeals-management',
+    title: 'Response & Appeals Management | Margin',
+    description: 'Keep Amazon responses, appeals, case history and supporting evidence connected so the next action is informed, supported and timely.',
+    canonical: routeUrl('/response-appeals-management'),
+    ogTitle: 'Response & Appeals Management | Margin',
+    ogDescription: 'Connect Amazon decisions to case history and evidence so responses and appeals remain controlled, supported, and tied to the financial outcome.',
+    ogUrl: routeUrl('/response-appeals-management'),
+    image: SITE_META.image,
+  },
   '/terms': {
     path: '/terms',
     title: 'Terms of Service | Margin',
