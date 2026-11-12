@@ -45,7 +45,7 @@ export const apiMenuGroups = [
         items: [
             { title: 'Response & Appeal Management', description: 'Keep Amazon requests, rejections, replies and supporting evidence on one recovery timeline.', icon: BookOpen, to: '/response-appeals-management' },
             { title: 'Payout Verification', description: "Compare Amazon's approved value with the reimbursement that actually reached settlement.", icon: Database, to: '/payout-verification' },
-            { title: 'Reversal & Accounting Reconciliation', description: 'Track later reversals, unresolved differences and accounting-ready recovery records.', icon: Undo2 }
+            { title: 'Reversal & Accounting Reconciliation', description: 'Track later reversals, unresolved differences and accounting-ready recovery records.', icon: Undo2, to: '/reversal-accounting-reconciliation' }
         ]
     }
 ];
