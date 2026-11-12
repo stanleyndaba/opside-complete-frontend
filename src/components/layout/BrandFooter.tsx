@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Globe } from 'lucide-react';
+import { ChevronRight, Globe } from 'lucide-react';
 import { COOKIE_SETTINGS_OPEN_EVENT } from '@/lib/cookieConsent';
 
 type Props = {
@@ -315,10 +315,10 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                   >
                     {contactLinks.map(({ label, email }) => <option key={email} value={email}>{label}</option>)}
                   </select>
-                  <button type="submit" className="h-10 shrink-0 rounded-[7px] bg-[#182026] px-3 text-[12px] font-medium text-white transition-colors hover:bg-[#303A42]">Email Margin</button>
+                  <button type="submit" className="h-10 shrink-0 rounded-[7px] bg-[#F05A3C] px-3 text-[12px] font-medium text-white transition-colors hover:bg-[#D9472D]">Email Margin <ChevronRight className="-ml-[0.5px] inline-block h-3.5 w-3.5 align-[-2px]" /></button>
                 </div>
               </form>
-              <div className="mt-5 grid min-w-0 gap-x-5 gap-y-2 text-[11px] leading-4 text-[#66737F] sm:grid-cols-2">
+              <div className="mt-5 grid min-w-0 grid-cols-1 gap-y-2 text-[11px] leading-4 text-[#66737F]">
                 {contactLinks.map(({ label, email }) => <a key={email} href={`mailto:${email}`} className="min-w-0 break-all transition-colors hover:text-[#182026]">{label}: {email}</a>)}
               </div>
             </div>
