@@ -26,10 +26,12 @@ const productDescriptors: FooterLink[] = [
   { label: 'Financial reconciliation' }
 ];
 
-const teamDescriptors: FooterLink[] = [
-  { label: 'Operations teams' },
-  { label: 'Finance teams' },
-  { label: 'Founders & leadership' }
+const solutionLinks: FooterLink[] = [
+  { label: 'Finance teams', href: '/finance-teams' },
+  { label: 'Founder-led businesses', href: '/founder-led' },
+  { label: 'Marketplace operations', href: '/marketplace-operations' },
+  { label: 'Aggregators & multi-brand', href: '/aggregators-multi-brand' },
+  { label: 'Enterprise & multi-marketplace', href: '/enterprise-multi-marketplace' }
 ];
 
 const resourceLinks: FooterLink[] = [
@@ -255,7 +257,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-2 gap-8 lg:grid-cols-3">
               <div>
                 <FooterColumn title="Company" links={companyLinks} />
                 <div className="mt-8">
@@ -270,7 +272,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               </div>
               <div className="col-span-2 lg:col-span-1">
                 <div className="mt-8 lg:mt-0">
-                  <FooterColumn title="For Teams" links={teamDescriptors} />
+                  <FooterColumn title="Solutions" links={solutionLinks} />
                 </div>
                 <div className="mt-8">
                   <FooterColumn title="How Margin works" links={productDescriptors} />
@@ -288,10 +290,10 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                   <a
                     key={email}
                     href={`mailto:${email}`}
-                    className="group block w-fit focus-visible:outline-none"
+                    className="group block min-w-0 focus-visible:outline-none"
                   >
                     <span className="block text-[11px] font-medium tracking-tight text-[#66737F]">{label}</span>
-                    <span className="mt-1 block w-fit text-sm text-[#52616A] transition-colors group-hover:text-[#182026] group-focus-visible:text-[#182026]">
+                    <span className="mt-1 block max-w-full break-all text-[13px] leading-5 text-[#52616A] transition-colors group-hover:text-[#182026] group-focus-visible:text-[#182026]">
                       {email}
                     </span>
                   </a>
