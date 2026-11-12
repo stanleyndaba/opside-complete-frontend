@@ -1701,7 +1701,7 @@ html, body, #root {
 .landing-page > main #margin-hero-title,
 .landing-page > main #margin-hero-title *:not(.hero-financial-position) {
   font-family: 'Lora', Georgia, serif !important;
-  font-weight: 520 !important;
+  font-weight: 500 !important;
   color: #000000 !important;
 }
 .landing-page > main #margin-hero-title {

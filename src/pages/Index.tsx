@@ -481,8 +481,8 @@ function KineticHeroSection({
       </div>
       <div className="relative z-10 flex w-full items-center pt-6 sm:pt-0">
         <div className="max-w-[860px]">
-          <p className="font-google-sans text-[13px] font-normal uppercase tracking-tight text-[#F05A3C]">Complex Amazon Fin-Ops, Done For You</p>
-          <h1 id="margin-hero-title" className="mt-3 max-w-[820px] font-inter text-[34px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[39px] sm:mt-5 sm:text-[51px] md:text-[63px] lg:text-[71px]" style={{ fontWeight: 520 }}>
+          <p className="font-google-sans text-[11px] font-normal uppercase tracking-tight text-[#F05A3C]">Complex Amazon Fin-Ops, Done For You</p>
+          <h1 id="margin-hero-title" className="mt-3 max-w-[820px] font-inter text-[34px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[39px] sm:mt-5 sm:text-[51px] md:text-[63px] lg:text-[71px]" style={{ fontWeight: 500 }}>
             <motion.span className="block font-[550] text-[#000000]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Your next Amazon settlement is coming. Have you accounted for everything that happened <span className="hero-financial-position font-[500] text-white">before it</span>?</motion.span>
           </h1>
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#52616A] sm:mt-8 sm:text-[18px] sm:leading-8">For Amazon businesses operating at scale, financial issues can become harder to trace as new transactions and settlement periods accumulate. Margin examines the chain from inventory movements, fees and adjustments to reimbursements, reversals and settlements—establishing what has been accounted for, what remains unresolved and what warrants action.</motion.p>
