@@ -283,6 +283,16 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/transaction-reconciliation'),
     image: SITE_META.image,
   },
+  '/amazon-discrepancy-recovery-detection': {
+    path: '/amazon-discrepancy-recovery-detection',
+    title: 'Amazon Discrepancy & Recovery Detection | Margin',
+    description: 'Find discrepancies hiding in Amazon activity, investigate their financial significance, and identify which findings warrant attention or recovery action.',
+    canonical: routeUrl('/amazon-discrepancy-recovery-detection'),
+    ogTitle: 'Amazon Discrepancy & Recovery Detection | Margin',
+    ogDescription: 'Identify unexpected Amazon activity, understand what the evidence supports, and keep unresolved financial issues visible.',
+    ogUrl: routeUrl('/amazon-discrepancy-recovery-detection'),
+    image: SITE_META.image,
+  },
   '/terms': {
     path: '/terms',
     title: 'Terms of Service | Margin',

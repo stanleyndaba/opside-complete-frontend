@@ -68,6 +68,7 @@ const Security = lazy(() => import("./pages/Security"));
 const AccessScope = lazy(() => import("./pages/AccessScope"));
 const Workflows = lazy(() => import("./pages/Workflows"));
 const TransactionReconciliation = lazy(() => import("./pages/TransactionReconciliation"));
+const AmazonDiscrepancyDetection = lazy(() => import("./pages/AmazonDiscrepancyDetection"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
@@ -350,6 +351,7 @@ const App = () => (
                         <Route path="/access-scope" element={<AccessScope />} />
                         <Route path="/workflows" element={<Workflows />} />
                         <Route path="/transaction-reconciliation" element={<TransactionReconciliation />} />
+                        <Route path="/amazon-discrepancy-recovery-detection" element={<AmazonDiscrepancyDetection />} />
                         <Route path="/terms" element={<Terms />} />
                         <Route path="/refund-policy" element={<RefundPolicy />} />
                         <Route path="/contact" element={<Contact />} />
