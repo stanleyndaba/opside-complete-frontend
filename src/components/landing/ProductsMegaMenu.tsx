@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -27,15 +28,16 @@ export const productMenuGroups = [
         items: [
             { title: 'Established FBA Brands', description: 'Continuous recovery control for brands with recurring shipment volume, meaningful inventory exposure and growing operational complexity.', icon: Store },
             { title: 'Agencies & Amazon Operators', description: 'Manage recoveries across client accounts while keeping evidence, ownership and seller approvals clear.', icon: Briefcase },
-            { title: 'Aggregators & Multi-Brand Portfolios', description: 'Standardize recovery monitoring, case handling and financial reconciliation across multiple brands and entities.', icon: Building2 }
+            { title: 'Aggregators & Multi-Brand Portfolios', description: 'Standardize recovery monitoring, case handling and financial reconciliation across multiple brands and entities.', icon: Building2, href: '/aggregators-multi-brand' },
+            { title: 'Enterprise & Multi-Marketplace', description: 'Coordinate recovery control across marketplaces, entities, operating teams and higher-volume financial populations.', icon: Building2, href: '/enterprise-multi-marketplace' }
         ]
     },
     {
         label: 'By Team',
         items: [
-            { title: 'Operations Teams', description: 'See evidence readiness, deadlines, ownership, Amazon responses and the next required action.', icon: Layers },
-            { title: 'Finance Teams', description: 'Compare expected, approved, paid, underpaid, reversed and unreconciled values from one recovery record.', icon: WalletCards },
-            { title: 'Founders & Leadership', description: 'Understand current recovery exposure, unresolved financial risk and the value reaching the business.', icon: Crown }
+            { title: 'Operations Teams', description: 'See evidence readiness, deadlines, ownership, Amazon responses and the next required action.', icon: Layers, href: '/marketplace-operations' },
+            { title: 'Finance Teams', description: 'Compare expected, approved, paid, underpaid, reversed and unreconciled values from one recovery record.', icon: WalletCards, href: '/finance-teams' },
+            { title: 'Founders & Leadership', description: 'Understand current recovery exposure, unresolved financial risk and the value reaching the business.', icon: Crown, href: '/founder-led' }
         ]
     },
     {
@@ -92,6 +94,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                                     icon={item.icon}
                                                     title={item.title}
                                                     description={item.description}
+                                                    href={item.href}
                                                     variant={variant === 'light' ? 'dark' : 'light'}
                                                 />
                                             ))}
@@ -123,24 +126,26 @@ export function ProductServiceItem({
     icon: Icon,
     title,
     description,
+    href,
+    onClick,
     variant = 'light'
 }: {
     icon: LucideIcon,
     title: string,
     description: string,
+    href?: string,
+    onClick?: () => void,
     variant?: 'dark' | 'light'
 }) {
     const isLight = variant === 'light';
-
-    return (
-        <div
-            className={cn(
-                'landing-menu-item group flex cursor-default items-start gap-3 rounded-[9px] border border-transparent px-3 py-3 transition-[background-color,border-color,transform] duration-150 hover:-translate-y-0.5',
-                isLight
-                    ? 'hover:border-[#E5ECEF] hover:bg-[#F7FAFB] hover:shadow-[0_8px_20px_rgba(24,32,38,0.05)]'
-                    : 'hover:bg-white/[0.03] hover:border-white/10'
-            )}
-        >
+    const className = cn(
+        'landing-menu-item group flex items-start gap-3 rounded-[9px] border border-transparent px-3 py-3 transition-[background-color,border-color,transform] duration-150 hover:-translate-y-0.5',
+        isLight
+            ? 'hover:border-[#E5ECEF] hover:bg-[#F7FAFB] hover:shadow-[0_8px_20px_rgba(24,32,38,0.05)]'
+            : 'hover:bg-white/[0.03] hover:border-white/10'
+    );
+    const content = (
+        <>
             <div className={cn(
                 'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] bg-[#F1F5F6] p-1 transition-colors',
                 isLight ? 'text-[#6B7280] group-hover:text-[#0B74DE]' : 'border border-[#D9D7FF]/35 bg-[#D9D7FF]/15 text-[#E8E7FF] group-hover:border-[#D9D7FF]/60 group-hover:bg-[#635BFF]/55 group-hover:text-white'
@@ -161,6 +166,10 @@ export function ProductServiceItem({
                     {description}
                 </p>
             </div>
-        </div>
+        </>
     );
+    if (href) {
+        return <Link to={href} onClick={onClick} className={className}>{content}</Link>;
+    }
+    return <div onClick={onClick} className={cn(className, 'cursor-default')}>{content}</div>;
 }
