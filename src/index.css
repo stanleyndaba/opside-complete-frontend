@@ -1696,10 +1696,11 @@ html, body, #root {
 }
 
 
-/* Final hero-only correction: Inter and a 15% increase apply only to the main hero headline. */
+/* Final hero-only correction: Lora applies to the main hero headline, while the
+   separately styled “before it” phrase keeps its own handwritten treatment. */
 .landing-page > main #margin-hero-title,
 .landing-page > main #margin-hero-title *:not(.hero-financial-position) {
-  font-family: 'Inter', system-ui, sans-serif !important;
+  font-family: 'Lora', Georgia, serif !important;
 }
 .landing-page > main #margin-hero-title {
   font-size: 40px !important;
