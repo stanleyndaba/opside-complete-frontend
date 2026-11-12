@@ -174,6 +174,15 @@ const FooterColumn: React.FC<{ title: string; links: FooterLink[] }> = ({ title,
 const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false }) => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitted'>('idle');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactRoute, setContactRoute] = useState(contactLinks[0].email);
+
+  const handleDirectContact = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const subject = encodeURIComponent('Margin enquiry');
+    const body = encodeURIComponent(`Please route my enquiry from ${contactEmail}.`);
+    window.location.href = `mailto:${contactRoute}?subject=${subject}&body=${body}`;
+  };
 
   const handleNewsletterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -285,19 +294,32 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               <p className="mt-2 max-w-[310px] text-sm leading-6 tracking-tight" style={{ color: '#52616A' }}>
                 There are people behind the product. Choose the route that matches what you need.
               </p>
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-                {contactLinks.map(({ label, email }) => (
-                  <a
-                    key={email}
-                    href={`mailto:${email}`}
-                    className="group block min-w-0 focus-visible:outline-none"
+              <form onSubmit={handleDirectContact} className="mt-6 space-y-3" aria-label="Contact Margin directly">
+                <label htmlFor="footer-contact-email" className="sr-only">Your email address</label>
+                <input
+                  id="footer-contact-email"
+                  type="email"
+                  required
+                  value={contactEmail}
+                  onChange={(event) => setContactEmail(event.target.value)}
+                  placeholder="Your email address"
+                  className="h-10 w-full min-w-0 rounded-[7px] border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026] outline-none placeholder:text-[#94A3B8] focus:border-[#F05A3C] focus:ring-2 focus:ring-[#F05A3C]/15"
+                />
+                <div className="flex min-w-0 gap-2">
+                  <label htmlFor="footer-contact-route" className="sr-only">Choose a contact route</label>
+                  <select
+                    id="footer-contact-route"
+                    value={contactRoute}
+                    onChange={(event) => setContactRoute(event.target.value)}
+                    className="h-10 min-w-0 flex-1 rounded-[7px] border border-[#D8E3EA] bg-white px-3 text-[12px] text-[#52616A] outline-none focus:border-[#F05A3C] focus:ring-2 focus:ring-[#F05A3C]/15"
                   >
-                    <span className="block text-[11px] font-medium tracking-tight text-[#66737F]">{label}</span>
-                    <span className="mt-1 block max-w-full break-all text-[13px] leading-5 text-[#52616A] transition-colors group-hover:text-[#182026] group-focus-visible:text-[#182026]">
-                      {email}
-                    </span>
-                  </a>
-                ))}
+                    {contactLinks.map(({ label, email }) => <option key={email} value={email}>{label}</option>)}
+                  </select>
+                  <button type="submit" className="h-10 shrink-0 rounded-[7px] bg-[#182026] px-3 text-[12px] font-medium text-white transition-colors hover:bg-[#303A42]">Email Margin</button>
+                </div>
+              </form>
+              <div className="mt-5 grid min-w-0 gap-x-5 gap-y-2 text-[11px] leading-4 text-[#66737F] sm:grid-cols-2">
+                {contactLinks.map(({ label, email }) => <a key={email} href={`mailto:${email}`} className="min-w-0 break-all transition-colors hover:text-[#182026]">{label}: {email}</a>)}
               </div>
             </div>
           </div>

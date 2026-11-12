@@ -15,7 +15,7 @@ const containerClass = "mx-auto min-w-0 w-full max-w-[1280px] px-4 sm:px-6 md:px
 
 function Heading({ eyebrow, title, children, dark = false }: { eyebrow?: string; title: string; children?: ReactNode; dark?: boolean }) {
   return <div className="max-w-[850px]">
-    {eyebrow ? <p className={`font-mono text-[4px] leading-tight font-normal uppercase tracking-tight text-[#F05A3C]`}>{eyebrow}</p> : null}
+    {eyebrow ? <p className={`font-mono text-[9px] leading-4 font-normal uppercase tracking-tight text-[#F05A3C] sm:text-[10px]`}>{eyebrow}</p> : null}
     <h2 className={`mt-3 font-lora text-[34px] font-normal leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]`}>{title}</h2>
     {children}
   </div>;
@@ -49,7 +49,7 @@ export default function FinanceTeams() {
       <section className="relative overflow-hidden bg-white py-8 sm:py-16 md:py-24">
         <div className={`${containerClass} min-w-0 grid items-center gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,0.92fr)] lg:gap-20`}>
           <div>
-            <p className="font-mono text-[4px] leading-tight font-normal uppercase tracking-tight text-[#F05A3C]">Finance Teams &amp; Controllers</p>
+            <p className="font-mono text-[9px] leading-4 font-normal uppercase tracking-tight text-[#F05A3C] sm:text-[10px]">Finance Teams &amp; Controllers</p>
             <h1 className="mt-4 max-w-[760px] font-lora text-[42px] font-normal leading-[0.99] tracking-[-0.05em] text-[#182026] sm:text-[58px] md:text-[72px]">Keep the financial picture accountable.</h1>
             <p className="mt-7 max-w-[680px] text-[16px] leading-8 text-[#52616A] sm:text-[18px]">Marketplace reconciliation, financial reporting and recovery work rarely stay inside one record or one team. Finance still needs to establish what happened, what has been accounted for and what remains unresolved.</p>
             <p className="mt-5 max-w-[680px] text-[16px] font-semibold leading-8 text-[#294B61] sm:text-[18px]">Margin connects the investigation, evidence, decision and financial outcome so Finance can review a defensible position instead of rebuilding every question from the beginning.</p>
