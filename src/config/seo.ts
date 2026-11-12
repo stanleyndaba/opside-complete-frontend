@@ -273,6 +273,16 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/workflows'),
     image: SITE_META.image,
   },
+  '/transaction-reconciliation': {
+    path: '/transaction-reconciliation',
+    title: 'Transaction Reconciliation | Margin',
+    description: 'Connect Amazon transaction records to the operational events, recovery activity, and settlement information that explain the financial position.',
+    canonical: routeUrl('/transaction-reconciliation'),
+    ogTitle: 'Transaction Reconciliation | Margin',
+    ogDescription: 'Understand what Amazon transactions mean, what has been accounted for, and which financial differences remain unexplained.',
+    ogUrl: routeUrl('/transaction-reconciliation'),
+    image: SITE_META.image,
+  },
   '/terms': {
     path: '/terms',
     title: 'Terms of Service | Margin',

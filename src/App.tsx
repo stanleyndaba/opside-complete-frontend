@@ -67,6 +67,7 @@ const Privacy = lazy(() => import("./pages/Privacy"));
 const Security = lazy(() => import("./pages/Security"));
 const AccessScope = lazy(() => import("./pages/AccessScope"));
 const Workflows = lazy(() => import("./pages/Workflows"));
+const TransactionReconciliation = lazy(() => import("./pages/TransactionReconciliation"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
@@ -348,6 +349,7 @@ const App = () => (
                         <Route path="/security" element={<Security />} />
                         <Route path="/access-scope" element={<AccessScope />} />
                         <Route path="/workflows" element={<Workflows />} />
+                        <Route path="/transaction-reconciliation" element={<TransactionReconciliation />} />
                         <Route path="/terms" element={<Terms />} />
                         <Route path="/refund-policy" element={<RefundPolicy />} />
                         <Route path="/contact" element={<Contact />} />
