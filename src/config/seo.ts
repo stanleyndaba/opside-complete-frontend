@@ -313,6 +313,16 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/response-appeals-management'),
     image: SITE_META.image,
   },
+  '/payout-verification': {
+    path: '/payout-verification',
+    title: 'Payout Verification | Margin',
+    description: 'Establish whether what Amazon says it paid matches the payout, the underlying settlement, and the money received by the business.',
+    canonical: routeUrl('/payout-verification'),
+    ogTitle: 'Payout Verification | Margin',
+    ogDescription: 'Connect settlement records, payout status, bank evidence and underlying transactions to establish what was paid, received and remains outstanding.',
+    ogUrl: routeUrl('/payout-verification'),
+    image: SITE_META.image,
+  },
   '/terms': {
     path: '/terms',
     title: 'Terms of Service | Margin',

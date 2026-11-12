@@ -27,9 +27,9 @@ export const apiMenuGroups = [
     {
         label: 'Find & Verify',
         items: [
-            { title: 'Amazon Discrepancy & Recovery Detection', description: 'Find shipment, inventory, fee, reimbursement and settlement differences that may warrant review.', icon: Box },
-            { title: 'Transaction Reconciliation', description: 'Compare expected, approved and paid values to surface underpayments and valuation differences for review.', icon: CreditCard },
-            { title: 'Recovery Eligibility Timing', description: 'Prioritize potential recoveries by value, evidence readiness and remaining recovery eligibility window.', icon: CalendarClock }
+            { title: 'Amazon Discrepancy & Recovery Detection', description: 'Find shipment, inventory, fee, reimbursement and settlement differences that may warrant review.', icon: Box, to: '/amazon-discrepancy-recovery-detection' },
+            { title: 'Transaction Reconciliation', description: 'Compare expected, approved and paid values to surface underpayments and valuation differences for review.', icon: CreditCard, to: '/transaction-reconciliation' },
+            { title: 'Recovery Eligibility Timing', description: 'Prioritize potential recoveries by value, evidence readiness and remaining recovery eligibility window.', icon: CalendarClock, to: '/recovery-eligibility-timing' }
         ]
     },
     {
@@ -43,8 +43,8 @@ export const apiMenuGroups = [
     {
         label: 'Close the Loop',
         items: [
-            { title: 'Response & Appeal Management', description: 'Keep Amazon requests, rejections, replies and supporting evidence on one recovery timeline.', icon: BookOpen },
-            { title: 'Payout Verification', description: "Compare Amazon's approved value with the reimbursement that actually reached settlement.", icon: Database },
+            { title: 'Response & Appeal Management', description: 'Keep Amazon requests, rejections, replies and supporting evidence on one recovery timeline.', icon: BookOpen, to: '/response-appeals-management' },
+            { title: 'Payout Verification', description: "Compare Amazon's approved value with the reimbursement that actually reached settlement.", icon: Database, to: '/payout-verification' },
             { title: 'Reversal & Accounting Reconciliation', description: 'Track later reversals, unresolved differences and accounting-ready recovery records.', icon: Undo2 }
         ]
     }
@@ -87,6 +87,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                                                     title={item.title}
                                                     description={item.description}
                                                     icon={item.icon}
+                                                    to={item.to}
                                                     variant={variant === 'light' ? 'dark' : 'light'}
                                                 />
                                             ))}
@@ -116,16 +117,18 @@ export function ApiServiceItem({
     icon: Icon,
     title,
     description,
+    to,
     variant = 'light'
 }: {
     icon: LucideIcon;
     title: string;
     description: string;
+    to?: string;
     variant?: 'dark' | 'light';
 }) {
     const isLight = variant === 'light';
 
-    return (
+    const item = (
         <div
             className={cn(
                 'landing-menu-item group flex cursor-default items-start gap-3 rounded-[9px] border border-transparent px-3 py-3 transition-[background-color,border-color,transform] duration-150 hover:-translate-y-0.5',
@@ -156,4 +159,6 @@ export function ApiServiceItem({
             </div>
         </div>
     );
+
+    return to ? <Link to={to} className="block">{item}</Link> : item;
 }

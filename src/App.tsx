@@ -71,6 +71,7 @@ const TransactionReconciliation = lazy(() => import("./pages/TransactionReconcil
 const AmazonDiscrepancyDetection = lazy(() => import("./pages/AmazonDiscrepancyDetection"));
 const RecoveryEligibilityTiming = lazy(() => import("./pages/RecoveryEligibilityTiming"));
 const ResponseAppealsManagement = lazy(() => import("./pages/ResponseAppealsManagement"));
+const PayoutVerification = lazy(() => import("./pages/PayoutVerification"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
@@ -356,6 +357,7 @@ const App = () => (
                         <Route path="/amazon-discrepancy-recovery-detection" element={<AmazonDiscrepancyDetection />} />
                         <Route path="/recovery-eligibility-timing" element={<RecoveryEligibilityTiming />} />
                         <Route path="/response-appeals-management" element={<ResponseAppealsManagement />} />
+                        <Route path="/payout-verification" element={<PayoutVerification />} />
                         <Route path="/terms" element={<Terms />} />
                         <Route path="/refund-policy" element={<RefundPolicy />} />
                         <Route path="/contact" element={<Contact />} />
