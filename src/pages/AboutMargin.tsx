@@ -17,9 +17,9 @@ const revealProps = {
 };
 
 const containerClass = 'mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12';
-const labelClass = 'about-small font-google-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-[#0B74DE]';
-const sectionHeadingClass = 'font-google-sans text-[32px] md:text-[48px] font-normal tracking-[-0.045em] text-[#182026] leading-[1.03]';
-const bodyTextClass = 'text-[15px] md:text-[17px] text-[#4D5B66] leading-7 md:leading-8 tracking-tight';
+const labelClass = 'about-small font-google-sans text-[11px] font-semibold uppercase tracking-tight text-[#F05A3C]';
+const sectionHeadingClass = 'font-google-sans text-[32px] md:text-[48px] font-normal tracking-tight text-[#182026] leading-[1.03]';
+const bodyTextClass = 'text-[13px] md:text-[17px] text-[#4D5B66] leading-[1.5] md:leading-8 tracking-tight';
 
 export default function AboutMargin() {
   usePageMeta({
@@ -30,7 +30,7 @@ export default function AboutMargin() {
   });
 
   return (
-    <div className="about-page min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+    <div className="about-page min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#F05A3C]/16 selection:text-[#182026]">
       <PublicNavbar variant="light" />
 
       <main className="relative">
@@ -49,13 +49,13 @@ export default function AboutMargin() {
             >
               <div className="space-y-5">
                 <span className={labelClass}>The Recovery Engine</span>
-                <h1 className="max-w-[900px] text-4xl leading-[1.02] tracking-[-0.055em] text-[#182026] md:text-[72px] lg:text-[88px]">
+                <h1 className="max-w-[900px] text-4xl leading-[1.02] tracking-tight text-[#182026] md:text-[72px] lg:text-[88px]">
                   Financial truth should not disappear inside a marketplace.
                 </h1>
               </div>
               
               <div className="max-w-[620px] space-y-5 lg:pb-2">
-                <p className="text-[20px] leading-8 tracking-[-0.02em] text-[#48677A] md:text-[24px] md:leading-9">
+                <p className="text-[13px] leading-[1.5] tracking-tight text-[#48677A] sm:text-[17px] sm:leading-8">
                   Margin exists to make unresolved marketplace money visible, evidence-backed, and accountable.
                 </p>
                 <p className={bodyTextClass}>
@@ -67,7 +67,7 @@ export default function AboutMargin() {
               </div>
 
               <div className="flex flex-wrap items-center gap-5 pt-2 lg:col-start-2">
-                <Button asChild className="h-11 rounded-[7px] bg-[#0B74DE] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] transition-all hover:bg-[#075EBA]">
+                <Button asChild className="h-11 rounded-[7px] bg-[#F05A3C] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(240,90,60,0.22)] transition-all hover:bg-[#D9472D]">
                   <Link to="/audit-start">Explore Recovery Audit</Link>
                 </Button>
                 <Link to="/contact" className="text-[14px] font-semibold text-[#182026] hover:underline flex items-center gap-2">
@@ -111,7 +111,7 @@ export default function AboutMargin() {
             <div className="max-w-3xl space-y-8">
               <div className="space-y-4">
                 <h2 className={sectionHeadingClass}>Margin is the Recovery Engine for marketplace businesses.</h2>
-                <p className="text-[14px] font-bold text-[#0B74DE] uppercase tracking-tight">Seller Recovery is the first business.</p>
+                <p className="text-[14px] font-bold text-[#F05A3C] uppercase tracking-tight">Seller Recovery is the first business.</p>
               </div>
               <p className={bodyTextClass}>
                 Margin examines the operational and financial records behind marketplace recovery, turns discrepancies into evidence-backed cases, and keeps the outcome visible through approval, payout, reversal, and final reconciliation.
@@ -119,7 +119,7 @@ export default function AboutMargin() {
               <p className={bodyTextClass}>
                 The immediate product is built for Amazon sellers. The larger company is built around a broader problem:
               </p>
-              <blockquote className="border-l-4 border-[#0B74DE] pl-8 py-4">
+              <blockquote className="border-l-4 border-[#F05A3C] pl-8 py-4">
                 <p className="font-lora text-2xl md:text-3xl text-[#182026] leading-relaxed">
                   "When a marketplace transaction becomes financially unresolved, the business needs more than a report. It needs a trusted way to establish the truth and move the matter forward."
                 </p>
@@ -135,17 +135,17 @@ export default function AboutMargin() {
           <div className={containerClass + " relative z-10"}>
             <div className="max-w-3xl space-y-8">
               <h2 className="font-lora text-3xl md:text-4xl font-medium tracking-tight leading-tight">We believe recovery should be treated as an operating function.</h2>
-              <p className="text-lg text-white/70 leading-relaxed">
+              <p className="text-[13px] text-white/70 leading-[1.5] sm:text-[17px] sm:leading-8">
                 Recovery is often handled as a scattered side task: an occasional spreadsheet, a provider report, a support thread, a finance check, or a best-effort review when someone has time.
               </p>
-              <p className="text-lg text-white/70 leading-relaxed font-semibold">
+              <p className="text-[13px] text-white/70 leading-[1.5] sm:text-[17px] sm:leading-8 font-semibold">
                 That approach breaks as the business grows.
               </p>
-              <p className="text-lg text-white/70 leading-relaxed">
+              <p className="text-[13px] text-white/70 leading-[1.5] sm:text-[17px] sm:leading-8">
                 At scale, recovery affects cash, margin, inventory accuracy, financial close, provider accountability, and operational confidence. It belongs inside the operating system of the business—not outside it as an unexplained estimate.
               </p>
               <div className="pt-8 border-t border-white/10">
-                <p className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE] mb-4">The Margin Belief</p>
+                <p className="text-[11px] font-bold uppercase tracking-tight text-[#F05A3C] mb-4">The Margin Belief</p>
                 <p className="font-lora text-2xl md:text-3xl leading-relaxed text-white">
                   Money is not recovered when a system says "approved." Money is recovered when the outcome is supported, received, reconciled, and visible.
                 </p>
@@ -203,7 +203,7 @@ export default function AboutMargin() {
                     "What should the seller do next?"
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-3 text-[15px] font-medium text-[#182026]">
-                      <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                      <div className="h-1.5 w-1.5 rounded-full bg-[#F05A3C]" />
                       {item}
                     </div>
                   ))}
@@ -273,14 +273,14 @@ export default function AboutMargin() {
                 </p>
               </div>
               <div className="lg:col-span-7 space-y-8">
-                <blockquote className="font-lora text-2xl md:text-3xl text-[#182026] leading-relaxed border-l-4 border-[#0B74DE] pl-8">
+                <blockquote className="font-lora text-2xl md:text-3xl text-[#182026] leading-relaxed border-l-4 border-[#F05A3C] pl-8">
                   "What happens when a marketplace's financial record does not match the evidence held by the person on the other side of the transaction?"
                 </blockquote>
                 <p className={bodyTextClass}>
                   Consumer Recovery will remain narrow and evidence-heavy. It will focus on high-value unresolved transactions where the records support a meaningful contradiction—not generic customer support or promises of easy refunds.
                 </p>
                 <div className="pt-8 border-t border-[#D8E3E8]">
-                  <p className="text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6] mb-6">The Order Matters</p>
+                  <p className="text-[11px] font-bold uppercase tracking-tight text-[#F05A3C] mb-6">The Order Matters</p>
                   <div className="flex flex-wrap items-center gap-4 text-[14px] font-bold text-[#182026] uppercase tracking-tight">
                     <span>Prove Seller Recovery</span>
                     <ArrowRight className="h-3 w-3 text-[#D8E3E8]" />
@@ -313,7 +313,7 @@ export default function AboutMargin() {
                   </div>
                 ))}
               </div>
-              <p className="text-[14px] text-[#8C9BA6] italic pt-4">
+              <p className="text-[14px] text-[#F05A3C] italic pt-4">
                 These are not marketing lines. They are product and operating constraints.
               </p>
             </div>
@@ -326,7 +326,7 @@ export default function AboutMargin() {
             <div className="grid lg:grid-cols-12 gap-16">
               <div className="lg:col-span-5">
                 <h2 className={sectionHeadingClass}>Where we are now</h2>
-                <p className="mt-6 text-lg text-[#4D5B66] leading-relaxed">
+                <p className="mt-6 text-[13px] text-[#4D5B66] leading-[1.5] sm:text-[17px] sm:leading-8">
                   We are building the first reliable recovery loop.
                 </p>
               </div>
@@ -344,7 +344,7 @@ export default function AboutMargin() {
                       "and the product must earn recurring use through measurable control value."
                     ].map((item, i) => (
                       <li key={i} className="flex items-center gap-3 text-[15px] text-[#4D5B66]">
-                        <div className="h-1 w-1 rounded-full bg-[#0B74DE]" />
+                        <div className="h-1 w-1 rounded-full bg-[#F05A3C]" />
                         {item}
                       </li>
                     ))}
@@ -397,7 +397,7 @@ export default function AboutMargin() {
                 Margin is building the Recovery Engine for marketplace businesses—starting with Amazon Seller Recovery and expanding only where the evidence proves the engine can carry more.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <Button asChild className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
+                <Button asChild className="h-12 px-8 rounded-md bg-[#F05A3C] text-[14px] font-semibold text-white shadow-lg shadow-[#F05A3C]/20 hover:bg-[#D9472D] transition-all">
                   <Link to="/audit-start">Run a Recovery Audit</Link>
                 </Button>
                 <Link to="/contact" className="text-[14px] font-semibold text-[#182026] hover:underline flex items-center gap-2">

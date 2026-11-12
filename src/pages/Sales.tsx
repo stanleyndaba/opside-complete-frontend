@@ -84,7 +84,7 @@ export default function Sales() {
     };
 
     return (
-        <div className="font-google-sans security-design-page min-h-screen overflow-x-hidden bg-[#F7F8F7] text-[#30343B] selection:bg-[#635BFF]/16 selection:text-[#30343B] font-sans">
+        <div className="font-google-sans security-design-page min-h-screen overflow-x-hidden bg-[#F7F8F7] text-[#30343B] selection:bg-[#F05A3C]/16 selection:text-[#30343B] font-sans">
             <PublicNavbar variant="light" />
 
             <main className="relative z-10 pt-32 pb-24">
@@ -99,13 +99,13 @@ export default function Sales() {
                         className="space-y-10"
                     >
                         <div className="space-y-4">
-                            <span className="text-[11px] font-bold uppercase tracking-tight text-[#635BFF]">
+                            <span className="text-[11px] font-bold uppercase tracking-tight text-[#F05A3C]">
                                 For Amazon businesses managing $1M+ in annual GMV
                             </span>
                             <h1 className="font-lora text-4xl font-medium leading-[1.05] tracking-tight text-[#30343B] md:text-[68px]">
                                 Don&apos;t manage recovery across complex Amazon operations. Let Margin run it.
                             </h1>
-                            <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-[#667177] md:text-xl">
+                            <p className="max-w-2xl text-[13px] leading-[1.5] tracking-tight text-[#667177] sm:text-[17px] sm:leading-8">
                                 Margin gives your finance and operations teams a controlled view of what Amazon paid, missed, reversed, or left unresolved—then turns the evidence into a clear recovery plan your team can own.
                             </p>
                         </div>
@@ -113,7 +113,7 @@ export default function Sales() {
                         <div className="flex flex-wrap items-center gap-6">
                             <Button 
                                 asChild
-                                className="h-12 px-8 rounded-[7px] bg-[#635BFF] text-[14px] font-semibold text-white shadow-lg shadow-[#635BFF]/20 hover:bg-[#5148E5] transition-all"
+                                className="h-12 px-8 rounded-[7px] bg-[#F05A3C] text-[14px] font-semibold text-white shadow-lg shadow-[#F05A3C]/20 hover:bg-[#D9472D] transition-all"
                             >
                                 <a href="#assessment">Explore Margin for Enterprise</a>
                             </Button>
@@ -124,10 +124,10 @@ export default function Sales() {
 
                         <div className="flex flex-col justify-between gap-6 border-t border-[#E1E5E5] pt-8 md:flex-row md:items-center">
                             <div className="flex items-center gap-2 text-[13px] font-medium text-[#30343B]">
-                                <ShieldCheck className="h-4 w-4 text-[#635BFF]" />
+                                <ShieldCheck className="h-4 w-4 text-[#F05A3C]" />
                                 Evidence-led. Read-only by default. Your team approves the action.
                             </div>
-                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-tight text-[#7A858A]">
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-tight text-[#F05A3C]">
                                 <span>Multi-account operations</span>
                                 <span className="h-1 w-1 rounded-full bg-[#E1E5E5]" />
                                 <span>SKU-level evidence</span>
@@ -139,9 +139,9 @@ export default function Sales() {
                         </div>
                     </motion.div>
                     <div className="relative overflow-hidden bg-[#F4F5F4] p-5 shadow-[0_22px_65px_rgba(48,52,59,0.08)] sm:p-6">
-                        <div className="flex items-center justify-between border-b border-[#DDE2E1] pb-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#30343B]"><ShieldCheck className="h-5 w-5" strokeWidth={1.5} /></div><div><p className="text-[12px] font-semibold">Enterprise control surface</p><p className="mt-0.5 text-[10px] text-[#7A858A]">Evidence-led recovery operations</p></div></div><span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-[#4D7869]"><span className="h-1.5 w-1.5 rounded-full bg-[#4D7869]" /> Ready to assess</span></div>
-                        <div className="space-y-2.5 pt-4">{[['Account coverage','Multiple brands and marketplaces',Database],['Evidence position','Source records linked to findings',FileText],['Decision rights','Your team approves the action',Check]].map(([label, detail, Icon]) => <div key={label as string} className="flex items-center gap-3 bg-white px-3.5 py-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF2F0] text-[#4D7869]"><Icon className="h-4 w-4" strokeWidth={1.6} /></div><div><p className="text-[12px] font-semibold">{label as string}</p><p className="mt-0.5 text-[10px] text-[#7A858A]">{detail as string}</p></div></div>)}</div>
-                        <div className="mt-4 flex items-center gap-2 border-t border-[#DDE2E1] pt-4 text-[10px] text-[#7A858A]"><ShieldCheck className="h-3.5 w-3.5" /> Start with the operation you need to control.</div>
+                        <div className="flex items-center justify-between border-b border-[#DDE2E1] pb-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#30343B]"><ShieldCheck className="h-5 w-5" strokeWidth={1.5} /></div><div><p className="text-[12px] font-semibold">Enterprise control surface</p><p className="mt-0.5 text-[10px] text-[#F05A3C]">Evidence-led recovery operations</p></div></div><span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-[#4D7869]"><span className="h-1.5 w-1.5 rounded-full bg-[#4D7869]" /> Ready to assess</span></div>
+                        <div className="space-y-2.5 pt-4">{[['Account coverage','Multiple brands and marketplaces',Database],['Evidence position','Source records linked to findings',FileText],['Decision rights','Your team approves the action',Check]].map(([label, detail, Icon]) => <div key={label as string} className="flex items-center gap-3 bg-white px-3.5 py-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF2F0] text-[#4D7869]"><Icon className="h-4 w-4" strokeWidth={1.6} /></div><div><p className="text-[12px] font-semibold">{label as string}</p><p className="mt-0.5 text-[10px] text-[#F05A3C]">{detail as string}</p></div></div>)}</div>
+                        <div className="mt-4 flex items-center gap-2 border-t border-[#DDE2E1] pt-4 text-[10px] text-[#F05A3C]"><ShieldCheck className="h-3.5 w-3.5" /> Start with the operation you need to control.</div>
                     </div>
                     </div>
                 </section>
@@ -153,7 +153,7 @@ export default function Sales() {
                             <h2 className="font-lora text-3xl font-medium tracking-tight text-[#30343B] leading-tight">
                                 The more you sell, the less you can afford to leave unresolved.
                             </h2>
-                            <div className="space-y-4 text-[15px] text-[#667177] leading-relaxed">
+                            <div className="space-y-4 text-[13px] text-[#667177] leading-[1.5] sm:text-[15px] sm:leading-7">
                                 <p>
                                     At $1M+ in GMV, small marketplace discrepancies stop being small. Inventory moves across accounts, markets, warehouses, SKUs, and reporting periods.
                                 </p>
@@ -196,7 +196,7 @@ export default function Sales() {
                             One recovery operation. One evidence standard. <br />
                             One accountable view.
                         </h2>
-                        <div className="max-w-3xl mx-auto space-y-6 text-lg text-[#667177] leading-relaxed tracking-tight">
+                        <div className="max-w-3xl mx-auto space-y-6 text-[13px] text-[#667177] leading-[1.5] sm:text-[17px] sm:leading-8 tracking-tight">
                             <p>
                                 Margin is built for operators who have outgrown scattered spreadsheets, disconnected provider reports, and one-off reimbursement checks.
                             </p>
@@ -232,14 +232,14 @@ export default function Sales() {
                                 ].map((item, i) => (
                                     <div key={i} className="space-y-2">
                                         <h4 className="text-[14px] font-bold text-[#30343B] uppercase tracking-tight">{item.title}</h4>
-                                        <p className="text-[13px] text-[#7A858A] leading-relaxed">{item.desc}</p>
+                                        <p className="text-[13px] text-[#F05A3C] leading-relaxed">{item.desc}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         <div className="border-y border-[#E1E5E5] bg-transparent py-8">
-                            <h3 className="mb-6 text-[11px] font-bold uppercase tracking-tight text-[#635BFF]">Enterprise fit</h3>
+                            <h3 className="mb-6 text-[11px] font-bold uppercase tracking-tight text-[#F05A3C]">Enterprise fit</h3>
                             <p className="mb-6 text-[15px] font-medium text-[#30343B]">Margin is a strong fit when you are managing:</p>
                             <ul className="space-y-4">
                                 {[
@@ -252,13 +252,13 @@ export default function Sales() {
                                     "a requirement for an auditable operating record rather than a monthly estimate"
                                 ].map((item, i) => (
                                     <li key={i} className="flex items-start gap-3 text-[14px] text-[#667177]">
-                                        <Check className="h-4 w-4 text-[#635BFF] mt-0.5 flex-shrink-0" />
+                                        <Check className="h-4 w-4 text-[#F05A3C] mt-0.5 flex-shrink-0" />
                                         <span>{item}</span>
                                     </li>
                                 ))}
                             </ul>
                             <div className="mt-8 pt-6 border-t border-[#E1E5E5]">
-                                <p className="text-[12px] text-[#7A858A] italic">
+                                <p className="text-[12px] text-[#F05A3C] italic">
                                     The $1M+ GMV threshold is a qualification signal, not a promise that every large account needs Margin. If the evidence does not support a meaningful opportunity, Margin should say so.
                                 </p>
                             </div>
@@ -272,7 +272,7 @@ export default function Sales() {
                     <div className="container mx-auto px-6 max-w-5xl relative z-10">
                         <div className="max-w-2xl mb-16">
                             <h2 className="font-lora text-3xl md:text-4xl font-medium tracking-tight mb-6">From discrepancy to verified outcome.</h2>
-                            <p className="text-lg text-[#667177] leading-relaxed">
+                            <p className="text-[13px] text-[#667177] leading-[1.5] sm:text-[17px] sm:leading-8">
                                 Margin brings the recovery operation into one accountable sequence:
                             </p>
                         </div>
@@ -287,9 +287,9 @@ export default function Sales() {
                                 { n: "06", title: "Verify the outcome", desc: "A case is not complete because Amazon marked it approved. Margin follows the financial outcome through payment, reversal, offset, or final reconciliation." }
                             ].map((step, i) => (
                                 <div key={i} className="space-y-4">
-                                    <div className="text-[10px] font-bold text-[#635BFF] uppercase tracking-tight">{step.n}</div>
+                                    <div className="text-[10px] font-bold text-[#F05A3C] uppercase tracking-tight">{step.n}</div>
                                     <h4 className="text-lg font-semibold tracking-tight">{step.title}</h4>
-                                    <p className="text-[14px] text-[#7A858A] leading-relaxed">{step.desc}</p>
+                                    <p className="text-[14px] text-[#F05A3C] leading-relaxed">{step.desc}</p>
                                 </div>
                             ))}
                         </div>
@@ -315,11 +315,11 @@ export default function Sales() {
                         ].map((benefit, i) => (
                             <div key={i} className="flex gap-5 bg-white p-6 shadow-[0_1px_2px_rgba(48,52,59,0.04)] sm:p-7">
                                 <div className="h-9 w-9 border-l-2 border-[#E1E5E5] pl-5 flex items-center justify-center flex-shrink-0">
-                                    <benefit.icon className="h-4 w-4 text-[#7A858A]" strokeWidth={1.5} />
+                                    <benefit.icon className="h-4 w-4 text-[#F05A3C]" strokeWidth={1.5} />
                                 </div>
                                 <div className="space-y-2">
                                     <h4 className="text-[16px] font-bold text-[#30343B]">{benefit.title}</h4>
-                                    <p className="text-[14px] text-[#7A858A] leading-relaxed">{benefit.desc}</p>
+                                    <p className="text-[14px] text-[#F05A3C] leading-relaxed">{benefit.desc}</p>
                                 </div>
                             </div>
                         ))}
@@ -349,7 +349,7 @@ export default function Sales() {
                                         "and what work is still being carried by your team."
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-3 text-[14px] text-[#30343B] font-medium">
-                                            <div className="h-1.5 w-1.5 rounded-full bg-[#635BFF]" />
+                                            <div className="h-1.5 w-1.5 rounded-full bg-[#F05A3C]" />
                                             {item}
                                         </li>
                                     ))}
@@ -373,7 +373,7 @@ export default function Sales() {
                 <section className="container mx-auto px-6 max-w-5xl mb-32">
                     <div className="max-w-3xl mb-12">
                         <h2 className="font-lora text-3xl md:text-4xl font-medium tracking-tight text-[#30343B] mb-4">Economic value</h2>
-                        <p className="text-lg text-[#667177] leading-relaxed">
+                        <p className="text-[13px] text-[#667177] leading-[1.5] sm:text-[17px] sm:leading-8">
                             The business case is not “more alerts.” It is less unresolved money and less unowned work. For an enterprise operator, Margin’s value can come from several sources:
                         </p>
                     </div>
@@ -411,14 +411,14 @@ export default function Sales() {
                                     "reversals, offsets, and payout mismatches",
                                     "the value of recurring control work"
                                 ].map((item, i) => (
-                                    <div key={i} className="flex items-center gap-2 text-[13px] text-[#7A858A]">
+                                    <div key={i} className="flex items-center gap-2 text-[13px] text-[#F05A3C]">
                                         <div className="h-1 w-1 rounded-full bg-[#E1E5E5]" />
                                         {item}
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <div className="border-y border-[#635BFF]/20 bg-[#F7F8F7] py-8 text-center">
+                        <div className="border-y border-[#F05A3C]/20 bg-[#F7F8F7] py-8 text-center">
                             <p className="text-[16px] font-semibold text-[#30343B] leading-relaxed">
                                 The commercial decision should be based on the value Margin can establish—not a generic industry percentage.
                             </p>
@@ -445,7 +445,7 @@ export default function Sales() {
                                 <div className="sm:w-[280px] flex-shrink-0">
                                     <h4 className="text-[16px] font-bold text-[#30343B]">{item.step}</h4>
                                 </div>
-                                <div className="text-[14px] text-[#7A858A] leading-relaxed">{item.desc}</div>
+                                <div className="text-[14px] text-[#F05A3C] leading-relaxed">{item.desc}</div>
                             </div>
                         ))}
                     </div>
@@ -453,13 +453,13 @@ export default function Sales() {
                     <div className="mt-12 border-y border-[#E1E5E5] bg-[#F7F8F7] py-8 text-center">
                         <div className="flex flex-wrap items-center justify-center gap-4 text-[13px] font-bold text-[#30343B] uppercase tracking-tight">
                             <span>Assessment</span>
-                            <ArrowRight className="h-3 w-3 text-[#7A858A]" />
+                            <ArrowRight className="h-3 w-3 text-[#F05A3C]" />
                             <span>Evidence baseline</span>
-                            <ArrowRight className="h-3 w-3 text-[#7A858A]" />
+                            <ArrowRight className="h-3 w-3 text-[#F05A3C]" />
                             <span>Controlled pilot</span>
-                            <ArrowRight className="h-3 w-3 text-[#7A858A]" />
+                            <ArrowRight className="h-3 w-3 text-[#F05A3C]" />
                             <span>Recovery decision</span>
-                            <ArrowRight className="h-3 w-3 text-[#7A858A]" />
+                            <ArrowRight className="h-3 w-3 text-[#F05A3C]" />
                             <span>Recurring control</span>
                         </div>
                     </div>
@@ -491,7 +491,7 @@ export default function Sales() {
                                 "current security attestation status"
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center gap-3 text-[13px] text-[#667177]">
-                                    <ShieldCheck className="h-4 w-4 text-[#635BFF] flex-shrink-0" />
+                                    <ShieldCheck className="h-4 w-4 text-[#F05A3C] flex-shrink-0" />
                                     <span>{item}</span>
                                 </div>
                             ))}
@@ -513,7 +513,7 @@ export default function Sales() {
                         ].map((faq, i) => (
                             <div key={i} className="space-y-3">
                                 <h4 className="text-[16px] font-bold text-[#30343B]">{faq.q}</h4>
-                                <p className="text-[14px] text-[#7A858A] leading-relaxed">{faq.a}</p>
+                                <p className="text-[14px] text-[#F05A3C] leading-relaxed">{faq.a}</p>
                             </div>
                         ))}
                     </div>
@@ -525,7 +525,7 @@ export default function Sales() {
                         <p className="font-google-sans text-2xl md:text-3xl font-medium tracking-tight text-[#30343B] leading-relaxed mb-8 italic">
                             "At $1M+ in GMV, recovery is no longer a side task. It is part of your financial operation. Margin was built to make that operation visible, evidence-backed, and accountable—without asking you to trust an unexplained number."
                         </p>
-                        <p className="text-[12px] font-bold text-[#7A858A] uppercase tracking-tight">
+                        <p className="text-[12px] font-bold text-[#F05A3C] uppercase tracking-tight">
                             — Founder & CEO, Margin
                         </p>
                     </div>
@@ -538,7 +538,7 @@ export default function Sales() {
                             <div className="lg:col-span-2 bg-[#F7F8F7] p-8 md:p-12 text-[#30343B] flex flex-col justify-between">
                                 <div className="space-y-6">
                                     <h2 className="font-lora text-3xl font-medium tracking-tight">Start with the operation you need to control.</h2>
-                                    <p className="text-[#7A858A] leading-relaxed">
+                                    <p className="text-[#F05A3C] leading-relaxed">
                                         A Margin specialist will review your operating profile and confirm whether an Enterprise assessment is appropriate. 
                                     </p>
                                     <div className="space-y-4 pt-6">
@@ -562,7 +562,7 @@ export default function Sales() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="pt-12 text-[12px] text-[#7A858A] leading-relaxed">
+                                <div className="pt-12 text-[12px] text-[#F05A3C] leading-relaxed">
                                     Your information is used to scope the conversation. No account connection or provider change is required to request an assessment.
                                 </div>
                             </div>
@@ -570,11 +570,11 @@ export default function Sales() {
                             <div className="lg:col-span-3 p-8 md:p-12">
                                 {isSubmitted ? (
                                     <div className="h-full flex flex-col items-center justify-center text-center py-12">
-                                        <div className="h-16 w-16 rounded-full bg-[#635BFF]/10 flex items-center justify-center mb-6">
-                                            <ArrowUpRight className="h-8 w-8 text-[#635BFF]" />
+                                        <div className="h-16 w-16 rounded-full bg-[#F05A3C]/10 flex items-center justify-center mb-6">
+                                            <ArrowUpRight className="h-8 w-8 text-[#F05A3C]" />
                                         </div>
                                         <h3 className="text-2xl font-bold text-[#30343B] mb-4">Assessment Request Prepared</h3>
-                                        <p className="text-[#7A858A] max-w-sm mb-8">
+                                        <p className="text-[#F05A3C] max-w-sm mb-8">
                                             Your enterprise profile has been formatted for review. Please send the email from your client so our team can follow up.
                                         </p>
                                         <Button 
@@ -594,7 +594,7 @@ export default function Sales() {
                                                     value={form.name}
                                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                                                     placeholder="Your name"
-                                                    className="h-11 rounded-[7px] border-[#E1E5E5] focus-visible:ring-[#635BFF]"
+                                                    className="h-11 rounded-[7px] border-[#E1E5E5] focus-visible:ring-[#F05A3C]"
                                                     required
                                                 />
                                             </div>
@@ -605,7 +605,7 @@ export default function Sales() {
                                                     value={form.email}
                                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                                     placeholder="name@company.com"
-                                                    className="h-11 rounded-[7px] border-[#E1E5E5] focus-visible:ring-[#635BFF]"
+                                                    className="h-11 rounded-[7px] border-[#E1E5E5] focus-visible:ring-[#F05A3C]"
                                                     required
                                                 />
                                             </div>
@@ -615,7 +615,7 @@ export default function Sales() {
                                                     value={form.company}
                                                     onChange={(e) => setForm({ ...form, company: e.target.value })}
                                                     placeholder="Legal entity or portfolio"
-                                                    className="h-11 rounded-[7px] border-[#E1E5E5] focus-visible:ring-[#635BFF]"
+                                                    className="h-11 rounded-[7px] border-[#E1E5E5] focus-visible:ring-[#F05A3C]"
                                                     required
                                                 />
                                             </div>
@@ -655,7 +655,7 @@ export default function Sales() {
                                                     value={form.accounts}
                                                     onChange={(e) => setForm({ ...form, accounts: e.target.value })}
                                                     placeholder="e.g. 3 accounts, 5 countries"
-                                                    className="h-11 rounded-[7px] border-[#E1E5E5] focus-visible:ring-[#635BFF]"
+                                                    className="h-11 rounded-[7px] border-[#E1E5E5] focus-visible:ring-[#F05A3C]"
                                                 />
                                             </div>
                                         </div>
@@ -701,14 +701,14 @@ export default function Sales() {
                                                 value={form.notes}
                                                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
                                                 placeholder="Describe marketplace coverage, operating complexity, current workflow, or unresolved concern."
-                                                className="min-h-[100px] rounded-[7px] border-[#E1E5E5] focus-visible:ring-[#635BFF]"
+                                                className="min-h-[100px] rounded-[7px] border-[#E1E5E5] focus-visible:ring-[#F05A3C]"
                                             />
                                         </div>
 
                                         <Button 
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="h-12 w-full rounded-[7px] bg-[#635BFF] text-[14px] font-semibold text-white shadow-lg shadow-[#635BFF]/20 hover:bg-[#5148E5] transition-all"
+                                            className="h-12 w-full rounded-[7px] bg-[#F05A3C] text-[14px] font-semibold text-white shadow-lg shadow-[#F05A3C]/20 hover:bg-[#D9472D] transition-all"
                                         >
                                             {isSubmitting ? 'Preparing Request...' : 'Request Enterprise Assessment'}
                                         </Button>

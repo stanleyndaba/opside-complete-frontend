@@ -1777,3 +1777,13 @@ html, body, #root {
 .mobile-menu-panel .landing-action-cta [class*="text-white"] {
   color: #FFFFFF !important;
 }
+
+
+/* Shared supporting-copy scale for public editorial pages. */
+@media (max-width: 767px) {
+  .about-page main p:not([class*="text-[10px]"]):not([class*="text-[11px]"]):not([class*="text-[12px]"]),
+  .security-design-page main p:not([class*="text-[10px]"]):not([class*="text-[11px]"]):not([class*="text-[12px]"]) {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+}
