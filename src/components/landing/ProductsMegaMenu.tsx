@@ -26,7 +26,7 @@ export const productMenuGroups = [
     {
         label: 'By Business',
         items: [
-            { title: 'Established FBA Brands', description: 'Continuous recovery control for brands with recurring shipment volume, meaningful inventory exposure and growing operational complexity.', icon: Store },
+            { title: 'Established FBA Brands', description: 'Continuous recovery control for brands with recurring shipment volume, meaningful inventory exposure and growing operational complexity.', icon: Store, href: '/established-fba-brands' },
             { title: 'Agencies & Amazon Operators', description: 'Manage recoveries across client accounts while keeping evidence, ownership and seller approvals clear.', icon: Briefcase },
             { title: 'Aggregators & Multi-Brand Portfolios', description: 'Standardize recovery monitoring, case handling and financial reconciliation across multiple brands and entities.', icon: Building2, href: '/aggregators-multi-brand' },
             { title: 'Enterprise & Multi-Marketplace', description: 'Coordinate recovery control across marketplaces, entities, operating teams and higher-volume financial populations.', icon: Building2, href: '/enterprise-multi-marketplace' }

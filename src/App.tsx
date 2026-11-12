@@ -100,6 +100,7 @@ const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
 const AuditFirst = lazy(() => import("./pages/AuditFirst"));
 const InformationRequired = lazy(() => import("./pages/InformationRequired"));
 const RecoverOnce = lazy(() => import('./pages/RecoverOnce'));
+const EstablishedFbaBrands = lazy(() => import('./pages/EstablishedFbaBrands'));
 const FounderLed = lazy(() => import('./pages/FounderLed'));
 const FinanceTeams = lazy(() => import('./pages/FinanceTeams'));
 const MarketplaceOperations = lazy(() => import('./pages/MarketplaceOperations'));
@@ -328,6 +329,7 @@ const App = () => (
                         <Route path="/" element={<Index />} />
                         <Route path="/information-required" element={<InformationRequired />} />
                         <Route path='/recover-once' element={<RecoverOnce />} />
+                        <Route path='/established-fba-brands' element={<EstablishedFbaBrands />} />
                         <Route path='/founder-led' element={<FounderLed />} />
                         <Route path='/finance-teams' element={<FinanceTeams />} />
                         <Route path='/marketplace-operations' element={<MarketplaceOperations />} />
