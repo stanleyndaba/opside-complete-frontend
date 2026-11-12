@@ -1701,7 +1701,8 @@ html, body, #root {
 .landing-page > main #margin-hero-title,
 .landing-page > main #margin-hero-title *:not(.hero-financial-position) {
   font-family: 'Lora', Georgia, serif !important;
-  font-weight: 650 !important;
+  font-weight: 500 !important;
+  color: #000000 !important;
 }
 .landing-page > main #margin-hero-title {
   font-size: 34px !important;
@@ -1728,15 +1729,23 @@ html, body, #root {
 }
 
 .landing-page .hero-financial-position {
-  font-family: 'Shadows Into Light', cursive !important;
-  font-weight: 400 !important;
+  display: inline-block;
+  font-family: 'Lora', Georgia, serif !important;
+  font-weight: 500 !important;
   font-style: normal !important;
   letter-spacing: 0 !important;
+  color: #FFFFFF !important;
+  background: #F05A3C !important;
+  border-radius: 3px;
+  padding: 0 0.12em 0.04em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 #margin-hero-title .hero-financial-position {
-  font-family: 'Shadows Into Light', cursive !important;
+  font-family: 'Lora', Georgia, serif !important;
   font-style: normal !important;
-  font-weight: 400 !important;
+  font-weight: 500 !important;
+  color: #FFFFFF !important;
 }
 #margin-hero-title .hero-financial-position {
   position: relative;
@@ -1744,22 +1753,7 @@ html, body, #root {
   z-index: 0;
 }
 #margin-hero-title .hero-financial-position::before {
-  content: "";
-  position: absolute;
-  left: -2%;
-  bottom: -0.08em;
-  width: 104%;
-  pointer-events: none;
-  border-radius: 55% 45% 52% 48%;
-  transform-origin: left center;
-  z-index: -1;
-}
-#margin-hero-title .hero-financial-position::before {
-  height: 0.14em;
-  background: #F05A3C;
-  opacity: 0.92;
-  transform: rotate(-1.6deg) skewX(-14deg);
-  clip-path: polygon(0 42%, 12% 20%, 28% 48%, 45% 16%, 63% 42%, 79% 24%, 100% 36%, 98% 74%, 80% 60%, 62% 82%, 45% 55%, 28% 78%, 12% 55%, 0 69%);
+  display: none;
 }
 
 /* Mobile navigation is a clean white dropdown, including its expanded groups. */
