@@ -14,13 +14,6 @@ const capabilities = [
   ['Support complexity progressively', 'As businesses add marketplaces, entities, financial institutions and operational platforms, Margin prioritises the connections that materially improve investigation, traceability, reconciliation and control.', Banknote],
 ];
 
-const sources = [
-  ['Amazon', 'Orders, inventory events, fees, reimbursements and settlements.', Database],
-  ['Accounting', 'Recorded income, expenses, credits and adjustments.', ReceiptText],
-  ['Banking', 'Deposits, withdrawals and cash movements.', Banknote],
-  ['Operations', 'Shipment, inventory, fulfilment and delivery records.', Network],
-];
-
 const comparison = [
   ['Connect applications', 'Obtain relevant information for financial investigation'],
   ['Synchronise records', 'Establish relationships between operational and financial events'],
@@ -45,11 +38,8 @@ export default function IntegrationConnectors() {
           <div className="pointer-events-none absolute right-[-14%] top-[-18%] h-[560px] w-[560px] rounded-full bg-[#ECEFF0] blur-3xl" />
           <div className="mx-auto grid w-full max-w-[1280px] gap-14 px-5 sm:px-6 md:grid-cols-[minmax(0,1.04fr)_minmax(360px,0.76fr)] md:items-center md:gap-16 md:px-8 lg:px-10 2xl:px-12">
             <div className="relative max-w-[800px]"><p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7A858A]">Integration and connectors</p><h1 className="max-w-[800px] font-lora text-[45px] font-normal leading-[0.99] tracking-[-0.055em] text-[#30343B] sm:text-[62px] md:text-[78px]">Bring your business records together. See the financial picture they cannot show separately.</h1><p className="mt-7 max-w-[730px] text-[17px] leading-8 text-[#667177] sm:text-[19px] sm:leading-9">Your marketplace, accounting, banking and operational systems each hold part of your business’s financial story. Margin connects relevant information across these systems, helping establish how operational events relate to financial outcomes, where records agree and where something remains unexplained.</p><p className="mt-6 max-w-[720px] border-l-2 border-[#5C7773] pl-4 text-[15px] font-semibold leading-7 text-[#30343B] sm:text-[17px] sm:leading-8">Keep the systems your business already relies on. Give Margin the information it needs to connect the picture.</p><a href="#connected-picture" className="mt-8 inline-flex items-center gap-2 rounded-[7px] bg-[#30343B] px-5 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#20242A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#30343B]/35 focus-visible:ring-offset-2">See the connected picture <ArrowRight className="h-4 w-4" aria-hidden="true" /></a></div>
-            <div className="relative min-h-[360px] md:min-h-[440px]">
-              <div className="absolute left-1/2 top-[16%] h-[66%] w-px -translate-x-1/2 bg-[#DCE2E2]" /><div className="absolute left-[12%] right-[12%] top-1/2 h-px bg-[#DCE2E2]" />
-              <div className="absolute left-1/2 top-1/2 flex h-[126px] w-[126px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full bg-[#30343B] text-center text-white shadow-[0_16px_40px_rgba(48,52,59,0.14)]"><Network className="mb-2 h-6 w-6 text-[#B8D2CD]" strokeWidth={1.4} /><span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Margin</span><span className="mt-1 text-[12px] text-white/70">Connect · investigate</span></div>
-              {sources.map(([name, detail, Icon], index) => { const positions = ['left-[2%] top-[10%]', 'right-[2%] top-[10%]', 'left-[2%] bottom-[10%]', 'right-[2%] bottom-[10%]']; return <div key={name as string} className={`absolute ${positions[index]} w-[44%]`}><div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#7A858A]"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F4F5F4] text-[#5C7773]"><Icon className="h-4 w-4" /></span>{name as string}</div><p className="mt-2 text-[12px] leading-5 text-[#667177]">{detail as string}</p></div>; })}
-              <div className="absolute bottom-[-1%] left-[29%] right-0 border-t border-[#30343B]" /><p className="absolute bottom-[-10%] left-[29%] text-[12px] font-semibold text-[#30343B]">Connected financial picture</p>
+            <div className="relative overflow-hidden rounded-[10px] border border-[#E3E8E9] bg-white shadow-[0_18px_44px_rgba(48,52,59,0.08)]">
+              <img src="/integration-layer-visual.png" alt="Margin integration layer connecting Amazon, accounting, banking and operational systems" className="h-auto w-full object-cover" />
             </div>
           </div>
         </section>
