@@ -1783,3 +1783,49 @@ html, body, #root {
     line-height: 1.5 !important;
   }
 }
+
+/* ============================================================
+   WORKFLOW PAGE SYSTEM — Security-inspired editorial treatment
+   ============================================================ */
+.workflow-page main > section:not(:first-of-type) {
+  padding-block: clamp(3.25rem, 6vw, 5.75rem) !important;
+}
+
+.workflow-page main > section:first-of-type {
+  padding-bottom: clamp(3.5rem, 6.5vw, 6.5rem) !important;
+  padding-top: clamp(8.5rem, 13vw, 12rem) !important;
+}
+
+.workflow-page p.uppercase {
+  color: #F05A3C !important;
+  font-size: 9px !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.35 !important;
+}
+
+.workflow-page [class*="tracking-[0.16em]"],
+.workflow-page [class*="tracking-[0.14em]"] {
+  letter-spacing: -0.01em !important;
+}
+
+.workflow-page h1.font-lora,
+.workflow-page h2.font-lora,
+.workflow-page h3.font-lora {
+  font-family: var(--font-serif) !important;
+  font-weight: 400 !important;
+}
+
+.workflow-page main > section:not(:first-of-type) h2.font-lora {
+  line-height: 1.04 !important;
+}
+
+@media (max-width: 639px) {
+  .workflow-page main > section:not(:first-of-type) {
+    padding-block: 3.25rem !important;
+  }
+
+  .workflow-page main > section:first-of-type {
+    padding-bottom: 3.5rem !important;
+    padding-top: 7.5rem !important;
+  }
+}

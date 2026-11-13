@@ -69,7 +69,7 @@ export default function ReversalAccountingReconciliation() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F7F8F7] text-[#30343B]">
+    <div className="workflow-page min-h-screen bg-[#F7F8F7] text-[#30343B]">
       <PublicNavbar variant="light" />
       <main>
         <section className="relative overflow-hidden bg-white pb-16 pt-32 sm:pb-20 sm:pt-40 md:pb-28 md:pt-48">
