@@ -848,8 +848,55 @@ export function QueryStage({ onComplete }: { onComplete: () => void }) {
   );
 }
 
-function DuplicateEventFrame({ event, children }: { event: number; children: React.ReactNode }) {
-  return <div className="relative"><div className="pointer-events-none absolute left-4 top-4 z-50 font-google-sans text-[9px] font-medium uppercase tracking-[0.12em] text-[#8A99A5] sm:left-8 sm:top-6">Financial evidence {event}/19</div>{children}</div>;
+type IntakeStage = 'query' | 'analysis' | 'findings' | 'issues-found' | 'proof-required' | 'document-orbit' | 'platform-simulation' | 'dropzone' | 'documents' | 'handoff' | 'register' | 'evidence-match' | 'artifact-analysis' | 'case-build' | 'correspondence' | 'claims' | 'claim-summary' | 'recovery-position' | 'learning';
+
+const duplicateEventNames = [
+  "Account query",
+  "Evidence analysis",
+  "Audit findings",
+  "Discrepancy register",
+  "Proof required",
+  "Document orbit",
+  "Platform simulation",
+  "Record intake",
+  "Source records assembled",
+  "Evidence register",
+  "Evidence match",
+  "Artifact analysis",
+  "Case build",
+  "Approval queue",
+  "Team handoff",
+  "Amazon correspondence",
+  "Reconciled outcomes",
+  "Recovery position",
+  "Learning from recovery",
+] as const;
+
+const duplicateEventNumbers: Record<IntakeStage, number> = {
+  query: 1,
+  analysis: 2,
+  findings: 3,
+  'issues-found': 4,
+  'proof-required': 5,
+  'document-orbit': 6,
+  'platform-simulation': 7,
+  dropzone: 8,
+  documents: 9,
+  register: 10,
+  'evidence-match': 11,
+  'artifact-analysis': 12,
+  'case-build': 13,
+  claims: 14,
+  handoff: 15,
+  correspondence: 16,
+  'claim-summary': 17,
+  'recovery-position': 18,
+  learning: 19,
+};
+
+function DuplicateEventFrame({ event, children }: { event: IntakeStage; children: React.ReactNode }) {
+  const eventNumber = duplicateEventNumbers[event];
+  return <div className="relative"><div className="pointer-events-none absolute left-4 top-4 z-50 font-google-sans text-[9px] font-medium uppercase tracking-[0.12em] text-[#8A99A5] sm:left-8 sm:top-6">{String(eventNumber).padStart(2, "0")} / {duplicateEventNames.length} · {duplicateEventNames[eventNumber - 1]}</div>{children}</div>;
 }
 
 export default function FilingPipelinePreview() {
@@ -858,7 +905,7 @@ export default function FilingPipelinePreview() {
   const [queueMode, setQueueMode] = useState<"all" | "priority" | "recent">("all");
   const [toast, setToast] = useState<string | null>(null);
   const [analysisComplete, setAnalysisComplete] = useState(false);
-  const [intakeStage, setIntakeStage] = useState<'query' | 'analysis' | 'findings' | 'issues-found' | 'proof-required' | 'document-orbit' | 'platform-simulation' | 'dropzone' | 'documents' | 'handoff' | 'register' | 'evidence-match' | 'artifact-analysis' | 'case-build' | 'correspondence' | 'claims' | 'claim-summary' | 'recovery-position' | 'learning'>('query');
+  const [intakeStage, setIntakeStage] = useState<IntakeStage>('query');
   const [intakeCycle, setIntakeCycle] = useState(0);
 
 
@@ -896,8 +943,7 @@ export default function FilingPipelinePreview() {
     setToast("Filing control recorded. Submission is now in progress.");
     window.setTimeout(() => setToast(null), 3200);
   };
-  const eventNumber = { query: 1, analysis: 2, findings: 3, 'issues-found': 4, 'proof-required': 5, 'document-orbit': 6, 'platform-simulation': 7, dropzone: 8, documents: 8, register: 9, 'evidence-match': 10, 'artifact-analysis': 11, 'case-build': 12, claims: 13, handoff: 14, correspondence: 15, 'claim-summary': 16, 'recovery-position': 17, learning: 19 }[intakeStage];
-  return <DuplicateEventFrame event={eventNumber}><main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6">{intakeStage === "learning" ? null : <aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside>}<section className="min-w-0 flex-1 bg-white">{intakeStage === "query" ? <QueryStage onComplete={() => setIntakeStage('analysis')} /> : intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setIntakeStage('findings')} /></div> : intakeStage === "findings" ? <AuditFindingsStage onComplete={() => setIntakeStage('issues-found')} /> : intakeStage === "issues-found" ? <IssuesFoundStage onComplete={() => setIntakeStage('proof-required')} /> : intakeStage === "proof-required" ? <ProofRequiredStage onComplete={() => setIntakeStage('document-orbit')} /> : intakeStage === "document-orbit" ? <DocumentOrbitStage onComplete={() => setIntakeStage('platform-simulation')} /> : intakeStage === "platform-simulation" ? <PlatformSimulationStage onComplete={() => setAnalysisComplete(true)} /> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "evidence-match" ? <EvidenceMatchStage /> : intakeStage === "handoff" ? <TeamHandoffStage /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => setIntakeStage('case-build')} /> : intakeStage === "case-build" ? <ReportGenerationStage onComplete={() => {
+  return <DuplicateEventFrame event={intakeStage}><main className="min-h-screen overflow-x-auto overscroll-x-contain bg-white font-google-sans text-[#182026] [-webkit-overflow-scrolling:touch]">{toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}<div className="mx-auto flex max-w-[1280px] items-start gap-3 px-0 py-0 sm:gap-4 sm:px-6 sm:py-6">{intakeStage === "learning" ? null : <aside aria-label="Recovery operations controls" className="sticky top-6 flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">{pipelineRail.map(({ label, href, icon: Icon }, index) => <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? "bg-[#D9E0E3] text-[#26333A]" : ""}`}><Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} /></a>)}</aside>}<section className="min-w-0 flex-1 bg-white">{intakeStage === "query" ? <QueryStage onComplete={() => setIntakeStage('analysis')} /> : intakeStage === "analysis" ? <div className="px-5 py-5 sm:px-6"><EvidenceAnalysisPanel key={intakeCycle} onComplete={() => setIntakeStage('findings')} /></div> : intakeStage === "findings" ? <AuditFindingsStage onComplete={() => setIntakeStage('issues-found')} /> : intakeStage === "issues-found" ? <IssuesFoundStage onComplete={() => setIntakeStage('proof-required')} /> : intakeStage === "proof-required" ? <ProofRequiredStage onComplete={() => setIntakeStage('document-orbit')} /> : intakeStage === "document-orbit" ? <DocumentOrbitStage onComplete={() => setIntakeStage('platform-simulation')} /> : intakeStage === "platform-simulation" ? <PlatformSimulationStage onComplete={() => setAnalysisComplete(true)} /> : intakeStage === "dropzone" || intakeStage === "documents" ? <EvidenceIntakeStage stage={intakeStage} /> : intakeStage === "evidence-match" ? <EvidenceMatchStage /> : intakeStage === "handoff" ? <TeamHandoffStage /> : intakeStage === "register" ? <EvidenceRegisterStage /> : intakeStage === "artifact-analysis" ? <ArtifactAnalysisStage onComplete={() => setIntakeStage('case-build')} /> : intakeStage === "case-build" ? <ReportGenerationStage onComplete={() => {
           setIntakeStage('claims');
           window.setTimeout(() => setIntakeStage('handoff'), CLAIMS_DWELL_MS);
           window.setTimeout(() => setIntakeStage('correspondence'), CLAIMS_DWELL_MS + OWNER_HANDOFF_DWELL_MS);
