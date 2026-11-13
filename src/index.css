@@ -1819,6 +1819,25 @@ html, body, #root {
   line-height: 1.04 !important;
 }
 
+.workflow-page main p:not([class*="text-[9px]"]):not([class*="text-[10px]"]):not([class*="text-[11px]"]):not([class*="text-[12px]"]):not([class*="text-[13px]"]):not([class*="text-[14px]"]) {
+  font-size: 15px !important;
+  line-height: 1.6 !important;
+}
+
+.workflow-page main a[class*="bg-[#30343B]"],
+.workflow-page main a[class*="bg-[#635BFF]"],
+.workflow-page main a[class*="bg-[#0B74DE]"] {
+  background-color: #F05A3C !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 12px 26px rgba(240, 90, 60, 0.22) !important;
+}
+
+.workflow-page main a[class*="bg-[#30343B]"]:hover,
+.workflow-page main a[class*="bg-[#635BFF]"]:hover,
+.workflow-page main a[class*="bg-[#0B74DE]"]:hover {
+  background-color: #D9472D !important;
+}
+
 @media (max-width: 639px) {
   .workflow-page main > section:not(:first-of-type) {
     padding-block: 3.25rem !important;
@@ -1827,6 +1846,11 @@ html, body, #root {
   .workflow-page main > section:first-of-type {
     padding-bottom: 3.5rem !important;
     padding-top: 7.5rem !important;
+  }
+
+  .workflow-page main p:not([class*="text-[9px]"]):not([class*="text-[10px]"]):not([class*="text-[11px]"]):not([class*="text-[12px]"]):not([class*="text-[13px]"]):not([class*="text-[14px]"]) {
+    font-size: 14px !important;
+    line-height: 1.55 !important;
   }
 }
 
