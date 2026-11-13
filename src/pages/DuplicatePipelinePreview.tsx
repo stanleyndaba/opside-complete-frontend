@@ -228,7 +228,7 @@ function FastDuplicateTypewriter({ text, onComplete }: { text: string; onComplet
   return <>{visibleText}{!reduceMotion && visibleText.length < text.length ? <span className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#8A99A5]" aria-hidden="true" /> : null}</>;
 }
 
-function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
+export function EvidenceAnalysisPanel({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
   const [activeItem, setActiveItem] = useState(0);
   const highlightClasses: Record<string, string> = { yellow: 'bg-[#FFF1A8]', blue: 'bg-[#DDEBFF]', green: 'bg-[#DDF4E5]', purple: 'bg-[#E9DEFF]' };
