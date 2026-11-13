@@ -43,7 +43,7 @@ export default function FinanceTeams() {
     image: SITE_META.image,
   });
 
-  return <div className="landing-page landing-google-sans min-h-screen overflow-x-hidden bg-white text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+  return <div className="team-page landing-page landing-google-sans min-h-screen overflow-x-hidden bg-white text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
     <PublicNavbar variant="light" wide />
     <main>
       <section className="relative overflow-hidden bg-white py-8 sm:py-16 md:py-24">

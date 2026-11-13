@@ -92,7 +92,7 @@ const EstablishedFbaBrands = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#F7F8F7] text-[#30343B]">
+    <div className="team-page min-h-screen bg-[#F7F8F7] text-[#30343B]">
       <PublicNavbar variant="light" />
 
       <main>

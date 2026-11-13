@@ -1829,3 +1829,65 @@ html, body, #root {
     padding-top: 7.5rem !important;
   }
 }
+
+/* ============================================================
+   FOR TEAMS PAGE SYSTEM — Security-inspired editorial treatment
+   ============================================================ */
+.team-page,
+.team-page * {
+  font-family: var(--font-google-sans) !important;
+}
+
+.team-page .font-lora,
+.team-page .font-lora * {
+  font-family: var(--font-serif) !important;
+}
+
+.team-page .brand-wordmark,
+.team-page .brand-wordmark * {
+  font-family: 'Merriweather', Georgia, serif !important;
+}
+
+.team-page main > section:not(:first-of-type) {
+  padding-block: clamp(3.25rem, 6vw, 5.75rem) !important;
+}
+
+.team-page main > section:first-of-type {
+  padding-bottom: clamp(3.5rem, 6.5vw, 6.5rem) !important;
+  padding-top: clamp(8.5rem, 13vw, 12rem) !important;
+}
+
+.team-page p.uppercase {
+  color: #F05A3C !important;
+  font-size: 9px !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.35 !important;
+}
+
+.team-page [class*="tracking-[0.16em]"],
+.team-page [class*="tracking-[0.14em]"],
+.team-page [class*="tracking-wide"] {
+  letter-spacing: -0.01em !important;
+}
+
+.team-page h1.font-lora,
+.team-page h2.font-lora,
+.team-page h3.font-lora {
+  font-family: var(--font-serif) !important;
+  font-weight: 400 !important;
+}
+
+.team-page main > section:not(:first-of-type) h2.font-lora {
+  line-height: 1.04 !important;
+}
+
+@media (max-width: 639px) {
+  .team-page main > section:not(:first-of-type) {
+    padding-block: 3.25rem !important;
+  }
+
+  .team-page main > section:first-of-type {
+    padding-bottom: 3.5rem !important;
+    padding-top: 7.5rem !important;
+  }
+}
