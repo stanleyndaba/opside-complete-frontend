@@ -83,29 +83,8 @@ export default function ReversalAccountingReconciliation() {
               <a href="#why-change" className="mt-8 inline-flex items-center gap-2 rounded-[7px] bg-[#30343B] px-5 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#20242A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#30343B]/35 focus-visible:ring-offset-2">See how Margin preserves the story <ArrowRight className="h-4 w-4" aria-hidden="true" /></a>
             </div>
 
-            <div className="relative min-h-[360px] md:min-h-[440px]">
-              <div className="absolute left-[13%] top-[8%] h-[84%] w-px bg-[#DCE2E2]" />
-              <div className="absolute left-[13%] top-[8%] h-[84%] w-px bg-gradient-to-b from-transparent via-[#79918E] to-transparent" />
-              {[
-                ['Original event', 'Reimbursement · +$1,200', 'top-[10%]'],
-                ['Subsequent change', 'Reversal · −$1,200', 'top-[34%]'],
-                ['Connected relationship', 'Same case · matched', 'top-[58%]'],
-                ['Net position', '$0 · no recovery remaining', 'top-[82%]'],
-              ].map(([label, value, position]) => (
-                <div key={label} className={`absolute left-[7%] ${position} flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#7A858A]`}>
-                  <span className="h-3 w-3 rounded-full border-2 border-[#5C7773] bg-white" />
-                  <span>{label}</span>
-                  <span className="hidden text-[12px] font-medium normal-case tracking-normal text-[#30343B] sm:inline">{value}</span>
-                </div>
-              ))}
-              <div className="absolute left-[29%] top-[17%] right-0 border-t border-[#DCE2E2]" />
-              <div className="absolute left-[29%] top-[41%] right-[8%] border-t border-[#DCE2E2]" />
-              <div className="absolute left-[29%] top-[65%] right-[18%] border-t border-[#DCE2E2]" />
-              <div className="absolute bottom-[4%] left-[29%] right-[3%] border-t border-[#30343B]" />
-              <div className="absolute left-[31%] top-[13%] max-w-[220px] text-[14px] leading-6 text-[#667177]">Initial credit<br /><span className="font-semibold text-[#30343B]">+$1,200 recorded</span></div>
-              <div className="absolute left-[31%] top-[37%] max-w-[220px] text-[14px] leading-6 text-[#667177]">Later debit<br /><span className="font-semibold text-[#30343B]">−$1,200 reversed</span></div>
-              <div className="absolute left-[31%] top-[61%] max-w-[220px] text-[14px] leading-6 text-[#667177]">Relationship<br /><span className="font-semibold text-[#5C7773]">Original and reversal connected</span></div>
-              <div className="absolute bottom-[-1%] left-[31%] max-w-[230px] text-[14px] leading-6 text-[#30343B]">Financial position<br /><span className="font-semibold text-[#5C7773]">Net effect established · $0</span></div>
+            <div className="relative flex items-center justify-center bg-transparent">
+              <img src="/reversal-accounting-sequence.png" alt="Accounting sequence showing an original reimbursement, subsequent reversal, connected relationship and resulting net position" className="h-auto w-full max-w-[560px] object-contain" />
             </div>
           </div>
         </section>
