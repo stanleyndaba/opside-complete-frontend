@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { BrandFooter } from '@/components/layout/BrandFooter';
+import { ExploreMoreWorkflows } from '@/components/landing/ExploreMoreWorkflows';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
@@ -157,6 +158,7 @@ export default function EvidenceBackedRecoveryCasePreparation() {
         <section className="bg-white py-20 sm:py-24 md:py-32">
           <div className="mx-auto flex w-full max-w-[900px] flex-col items-center px-5 text-center sm:px-6"><div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F0F2F1] text-[#30343B]"><BadgeCheck className="h-6 w-6" strokeWidth={1.5} /></div><p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7A858A]">Establish the financial position</p><h2 className="mt-4 font-lora text-[38px] font-normal leading-[1.04] tracking-[-0.05em] text-[#30343B] sm:text-[52px]">Submit cases you can explain, substantiate and stand behind.</h2><p className="mt-5 max-w-[690px] text-[16px] leading-7 text-[#667177] sm:text-[17px] sm:leading-8">Margin brings the findings together, establishes the financial rationale and prepares the supporting case—so your team can review what is being pursued and why before authorising submission.</p><Link to="/audit-start" className="mt-8 inline-flex items-center gap-2 rounded-[7px] bg-[#635BFF] px-5 py-3 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] transition-colors hover:bg-[#5148E5]">Establish Your Financial Position <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></div>
         </section>
+      <ExploreMoreWorkflows />
       </main>
       <BrandFooter wide />
     </div>

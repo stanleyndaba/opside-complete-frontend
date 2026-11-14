@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { BrandFooter } from '@/components/layout/BrandFooter';
+import { ExploreMoreWorkflows } from '@/components/landing/ExploreMoreWorkflows';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
@@ -165,6 +166,7 @@ const TransactionReconciliation = () => {
             <Link to="/audit-start" className="mt-8 inline-flex items-center gap-2 rounded-[7px] bg-[#635BFF] px-5 py-3 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] transition-colors hover:bg-[#5148E5]">Establish Your Financial Position <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
           </div>
         </section>
+      <ExploreMoreWorkflows />
       </main>
       <BrandFooter wide />
     </div>

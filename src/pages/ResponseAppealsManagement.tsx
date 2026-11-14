@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { BrandFooter } from '@/components/layout/BrandFooter';
+import { ExploreMoreWorkflows } from '@/components/landing/ExploreMoreWorkflows';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
@@ -103,6 +104,7 @@ const ResponseAppealsManagement = () => {
         <section className="bg-white py-16 sm:py-20 md:py-28"><div className="mx-auto grid w-full max-w-[1280px] gap-12 px-5 sm:px-6 md:grid-cols-[0.75fr_1.25fr] md:gap-16 md:px-8 lg:px-10 2xl:px-12"><div className="max-w-[520px]"><p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7A858A]">The commercial outcome</p><h2 className="mt-4 font-lora text-[36px] font-normal leading-[1.03] tracking-[-0.05em] text-[#30343B] sm:text-[48px]">Keep the case, evidence, responses and outcomes connected.</h2></div><div className="max-w-[720px] text-[16px] leading-8 text-[#667177] sm:text-[17px] sm:leading-9"><p>Your team should not have to start another investigation every time a decision changes.</p><p className="mt-5">Margin keeps the case, evidence, responses and outcomes connected, helping your business understand what happened, what can still be done, and whether the financial matter has actually been resolved.</p><div className="mt-7 flex items-start gap-3 border-t border-[#DDE2E1] pt-5 text-[14px] leading-6 text-[#667177]"><AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#5C7773]" strokeWidth={1.7} />Response and appeal control remains evidence-led, time-aware and subject to seller approval.</div></div></div></section>
 
         <section className="border-t border-[#E1E5E5] bg-[#F4F5F4] py-20 sm:py-24 md:py-32"><div className="mx-auto flex w-full max-w-[900px] flex-col items-center px-5 text-center sm:px-6"><div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#30343B]"><MessageSquareText className="h-6 w-6" strokeWidth={1.5} /></div><p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#7A858A]">Establish the financial position</p><h2 className="mt-4 font-lora text-[38px] font-normal leading-[1.04] tracking-[-0.05em] text-[#30343B] sm:text-[52px]">Know what happened after Amazon responded.</h2><p className="mt-5 max-w-[700px] text-[16px] leading-7 text-[#667177] sm:text-[17px] sm:leading-8">Margin helps keep responses, evidence, decisions and financial outcomes connected so your team can establish what remains actionable and what has actually been resolved.</p><Link to="/audit-start" className="mt-8 inline-flex items-center gap-2 rounded-[7px] bg-[#635BFF] px-5 py-3 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(99,91,255,0.18)] transition-colors hover:bg-[#5148E5]">Establish Your Financial Position <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></div></section>
+      <ExploreMoreWorkflows />
       </main>
       <BrandFooter wide />
     </div>
