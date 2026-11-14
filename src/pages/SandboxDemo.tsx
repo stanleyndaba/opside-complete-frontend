@@ -9,6 +9,7 @@ import {
   ImplementingRoutine,
 } from "./Routine";
 import {
+  QueryStage,
   AuditFindingsStage,
   IssuesFoundStage,
   ProofRequiredStage,
@@ -54,6 +55,7 @@ const principleStages = [
   "Case build",
   "Approve once",
   "Team handoff",
+  "Account query",
   "Amazon correspondence",
   "Reconciled outcome",
   "Recovery positions",
@@ -102,7 +104,7 @@ export default function SandboxDemo() {
   const [stage, setStage] = useState(0);
   const advance = useCallback(() => setStage((current) => Math.min(current + 1, principleStages.length - 1)), []);
   useEffect(() => {
-    const staticDurations: Record<number, number> = { 0: 9000, 1: 9000, 2: 12000, 3: 11000, 4: 12000, 5: 9000, 6: 11000, 7: 7000, 8: 12000, 9: 7000, 10: 9000, 11: 10000, 12: 8000, 13: 12000, 14: 7000, 15: 6500, 16: 7000, 17: 9500, 18: 9000, 19: 9000, 20: 14000, 21: 28000, 22: 14000, 23: 9000, 24: 8500, 25: 15000, 26: 12000, 27: 9000, 28: 14000 };
+    const staticDurations: Record<number, number> = { 0: 9000, 1: 9000, 2: 12000, 3: 11000, 4: 12000, 5: 9000, 6: 11000, 7: 7000, 8: 12000, 9: 7000, 10: 9000, 11: 10000, 12: 8000, 13: 12000, 14: 7000, 15: 6500, 16: 7000, 17: 9500, 18: 9000, 19: 9000, 20: 14000, 21: 28000, 22: 14000, 23: 9000, 24: 8500, 25: 15000, 26: 9000, 27: 15000, 28: 12000, 29: 9000 };
     const duration = reduceMotion ? 900 : staticDurations[stage];
     if (!duration) return;
     const timer = window.setTimeout(advance, duration);
@@ -137,10 +139,11 @@ export default function SandboxDemo() {
     case 22: content = <ReportGenerationStage onComplete={advance} />; break;
     case 23: content = <ApproveOnceStage onComplete={advance} />; break;
     case 24: content = <TeamHandoffStage />; break;
-    case 25: content = <AmazonCorrespondenceStage />; break;
-    case 26: content = <ReconciledAnomalies cards={__previewRecords} />; break;
-    case 27: content = <RecoveryPositionStage />; break;
-    case 28: content = <AccuracyLearningStage />; break;
+    case 25: content = <QueryStage {...common} />; break;
+    case 26: content = <AmazonCorrespondenceStage />; break;
+    case 27: content = <ReconciledAnomalies cards={__previewRecords} />; break;
+    case 28: content = <RecoveryPositionStage />; break;
+    case 29: content = <AccuracyLearningStage />; break;
   }
   return <main className="min-h-screen bg-white font-google-sans text-[#182026]"><div className="sticky top-0 z-50 flex items-center justify-between border-b border-[#E8EFF1] bg-white/95 px-4 py-3 backdrop-blur-sm sm:px-8"><span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#7B8A97]">Margin · Super Demo</span><span className="text-[10px] tabular-nums text-[#8A99A5]">{String(stage + 1).padStart(2, "0")} / {principleStages.length} · {principleStages[stage]}</span></div><AnimatePresence mode="wait"><motion.div key={stage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3 }}>{content}</motion.div></AnimatePresence></main>;
 }
