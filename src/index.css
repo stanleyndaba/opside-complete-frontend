@@ -1670,29 +1670,28 @@ html, body, #root {
   }
 }
 
-/* Primary actions use one deliberate signal color: orange field, white copy,
-   and a white inset arrow disc carrying the orange arrow. */
+/* Landing orange actions use compact editorial buttons with a plain white chevron. */
 .landing-page .landing-action-cta {
-  border-radius: 999px !important;
+  border-radius: 3px !important;
   color: #FFFFFF !important;
 }
 
 .landing-page .landing-action-cta > svg {
-  width: 28px !important;
-  height: 28px !important;
-  flex: 0 0 28px;
-  margin-left: 4px;
-  padding: 7px;
-  border-radius: 999px;
-  background: #FFFFFF;
-  color: #F05A3C;
-  stroke-width: 2.4;
+  width: 1rem !important;
+  height: 1rem !important;
+  flex: 0 0 1rem;
+  margin-left: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #FFFFFF;
+  stroke-width: 2.2;
 }
 
 .landing-page .landing-action-cta:hover > svg,
 .landing-page .landing-action-cta:focus-visible > svg {
-  background: #FFF1ED;
-  color: #D9472D;
+  background: transparent;
+  color: #FFFFFF;
 }
 
 
