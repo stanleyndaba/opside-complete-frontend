@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronRight, Store, Briefcase, Building2, Layers, WalletCards, Crown, type LucideIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const teamDestinations: Array<{ title: string; description: string; icon: LucideIcon; href: string }> = [
   {
@@ -49,7 +49,9 @@ const teamDestinations: Array<{ title: string; description: string; icon: Lucide
 
 export function ExploreMoreTeams() {
   const [expanded, setExpanded] = useState(false);
-  const visibleDestinations = expanded ? teamDestinations : teamDestinations.slice(0, 4);
+  const { pathname } = useLocation();
+  const otherDestinations = teamDestinations.filter((destination) => destination.href !== pathname);
+  const visibleDestinations = expanded ? otherDestinations : otherDestinations.slice(0, 4);
 
   return (
     <section aria-labelledby="explore-more-teams-title" className="relative overflow-hidden bg-[#F5F6F4] py-12 sm:py-16 md:py-20">
@@ -69,7 +71,7 @@ export function ExploreMoreTeams() {
             </article>
           ))}
         </div>
-        {!expanded && teamDestinations.length > 4 ? <button type="button" onClick={() => setExpanded(true)} className="mx-auto mt-8 inline-flex items-center gap-1 text-[13px] font-semibold text-[#F05A3C] transition-colors hover:text-[#D9472D]">See More <ChevronRight className="h-4 w-4" /></button> : null}
+        {!expanded && otherDestinations.length > 4 ? <button type="button" onClick={() => setExpanded(true)} className="mx-auto mt-8 inline-flex items-center gap-1 text-[13px] font-semibold text-[#F05A3C] transition-colors hover:text-[#D9472D]">See More <ChevronRight className="h-4 w-4" /></button> : null}
       </div>
     </section>
   );
