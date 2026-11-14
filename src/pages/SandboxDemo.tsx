@@ -44,6 +44,7 @@ const principleStages = [
   "Create routine",
   "Routine plan",
   "All routines",
+  "Team handoff",
   "Implementing routine",
   "Platform simulation",
   "Generating plan",
@@ -106,7 +107,7 @@ export default function SandboxDemo() {
   const [stage, setStage] = useState(0);
   const advance = useCallback(() => setStage((current) => Math.min(current + 1, principleStages.length - 1)), []);
   useEffect(() => {
-    const staticDurations: Record<number, number> = { 0: 9000, 1: 9000, 2: 12000, 3: 11000, 4: 9000, 5: 12000, 6: 9000, 7: 11000, 8: 7000, 9: 12000, 10: 7000, 11: 9000, 12: 10000, 13: 8000, 14: 12000, 15: 7000, 16: 6500, 17: 7000, 18: 9500, 19: 9000, 20: 9000, 21: 14000, 22: 28000, 23: 14000, 24: 9000, 25: 8500, 26: 15000, 27: 9000, 28: 15000, 29: 12000, 30: 9000 };
+    const staticDurations: Record<number, number> = { 0: 9000, 1: 9000, 2: 12000, 3: 11000, 4: 9000, 5: 12000, 6: 9000, 7: 11000, 8: 7000, 9: 12000, 10: 7000, 11: 9000, 12: 9000, 13: 10000, 14: 8000, 15: 12000, 16: 7000, 17: 6500, 18: 7000, 19: 9500, 20: 9000, 21: 9000, 22: 14000, 23: 28000, 24: 14000, 25: 9000, 26: 8500, 27: 15000, 28: 9000, 29: 15000, 30: 12000, 31: 9000 };
     const duration = reduceMotion ? 900 : staticDurations[stage];
     if (!duration) return;
     const timer = window.setTimeout(advance, duration);
@@ -129,24 +130,25 @@ export default function SandboxDemo() {
     case 10: content = <CreateRoutineStage onComplete={advance} />; break;
     case 11: content = <RoutinePlanStage />; break;
     case 12: content = <AllRoutines reduceMotion={Boolean(reduceMotion)} />; break;
-    case 13: content = <ImplementingRoutine reduceMotion={Boolean(reduceMotion)} />; break;
-    case 14: content = <PlatformSimulationStage {...common} />; break;
-    case 15: content = <GeneratingPlanStage />; break;
-    case 16: content = <ActivityWheel />; break;
-    case 17: content = <EvidenceIntakeStage stage="dropzone" />; break;
-    case 18: content = <EvidenceIntakeStage stage="documents" />; break;
-    case 19: content = <EvidenceRegisterStage />; break;
-    case 20: content = <EvidenceMatchStage />; break;
-    case 21: content = <ArtifactAnalysisStage {...common} />; break;
-    case 22: content = <FinancialResolutionWorkflow />; break;
-    case 23: content = <ReportGenerationStage onComplete={advance} />; break;
-    case 24: content = <ApproveOnceStage onComplete={advance} />; break;
-    case 25: content = <TeamHandoffStage />; break;
-    case 26: content = <QueryStage {...common} />; break;
-    case 27: content = <AmazonCorrespondenceStage />; break;
-    case 28: content = <ReconciledAnomalies cards={__previewRecords} />; break;
-    case 29: content = <RecoveryPositionStage />; break;
-    case 30: content = <AccuracyLearningStage />; break;
+    case 13: content = <TeamHandoffStage />; break;
+    case 14: content = <ImplementingRoutine reduceMotion={Boolean(reduceMotion)} />; break;
+    case 15: content = <PlatformSimulationStage {...common} />; break;
+    case 16: content = <GeneratingPlanStage />; break;
+    case 17: content = <ActivityWheel />; break;
+    case 18: content = <EvidenceIntakeStage stage="dropzone" />; break;
+    case 19: content = <EvidenceIntakeStage stage="documents" />; break;
+    case 20: content = <EvidenceRegisterStage />; break;
+    case 21: content = <EvidenceMatchStage />; break;
+    case 22: content = <ArtifactAnalysisStage {...common} />; break;
+    case 23: content = <FinancialResolutionWorkflow />; break;
+    case 24: content = <ReportGenerationStage onComplete={advance} />; break;
+    case 25: content = <ApproveOnceStage onComplete={advance} />; break;
+    case 26: content = <TeamHandoffStage />; break;
+    case 27: content = <QueryStage {...common} />; break;
+    case 28: content = <AmazonCorrespondenceStage />; break;
+    case 29: content = <ReconciledAnomalies cards={__previewRecords} />; break;
+    case 30: content = <RecoveryPositionStage />; break;
+    case 31: content = <AccuracyLearningStage />; break;
   }
   return <main className="min-h-screen bg-white font-google-sans text-[#182026]"><div className="sticky top-0 z-50 flex items-center justify-between border-b border-[#E8EFF1] bg-white/95 px-4 py-3 backdrop-blur-sm sm:px-8"><span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#7B8A97]">Margin · Super Demo</span><span className="text-[10px] tabular-nums text-[#8A99A5]">{String(stage + 1).padStart(2, "0")} / {principleStages.length} · {principleStages[stage]}</span></div><AnimatePresence mode="wait"><motion.div key={stage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3 }}>{content}</motion.div></AnimatePresence></main>;
 }
