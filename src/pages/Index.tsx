@@ -52,6 +52,7 @@ import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import { MarginEngineSection } from "@/components/landing/MarginEngineSection";
+import { BlogSection } from "@/components/landing/BlogSection";
 import { GoogleMark } from "@/components/GoogleMark";
 import { HeroInboxVisual } from "@/components/landing/HeroInboxVisual";
 
@@ -2370,6 +2371,7 @@ export default function Index() {
         <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
         <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
         <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
+        <BlogSection />
         <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
