@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { BrandFooter } from '@/components/layout/BrandFooter';
+import { ExploreMoreTeams } from '@/components/landing/ExploreMoreTeams';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
@@ -199,6 +200,7 @@ const EstablishedFbaBrands = () => {
         <section className="bg-white py-16 sm:py-20">
           <div className="mx-auto flex w-full max-w-[900px] flex-col items-center px-5 text-center sm:px-6"><div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F0F2F1] text-[#30343B]"><ShieldCheck className="h-6 w-6" strokeWidth={1.5} /></div><h2 className="mt-5 font-lora text-[34px] font-normal leading-[1.04] tracking-tight text-[#30343B] sm:text-[46px]">Know where your Amazon business stands.</h2><p className="mt-4 max-w-[600px] text-[13px] leading-[1.5] text-[#667177] sm:text-[16px] sm:leading-7">You have built an established operation. You should be able to explain what happened to the money moving through it.</p><Link to="/review-consent" className="mt-7 inline-flex items-center gap-2 rounded-[7px] bg-[#F05A3C] px-5 py-3 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.22)] transition-colors hover:bg-[#D9472D]">Establish your financial position <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></div>
         </section>
+      <ExploreMoreTeams />
       </main>
 
       <BrandFooter wide />
