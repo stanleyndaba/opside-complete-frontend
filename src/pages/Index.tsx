@@ -1558,8 +1558,7 @@ function MarginStandardDeliverableSection() {
           <p className="mx-auto mt-4 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'The finding can be challenged, approved or held for further investigation, with the decision and subsequent outcome retained in the financial record.'} mobile={'Finance can challenge, approve or hold a finding, with the decision and subsequent outcome preserved in its record.'} /></p>
           <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}></p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <button type="button" className={landingPrimaryCtaClass} aria-label="See the Financial Basis">See the Financial Basis <ChevronRight className="h-4 w-4" /></button>
-            <button type="button" className={landingPrimaryCtaClass} aria-label="See the Operating Model">See the Operating Model <ChevronRight className="h-4 w-4" /></button>
+            <button type="button" className="landing-action-cta landing-pressable inline-flex h-11 items-center justify-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2" aria-label="See the Financial Basis">See the Financial Basis <ChevronRight className="h-4 w-4" /></button>
           </div>
         </motion.div>
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 flex w-full max-w-[1040px] justify-center sm:mt-10 lg:mt-12">
