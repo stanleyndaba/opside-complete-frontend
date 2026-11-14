@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import EvidenceRequired from "./EvidenceRequired";
 import {
   FinancialAnalysisWorkspace,
   FinancialResolutionWorkflow,
@@ -34,6 +35,7 @@ const principleStages = [
   "Evidence register",
   "Audit findings",
   "Discrepancy register",
+  "Evidence required",
   "Evidence analysis",
   "Proof required",
   "Building controls",
@@ -104,7 +106,7 @@ export default function SandboxDemo() {
   const [stage, setStage] = useState(0);
   const advance = useCallback(() => setStage((current) => Math.min(current + 1, principleStages.length - 1)), []);
   useEffect(() => {
-    const staticDurations: Record<number, number> = { 0: 9000, 1: 9000, 2: 12000, 3: 11000, 4: 12000, 5: 9000, 6: 11000, 7: 7000, 8: 12000, 9: 7000, 10: 9000, 11: 10000, 12: 8000, 13: 12000, 14: 7000, 15: 6500, 16: 7000, 17: 9500, 18: 9000, 19: 9000, 20: 14000, 21: 28000, 22: 14000, 23: 9000, 24: 8500, 25: 15000, 26: 9000, 27: 15000, 28: 12000, 29: 9000 };
+    const staticDurations: Record<number, number> = { 0: 9000, 1: 9000, 2: 12000, 3: 11000, 4: 9000, 5: 12000, 6: 9000, 7: 11000, 8: 7000, 9: 12000, 10: 7000, 11: 9000, 12: 10000, 13: 8000, 14: 12000, 15: 7000, 16: 6500, 17: 7000, 18: 9500, 19: 9000, 20: 9000, 21: 14000, 22: 28000, 23: 14000, 24: 9000, 25: 8500, 26: 15000, 27: 9000, 28: 15000, 29: 12000, 30: 9000 };
     const duration = reduceMotion ? 900 : staticDurations[stage];
     if (!duration) return;
     const timer = window.setTimeout(advance, duration);
@@ -118,32 +120,33 @@ export default function SandboxDemo() {
     case 1: content = <EvidenceRegisterStage />; break;
     case 2: content = <AuditFindingsStage {...common} />; break;
     case 3: content = <IssuesFoundStage {...common} />; break;
-    case 4: content = <EvidenceAnalysisPanel {...common} />; break;
-    case 5: content = <ProofRequiredStage {...common} />; break;
-    case 6: content = <RoutineLibrary reduceMotion={Boolean(reduceMotion)} />; break;
-    case 7: content = <GeneratingPlanStage />; break;
-    case 8: content = <FinancialAnalysisWorkspace reduceMotion={Boolean(reduceMotion)} />; break;
-    case 9: content = <CreateRoutineStage onComplete={advance} />; break;
-    case 10: content = <RoutinePlanStage />; break;
-    case 11: content = <AllRoutines reduceMotion={Boolean(reduceMotion)} />; break;
-    case 12: content = <ImplementingRoutine reduceMotion={Boolean(reduceMotion)} />; break;
-    case 13: content = <PlatformSimulationStage {...common} />; break;
-    case 14: content = <GeneratingPlanStage />; break;
-    case 15: content = <ActivityWheel />; break;
-    case 16: content = <EvidenceIntakeStage stage="dropzone" />; break;
-    case 17: content = <EvidenceIntakeStage stage="documents" />; break;
-    case 18: content = <EvidenceRegisterStage />; break;
-    case 19: content = <EvidenceMatchStage />; break;
-    case 20: content = <ArtifactAnalysisStage {...common} />; break;
-    case 21: content = <FinancialResolutionWorkflow />; break;
-    case 22: content = <ReportGenerationStage onComplete={advance} />; break;
-    case 23: content = <ApproveOnceStage onComplete={advance} />; break;
-    case 24: content = <TeamHandoffStage />; break;
-    case 25: content = <QueryStage {...common} />; break;
-    case 26: content = <AmazonCorrespondenceStage />; break;
-    case 27: content = <ReconciledAnomalies cards={__previewRecords} />; break;
-    case 28: content = <RecoveryPositionStage />; break;
-    case 29: content = <AccuracyLearningStage />; break;
+    case 4: content = <EvidenceRequired showSearch={false} showSidebar={false} flat />; break;
+    case 5: content = <EvidenceAnalysisPanel {...common} />; break;
+    case 6: content = <ProofRequiredStage {...common} />; break;
+    case 7: content = <RoutineLibrary reduceMotion={Boolean(reduceMotion)} />; break;
+    case 8: content = <GeneratingPlanStage />; break;
+    case 9: content = <FinancialAnalysisWorkspace reduceMotion={Boolean(reduceMotion)} />; break;
+    case 10: content = <CreateRoutineStage onComplete={advance} />; break;
+    case 11: content = <RoutinePlanStage />; break;
+    case 12: content = <AllRoutines reduceMotion={Boolean(reduceMotion)} />; break;
+    case 13: content = <ImplementingRoutine reduceMotion={Boolean(reduceMotion)} />; break;
+    case 14: content = <PlatformSimulationStage {...common} />; break;
+    case 15: content = <GeneratingPlanStage />; break;
+    case 16: content = <ActivityWheel />; break;
+    case 17: content = <EvidenceIntakeStage stage="dropzone" />; break;
+    case 18: content = <EvidenceIntakeStage stage="documents" />; break;
+    case 19: content = <EvidenceRegisterStage />; break;
+    case 20: content = <EvidenceMatchStage />; break;
+    case 21: content = <ArtifactAnalysisStage {...common} />; break;
+    case 22: content = <FinancialResolutionWorkflow />; break;
+    case 23: content = <ReportGenerationStage onComplete={advance} />; break;
+    case 24: content = <ApproveOnceStage onComplete={advance} />; break;
+    case 25: content = <TeamHandoffStage />; break;
+    case 26: content = <QueryStage {...common} />; break;
+    case 27: content = <AmazonCorrespondenceStage />; break;
+    case 28: content = <ReconciledAnomalies cards={__previewRecords} />; break;
+    case 29: content = <RecoveryPositionStage />; break;
+    case 30: content = <AccuracyLearningStage />; break;
   }
   return <main className="min-h-screen bg-white font-google-sans text-[#182026]"><div className="sticky top-0 z-50 flex items-center justify-between border-b border-[#E8EFF1] bg-white/95 px-4 py-3 backdrop-blur-sm sm:px-8"><span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#7B8A97]">Margin · Super Demo</span><span className="text-[10px] tabular-nums text-[#8A99A5]">{String(stage + 1).padStart(2, "0")} / {principleStages.length} · {principleStages[stage]}</span></div><AnimatePresence mode="wait"><motion.div key={stage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3 }}>{content}</motion.div></AnimatePresence></main>;
 }
