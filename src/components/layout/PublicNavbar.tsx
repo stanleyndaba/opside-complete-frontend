@@ -310,8 +310,8 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     <Link
                                         to="/audit-start"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="landing-action-cta relative flex min-h-[46px] w-full items-center justify-center rounded-full bg-[#F05A3C] px-12 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(240,90,60,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#D9472D] hover:shadow-[0_12px_26px_rgba(240,90,60,0.32)]">
-                                        Send records for review <span aria-hidden="true" className="absolute right-2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#30343B] shadow-[0_3px_8px_rgba(33,43,55,0.16)]"><ChevronRight className="h-4 w-4" strokeWidth={2.2} /></span>
+                                        className="landing-action-cta relative flex min-h-[46px] w-fit items-center justify-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(240,90,60,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#D9472D] hover:shadow-[0_12px_26px_rgba(240,90,60,0.32)]">
+                                        Send records for review <ChevronRight aria-hidden="true" className="h-4 w-4" strokeWidth={2.2} />
                                     </Link>
                                     <Link
                                         to="/contact"

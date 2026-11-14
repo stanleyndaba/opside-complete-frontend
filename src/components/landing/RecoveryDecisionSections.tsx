@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Check, ChevronRight } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
 
@@ -87,7 +87,7 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
           <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Make every resolved discrepancy easier to account for next time.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin preserves established evidence, prior decisions, linked financial events and verified outcomes so later investigations can build on what is already known. It can compare new activity against previously examined events, identify recurring patterns and distinguish a genuinely new discrepancy from a timing difference, reversal or previously resolved item.</p>
           <p className="mt-4 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Each examination adds to the record of what has been established, reducing the need to reconstruct the same financial history repeatedly.</p>
-          <Link to="/sales" className="landing-action-cta landing-pressable mt-6 inline-flex h-11 items-center rounded-full bg-[#F05A3C] px-6 text-[13px] font-bold text-white shadow-[0_18px_48px_rgba(240,90,60,0.24)] transition-colors hover:bg-[#D9472D]">Discuss a Pilot <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          <Link to="/sales" className="landing-action-cta landing-pressable mt-6 inline-flex h-11 items-center rounded-[3px] bg-[#F05A3C] px-6 text-[13px] font-bold text-white shadow-[0_18px_48px_rgba(240,90,60,0.24)] transition-colors hover:bg-[#D9472D]">Discuss a Pilot <ChevronRight className="h-4 w-4" /></Link>
         </motion.div>
       </div>
     </div>
@@ -140,7 +140,7 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
       </motion.div>
 
       <motion.div {...revealProps} className="mt-8 md:mt-10">
-        <Button onClick={() => onAuditCta("enterprise_onboarding_timeline")} className="landing-action-cta landing-pressable h-11 rounded-full bg-[#F05A3C] px-6 text-[13px] font-bold text-white shadow-[0_18px_48px_rgba(240,90,60,0.24)] transition-colors hover:bg-[#D9472D]">Discuss a Pilot <ArrowRight className="h-4 w-4" /></Button>
+        <Button onClick={() => onAuditCta("enterprise_onboarding_timeline")} className="landing-action-cta landing-pressable h-11 rounded-[3px] bg-[#F05A3C] px-6 text-[13px] font-bold text-white shadow-[0_18px_48px_rgba(240,90,60,0.24)] transition-colors hover:bg-[#D9472D]">Discuss a Pilot <ChevronRight className="h-4 w-4" /></Button>
       </motion.div>
     </div>
   </section>
