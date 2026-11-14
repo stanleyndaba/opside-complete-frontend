@@ -310,13 +310,14 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     <Link
                                         to="/audit-start"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="landing-action-cta relative flex min-h-[46px] w-fit items-center justify-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(240,90,60,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#D9472D] hover:shadow-[0_12px_26px_rgba(240,90,60,0.32)]">
+                                        className="landing-action-cta relative flex min-h-[46px] w-full items-center justify-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(240,90,60,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#D9472D] hover:shadow-[0_12px_26px_rgba(240,90,60,0.32)]">
                                         Send records for review <ChevronRight aria-hidden="true" className="h-4 w-4" strokeWidth={2.2} />
                                     </Link>
                                     <Link
                                         to="/contact"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[46px] w-full items-center justify-center gap-3 rounded-full border border-white/25 bg-white/10 px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white transition-[background-color,border-color] duration-200 hover:border-white/40 hover:bg-white/15">
+                                        className="flex min-h-[46px] w-full items-center justify-center gap-3 rounded-full border-0 bg-white/10 px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white transition-colors duration-200 hover:bg-white/15">
+                                        <img src="/gmailicon.png" alt="" aria-hidden="true" className="h-5 w-5 object-contain" />
                                         Talk to Margin <ChevronRight aria-hidden="true" className="h-4 w-4" />
                                     </Link>
                                 </div>
