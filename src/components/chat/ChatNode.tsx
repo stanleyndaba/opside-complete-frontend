@@ -203,10 +203,7 @@ export function ChatNode() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
-                    "flex h-[52px] w-[52px] items-center justify-center rounded-full border transition-all shadow-[0_22px_70px_rgba(37,49,58,0.18)]",
-                    isOpen
-                        ? "border-[#BFD8EA] bg-white text-[#0B74DE]"
-                        : "border-[#CFE0EA] bg-white text-[#25313A] hover:border-[#BFD8EA] hover:text-[#0B74DE]"
+                    "flex h-[52px] w-[52px] items-center justify-center rounded-full border border-[#F05A3C] bg-[#F05A3C] text-white transition-all shadow-[0_22px_70px_rgba(37,49,58,0.18)] hover:border-[#D9472D] hover:bg-[#D9472D]",
                 )}
                 aria-label={isOpen ? 'Close Margin guide' : 'Open Margin guide'}
             >
