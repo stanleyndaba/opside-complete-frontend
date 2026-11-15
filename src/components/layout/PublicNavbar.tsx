@@ -214,7 +214,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                         )}>
                                             For Teams
                                         </AccordionTrigger>
-                                        <AccordionContent className="overflow-visible border-none px-3 pb-5 pt-2 space-y-3">
+                                        <AccordionContent className="overflow-visible border-none bg-transparent px-3 pb-5 pt-2 space-y-3">
                                             {productMenuGroups.map((group) => (
                                                     <div key={group.label} className="space-y-2 pt-3">
                                                         <h5 className="px-2 text-[11px] font-sans font-medium tracking-normal text-white/60">
@@ -224,7 +224,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                                             {group.items.map((item) => (
                                                                 <ProductServiceItem
                                                                     key={item.title}
-                                                                    variant="light"
+                                                                    variant="dark"
                                                                     icon={item.icon}
                                                                     title={item.title}
                                                                     description={item.description}
@@ -244,7 +244,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                         )}>
                                             Workflows
                                         </AccordionTrigger>
-                                        <AccordionContent className="overflow-visible border-none px-3 pb-5 pt-2">
+                                        <AccordionContent className="overflow-visible border-none bg-transparent px-3 pb-5 pt-2">
                                             <div className="space-y-6">
                                                 {apiMenuGroups.map((group) => (
                                                     <div key={group.label} className="space-y-2 pt-3">
@@ -255,7 +255,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                                             {group.items.map((item) => (
                                                                 <ApiServiceItem
                                                                     key={item.title}
-                                                                    variant="light"
+                                                                    variant="dark"
                                                                     icon={item.icon}
                                                                     title={item.title}
                                                                     description={item.description}
