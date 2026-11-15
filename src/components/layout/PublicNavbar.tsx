@@ -105,7 +105,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         "relative grid min-h-[56px] grid-cols-[1fr_auto] items-center gap-3 transition-all duration-300 md:min-h-[68px] md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:gap-6 md:px-5 md:py-3 lg:flex lg:px-7",
                         isLight
                             ? "rounded-none bg-[#FAFAF7]/95 px-4 py-2.5 shadow-none backdrop-blur-xl md:bg-white/[0.94] md:shadow-[0_12px_42px_rgba(37,49,58,0.10)]"
-                            : "rounded-none bg-white/[0.08] px-4 py-2.5 shadow-none backdrop-blur-xl saturate-[160%] md:shadow-[0_18px_55px_rgba(0,0,0,0.24)]"
+                            : "rounded-none bg-white/[0.08] px-4 py-2.5 shadow-none backdrop-blur-xl backdrop-saturate-[160%] md:shadow-[0_18px_55px_rgba(0,0,0,0.24)]"
                     )}>
                     <div className="flex items-center gap-3">
                         <Link
@@ -196,15 +196,15 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                            className="fixed inset-0 z-[60] md:hidden">
-                            <div className="mobile-menu-panel flex h-[100dvh] flex-col overflow-y-auto bg-white text-[#182026] shadow-[0_24px_80px_rgba(22,28,34,0.16)]">
-                                <div className="flex min-h-[76px] shrink-0 items-center justify-between bg-white text-[#17212B] shadow-[0_4px_18px_rgba(37,49,58,0.10)]">
-                                    <button type="button" onClick={() => setMobileMenuOpen(false)} className="inline-flex h-[76px] min-w-[132px] items-center justify-start rounded-br-[28px] px-5 text-[12px] font-sans font-medium text-[#52616C] transition-colors hover:text-[#17212B]">Close</button>
-                                    <Link to="/" onClick={() => setMobileMenuOpen(false)} className="absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-2 text-[#182026]">
-                                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
+                            className="fixed inset-0 z-[60] bg-black/[0.12] backdrop-blur-sm md:hidden">
+                            <div className="mobile-menu-panel flex h-[100dvh] flex-col overflow-y-auto bg-[#182026]/[0.82] text-white shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl backdrop-saturate-[160%]">
+                                <div className="flex min-h-[76px] shrink-0 items-center justify-between border-b border-white/10 bg-white/[0.08] text-white shadow-[0_4px_18px_rgba(0,0,0,0.12)] backdrop-blur-xl">
+                                    <button type="button" onClick={() => setMobileMenuOpen(false)} className="inline-flex h-[76px] min-w-[132px] items-center justify-start rounded-br-[28px] px-5 text-[12px] font-sans font-medium text-white/75 transition-colors hover:text-white">Close</button>
+                                    <Link to="/" onClick={() => setMobileMenuOpen(false)} className="absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-2 text-white">
+                                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain invert brightness-0" />
                                         <span className="brand-wordmark font-merriweather text-[17px] tracking-tight">Margin</span>
                                     </Link>
-                                    <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="px-5 text-[12px] font-sans font-medium text-[#52616C] transition-colors hover:text-[#17212B]">Log in</Link>
+                                    <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="px-5 text-[12px] font-sans font-medium text-white/75 transition-colors hover:text-white">Log in</Link>
                                 </div>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="teams" className="border-none">
