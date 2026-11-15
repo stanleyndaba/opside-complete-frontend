@@ -16,22 +16,37 @@ type FooterLink = {
 };
 
 const productLinks: FooterLink[] = [
-  { label: 'Pricing', href: '/pricing' },
-  { label: 'Security', href: '/security' }
+  { label: 'Amazon Discrepancy & Recovery Detection', href: '/amazon-discrepancy-recovery-detection' },
+  { label: 'Transaction Reconciliation', href: '/transaction-reconciliation' },
+  { label: 'Recovery Eligibility Timing', href: '/recovery-eligibility-timing' },
+  { label: 'Recovery Evidence', href: '/recovery-evidence' },
+  { label: 'Evidence-Backed Recovery Case Preparation', href: '/evidence-backed-recovery-case-preparation' },
+  { label: 'Seller Approval & Filing', href: '/seller-approval-filing' },
+  { label: 'Response & Appeal Management', href: '/response-appeals-management' },
+  { label: 'Payout Verification', href: '/payout-verification' },
+  { label: 'Reversal & Accounting Reconciliation', href: '/reversal-accounting-reconciliation' },
+  { label: 'Integrations and Connectors', href: '/integration-connectors' },
+  { label: 'Pricing', href: '/pricing' }
 ];
 
 const solutionLinks: FooterLink[] = [
-  { label: 'Finance teams', href: '/finance-teams' },
-  { label: 'Founder-led businesses', href: '/founder-led' },
-  { label: 'Marketplace operations', href: '/marketplace-operations' },
-  { label: 'Aggregators & multi-brand', href: '/aggregators-multi-brand' },
-  { label: 'Enterprise & multi-marketplace', href: '/enterprise-multi-marketplace' }
+  { label: 'Established FBA Brands', href: '/established-fba-brands' },
+  { label: 'Agencies & Amazon Operators', href: '/agencies-amazon-operators' },
+  { label: 'Aggregators & Multi-Brand Portfolios', href: '/aggregators-multi-brand' },
+  { label: 'Enterprise & Multi-Marketplace', href: '/enterprise-multi-marketplace' },
+  { label: 'Operations Teams', href: '/marketplace-operations' },
+  { label: 'Finance Teams', href: '/finance-teams' },
+  { label: 'Founders & Leadership', href: '/founder-led' },
+  { label: 'Multi-Account Oversight' },
+  { label: 'Team Roles & Approvals' },
+  { label: 'Accounting-Ready Records' }
 ];
 
 const resourceLinks: FooterLink[] = [
   { label: 'Docs', href: '/docs' },
   { label: 'Amazon access scope', href: '/access-scope' },
-  { label: 'Help Center', href: '/contact' }
+  { label: 'Help Center', href: '/contact' },
+  { label: 'Security', href: '/security' }
 ];
 
 const companyLinks: FooterLink[] = [
