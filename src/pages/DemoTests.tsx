@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   List,
@@ -111,6 +112,51 @@ function PromptCard({ prompt }: { prompt: Prompt }) {
   );
 }
 
+function ScaledCaseDetail({ children }: { children: ReactNode }) {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const worldRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  const [worldHeight, setWorldHeight] = useState(0);
+  const worldWidth = 1280;
+
+  useEffect(() => {
+    const frame = frameRef.current;
+    const world = worldRef.current;
+    if (!frame || !world) return;
+
+    const measure = () => {
+      setScale(Math.min(1, frame.clientWidth / worldWidth));
+      setWorldHeight(world.scrollHeight);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(frame);
+    observer.observe(world);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={frameRef}
+      className="relative w-full overflow-hidden"
+      style={{ height: worldHeight ? `${worldHeight * scale}px` : undefined }}
+    >
+      <div
+        ref={worldRef}
+        className="absolute left-0 top-0"
+        style={{
+          width: `${worldWidth}px`,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export default function DemoTests() {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState("Workflows");
@@ -161,7 +207,9 @@ export default function DemoTests() {
           <AnimatePresence mode="wait">
           {active === "Favourites" ? (
             <motion.div key="case-detail-demo" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="-mx-3 mt-4 overflow-hidden rounded-[8px] border border-[#D8E3E8] bg-white sm:-mx-6 lg:-mx-8 xl:-mx-10">
-              <CaseDetailDemo />
+              <ScaledCaseDetail>
+                <CaseDetailDemo />
+              </ScaledCaseDetail>
             </motion.div>
           ) : <motion.div key="library-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="mt-7 max-w-[760px] sm:mt-9">
