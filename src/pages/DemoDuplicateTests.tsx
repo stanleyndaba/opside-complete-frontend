@@ -5,15 +5,13 @@ import {
   List,
   Menu,
   MessageSquare,
-  MousePointer2,
   MoreHorizontal,
   Plus,
-  Search,
   Star,
   UserRound,
   UsersRound,
 } from "lucide-react";
-import CaseDetailDemo from "./CaseDetailDemo";
+import CaseDetailDuplicateDemo from "./CaseDetailDuplicateDemo";
 
 type LibraryItem = {
   label: string;
@@ -194,28 +192,8 @@ function ScaledCaseDetail({ children }: { children: ReactNode }) {
 }
 
 export default function DemoDuplicateTests() {
-  const reduceMotion = useReducedMotion();
-  const [active, setActive] = useState("Workflows");
+  const [active] = useState("Favourites");
   const [search, setSearch] = useState("");
-  const [demoPhase, setDemoPhase] = useState(0);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      setActive("Favourites");
-      return;
-    }
-    const moveTimer = window.setTimeout(() => setDemoPhase(1), 450);
-    const tapTimer = window.setTimeout(() => {
-      setDemoPhase(2);
-      setActive("Favourites");
-    }, 1550);
-    const settleTimer = window.setTimeout(() => setDemoPhase(3), 2350);
-    return () => {
-      window.clearTimeout(moveTimer);
-      window.clearTimeout(tapTimer);
-      window.clearTimeout(settleTimer);
-    };
-  }, [reduceMotion]);
 
   const visibleCards = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -225,26 +203,13 @@ export default function DemoDuplicateTests() {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-white px-3 py-3 text-[#18191a] sm:px-6 sm:py-6 lg:px-10 lg:py-10">
-      <section className="mx-auto flex min-h-[calc(100vh-0.75rem)] w-full max-w-[1420px] overflow-hidden rounded-[16px] bg-[#fafafa] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]">
-        <aside className="relative flex w-[56px] min-w-[56px] shrink-0 flex-col items-center border-r border-[#e1e1e1] px-2 py-5 sm:py-6">
-          {!reduceMotion ? <motion.div aria-hidden="true" className="pointer-events-none absolute z-30 text-[#182026] drop-shadow-[0_3px_4px_rgba(24,32,38,0.22)]" initial={{ left: "12px", top: "92px", opacity: 0 }} animate={{ left: demoPhase >= 1 ? "15px" : "12px", top: demoPhase >= 1 ? "52px" : "92px", opacity: demoPhase === 6 ? 0 : 1 }} transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}><MousePointer2 className="h-7 w-7 fill-white stroke-[2]" />{demoPhase === 2 ? <motion.span initial={{ opacity: 0.9, scale: 0.45 }} animate={{ opacity: 0, scale: 1.9 }} transition={{ duration: 0.75 }} className="absolute -left-3 -top-3 h-10 w-10 rounded-full border-2 border-[#182026]" /> : null}</motion.div> : null}
-          <button type="button" onClick={() => setActive("Favourites")} className="mt-4 flex h-10 w-10 items-center justify-center rounded-[8px] text-[#25292a] transition-colors hover:bg-[#efefef]" aria-label="Open Favourites case detail"><Menu className="h-5 w-5" /></button>
-        </aside>
-
-        <section className="min-w-0 flex-1 overflow-y-auto bg-[#fbfbfb] px-3 py-5 sm:px-6 sm:py-6 lg:px-8 xl:px-10">
-          <div className="flex items-center justify-between gap-3">
-            <div className="relative min-w-0 flex-1 max-w-[610px]">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 stroke-[1.7] text-[#656767]" />
-              <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search prompts" className="h-[42px] w-full rounded-[20px] border-0 bg-[#f0f0f0] pl-10 pr-3 text-[12px] text-[#1e2021] outline-none placeholder:text-[#7d7e7f] focus:ring-2 focus:ring-[#ccd0d0] sm:text-[15px]" />
-            </div>
-            <button type="button" aria-label="Account" className="hidden h-8 w-8 items-center justify-center rounded-full bg-[#25292a] text-white sm:flex"><UserRound className="h-4 w-4" /></button>
-          </div>
-
+      <section className="mx-auto min-h-[calc(100vh-0.75rem)] w-full max-w-[1420px] overflow-hidden rounded-[16px] bg-[#fafafa] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]">
+        <section className="min-w-0 overflow-y-auto bg-[#fbfbfb] px-3 py-5 sm:px-6 sm:py-6 lg:px-8 xl:px-10">
           <AnimatePresence mode="wait">
           {active === "Favourites" ? (
             <motion.div key="case-detail-demo" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="-mx-3 mt-4 overflow-hidden rounded-[8px] border border-[#D8E3E8] bg-white sm:-mx-6 lg:-mx-8 xl:-mx-10">
               <ScaledCaseDetail>
-                <CaseDetailDemo />
+                <CaseDetailDuplicateDemo />
               </ScaledCaseDetail>
             </motion.div>
           ) : <motion.div key="library-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
