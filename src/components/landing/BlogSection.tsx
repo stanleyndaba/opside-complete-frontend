@@ -6,22 +6,19 @@ const articles = [
     eyebrow: "Provider accountability",
     title: "Your Amazon recovery provider says the work is done. Can Finance verify the outcome?",
     audience:
-      "For: CFOs, Controllers, Finance Directors and established Amazon brands already using recovery providers",
-    eyebrowClassName: "text-[#71808A]",
+      "CFOs, Controllers, Finance Directors and established Amazon brands already using recovery providers",
   },
   {
     eyebrow: "Operational complexity",
     title: "As your Amazon operation grows, can your financial controls keep up?",
     audience:
-      "For: COOs, Heads of Marketplace Operations, Finance Directors and established FBA brands.",
-    eyebrowClassName: "text-[#71808A]",
+      "COOs, Heads of Marketplace Operations, Finance Directors and established FBA brands.",
   },
   {
     eyebrow: "Financial-period closure",
     title: "What does a properly closed Amazon financial period actually look like?",
     audience:
-      "For: CFOs, Controllers, Financial Directors and enterprise Amazon businesses.",
-    eyebrowClassName: "text-[#F05A3C]",
+      "CFOs, Controllers, Financial Directors and enterprise Amazon businesses.",
   },
 ] as const;
 
@@ -32,10 +29,10 @@ export function BlogSection() {
       aria-labelledby="landing-blog-title"
     >
       <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
-        <div className="flex flex-col gap-4 border-b border-[#DDE4E7] pb-8 md:flex-row md:items-end md:justify-between md:gap-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between md:gap-8">
           <div className="max-w-[680px]">
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#F05A3C]">
-              Margin insights
+            <p className="font-mono text-[5.5px] font-semibold uppercase tracking-tight text-[#F05A3C]">
+              BLOG
             </p>
             <h2
               id="landing-blog-title"
@@ -49,15 +46,13 @@ export function BlogSection() {
           </p>
         </div>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-3 md:gap-5">
+        <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 md:gap-5">
           {articles.map((article) => (
             <article
               key={article.title}
-              className="group flex min-h-[250px] flex-col rounded-[14px] border border-[#DDE4E7] bg-white p-5 shadow-[0_12px_30px_rgba(48,52,59,0.04)] transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[0_18px_38px_rgba(48,52,59,0.09)] sm:p-6"
+              className="group flex min-h-[250px] w-[min(85vw,380px)] shrink-0 snap-start flex-col rounded-[14px] bg-white p-5 shadow-none transition-transform duration-200 hover:-translate-y-1 sm:p-6"
             >
-              <p
-                className={`font-mono text-[10px] font-semibold uppercase tracking-tight ${article.eyebrowClassName}`}
-              >
+              <p className="font-mono text-[11px] font-medium tracking-tight text-[#F05A3C]">
                 {article.eyebrow}
               </p>
               <h3 className="mt-5 max-w-[360px] font-lora text-[25px] font-normal leading-[1.08] tracking-[-0.04em] text-[#182026] sm:text-[29px]">
@@ -66,8 +61,8 @@ export function BlogSection() {
               <p className="mt-5 max-w-[370px] text-[12px] leading-5 text-[#71808A]">
                 {article.audience}
               </p>
-              <div className="mt-auto flex items-center justify-between gap-4 pt-7">
-                <span className="text-[11px] font-medium text-[#71808A]">3 min read</span>
+              <div className="mt-auto flex flex-col items-start gap-2 pt-7">
+                <span className="text-[11px] font-medium tracking-tight text-[#71808A]">3 min read</span>
                 <Link
                   to="/research"
                   className="inline-flex items-center gap-1 text-[10px] font-normal text-[#F05A3C] no-underline transition-colors hover:text-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2"
