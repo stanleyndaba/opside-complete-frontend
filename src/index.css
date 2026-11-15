@@ -65,7 +65,7 @@
   }
 
   .hero-section #margin-hero-title {
-    font-weight: 850 !important;
+    font-weight: 700 !important;
   }
 
   .hero-section .hero-gmail-visual {
@@ -1704,12 +1704,12 @@ html, body, #root {
 }
 
 
-/* Final hero-only correction: Lora applies to the main hero headline, while the
-   separately styled “before it” phrase keeps its own handwritten treatment. */
+/* Final hero-only correction: keep the main headline in the operational
+   Space Grotesk display face while the highlighted phrase keeps its own treatment. */
 .landing-page > main #margin-hero-title,
 .landing-page > main #margin-hero-title *:not(.hero-financial-position) {
-  font-family: 'Lora', Georgia, serif !important;
-  font-weight: 500 !important;
+  font-family: 'Space Grotesk', var(--font-sans) !important;
+  font-weight: 700 !important;
   color: #000000 !important;
 }
 .landing-page > main #margin-hero-title {
