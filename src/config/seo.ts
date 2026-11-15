@@ -28,6 +28,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/'),
     image: SITE_META.image,
   },
+  '/try-demo': {
+    path: '/try-demo',
+    title: 'Try the Margin Evidence Visual | Margin',
+    description:
+      'Explore how Margin connects financial exposure, source records, required evidence, and approval position before recovery action.',
+    canonical: routeUrl('/try-demo'),
+    ogTitle: 'Try the Margin Evidence Visual | Margin',
+    ogDescription:
+      'See how Margin reconstructs a financial history from connected records and separates established evidence from what remains unresolved.',
+    ogUrl: routeUrl('/try-demo'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',

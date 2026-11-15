@@ -1,0 +1,884 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "title": "Home"
+    },
+    {
+      "path": "/information-required",
+      "title": "Information Required"
+    },
+    {
+      "path": "/recover-once",
+      "title": "Recover Once"
+    },
+    {
+      "path": "/established-fba-brands",
+      "title": "Established Fba Brands"
+    },
+    {
+      "path": "/agencies-amazon-operators",
+      "title": "Agencies Amazon Operators"
+    },
+    {
+      "path": "/founder-led",
+      "title": "Founder Led"
+    },
+    {
+      "path": "/finance-teams",
+      "title": "Finance Teams"
+    },
+    {
+      "path": "/marketplace-operations",
+      "title": "Marketplace Operations"
+    },
+    {
+      "path": "/aggregators-multi-brand",
+      "title": "Aggregators Multi Brand"
+    },
+    {
+      "path": "/enterprise-multi-marketplace",
+      "title": "Enterprise Multi Marketplace"
+    },
+    {
+      "path": "/recovery-workspace",
+      "title": "Recovery Workspace"
+    },
+    {
+      "path": "/document-ingestion",
+      "title": "Document Ingestion"
+    },
+    {
+      "path": "/speak-to-sales",
+      "title": "Speak To Sales"
+    },
+    {
+      "path": "/talk-to-sales",
+      "title": "Talk To Sales"
+    },
+    {
+      "path": "/filing-pipeline-preview",
+      "title": "Filing Pipeline Preview"
+    },
+    {
+      "path": "/duplicate-pipeline-preview",
+      "title": "Duplicate Pipeline Preview"
+    },
+    {
+      "path": "/routine",
+      "title": "Routine"
+    },
+    {
+      "path": "/sandbox-demo",
+      "title": "Sandbox Demo"
+    },
+    {
+      "path": "/try-demo",
+      "title": "Try Demo | Margin"
+    },
+    {
+      "path": "/evidence-required",
+      "title": "Evidence Required"
+    },
+    {
+      "path": "/amazon-thread-review",
+      "title": "Amazon Thread Review"
+    },
+    {
+      "path": "/progress-review",
+      "title": "Progress Review"
+    },
+    {
+      "path": "/progress-preview",
+      "title": "Progress Preview"
+    },
+    {
+      "path": "/financial-reconciliation",
+      "title": "Financial Reconciliation"
+    },
+    {
+      "path": "/payment-proof-demo",
+      "title": "Payment Proof Demo"
+    },
+    {
+      "path": "/margin-standard-deliverable",
+      "title": "Margin Standard Deliverable"
+    },
+    {
+      "path": "/auto-submit-preview",
+      "title": "Auto Submit Preview"
+    },
+    {
+      "path": "/appeals-review",
+      "title": "Appeals Review"
+    },
+    {
+      "path": "/login",
+      "title": "Login"
+    },
+    {
+      "path": "/connect-amazon",
+      "title": "Connect Amazon"
+    },
+    {
+      "path": "/careers",
+      "title": "Careers"
+    },
+    {
+      "path": "/docs",
+      "title": "Docs"
+    },
+    {
+      "path": "/privacy",
+      "title": "Privacy"
+    },
+    {
+      "path": "/security",
+      "title": "Security"
+    },
+    {
+      "path": "/blog/provider-accountability",
+      "title": "Blog/Provider Accountability"
+    },
+    {
+      "path": "/blog/operational-complexity",
+      "title": "Blog/Operational Complexity"
+    },
+    {
+      "path": "/blog/financial-period-closure",
+      "title": "Blog/Financial Period Closure"
+    },
+    {
+      "path": "/access-scope",
+      "title": "Access Scope"
+    },
+    {
+      "path": "/workflows",
+      "title": "Workflows"
+    },
+    {
+      "path": "/transaction-reconciliation",
+      "title": "Transaction Reconciliation"
+    },
+    {
+      "path": "/amazon-discrepancy-recovery-detection",
+      "title": "Amazon Discrepancy Recovery Detection"
+    },
+    {
+      "path": "/recovery-eligibility-timing",
+      "title": "Recovery Eligibility Timing"
+    },
+    {
+      "path": "/response-appeals-management",
+      "title": "Response Appeals Management"
+    },
+    {
+      "path": "/payout-verification",
+      "title": "Payout Verification"
+    },
+    {
+      "path": "/reversal-accounting-reconciliation",
+      "title": "Reversal Accounting Reconciliation"
+    },
+    {
+      "path": "/recovery-evidence",
+      "title": "Recovery Evidence"
+    },
+    {
+      "path": "/seller-approval-filing",
+      "title": "Seller Approval Filing"
+    },
+    {
+      "path": "/evidence-backed-recovery-case-preparation",
+      "title": "Evidence Backed Recovery Case Preparation"
+    },
+    {
+      "path": "/integration-connectors",
+      "title": "Integration Connectors"
+    },
+    {
+      "path": "/terms",
+      "title": "Terms"
+    },
+    {
+      "path": "/refund-policy",
+      "title": "Refund Policy"
+    },
+    {
+      "path": "/contact",
+      "title": "Contact"
+    },
+    {
+      "path": "/consumer-recovery",
+      "title": "Consumer Recovery"
+    },
+    {
+      "path": "/sales",
+      "title": "Sales"
+    },
+    {
+      "path": "/amazon-fba-reimbursement",
+      "title": "Amazon Fba Reimbursement"
+    },
+    {
+      "path": "/amazon-lost-inventory-reimbursement",
+      "title": "Amazon Lost Inventory Reimbursement"
+    },
+    {
+      "path": "/amazon-reimbursement-audit",
+      "title": "Amazon Reimbursement Audit"
+    },
+    {
+      "path": "/amazon-inbound-shipment-shortage",
+      "title": "Amazon Inbound Shipment Shortage"
+    },
+    {
+      "path": "/amazon-fee-overcharge-reimbursement",
+      "title": "Amazon Fee Overcharge Reimbursement"
+    },
+    {
+      "path": "/getida-alternative",
+      "title": "Getida Alternative"
+    },
+    {
+      "path": "/sellerboard-alternative",
+      "title": "Sellerboard Alternative"
+    },
+    {
+      "path": "/about",
+      "title": "About"
+    },
+    {
+      "path": "/about-margin",
+      "title": "About Margin"
+    },
+    {
+      "path": "/research",
+      "title": "Research"
+    },
+    {
+      "path": "/fba-reimbursement-research",
+      "title": "Fba Reimbursement Research"
+    },
+    {
+      "path": "/pricing",
+      "title": "Pricing"
+    },
+    {
+      "path": "/currency-margin",
+      "title": "Currency Margin"
+    },
+    {
+      "path": "/standalone",
+      "title": "Standalone"
+    },
+    {
+      "path": "/payment/success",
+      "title": "Payment/Success"
+    },
+    {
+      "path": "/founding-500/status",
+      "title": "Founding 500/Status"
+    },
+    {
+      "path": "/designsimulate",
+      "title": "Designsimulate"
+    },
+    {
+      "path": "/platformsimulate",
+      "title": "Platformsimulate"
+    },
+    {
+      "path": "/documentsimulate",
+      "title": "Documentsimulate"
+    },
+    {
+      "path": "/auditsimulate",
+      "title": "Auditsimulate"
+    },
+    {
+      "path": "/audit",
+      "title": "Audit"
+    },
+    {
+      "path": "/timeline-simulation",
+      "title": "Timeline Simulation"
+    },
+    {
+      "path": "/readiness-simulate",
+      "title": "Readiness Simulate"
+    },
+    {
+      "path": "/readiness-simulate-two",
+      "title": "Readiness Simulate Two"
+    },
+    {
+      "path": "/memory-simulate",
+      "title": "Memory Simulate"
+    },
+    {
+      "path": "/reconciliation-simulate",
+      "title": "Reconciliation Simulate"
+    },
+    {
+      "path": "/platformfly",
+      "title": "Platformfly"
+    },
+    {
+      "path": "/accuracy-graph",
+      "title": "Accuracy Graph"
+    },
+    {
+      "path": "/scatterdesign",
+      "title": "Scatterdesign"
+    },
+    {
+      "path": "/countdown",
+      "title": "Countdown"
+    },
+    {
+      "path": "/plane",
+      "title": "Plane"
+    },
+    {
+      "path": "/closingcta",
+      "title": "Closingcta"
+    },
+    {
+      "path": "/claimsimulate",
+      "title": "Claimsimulate"
+    },
+    {
+      "path": "/filesimulate",
+      "title": "Filesimulate"
+    },
+    {
+      "path": "/api-connection",
+      "title": "Api Connection"
+    },
+    {
+      "path": "/evidence-analysis",
+      "title": "Evidence Analysis"
+    },
+    {
+      "path": "/evidence-match",
+      "title": "Evidence Match"
+    },
+    {
+      "path": "/rejection-loop",
+      "title": "Rejection Loop"
+    },
+    {
+      "path": "/report-generation",
+      "title": "Report Generation"
+    },
+    {
+      "path": "/accuracy-scaling",
+      "title": "Accuracy Scaling"
+    },
+    {
+      "path": "/feedback-learning",
+      "title": "Feedback Learning"
+    },
+    {
+      "path": "/auditable-workspace",
+      "title": "Auditable Workspace"
+    },
+    {
+      "path": "/auditable-outputs",
+      "title": "Auditable Outputs"
+    },
+    {
+      "path": "/every-case",
+      "title": "Every Case"
+    },
+    {
+      "path": "/openstatement",
+      "title": "Openstatement"
+    },
+    {
+      "path": "/margin-takes-over",
+      "title": "Margin Takes Over"
+    },
+    {
+      "path": "/margin-reads",
+      "title": "Margin Reads"
+    },
+    {
+      "path": "/evidence-before-asked",
+      "title": "Evidence Before Asked"
+    },
+    {
+      "path": "/recovery-lifecycle",
+      "title": "Recovery Lifecycle"
+    },
+    {
+      "path": "/learning-recovery",
+      "title": "Learning Recovery"
+    },
+    {
+      "path": "/audit-ready-history",
+      "title": "Audit Ready History"
+    },
+    {
+      "path": "/amazon-asks",
+      "title": "Amazon Asks"
+    },
+    {
+      "path": "/clocksimulate",
+      "title": "Clocksimulate"
+    },
+    {
+      "path": "/rejectsimulate",
+      "title": "Rejectsimulate"
+    },
+    {
+      "path": "/staresimulate",
+      "title": "Staresimulate"
+    },
+    {
+      "path": "/discrepancysimulate",
+      "title": "Discrepancysimulate"
+    },
+    {
+      "path": "/reframesimulate",
+      "title": "Reframesimulate"
+    },
+    {
+      "path": "/discoverysimulate",
+      "title": "Discoverysimulate"
+    },
+    {
+      "path": "/statementsimulate",
+      "title": "Statementsimulate"
+    },
+    {
+      "path": "/comparisonsimulate",
+      "title": "Comparisonsimulate"
+    },
+    {
+      "path": "/finality",
+      "title": "Finality"
+    },
+    {
+      "path": "/finalpayoffsimulate",
+      "title": "Finalpayoffsimulate"
+    },
+    {
+      "path": "/evidence-chase",
+      "title": "Evidence Chase"
+    },
+    {
+      "path": "/evidence-insight",
+      "title": "Evidence Insight"
+    },
+    {
+      "path": "/launch-countdown",
+      "title": "Launch Countdown"
+    },
+    {
+      "path": "/giving-up",
+      "title": "Giving Up"
+    },
+    {
+      "path": "/results-scroll",
+      "title": "Results Scroll"
+    },
+    {
+      "path": "/supplier-chat",
+      "title": "Supplier Chat"
+    },
+    {
+      "path": "/google-drive",
+      "title": "Google Drive"
+    },
+    {
+      "path": "/intro-pain",
+      "title": "Intro Pain"
+    },
+    {
+      "path": "/action-simulate",
+      "title": "Action Simulate"
+    },
+    {
+      "path": "/rejection-screen",
+      "title": "Rejection Screen"
+    },
+    {
+      "path": "/card-review",
+      "title": "Card Review"
+    },
+    {
+      "path": "/AppealSimulate",
+      "title": "Appealsimulate"
+    },
+    {
+      "path": "/appealsimulate",
+      "title": "Appealsimulate"
+    },
+    {
+      "path": "/discrepancy-stack",
+      "title": "Discrepancy Stack"
+    },
+    {
+      "path": "/waitlist",
+      "title": "Waitlist"
+    },
+    {
+      "path": "/early-access",
+      "title": "Early Access"
+    },
+    {
+      "path": "/onboarding-approval",
+      "title": "Onboarding Approval"
+    },
+    {
+      "path": "/document-uploads",
+      "title": "Document Uploads"
+    },
+    {
+      "path": "/pricing/standard-agreement",
+      "title": "Pricing/Standard Agreement"
+    },
+    {
+      "path": "/branding",
+      "title": "Branding"
+    },
+    {
+      "path": "/auth/clerk/callback",
+      "title": "Auth/Clerk/Callback"
+    },
+    {
+      "path": "/auth/callback",
+      "title": "Auth/Callback"
+    },
+    {
+      "path": "/auth/callback/redirect",
+      "title": "Auth/Callback/Redirect"
+    },
+    {
+      "path": "/auth/redirect/callback",
+      "title": "Auth/Redirect/Callback"
+    },
+    {
+      "path": "/auth/success",
+      "title": "Auth/Success"
+    },
+    {
+      "path": "/auth/sandbox-callback",
+      "title": "Auth/Sandbox Callback"
+    },
+    {
+      "path": "/system-error-preview",
+      "title": "System Error Preview"
+    },
+    {
+      "path": "/stripe/callback",
+      "title": "Stripe/Callback"
+    },
+    {
+      "path": "/data-upload",
+      "title": "Data Upload"
+    },
+    {
+      "path": "/seller-audit",
+      "title": "Seller Audit"
+    },
+    {
+      "path": "/audit-intake",
+      "title": "Audit Intake"
+    },
+    {
+      "path": "/review-consent",
+      "title": "Review Consent"
+    },
+    {
+      "path": "/audit-start",
+      "title": "Audit Start"
+    },
+    {
+      "path": "/amazon-audit",
+      "title": "Amazon Audit"
+    },
+    {
+      "path": "/demo-tests",
+      "title": "Demo Tests"
+    },
+    {
+      "path": "/demo-duplicate-tests",
+      "title": "Demo Duplicate Tests"
+    },
+    {
+      "path": "/issues-found",
+      "title": "Issues Found"
+    },
+    {
+      "path": "/discrepancies",
+      "title": "Discrepancies"
+    },
+    {
+      "path": "/app",
+      "title": "App"
+    },
+    {
+      "path": "/app/redirect",
+      "title": "App/Redirect"
+    },
+    {
+      "path": "/app/:tenantSlug",
+      "title": "App/:Tenantslug"
+    },
+    {
+      "path": "/app/:tenantSlug/dashboard",
+      "title": "App/:Tenantslug/Dashboard"
+    },
+    {
+      "path": "/app/:tenantSlug/reports",
+      "title": "App/:Tenantslug/Reports"
+    },
+    {
+      "path": "/app/:tenantSlug/export",
+      "title": "App/:Tenantslug/Export"
+    },
+    {
+      "path": "/app/:tenantSlug/learning-insights",
+      "title": "App/:Tenantslug/Learning Insights"
+    },
+    {
+      "path": "/app/:tenantSlug/auth/callback",
+      "title": "App/:Tenantslug/Auth/Callback"
+    },
+    {
+      "path": "/app/:tenantSlug/auth/success",
+      "title": "App/:Tenantslug/Auth/Success"
+    },
+    {
+      "path": "/app/:tenantSlug/integrations-hub",
+      "title": "App/:Tenantslug/Integrations Hub"
+    },
+    {
+      "path": "/app/:tenantSlug/recoveries",
+      "title": "App/:Tenantslug/Recoveries"
+    },
+    {
+      "path": "/app/:tenantSlug/discrepancies",
+      "title": "App/:Tenantslug/Discrepancies"
+    },
+    {
+      "path": "/app/:tenantSlug/filing-pipeline",
+      "title": "App/:Tenantslug/Filing Pipeline"
+    },
+    {
+      "path": "/app/:tenantSlug/approved-reimbursements",
+      "title": "App/:Tenantslug/Approved Reimbursements"
+    },
+    {
+      "path": "/app/:tenantSlug/dispute-cases",
+      "title": "App/:Tenantslug/Dispute Cases"
+    },
+    {
+      "path": "/app/:tenantSlug/appeals",
+      "title": "App/:Tenantslug/Appeals"
+    },
+    {
+      "path": "/app/:tenantSlug/cases/:caseId",
+      "title": "App/:Tenantslug/Cases/:Caseid"
+    },
+    {
+      "path": "/app/:tenantSlug/recoveries/:caseId",
+      "title": "App/:Tenantslug/Recoveries/:Caseid"
+    },
+    {
+      "path": "/app/:tenantSlug/resolve/:id",
+      "title": "App/:Tenantslug/Resolve/:Id"
+    },
+    {
+      "path": "/app/:tenantSlug/history",
+      "title": "App/:Tenantslug/History"
+    },
+    {
+      "path": "/app/:tenantSlug/documents",
+      "title": "App/:Tenantslug/Documents"
+    },
+    {
+      "path": "/app/:tenantSlug/evidence-locker",
+      "title": "App/:Tenantslug/Evidence Locker"
+    },
+    {
+      "path": "/app/:tenantSlug/documents/:id",
+      "title": "App/:Tenantslug/Documents/:Id"
+    },
+    {
+      "path": "/app/:tenantSlug/notifications",
+      "title": "App/:Tenantslug/Notifications"
+    },
+    {
+      "path": "/app/:tenantSlug/settings",
+      "title": "App/:Tenantslug/Settings"
+    },
+    {
+      "path": "/app/:tenantSlug/upcoming-payments",
+      "title": "App/:Tenantslug/Upcoming Payments"
+    },
+    {
+      "path": "/app/:tenantSlug/reconnect-amazon",
+      "title": "App/:Tenantslug/Reconnect Amazon"
+    },
+    {
+      "path": "/app/:tenantSlug/connect-amazon",
+      "title": "App/:Tenantslug/Connect Amazon"
+    },
+    {
+      "path": "/app/:tenantSlug/integrations/reconnect/amazon",
+      "title": "App/:Tenantslug/Integrations/Reconnect/Amazon"
+    },
+    {
+      "path": "/app/:tenantSlug/billing",
+      "title": "App/:Tenantslug/Billing"
+    },
+    {
+      "path": "/app/:tenantSlug/recover-once/:engagementId",
+      "title": "App/:Tenantslug/Recover Once/:Engagementid"
+    },
+    {
+      "path": "/app/:tenantSlug/api-access",
+      "title": "App/:Tenantslug/Api Access"
+    },
+    {
+      "path": "/app/:tenantSlug/help",
+      "title": "App/:Tenantslug/Help"
+    },
+    {
+      "path": "/app/:tenantSlug/whats-new",
+      "title": "App/:Tenantslug/Whats New"
+    },
+    {
+      "path": "/app/:tenantSlug/evidence-onboarding",
+      "title": "App/:Tenantslug/Evidence Onboarding"
+    },
+    {
+      "path": "/app/:tenantSlug/evidence-search",
+      "title": "App/:Tenantslug/Evidence Search"
+    },
+    {
+      "path": "/app/:tenantSlug/margin-board",
+      "title": "App/:Tenantslug/Margin Board"
+    },
+    {
+      "path": "/app/:tenantSlug/data-upload",
+      "title": "App/:Tenantslug/Data Upload"
+    },
+    {
+      "path": "/app/:tenantSlug/pricing/standard-agreement",
+      "title": "App/:Tenantslug/Pricing/Standard Agreement"
+    },
+    {
+      "path": "/app/:tenantSlug/pricing-adjust",
+      "title": "App/:Tenantslug/Pricing Adjust"
+    },
+    {
+      "path": "/app/:tenantSlug/admin",
+      "title": "App/:Tenantslug/Admin"
+    },
+    {
+      "path": "/app/:tenantSlug/admin/users-integrations",
+      "title": "App/:Tenantslug/Admin/Users Integrations"
+    },
+    {
+      "path": "/app/:tenantSlug/admin/amazon-auth-test",
+      "title": "App/:Tenantslug/Admin/Amazon Auth Test"
+    },
+    {
+      "path": "/app/:tenantSlug/revenue-model",
+      "title": "App/:Tenantslug/Revenue Model"
+    },
+    {
+      "path": "/app/:tenantSlug/admin/revenue-model",
+      "title": "App/:Tenantslug/Admin/Revenue Model"
+    },
+    {
+      "path": "/app/:tenantSlug/admin/revenue",
+      "title": "App/:Tenantslug/Admin/Revenue"
+    },
+    {
+      "path": "/app/:tenantSlug/admin/sales-leads",
+      "title": "App/:Tenantslug/Admin/Sales Leads"
+    },
+    {
+      "path": "/app/:tenantSlug/admin/queue",
+      "title": "App/:Tenantslug/Admin/Queue"
+    },
+    {
+      "path": "/app/:tenantSlug/admin/team",
+      "title": "App/:Tenantslug/Admin/Team"
+    },
+    {
+      "path": "/integrations-hub",
+      "title": "Integrations Hub"
+    },
+    {
+      "path": "/cases/:caseId",
+      "title": "Cases/:Caseid"
+    },
+    {
+      "path": "/recoveries/:caseId",
+      "title": "Recoveries/:Caseid"
+    },
+    {
+      "path": "/recoveries",
+      "title": "Recoveries"
+    },
+    {
+      "path": "/filing-pipeline",
+      "title": "Filing Pipeline"
+    },
+    {
+      "path": "/approved-reimbursements",
+      "title": "Approved Reimbursements"
+    },
+    {
+      "path": "/dispute-cases",
+      "title": "Dispute Cases"
+    },
+    {
+      "path": "/appeals",
+      "title": "Appeals"
+    },
+    {
+      "path": "/settings",
+      "title": "Settings"
+    },
+    {
+      "path": "/reconnect-amazon",
+      "title": "Reconnect Amazon"
+    },
+    {
+      "path": "/connect-amazon-account",
+      "title": "Connect Amazon Account"
+    },
+    {
+      "path": "/billing",
+      "title": "Billing"
+    },
+    {
+      "path": "/history",
+      "title": "History"
+    },
+    {
+      "path": "/upcoming-payments",
+      "title": "Upcoming Payments"
+    },
+    {
+      "path": "/admin/queue",
+      "title": "Admin/Queue"
+    },
+    {
+      "path": "/admin/users-integrations",
+      "title": "Admin/Users Integrations"
+    },
+    {
+      "path": "/pricing-adjust",
+      "title": "Pricing Adjust"
+    }
+  ]
+}
