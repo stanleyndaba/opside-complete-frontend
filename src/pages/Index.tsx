@@ -2378,6 +2378,12 @@ export default function Index() {
               <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
                 <span className="heading-tone-dark">Questions worth answering before you give anyone access to your financial records.</span>
               </h2>
+              <p className="mt-4 text-[9px] leading-4 text-[#71808A] sm:text-[10px]">
+                <span className="block">Don&apos;t see the answer you looking for?</span>
+                <Link to="/contact" className="mt-0.5 inline-flex items-center gap-1 font-normal text-[#F05A3C] no-underline transition-colors hover:text-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2">
+                  Contact Margin <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                </Link>
+              </p>
             </motion.div>
             <div className="mt-10 max-w-4xl md:mt-14">
               <Accordion type="single" collapsible className="w-full border-t border-[var(--margin-border)]">
@@ -2389,7 +2395,6 @@ export default function Index() {
                 ))}
               </Accordion>
               <Button type="button" onClick={() => setShowAllFaqs((current) => !current)} className={`faq-more-button ${landingPrimaryCtaClass} mt-7`}>{showAllFaqs ? "Show Fewer" : "View All Questions"}<ChevronRight className="h-4 w-4" /></Button>
-              <button type="button" className="landing-pressable mt-6 flex h-11 w-fit items-center justify-start gap-2 bg-transparent px-0 text-left text-[13px] font-semibold text-[#635BFF] transition-colors hover:bg-transparent hover:text-[#5148E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2" aria-label="Talk to Margin about your account">Still have a question about your account? Talk to Margin <ChevronRight className="h-4 w-4" /></button>
             </div>
           </div>
         </section>
