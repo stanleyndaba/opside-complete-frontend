@@ -20,12 +20,6 @@ const productLinks: FooterLink[] = [
   { label: 'Security', href: '/security' }
 ];
 
-const productDescriptors: FooterLink[] = [
-  { label: 'Recovery operations' },
-  { label: 'Evidence traceability' },
-  { label: 'Financial reconciliation' }
-];
-
 const solutionLinks: FooterLink[] = [
   { label: 'Finance teams', href: '/finance-teams' },
   { label: 'Founder-led businesses', href: '/founder-led' },
@@ -282,9 +276,6 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               <div className="col-span-2 lg:col-span-1">
                 <div className="mt-8 lg:mt-0">
                   <FooterColumn title="Solutions" links={solutionLinks} />
-                </div>
-                <div className="mt-8">
-                  <FooterColumn title="How Margin works" links={productDescriptors} />
                 </div>
               </div>
             </div>
