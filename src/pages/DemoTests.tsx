@@ -114,9 +114,11 @@ function PromptCard({ prompt }: { prompt: Prompt }) {
 
 function ScaledCaseDetail({ children }: { children: ReactNode }) {
   const frameRef = useRef<HTMLDivElement>(null);
+  const scrollportRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const worldWidth = 1280;
   const worldHeight = 920;
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const frame = frameRef.current;
@@ -131,6 +133,36 @@ function ScaledCaseDetail({ children }: { children: ReactNode }) {
     observer.observe(frame);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    const scrollport = scrollportRef.current;
+    if (!scrollport || reduceMotion) return;
+
+    let frame = 0;
+    let last = performance.now();
+    let pauseUntil = last + 900;
+
+    const tick = (now: number) => {
+      const elapsed = now - last;
+      last = now;
+
+      if (now >= pauseUntil) {
+        const maxScroll = scrollport.scrollHeight - scrollport.clientHeight;
+        if (maxScroll > 0) {
+          scrollport.scrollTop += (elapsed / 1000) * 24;
+          if (scrollport.scrollTop >= maxScroll) {
+            scrollport.scrollTop = 0;
+            pauseUntil = now + 900;
+          }
+        }
+      }
+
+      frame = window.requestAnimationFrame(tick);
+    };
+
+    frame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frame);
+  }, [reduceMotion]);
 
   return (
     <div
@@ -149,7 +181,13 @@ function ScaledCaseDetail({ children }: { children: ReactNode }) {
           transformOrigin: "top left",
         }}
       >
-        {children}
+        <div
+          ref={scrollportRef}
+          className="h-full w-full overflow-hidden"
+          style={{ height: `${worldHeight}px` }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
