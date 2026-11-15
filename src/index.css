@@ -1755,6 +1755,15 @@ html, body, #root {
   display: none;
 }
 
+.landing-page .hero-financial-position--text,
+#margin-hero-title .hero-financial-position--text {
+  display: inline;
+  color: #F05A3C !important;
+  background: transparent !important;
+  border-radius: 0;
+  padding: 0;
+}
+
 /* Mobile navigation is a clean white dropdown, including its expanded groups. */
 .mobile-menu-panel {
   background: #FFFFFF !important;
