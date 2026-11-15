@@ -114,25 +114,21 @@ function PromptCard({ prompt }: { prompt: Prompt }) {
 
 function ScaledCaseDetail({ children }: { children: ReactNode }) {
   const frameRef = useRef<HTMLDivElement>(null);
-  const worldRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-  const [worldHeight, setWorldHeight] = useState(0);
   const worldWidth = 1280;
+  const worldHeight = 920;
 
   useEffect(() => {
     const frame = frameRef.current;
-    const world = worldRef.current;
-    if (!frame || !world) return;
+    if (!frame) return;
 
     const measure = () => {
       setScale(Math.min(1, frame.clientWidth / worldWidth));
-      setWorldHeight(world.scrollHeight);
     };
 
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(frame);
-    observer.observe(world);
     return () => observer.disconnect();
   }, []);
 
@@ -140,10 +136,12 @@ function ScaledCaseDetail({ children }: { children: ReactNode }) {
     <div
       ref={frameRef}
       className="relative w-full overflow-hidden"
-      style={{ height: worldHeight ? `${worldHeight * scale}px` : undefined }}
+      style={{
+        height: `${worldHeight * scale}px`,
+        aspectRatio: `${worldWidth} / ${worldHeight}`,
+      }}
     >
       <div
-        ref={worldRef}
         className="absolute left-0 top-0"
         style={{
           width: `${worldWidth}px`,
