@@ -1712,6 +1712,14 @@ html, body, #root {
   color: #FFFFFF;
 }
 
+/* The hero uses a pale-indigo CTA, so its label and chevron stay bright indigo
+   instead of inheriting the white treatment used by orange landing CTAs. */
+.landing-page .hero-section .landing-action-cta,
+.landing-page .hero-section .landing-action-cta > svg,
+.landing-page .hero-section .landing-action-cta:hover > svg,
+.landing-page .hero-section .landing-action-cta:focus-visible > svg {
+  color: #4338CA !important;
+}
 
 /* Final hero-only correction: keep the main headline and highlighted phrase
    in the same Sora 600 display face. */
