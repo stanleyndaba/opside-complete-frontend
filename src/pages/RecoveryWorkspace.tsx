@@ -145,7 +145,8 @@ export default function RecoveryWorkspace() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-white font-sans text-[#191B20]">
+    <div className="min-h-screen overflow-x-hidden bg-white px-3 py-3 font-sans text-[#191B20] sm:px-6 sm:py-6 lg:px-10 lg:py-10">
+      <section className="mx-auto flex min-h-[calc(100vh-0.75rem)] w-full max-w-[1420px] flex-col overflow-hidden rounded-[16px] bg-[#fafafa] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]">
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-start gap-4 px-4 sm:px-6 lg:px-6">
           <div className="min-w-0 px-1.5 py-1.5">
@@ -156,7 +157,8 @@ export default function RecoveryWorkspace() {
         </div>
       </header>
 
-      <main className="font-google-sans mx-auto min-w-[900px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6">
+      <main className="min-w-0 flex-1 font-google-sans">
+        <div className="mx-auto min-w-[900px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6">
         <div className="flex items-start gap-3 lg:gap-4">
           <aside aria-label="Recovery Workspace assessment controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
             {assessmentRail.map(({ label, href, icon: Icon }, index) => (
@@ -314,7 +316,9 @@ export default function RecoveryWorkspace() {
             </div>
           </aside>
         </div>
+        </div>
       </main>
+      </section>
     </div>
   );
 }
