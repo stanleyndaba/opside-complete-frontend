@@ -65,6 +65,9 @@ const Careers = lazy(() => import("./pages/Careers"));
 const Docs = lazy(() => import("./pages/Docs"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Security = lazy(() => import("./pages/Security"));
+const BlogProviderAccountability = lazy(() => import("./pages/BlogProviderAccountability"));
+const BlogOperationalComplexity = lazy(() => import("./pages/BlogOperationalComplexity"));
+const BlogFinancialPeriodClosure = lazy(() => import("./pages/BlogFinancialPeriodClosure"));
 const AccessScope = lazy(() => import("./pages/AccessScope"));
 const Workflows = lazy(() => import("./pages/Workflows"));
 const TransactionReconciliation = lazy(() => import("./pages/TransactionReconciliation"));
@@ -360,6 +363,9 @@ const App = () => (
                         <Route path="/docs" element={<Docs />} />
                         <Route path="/privacy" element={<Privacy />} />
                         <Route path="/security" element={<Security />} />
+                        <Route path="/blog/provider-accountability" element={<BlogProviderAccountability />} />
+                        <Route path="/blog/operational-complexity" element={<BlogOperationalComplexity />} />
+                        <Route path="/blog/financial-period-closure" element={<BlogFinancialPeriodClosure />} />
                         <Route path="/access-scope" element={<AccessScope />} />
                         <Route path="/workflows" element={<Workflows />} />
                         <Route path="/transaction-reconciliation" element={<TransactionReconciliation />} />

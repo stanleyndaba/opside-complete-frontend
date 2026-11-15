@@ -7,18 +7,21 @@ const articles = [
     title: "Your Amazon recovery provider says the work is done. Can Finance verify the outcome?",
     audience:
       "CFOs, Controllers, Finance Directors and established Amazon brands already using recovery providers",
+    href: "/blog/provider-accountability",
   },
   {
     eyebrow: "Operational complexity",
     title: "As your Amazon operation grows, can your financial controls keep up?",
     audience:
       "COOs, Heads of Marketplace Operations, Finance Directors and established FBA brands.",
+    href: "/blog/operational-complexity",
   },
   {
     eyebrow: "Financial-period closure",
     title: "What does a properly closed Amazon financial period actually look like?",
     audience:
       "CFOs, Controllers, Financial Directors and enterprise Amazon businesses.",
+    href: "/blog/financial-period-closure",
   },
 ] as const;
 
@@ -64,11 +67,11 @@ export function BlogSection() {
               <div className="mt-auto flex flex-col items-start gap-2 pt-7">
                 <span className="text-[11px] font-medium tracking-tight text-[#71808A]">3 min read</span>
                 <Link
-                  to="/research"
+                  to={article.href}
                   className="inline-flex items-center gap-1 text-[10px] font-normal text-[#F05A3C] no-underline transition-colors hover:text-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2"
-                  aria-label={`Read more: ${article.title}`}
+                  aria-label={`Read now: ${article.title}`}
                 >
-                  Read more <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
+                  Read now <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
               </div>
             </article>
