@@ -1,4 +1,4 @@
-import { ArrowRight, Check, FileCheck2, Link2, ShieldCheck } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
@@ -68,7 +68,7 @@ export function BlogArticlePage({ article }: Props) {
       <main>
         <section className="relative overflow-hidden bg-white pb-16 pt-32 sm:pb-20 sm:pt-40 md:pb-28 md:pt-48">
           <div className="pointer-events-none absolute right-[-12%] top-[-14%] h-[520px] w-[520px] rounded-full bg-[#EDEFF0] blur-3xl" />
-          <div className="mx-auto grid w-full max-w-[1280px] gap-12 px-5 sm:px-6 md:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.75fr)] md:items-end md:gap-16 md:px-8 lg:px-10 2xl:px-12">
+          <div className="mx-auto w-full max-w-[780px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
             <div className="relative max-w-[780px]">
               <p className="mb-5 text-[11px] font-semibold uppercase tracking-tight text-[#F05A3C]">{article.eyebrow}</p>
               <h1 className="max-w-[780px] font-lora text-[34px] font-normal leading-[0.98] tracking-[-0.045em] text-[#30343B] min-[390px]:text-[39px] sm:text-[51px] md:text-[63px] lg:text-[71px]">{article.title}</h1>
@@ -78,21 +78,6 @@ export function BlogArticlePage({ article }: Props) {
                 <span className="h-1 w-1 rounded-full bg-[#F05A3C]" aria-hidden="true" />
                 <span>{article.audience}</span>
               </div>
-            </div>
-
-            <div className="relative overflow-hidden rounded-[4px] border border-[#DEE3E2] bg-[#F4F5F4] p-5 shadow-[0_22px_65px_rgba(48,52,59,0.08)] sm:p-6">
-              <div className="flex items-center justify-between border-b border-[#DDE2E1] pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#30343B]"><ShieldCheck className="h-5 w-5" strokeWidth={1.6} /></div>
-                  <div><p className="text-[12px] font-semibold text-[#30343B]">Margin perspective</p><p className="mt-0.5 text-[10px] text-[#F05A3C]">Independent financial assurance</p></div>
-                </div>
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-[#4D7869]"><span className="h-1.5 w-1.5 rounded-full bg-[#4D7869]" /> Read now</span>
-              </div>
-              <div className="space-y-2.5 pt-4">
-                <div className="flex items-center gap-3 rounded-[3px] bg-white px-3.5 py-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF2F0] text-[#4D7869]"><FileCheck2 className="h-4 w-4" strokeWidth={1.7} /></div><div><p className="text-[12px] font-semibold text-[#30343B]">Evidence connected</p><p className="mt-0.5 text-[10px] text-[#F05A3C]">Records remain inspectable</p></div></div>
-                <div className="flex items-center gap-3 rounded-[3px] bg-white px-3.5 py-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF2F0] text-[#4D7869]"><Link2 className="h-4 w-4" strokeWidth={1.7} /></div><div><p className="text-[12px] font-semibold text-[#30343B]">Outcome traceable</p><p className="mt-0.5 text-[10px] text-[#F05A3C]">Settlement and close visible</p></div></div>
-              </div>
-              <div className="mt-4 flex items-center gap-2 border-t border-[#DDE2E1] pt-4 text-[10px] leading-4 text-[#F05A3C]"><Check className="h-3.5 w-3.5 shrink-0" /> Financial questions stay connected to their records.</div>
             </div>
           </div>
         </section>
