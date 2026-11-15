@@ -104,7 +104,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                     <div className={cn(
                         "relative grid min-h-[56px] grid-cols-[1fr_auto] items-center gap-3 transition-all duration-300 md:min-h-[68px] md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:gap-6 md:px-5 md:py-3 lg:flex lg:px-7",
                         isLight
-                            ? "rounded-none bg-[#FAFAF7]/95 px-4 py-2.5 shadow-none backdrop-blur-xl md:bg-white/[0.94] md:shadow-[0_12px_42px_rgba(37,49,58,0.10)]"
+                            ? "rounded-none bg-white/[0.38] px-4 py-2.5 shadow-none backdrop-blur-xl backdrop-saturate-[160%] md:bg-white/[0.94] md:shadow-[0_12px_42px_rgba(37,49,58,0.10)]"
                             : "rounded-none bg-white/[0.08] px-4 py-2.5 shadow-none backdrop-blur-xl backdrop-saturate-[160%] md:shadow-[0_18px_55px_rgba(0,0,0,0.24)]"
                     )}>
                     <div className="flex items-center gap-3">
