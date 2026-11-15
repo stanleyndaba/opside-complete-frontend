@@ -156,23 +156,23 @@ export default function RecoveryWorkspace() {
         </div>
       </header>
 
-      <main className="font-google-sans mx-auto w-full min-w-0 max-w-[1180px] px-4 py-5 sm:px-6 sm:py-5 lg:px-6">
-        <div className="flex min-w-0 flex-col items-stretch gap-3 lg:flex-row lg:items-start lg:gap-4">
-          <aside aria-label="Recovery Workspace assessment controls" className="flex w-full shrink-0 flex-row items-center gap-1 overflow-x-auto rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:gap-2 sm:p-1.5 lg:sticky lg:top-[76px] lg:w-[42px] lg:flex-col lg:overflow-visible lg:items-center lg:self-start lg:p-1 xl:w-[52px]">
+      <main className="font-google-sans mx-auto min-w-[900px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6">
+        <div className="flex items-start gap-3 lg:gap-4">
+          <aside aria-label="Recovery Workspace assessment controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
             {assessmentRail.map(({ label, href, icon: Icon }, index) => (
               <a key={label} href={href} title={label} aria-label={label} className={`flex h-8 w-8 items-center justify-center rounded-[5px] text-[#52616A] transition-colors hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 sm:h-9 sm:w-9 ${index === 0 ? 'bg-[#D9E0E3] text-[#26333A]' : ''}`}>
                 <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.8} />
               </a>
             ))}
           </aside>
-          <div className="min-w-0 w-full flex-1">
+          <div className="min-w-0 flex-1">
           <div className="flex flex-col gap-4">
           {showRecoveryPipeline ? <RecoveryPipelineSequence workspaceMode /> : <article id="recovery-workspace-record" className="relative order-1 min-w-0 rounded-none bg-white px-0 py-5 shadow-none sm:px-6 sm:py-5" aria-labelledby="recovery-workspace-title">
             <div aria-label="Recovery Workspace assessment timeline" className="pointer-events-none absolute bottom-8 left-2 top-8 flex w-6 flex-col items-center justify-between">
               <span aria-hidden="true" className="absolute bottom-2 top-2 w-px bg-[#C9D6DE]" />
               <span className="relative z-10 h-[7px] w-[7px] rounded-full bg-[#0B74DE] shadow-[0_0_0_3px_white]" title={assessmentTimeline[0]} />
             </div>
-            <div className="enterprise-assessment-copy min-w-0 pl-10 sm:pl-12">
+            <div className="enterprise-assessment-copy pl-12" style={{ zoom: 0.75 }}>
               <WorkspaceResponseBuild onFirstParagraphComplete={() => setShowRecoveryPipeline(true)} />
 
             <section className="py-4" aria-labelledby="what-covers">
