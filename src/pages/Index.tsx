@@ -1442,8 +1442,8 @@ function NestedRecoveryVisual({
   };
 
   return (
-    <motion.div {...revealProps} className={`relative overflow-visible ${cleanPresentation ? 'min-h-0 rounded-none bg-transparent p-0 sm:min-h-[570px] sm:rounded-[12px] sm:bg-[#EEF3F0] sm:p-4' : 'min-h-[620px] rounded-[12px] bg-[#EEF3F0] p-2 sm:min-h-[570px] sm:p-4'}`} style={cleanPresentation ? undefined : { backgroundImage: `linear-gradient(rgba(246,249,247,0.4), rgba(246,249,247,0.56)), url(${backgroundImage})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>
-      <div className={`relative ${cleanPresentation ? 'h-auto min-h-0 sm:h-full sm:min-h-[538px]' : 'h-full min-h-[590px] sm:min-h-[538px]'}`}>
+    <motion.div {...revealProps} className={`relative overflow-visible ${cleanPresentation ? 'min-h-[620px] rounded-none bg-transparent p-0 sm:min-h-[570px] sm:rounded-[12px] sm:bg-[#EEF3F0] sm:p-4' : 'min-h-[620px] rounded-[12px] bg-[#EEF3F0] p-2 sm:min-h-[570px] sm:p-4'}`} style={cleanPresentation ? undefined : { backgroundImage: `linear-gradient(rgba(246,249,247,0.4), rgba(246,249,247,0.56)), url(${backgroundImage})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>
+      <div className={`relative h-full ${cleanPresentation ? 'min-h-[590px] sm:min-h-[538px]' : 'min-h-[590px] sm:min-h-[538px]'}`}>
         {(Object.keys(browsers) as Array<keyof typeof browsers>).map((key) => {
           const isActive = activeBrowser === key;
           const browser = browsers[key];
