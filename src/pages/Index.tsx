@@ -1260,7 +1260,11 @@ function MarginStandardSection() {
             <p className="mt-4 max-w-[780px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#52616A] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Your team reviews the established position. It doesn&apos;t have to rebuild the investigation.'} mobile={'Your team reviews the established position—not a reconstruction of the investigation.'} /></p>
           </motion.div>
           <motion.div {...revealProps} className="relative">
-            <OneRecordAnalysisVisual />
+            <div className="relative h-auto min-h-0 overflow-y-auto overscroll-contain rounded-none border-0 bg-transparent shadow-none sm:h-[min(600px,62vw)] sm:min-h-[320px] sm:rounded-[10px] sm:border sm:border-[#C9D9E1] sm:bg-[#FBFAF7] sm:shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+              <ScaledDemoStage designWidth={900} designHeight={420}>
+                <OneRecordAnalysisVisual />
+              </ScaledDemoStage>
+            </div>
           </motion.div>
         </div>
       </div>
