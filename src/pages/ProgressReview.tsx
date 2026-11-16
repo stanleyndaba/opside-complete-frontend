@@ -67,7 +67,7 @@ export default function ProgressReview({ embedded = false }: { embedded?: boolea
   };
   return <main className={`preview-google-sans ${embedded ? 'min-h-0' : 'min-h-screen'} overflow-x-auto bg-[#FAFAF7] text-[#182026]`}>
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
-    <header className="sticky top-0 z-30 bg-white backdrop-blur-sm">
+    {embedded ? null : <header className="sticky top-0 z-30 bg-white backdrop-blur-sm">
       <div className="mx-auto flex min-h-16 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-6">
         <button type="button" onClick={() => setToast("Northstar Commerce LLC profile selected")} className="flex h-9 shrink-0 items-center gap-2 rounded-[20px] border border-[#DCE8EE] bg-white px-3 text-[#52616A] transition-colors hover:border-[#B9CBD5] hover:bg-[#FAFCFD]" aria-label="Open Northstar Commerce LLC profile controls" title="Northstar Commerce LLC">
           <span className="text-[11px] font-medium tracking-tight text-[#36404A]">Northstar Commerce LLC</span>
@@ -82,9 +82,9 @@ export default function ProgressReview({ embedded = false }: { embedded?: boolea
           </button>
         </div>
       </div>
-    </header>
-    <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
-      <aside aria-label="Progress preview controls" className="sticky top-[76px] flex w-[220px] shrink-0 flex-col gap-1 rounded-[5px] bg-white p-2">
+    </header>}
+    <div className={`mx-auto flex ${embedded ? 'max-w-[1320px] px-0 py-0' : 'min-w-[820px] max-w-[1320px] gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6'} items-start`}>
+      {embedded ? null : <aside aria-label="Progress preview controls" className="sticky top-[76px] flex w-[220px] shrink-0 flex-col gap-1 rounded-[5px] bg-white p-2">
         {assessmentRail.map(({ label, href, icon: Icon }, index) => (
           <a key={label} href={href} title={label} aria-label={label} className={`flex h-10 w-full items-center gap-3 rounded-[5px] px-3 text-[12px] font-medium tracking-tight text-[#52616A] hover:bg-[#F0F3F4] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 ${index === 0 ? 'bg-[#E7ECEE] text-[#26333A]' : ''}`}>
             <Icon className="h-4 w-4 shrink-0" strokeWidth={1.8} />
@@ -92,7 +92,7 @@ export default function ProgressReview({ embedded = false }: { embedded?: boolea
             {label === 'Agent (Cappy)' ? <span className="ml-1 h-2 w-2 rounded-full bg-[#3B82F6]" aria-label="Agent online" title="Agent online" /> : null}
           </a>
         ))}
-      </aside>
+      </aside>}
       <div className="min-w-0 flex-1">
         <section id="progress-record" className="rounded-[5px] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
         <div className="mb-4 pb-3"><h1 id="progress-review-title" className="font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Updated Review</h1></div>
