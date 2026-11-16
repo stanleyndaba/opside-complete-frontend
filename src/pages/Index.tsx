@@ -64,6 +64,7 @@ import ProgressReview from "@/pages/ProgressReview";
 import EvidenceRequired from "@/pages/EvidenceRequired";
 import { AutoSubmitPresentation } from "@/pages/AutoSubmitPreview";
 import { ReportGenerationStage } from "@/components/report-generation";
+import { AppealsReviewPresentation } from "@/pages/AppealsReview";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -1830,7 +1831,11 @@ function RecoveryOutcomeExplorer() {
             <p className="mt-5 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8"><LandingResponsiveCopy desktop={'A further action is recommended only when the evidence and applicable process justify it.'} mobile={'Margin recommends another action only when the evidence and applicable process support it.'} /></p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden lg:order-1">
-            <FinalDelegationPreview compactMobile expandedMobile src="/appeals-review" title="Appeals Review page preview" />
+            <div className="relative h-auto min-h-0 overflow-y-auto overscroll-contain rounded-none border-0 bg-transparent shadow-none sm:h-[min(600px,62vw)] sm:min-h-[320px] sm:rounded-[10px] sm:border sm:border-[#C9D9E1] sm:bg-[#E7E9EB] sm:shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+              <ScaledDemoStage designWidth={1280} designHeight={900}>
+                <AppealsReviewPresentation embedded />
+              </ScaledDemoStage>
+            </div>
           </motion.div>
         </div>
       </div>

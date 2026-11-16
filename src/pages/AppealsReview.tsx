@@ -31,7 +31,7 @@ const cases: ReviewCase[] = [
   { id: "RFD-16792-SLA", store: "Cedar & Coast MX", identifiers: "112-7742088-514 / CC-POWER-STRIP / B08K4P7R2H · Amazon MX · CCO-MX-01", progress: "Amazon decision recorded", progressTone: "text-[#8A641B]", requested: "$33,745.00", approved: "$0.00", gap: "$33,745.00", responseType: "Amazon decision — denied", response: "The service-level request was rejected because the delivery promise timeline was not fully established.", reason: "SLA breach compensation · materiality: high", state: "Evidence gap must close", stateTone: "bg-[#FCF8EE] text-[#8A641B]", stateSummary: "The exposure is quantified; one stronger source is required before resubmission.", proof: "Promise timeline needs source detail", proofDetail: "Order record and carrier exception are linked; the original promise timestamp needs confirmation.", basis: "Review can proceed once the promise window is reconciled to the carrier event.", updated: "Updated 3 hours ago · Owner: Delivery Controls", next: "Reconcile promise window" },
 ];
 
-export default function AppealsReview() {
+export function AppealsReviewPresentation({ embedded = false }: { embedded?: boolean } = {}) {
   const [query, setQuery] = useState("");
   const [toast, setToast] = useState<string | null>(null);
   const filtered = useMemo(() => {
@@ -42,9 +42,9 @@ export default function AppealsReview() {
     setToast(`${item.id}: response analysis opened`);
     window.setTimeout(() => setToast(null), 2600);
   };
-  return <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] font-google-sans text-[#182026]">
+  return <main className={`preview-google-sans ${embedded ? "overflow-x-auto" : "min-h-screen overflow-x-auto"} bg-[#FAFAF7] font-google-sans text-[#182026]`}>
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
-    <div className="mx-auto min-w-[760px] max-w-[1280px] px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6">
+    <div className={`mx-auto max-w-[1280px] px-4 py-4 sm:px-6 sm:py-6 ${embedded ? "w-full min-w-0" : "min-w-[760px] sm:min-w-0"}`}>
       <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
         <header className="mb-4 pb-3"><p className="text-[11px] font-medium tracking-tight text-[#66737F]">Governed response and exception control · Illustrative control population</p><h1 className="mt-0.5 font-google-sans text-[20px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[23px]">Appeals and residual positions</h1><p className="mt-1 max-w-4xl text-[11px] leading-5 tracking-tight text-[#66737F]">Classify Amazon decisions, quantify the remaining financial position, and advance only the action supported by the evidence, policy, and materiality threshold.</p></header>
         <div className="space-y-1"><div className="text-[12px] font-medium tracking-tight text-[#182026]">Response positions reconstructed from Amazon decisions and governed source populations</div><div className="text-[11px] font-medium text-[#0B74DE]">Each rejection remains linked to its original event, submitted scope, evidence sufficiency, approval state, response window, accountable owner, and controlled next action.</div><div className="text-[10px] font-medium text-[#4B5563]">Q1 2026 illustrative control population · 684 decisions reviewed · $1.96M unresolved exposure · 92 positions requiring evidence or resubmission review · {filtered.length} positions shown</div></div>
@@ -60,4 +60,8 @@ export default function AppealsReview() {
       </section>
     </div>
   </main>;
+}
+
+export default function AppealsReview() {
+  return <AppealsReviewPresentation />;
 }

@@ -148,6 +148,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-ten'),
     image: SITE_META.image,
   },
+  '/try-demo-eleven': {
+    path: '/try-demo-eleven',
+    title: 'Try the Margin Appeals Review Visual | Margin',
+    description:
+      'Explore the direct Appeals Review visual that tests Amazon rejections against the original submission, evidence sufficiency, residual exposure, and the controlled next action.',
+    canonical: routeUrl('/try-demo-eleven'),
+    ogTitle: 'Try the Margin Appeals Review Visual | Margin',
+    ogDescription:
+      'See how Margin keeps rejected cases connected to their evidence, financial position, response window, and authorized resubmission path.',
+    ogUrl: routeUrl('/try-demo-eleven'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',
