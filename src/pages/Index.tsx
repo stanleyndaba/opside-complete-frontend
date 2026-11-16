@@ -57,6 +57,7 @@ import { GoogleMark } from "@/components/GoogleMark";
 import { HeroInboxVisual } from "@/components/landing/HeroInboxVisual";
 import { DiscrepancyModalVisual } from "@/components/landing/DiscrepancyModalVisual";
 import { ScaledDemoStage } from "@/components/landing/ScaledDemoStage";
+import { ReconciliationPipelineVisual } from "@/components/landing/ReconciliationPipelineVisual";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -1111,7 +1112,11 @@ function ControlSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative overflow-hidden">
-            <FinalDelegationPreview compactMobile expandedMobile src="/filing-pipeline-preview" title="Recovery operations page preview" />
+            <div className="relative h-[min(600px,62vw)] min-h-[320px] overflow-y-auto overscroll-contain rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7] shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+              <ScaledDemoStage designHeight={620}>
+                <ReconciliationPipelineVisual />
+              </ScaledDemoStage>
+            </div>
           </motion.div>
         </div>
       </div>
