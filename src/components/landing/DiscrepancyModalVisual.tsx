@@ -74,7 +74,7 @@ function ReconstructionStep({ label, text, index, status, tone = 'default', onCo
         {index < 20 ? <span className={cn('absolute left-1/2 top-3 h-[calc(100%+6px)] w-px -translate-x-1/2 bg-[#C9D6DE]', status === 'done' ? 'opacity-100' : 'opacity-0')} aria-hidden="true" /> : null}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p>
+        <p className="text-[7.5px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p>
         <p className={cn('mt-1 text-[11px] leading-5', tone === 'accent' ? 'font-semibold text-[#0B74DE]' : 'text-[#4D5B66]')}>
           {isActive ? <TypewriterText text={text} speed={3} delay={70} onComplete={onComplete} /> : text}
         </p>
@@ -121,18 +121,18 @@ export function DiscrepancyModalVisual({ compactMobile = false }: { compactMobil
           <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
             <div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r">
               <div className="mb-3"><p className="mb-2 max-w-[560px] text-[10px] leading-4 tracking-tight text-[#98A5AE]">Settlement and entitlement review · 4 marketplaces · 3 entities · 8 reporting periods · REC-2026-0147 · Cross-marketplace recovery exposure</p><div className="flex gap-2"><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] text-[#182026]">Cross-marketplace exposure</span><span className="rounded-[10px] border-0 bg-[#EEF1F2] px-2 py-1 text-[10px] font-medium text-[#182026]">Evidence under review</span></div></div>
-              <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Required documentation</p>
+              <p className="text-[7.5px] font-medium uppercase tracking-tight text-[#66737F]">Required documentation</p>
               <div className="mt-2 border-y border-[#E9E9EC] py-1">{reconstructionProofSteps.map(([label, text], index) => <ReconstructionStep key={label} label={label} text={text} index={index} status={reduceMotion ? 'done' : index < activeStep ? 'done' : index === activeStep ? 'active' : 'pending'} onComplete={index === activeStep ? advanceStep : undefined} />)}</div>
-              <div className="mt-3 border-t border-[#E9E9EC] pt-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin already found</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="Margin connected the exposure across US, CA, UK, and DE marketplace activity, three operating entities, settlement periods, fulfillment records, and finance data." /></p></div>
+              <div className="mt-3 border-t border-[#E9E9EC] pt-3"><p className="text-[7.5px] font-medium uppercase tracking-tight text-[#66737F]">What Margin already found</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="Margin connected the exposure across US, CA, UK, and DE marketplace activity, three operating entities, settlement periods, fulfillment records, and finance data." /></p></div>
             </div>
-            <div className="px-4 py-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="The evidence record preserves source lineage, operating scope, policy basis, and financial responsibility across the recovery position." /></p></div>
+            <div className="px-4 py-3"><p className="text-[7.5px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="The evidence record preserves source lineage, operating scope, policy basis, and financial responsibility across the recovery position." /></p></div>
           </div>
         ) : (
           <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
             <div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r">
               <div className="relative py-1">{reconstructionFindingSteps.map(([label, text], index) => <ReconstructionStep key={label} label={label} text={text} index={index} status={reduceMotion ? 'done' : index < activeStep ? 'done' : index === activeStep ? 'active' : 'pending'} onComplete={index === activeStep ? advanceStep : undefined} tone={index === 0 ? 'accent' : 'default'} />)}</div>
             </div>
-            <div className="px-4 py-3"><p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="The connected operating record establishes a supported exposure position and identifies the remaining variance for controlled review." /></p></div>
+            <div className="px-4 py-3"><p className="text-[7.5px] font-medium uppercase tracking-tight text-[#66737F]">Evidence context</p><p className="mt-2 text-[11px] leading-5 text-[#4D5B66]"><TypewriterText text="The connected operating record establishes a supported exposure position and identifies the remaining variance for controlled review." /></p></div>
           </div>
         )}
       </div>
