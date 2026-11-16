@@ -175,7 +175,7 @@ export default function EvidenceRequired({ showSearch = true, showSidebar = true
   const getDocumentIcon = (index: number) => documentSourceIcons[index % documentSourceIcons.length];
   const visibleDocumentCount = Math.min(matchedDocuments.length, revealStep);
   const visibleLogCount = Math.max(0, Math.min(evidenceLog.length, revealStep - matchedDocuments.length));
-  return <main className={`preview-google-sans ${embedded ? "min-h-0" : "min-h-screen"} overflow-x-auto text-[#182026] ${flat ? "bg-white" : "bg-[#FAFAF7]"}`}>
+  return <main style={embedded ? { zoom: 0.75, width: '133.333333%' } : undefined} className={`preview-google-sans ${embedded ? "min-h-0" : "min-h-screen"} overflow-x-auto text-[#182026] ${flat ? "bg-white" : "bg-[#FAFAF7]"}`}>
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
     <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-2 sm:min-w-0 sm:px-6 sm:py-4">
       {showSidebar ? <aside aria-label="Evidence preview controls" className="sticky top-4 flex w-[52px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1.5">
