@@ -172,6 +172,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-twelve'),
     image: SITE_META.image,
   },
+  '/try-demo-thirteen': {
+    path: '/try-demo-thirteen',
+    title: 'Try the Margin Recovery Explanation Visual | Margin',
+    description:
+      'Explore the direct recovery support visual that connects case history, evidence, Amazon responses, financial position, and accountable next action in one explanation.',
+    canonical: routeUrl('/try-demo-thirteen'),
+    ogTitle: 'Try the Margin Recovery Explanation Visual | Margin',
+    ogDescription:
+      'See how Margin explains a recovery decision from the recorded financial work instead of simply repeating a status or submission instruction.',
+    ogUrl: routeUrl('/try-demo-thirteen'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',
