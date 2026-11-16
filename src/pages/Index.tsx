@@ -1451,7 +1451,7 @@ function NestedRecoveryVisual({
           return (
             <div key={key} role="button" tabIndex={0} onClick={() => onBrowserChange(key)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onBrowserChange(key); }} aria-label={`Show ${browser.label}`} className={`absolute overflow-hidden rounded-[10px] border text-left transition-all duration-500 ${key === 'progress' ? 'left-[1%] top-[3%] h-[78%] w-[92%] sm:left-[3%] sm:top-[5%] sm:h-[76%] sm:w-[78%]' : 'bottom-[2%] right-[1%] h-[76%] w-[92%] sm:bottom-[3%] sm:right-[3%] sm:h-[73%] sm:w-[78%]'} ${isActive ? 'z-20 border-white/95 shadow-[0_24px_48px_rgba(37,73,91,0.25)]' : 'z-10 border-white/65 shadow-[0_12px_30px_rgba(37,73,91,0.14)]'}`}>
               {cleanPresentation ? null : <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md"><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /></div>}
-              <div className={`${cleanPresentation ? 'h-full' : 'h-[calc(100%-28px)]'} w-full overflow-y-auto bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}><Demo embedded /></div>
+              <div className={`${cleanPresentation ? 'h-full' : 'h-[calc(100%-28px)]'} w-full overflow-y-auto bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}><ScaledDemoStage designWidth={900} designHeight={620}><Demo embedded /></ScaledDemoStage></div>
             </div>
           );
         })}
