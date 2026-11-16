@@ -1456,8 +1456,8 @@ function NestedRecoveryVisual({
 }
 
 const financialCertaintyBrowsers = {
-  issues: { label: 'Issues found', path: '/issues-found' },
-  operations: { label: 'Recovery operations', path: '/filing-pipeline-preview' },
+  issues: { label: 'Issues found', path: '/try-demo-four' },
+  operations: { label: 'Recovery operations', path: '/try-demo-two' },
 } as const;
 
 function FinancialCertaintyNestedVisual() {

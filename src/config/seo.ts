@@ -64,6 +64,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-three'),
     image: SITE_META.image,
   },
+  '/try-demo-four': {
+    path: '/try-demo-four',
+    title: 'Try the Margin Issues Found Visual | Margin',
+    description:
+      'Explore the coded financial exposure register that connects findings, source lineage, evidence state, and the next controlled step.',
+    canonical: routeUrl('/try-demo-four'),
+    ogTitle: 'Try the Margin Issues Found Visual | Margin',
+    ogDescription:
+      'See how Margin records issues as controlled financial positions rather than disconnected alerts.',
+    ogUrl: routeUrl('/try-demo-four'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',
