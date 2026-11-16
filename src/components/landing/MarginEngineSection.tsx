@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
-import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
+import RecoverOnce from "@/pages/RecoverOnce";
+import { ScaledDemoStage } from "@/components/landing/ScaledDemoStage";
 
 export function MarginEngineSection() {
   return (
@@ -14,7 +15,11 @@ export function MarginEngineSection() {
         </div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="mx-auto w-full max-w-[1040px] lg:max-w-[1350px]">
-          <FinalDelegationPreview compactMobile tallMobile />
+          <div className="relative h-auto min-h-0 overflow-y-auto overscroll-contain rounded-none border-0 bg-transparent shadow-none sm:h-[min(600px,62vw)] sm:min-h-[320px] sm:rounded-[10px] sm:border sm:border-[#C9D9E1] sm:bg-[#FBFAF7] sm:shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+            <ScaledDemoStage designWidth={900} designHeight={760}>
+              <RecoverOnce embedded />
+            </ScaledDemoStage>
+          </div>
         </motion.div>
 
         <div className="mt-10 flex flex-col items-start gap-4 sm:items-center">

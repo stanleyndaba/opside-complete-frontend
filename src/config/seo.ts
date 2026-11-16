@@ -100,6 +100,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-six'),
     image: SITE_META.image,
   },
+  '/try-demo-seven': {
+    path: '/try-demo-seven',
+    title: 'Try the Margin Recovery Decision Visual | Margin',
+    description:
+      'Explore the direct Recover Once visual that connects the established financial position, supporting evidence, decision boundary, and controlled recovery action.',
+    canonical: routeUrl('/try-demo-seven'),
+    ogTitle: 'Try the Margin Recovery Decision Visual | Margin',
+    ogDescription:
+      'See how Margin preserves the evidence-backed recovery stance while keeping approval and decision authority with your team.',
+    ogUrl: routeUrl('/try-demo-seven'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',

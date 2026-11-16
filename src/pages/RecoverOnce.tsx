@@ -23,8 +23,8 @@ const assessmentRail = [
   { label: 'Decision boundary', href: '#progressive-recovery-stance', icon: SlidersHorizontal },
   { label: 'Next step', href: '#analysis-workspace-title', icon: Search },
 ] as const;
-export default function RecoverOnce() {
-  usePageMeta({
+export default function RecoverOnce({ embedded = false }: { embedded?: boolean } = {}) {
+  usePageMeta(embedded ? { title: '', description: '' } : {
     title: 'Recovery Decision Record | Margin',
     description: 'Review an evidence-backed recovery decision record and approve a controlled recovery operation.',
     url: `${SITE_META.url}/recover-once`,
@@ -33,7 +33,7 @@ export default function RecoverOnce() {
 
   return (
     <div className="min-h-screen overflow-x-auto bg-white font-sans text-[#191B20]">
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
+      {embedded ? null : <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-start gap-4 px-4 sm:px-6 lg:px-6">
           <div className="min-w-0 px-1.5 py-1.5">
             <p className="text-[11px] font-medium tracking-tight text-[#595E68]">Northstar Commerce LLC · Amazon US Recovery Decision Record</p>
@@ -41,8 +41,8 @@ export default function RecoverOnce() {
             <p className="mt-0.5 text-[10px] tracking-tight text-[#858792]">RCR-2026-00418 · 30 April 2026 · 13:41 UTC</p>
           </div>
         </div>
-      </header>
-      <main className="font-google-sans mx-auto min-w-[900px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6">
+      </header>}
+      <main className={`font-google-sans mx-auto ${embedded ? 'max-w-[1180px] px-0 py-0' : 'min-w-[900px] max-w-[1180px] px-4 py-5 sm:min-w-0 sm:px-6 sm:py-5 lg:px-6'}`}>
         <div className="flex items-start gap-3 lg:gap-4">
           <aside aria-label="Recover Once assessment controls" className="sticky top-[76px] flex w-[42px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1 sm:w-[52px] sm:p-1.5">
             {assessmentRail.map(({ label, href, icon: Icon }, index) => (
