@@ -229,11 +229,11 @@ html, body, #root {
 .font-merriweather, .font-merriweather * { font-family: 'Merriweather', serif !important; }
 .font-playfair, .font-playfair * { font-family: 'Playfair Display', serif !important; }
 .landing-google-sans,
-.landing-google-sans * {
+.landing-google-sans :not(.demo-visual-isolation *):not(.demo-visual-isolation) {
   font-family: "Google Sans", var(--font-sans) !important;
 }
-.landing-google-sans .font-lora,
-.landing-google-sans .font-lora * {
+.landing-google-sans .font-lora:not(.demo-visual-isolation *),
+.landing-google-sans .font-lora:not(.demo-visual-isolation *) * {
   font-family: var(--font-serif) !important;
 }
 .landing-navbar-google-sans,
@@ -244,12 +244,12 @@ html, body, #root {
 .landing-navbar-google-sans .brand-wordmark * {
   font-family: 'Merriweather', Georgia, serif !important;
 }
-.landing-google-sans h1,
-.landing-google-sans h2,
-.landing-google-sans h3,
-.landing-google-sans h4,
-.landing-google-sans h5,
-.landing-google-sans h6 {
+.landing-google-sans h1:not(.demo-visual-isolation *),
+.landing-google-sans h2:not(.demo-visual-isolation *),
+.landing-google-sans h3:not(.demo-visual-isolation *),
+.landing-google-sans h4:not(.demo-visual-isolation *),
+.landing-google-sans h5:not(.demo-visual-isolation *),
+.landing-google-sans h6:not(.demo-visual-isolation *) {
   font-family: "Google Sans", var(--font-sans) !important;
 }
 .font-google-sans, .font-google-sans * { font-family: var(--font-google-sans) !important; }
@@ -1127,17 +1127,22 @@ html, body, #root {
 }
 
 /* Section headings and the hero use Google Sans; Lora remains a selective editorial accent. */
-.landing-google-sans .font-lora:not(#margin-hero-title),
-.landing-google-sans .font-lora:not(#margin-hero-title) * {
+.landing-google-sans .font-lora:not(#margin-hero-title):not(.demo-visual-isolation *),
+.landing-google-sans .font-lora:not(#margin-hero-title):not(.demo-visual-isolation *) * {
   font-family: "Google Sans", var(--font-sans) !important;
 }
 
-.landing-google-sans h1,
-.landing-google-sans h2,
-.landing-google-sans h3,
-.landing-google-sans h4,
-.landing-google-sans h5,
-.landing-google-sans h6 {
+/* Direct-mounted demos must keep the typography they had in their isolated source pages. */
+.landing-google-sans .demo-visual-isolation {
+  font-family: var(--font-sans) !important;
+}
+
+.landing-google-sans h1:not(.demo-visual-isolation *),
+.landing-google-sans h2:not(.demo-visual-isolation *),
+.landing-google-sans h3:not(.demo-visual-isolation *),
+.landing-google-sans h4:not(.demo-visual-isolation *),
+.landing-google-sans h5:not(.demo-visual-isolation *),
+.landing-google-sans h6:not(.demo-visual-isolation *) {
   font-family: "Google Sans", var(--font-sans) !important;
 }
 
@@ -1500,21 +1505,21 @@ html, body, #root {
 
   /* Legora-style responsive type steps: substantial headings, readable body,
      and intentional wrapping instead of desktop text squeezed into a phone. */
-  .landing-page > main h1,
-  .landing-page > main #margin-hero-title {
+  .landing-page > main h1:not(.demo-visual-isolation *),
+  .landing-page > main #margin-hero-title:not(.demo-visual-isolation *) {
     font-size: 34px !important;
     line-height: 1.04 !important;
     letter-spacing: -0.035em !important;
     max-width: 22ch;
   }
 
-  .landing-page > main h2 {
+  .landing-page > main h2:not(.demo-visual-isolation *) {
     font-size: 32px !important;
     line-height: var(--landing-mobile-heading-leading) !important;
     letter-spacing: -0.035em !important;
   }
 
-  .landing-page > main h3 {
+  .landing-page > main h3:not(.demo-visual-isolation *) {
     font-size: 22px !important;
     line-height: 1.1 !important;
     letter-spacing: -0.025em !important;
@@ -1523,32 +1528,32 @@ html, body, #root {
   /* Legora-style mobile supporting copy: smaller than the display heading,
      comfortably readable, and consistent across every editorial section.
      Dense operational mini-interfaces retain their own compact labels. */
-  .landing-page > main > section p:not([class*="font-mono"]):not([class*="text-[9px]"]):not([class*="text-[10px]"]):not([class*="text-[11px]"]):not([class*="text-[12px]"]) {
+  .landing-page > main > section p:not(.demo-visual-isolation p):not([class*="font-mono"]):not([class*="text-[9px]"]):not([class*="text-[10px]"]):not([class*="text-[11px]"]):not([class*="text-[12px]"]) {
     font-size: var(--landing-mobile-copy-size) !important;
     line-height: var(--landing-mobile-copy-leading);
   }
 
-  .landing-page > main > section p[class*="text-[14px]"],
-  .landing-page > main > section p[class*="text-[15px]"],
-  .landing-page > main > section p[class*="text-[16px]"],
-  .landing-page > main > section p[class*="text-[17px]"],
-  .landing-page > main > section p[class*="text-[18px]"] {
+  .landing-page > main > section p[class*="text-[14px]"]:not(.demo-visual-isolation p),
+  .landing-page > main > section p[class*="text-[15px]"]:not(.demo-visual-isolation p),
+  .landing-page > main > section p[class*="text-[16px]"]:not(.demo-visual-isolation p),
+  .landing-page > main > section p[class*="text-[17px]"]:not(.demo-visual-isolation p),
+  .landing-page > main > section p[class*="text-[18px]"]:not(.demo-visual-isolation p) {
     font-size: var(--landing-mobile-copy-size) !important;
     line-height: var(--landing-mobile-copy-leading) !important;
   }
 
   /* The short emphasized takeaway under a section heading remains distinct,
      but still follows the smaller mobile reading scale. */
-  .landing-page > main > section p.font-semibold,
-  .landing-page > main > section p.font-medium {
+  .landing-page > main > section p.font-semibold:not(.demo-visual-isolation p),
+  .landing-page > main > section p.font-medium:not(.demo-visual-isolation p) {
     font-size: var(--landing-mobile-copy-size) !important;
   }
 
   /* Secondary editorial statements sit one step below the explanatory copy.
      Eyebrows and metadata are excluded above and keep their existing sizes. */
-  .landing-page > main > section p.font-lora,
-  .landing-page > main > section p.font-lora.font-semibold,
-  .landing-page > main > section p.font-lora.font-medium {
+  .landing-page > main > section p.font-lora:not(.demo-visual-isolation p),
+  .landing-page > main > section p.font-lora.font-semibold:not(.demo-visual-isolation p),
+  .landing-page > main > section p.font-lora.font-medium:not(.demo-visual-isolation p) {
     font-size: 12px !important;
     line-height: 1.45 !important;
   }
@@ -1664,13 +1669,13 @@ html, body, #root {
 }
 
 @media (max-width: 380px) {
-  .landing-page > main h1,
-  .landing-page > main #margin-hero-title {
+  .landing-page > main h1:not(.demo-visual-isolation *),
+  .landing-page > main #margin-hero-title:not(.demo-visual-isolation *) {
     font-size: 36px !important;
     max-width: 20ch;
   }
 
-  .landing-page > main h2 {
+  .landing-page > main h2:not(.demo-visual-isolation *) {
     font-size: 29px !important;
   }
 

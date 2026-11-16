@@ -41,7 +41,7 @@ export function ScaledDemoStage({
     <div ref={frameRef} className="relative w-full overflow-hidden" style={{ height }}>
       <div
         ref={sceneRef}
-        className="absolute left-0 top-0 w-[900px]"
+        className="demo-visual-isolation absolute left-0 top-0 w-[900px]"
         style={{
           width: designWidth,
           transform: `scale(${scale})`,
