@@ -124,6 +124,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-eight'),
     image: SITE_META.image,
   },
+  '/try-demo-nine': {
+    path: '/try-demo-nine',
+    title: 'Try the Margin Governed Submission Visual | Margin',
+    description:
+      'Explore the direct governed submission visual that prepares authorized recovery actions, tracks Amazon responses, and keeps exceptions held for review.',
+    canonical: routeUrl('/try-demo-nine'),
+    ogTitle: 'Try the Margin Governed Submission Visual | Margin',
+    ogDescription:
+      'See how Margin operates within the business approval boundary while tracking evidence, submission states, Amazon responses, and outstanding requirements.',
+    ogUrl: routeUrl('/try-demo-nine'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',

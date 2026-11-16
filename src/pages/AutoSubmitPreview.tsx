@@ -141,12 +141,12 @@ function CaseTimelineRow({ item }: { item: AutoSubmitCase }) {
   );
 }
 
-export default function AutoSubmitPreview() {
+export function AutoSubmitPresentation({ embedded = false }: { embedded?: boolean }) {
   const [enabled, setEnabled] = useState(true);
 
   return (
-    <main className="min-h-screen overflow-x-auto bg-[#F4F6F7] font-google-sans text-[#202A31]">
-      <div className="mx-auto min-w-[520px] max-w-[820px] px-2 py-2 sm:min-w-0 sm:px-4 sm:py-4">
+    <main className={`${embedded ? "h-auto overflow-visible" : "min-h-screen overflow-x-auto"} bg-[#F4F6F7] font-google-sans text-[#202A31]`}>
+      <div className={`${embedded ? "w-[820px] max-w-none px-4 py-4" : "mx-auto min-w-[520px] max-w-[820px] px-2 py-2 sm:min-w-0 sm:px-4 sm:py-4"}`}>
         <section className="rounded-[8px] bg-white/42 p-2.5 shadow-[0_18px_42px_rgba(56,74,82,0.08),inset_0_1px_0_rgba(255,255,255,0.92)] backdrop-blur-xl sm:p-4" aria-label="Auto Submit control and case queue for Northstar Commerce LLC">
           <header className="flex items-center gap-2 pb-2.5 sm:gap-2.5 sm:pb-3">
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F2C21A] text-white sm:h-6 sm:w-6"><Check className="h-2.5 w-2.5" strokeWidth={3} /></span>
@@ -175,4 +175,8 @@ export default function AutoSubmitPreview() {
       </div>
     </main>
   );
+}
+
+export default function AutoSubmitPreview() {
+  return <AutoSubmitPresentation />;
 }

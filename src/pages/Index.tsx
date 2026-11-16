@@ -62,6 +62,7 @@ import { OneRecordAnalysisVisual } from "@/components/landing/OneRecordAnalysisV
 import { DuplicatePipelineVisual } from "@/pages/DuplicatePipelinePreview";
 import ProgressReview from "@/pages/ProgressReview";
 import EvidenceRequired from "@/pages/EvidenceRequired";
+import { AutoSubmitPresentation } from "@/pages/AutoSubmitPreview";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -1504,8 +1505,10 @@ function AutoSubmitSection() {
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See Execution">See Execution <ChevronRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full shrink-0 lg:w-[360px]">
-            <div className="mx-auto h-[330px] w-full max-w-[900px] overflow-hidden rounded-[10px] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[430px] lg:h-[min(54vh,560px)]">
-              <iframe title="Auto Submit control" src="/auto-submit-preview" className="h-full w-full border-0 bg-[#E7E9EB]" loading="lazy" />
+            <div className="mx-auto h-[330px] w-full max-w-[900px] overflow-y-auto overscroll-contain rounded-[10px] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[430px] lg:h-[min(54vh,560px)]">
+              <ScaledDemoStage designWidth={820} designHeight={700}>
+                <AutoSubmitPresentation embedded />
+              </ScaledDemoStage>
             </div>
           </motion.div>
         </div>
