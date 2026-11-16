@@ -52,6 +52,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-two'),
     image: SITE_META.image,
   },
+  '/try-demo-three': {
+    path: '/try-demo-three',
+    title: 'Try the Margin Financial Position Visual | Margin',
+    description:
+      'Explore the coded duplicate-pipeline view that connects incoming Amazon activity, evidence, settlement records, and an established financial position.',
+    canonical: routeUrl('/try-demo-three'),
+    ogTitle: 'Try the Margin Financial Position Visual | Margin',
+    ogDescription:
+      'See how Margin turns incoming Amazon activity and connected financial records into an established, evidence-backed position.',
+    ogUrl: routeUrl('/try-demo-three'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',

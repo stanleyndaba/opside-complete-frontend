@@ -58,6 +58,7 @@ import { HeroInboxVisual } from "@/components/landing/HeroInboxVisual";
 import { DiscrepancyModalVisual } from "@/components/landing/DiscrepancyModalVisual";
 import { ScaledDemoStage } from "@/components/landing/ScaledDemoStage";
 import { ReconciliationPipelineVisual } from "@/components/landing/ReconciliationPipelineVisual";
+import { DuplicatePipelineVisual } from "@/pages/DuplicatePipelinePreview";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -583,12 +584,11 @@ function DuplicatePipelineDemoSection() {
               <span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
               <span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
           </div>
-          <iframe
-            title="Margin recovery operations demo"
-            src="/duplicate-pipeline-preview"
-            className="block h-[390px] w-full border-0 bg-white sm:h-[680px] lg:h-[780px]"
-            loading="lazy"
-          />
+          <div className="relative h-[min(600px,62vw)] min-h-[320px] overflow-y-auto overscroll-contain rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7] shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+            <ScaledDemoStage designHeight={780}>
+              <DuplicatePipelineVisual />
+            </ScaledDemoStage>
+          </div>
         </motion.div>
       </div>
     </section>

@@ -899,7 +899,7 @@ function DuplicateEventFrame({ event, children }: { event: IntakeStage; children
   return <div className="relative"><div className="pointer-events-none absolute left-4 top-4 z-50 font-google-sans text-[9px] font-medium uppercase tracking-[0.12em] text-[#8A99A5] sm:left-8 sm:top-6">{String(eventNumber).padStart(2, "0")} / {duplicateEventNames.length} · {duplicateEventNames[eventNumber - 1]}</div>{children}</div>;
 }
 
-export default function FilingPipelinePreview() {
+export function DuplicatePipelineVisual() {
   const [activeTab, setActiveTab] = useState<TabId>("approval");
   const [query, setQuery] = useState("");
   const [queueMode, setQueueMode] = useState<"all" | "priority" | "recent">("all");
@@ -959,3 +959,5 @@ export default function FilingPipelinePreview() {
 }
 
 export const __previewRecords = cards.resolved;
+
+export default DuplicatePipelineVisual;
