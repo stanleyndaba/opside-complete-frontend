@@ -40,6 +40,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo'),
     image: SITE_META.image,
   },
+  '/try-demo-two': {
+    path: '/try-demo-two',
+    title: 'Try the Margin Recovery Operations Visual | Margin',
+    description:
+      'Explore the coded recovery operations view that keeps seller approvals, filings, Amazon responses, payouts, and reconciled outcomes connected.',
+    canonical: routeUrl('/try-demo-two'),
+    ogTitle: 'Try the Margin Recovery Operations Visual | Margin',
+    ogDescription:
+      'See the recovery operations record that preserves what changed, what remains unresolved, and what happens next.',
+    ogUrl: routeUrl('/try-demo-two'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',
