@@ -112,6 +112,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-seven'),
     image: SITE_META.image,
   },
+  '/try-demo-eight': {
+    path: '/try-demo-eight',
+    title: 'Try the Margin Discrepancy Analysis Visual | Margin',
+    description:
+      'Explore the direct discrepancy-analysis visual that tests reversals, adjustments, reimbursements, timing differences, and duplicate entries before further action.',
+    canonical: routeUrl('/try-demo-eight'),
+    ogTitle: 'Try the Margin Discrepancy Analysis Visual | Margin',
+    ogDescription:
+      'See how Margin separates explained variance from unresolved exposure and prepares an evidence-backed basis for the next decision.',
+    ogUrl: routeUrl('/try-demo-eight'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',
