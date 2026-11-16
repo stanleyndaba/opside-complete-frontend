@@ -76,6 +76,30 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-four'),
     image: SITE_META.image,
   },
+  '/try-demo-five': {
+    path: '/try-demo-five',
+    title: 'Try the Margin Progress Review Visual | Margin',
+    description:
+      'Explore the direct Progress Review visual that carries a financial event from scope and evidence through approval, settlement, and residual close state.',
+    canonical: routeUrl('/try-demo-five'),
+    ogTitle: 'Try the Margin Progress Review Visual | Margin',
+    ogDescription:
+      'See how Margin preserves the controlled history behind a recovery outcome, including settlement verification and remaining residual exposure.',
+    ogUrl: routeUrl('/try-demo-five'),
+    image: SITE_META.image,
+  },
+  '/try-demo-six': {
+    path: '/try-demo-six',
+    title: 'Try the Margin Evidence Required Visual | Margin',
+    description:
+      'Explore the direct Evidence Required visual that connects source artifacts, evidence sufficiency, and the controlled financial position.',
+    canonical: routeUrl('/try-demo-six'),
+    ogTitle: 'Try the Margin Evidence Required Visual | Margin',
+    ogDescription:
+      'See how Margin keeps required documents, evidence relationships, and outstanding source classes visible before action proceeds.',
+    ogUrl: routeUrl('/try-demo-six'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',

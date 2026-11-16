@@ -50,7 +50,7 @@ const documentSourceIcons = [
   { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
 ] as const;
 
-export default function ProgressReview() {
+export default function ProgressReview({ embedded = false }: { embedded?: boolean } = {}) {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const filteredEvents = useMemo(() => {
@@ -65,7 +65,7 @@ export default function ProgressReview() {
     setToast(`${doc} opened from the governed progress record`);
     window.setTimeout(() => setToast(null), 2500);
   };
-  return <main className="preview-google-sans min-h-screen overflow-x-auto bg-[#FAFAF7] text-[#182026]">
+  return <main className={`preview-google-sans ${embedded ? 'min-h-0' : 'min-h-screen'} overflow-x-auto bg-[#FAFAF7] text-[#182026]`}>
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
     <header className="sticky top-0 z-30 bg-white backdrop-blur-sm">
       <div className="mx-auto flex min-h-16 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-6">

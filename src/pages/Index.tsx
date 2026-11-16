@@ -59,6 +59,8 @@ import { DiscrepancyModalVisual } from "@/components/landing/DiscrepancyModalVis
 import { ScaledDemoStage } from "@/components/landing/ScaledDemoStage";
 import { ReconciliationPipelineVisual } from "@/components/landing/ReconciliationPipelineVisual";
 import { DuplicatePipelineVisual } from "@/pages/DuplicatePipelinePreview";
+import ProgressReview from "@/pages/ProgressReview";
+import EvidenceRequired from "@/pages/EvidenceRequired";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -1417,8 +1419,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
 }
 
 const nestedRecoveryBrowsers = {
-  progress: { label: 'Progress review', path: '/progress-review' },
-  evidence: { label: 'Evidence required', path: '/evidence-required' },
+  progress: { label: 'Progress review', path: '/try-demo-five' },
+  evidence: { label: 'Evidence required', path: '/try-demo-six' },
 } as const;
 
 function NestedRecoveryVisual({
@@ -1426,11 +1428,13 @@ function NestedRecoveryVisual({
   onBrowserChange,
   progressPath = nestedRecoveryBrowsers.progress.path,
   backgroundImage = '/visual-english-landscape-2.jpg',
+  cleanPresentation = false,
 }: {
   activeBrowser: keyof typeof nestedRecoveryBrowsers;
   onBrowserChange: (browser: keyof typeof nestedRecoveryBrowsers) => void;
   progressPath?: string;
   backgroundImage?: string;
+  cleanPresentation?: boolean;
 }) {
   const browsers = {
     ...nestedRecoveryBrowsers,
@@ -1438,15 +1442,16 @@ function NestedRecoveryVisual({
   };
 
   return (
-    <motion.div {...revealProps} className="relative min-h-[620px] overflow-visible rounded-[12px] bg-[#EEF3F0] p-2 sm:min-h-[570px] sm:p-4" style={{ backgroundImage: `linear-gradient(rgba(246,249,247,0.4), rgba(246,249,247,0.56)), url(${backgroundImage})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>
-      <div className="relative h-full min-h-[590px] sm:min-h-[538px]">
+    <motion.div {...revealProps} className={`relative overflow-visible ${cleanPresentation ? 'min-h-0 rounded-none bg-transparent p-0 sm:min-h-[570px] sm:rounded-[12px] sm:bg-[#EEF3F0] sm:p-4' : 'min-h-[620px] rounded-[12px] bg-[#EEF3F0] p-2 sm:min-h-[570px] sm:p-4'}`} style={cleanPresentation ? undefined : { backgroundImage: `linear-gradient(rgba(246,249,247,0.4), rgba(246,249,247,0.56)), url(${backgroundImage})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>
+      <div className={`relative ${cleanPresentation ? 'h-auto min-h-0 sm:h-full sm:min-h-[538px]' : 'h-full min-h-[590px] sm:min-h-[538px]'}`}>
         {(Object.keys(browsers) as Array<keyof typeof browsers>).map((key) => {
           const isActive = activeBrowser === key;
           const browser = browsers[key];
+          const Demo = key === 'progress' ? ProgressReview : EvidenceRequired;
           return (
             <div key={key} role="button" tabIndex={0} onClick={() => onBrowserChange(key)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onBrowserChange(key); }} aria-label={`Show ${browser.label}`} className={`absolute overflow-hidden rounded-[10px] border text-left transition-all duration-500 ${key === 'progress' ? 'left-[1%] top-[3%] h-[78%] w-[92%] sm:left-[3%] sm:top-[5%] sm:h-[76%] sm:w-[78%]' : 'bottom-[2%] right-[1%] h-[76%] w-[92%] sm:bottom-[3%] sm:right-[3%] sm:h-[73%] sm:w-[78%]'} ${isActive ? 'z-20 border-white/95 shadow-[0_24px_48px_rgba(37,73,91,0.25)]' : 'z-10 border-white/65 shadow-[0_12px_30px_rgba(37,73,91,0.14)]'}`}>
-              <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md"><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /></div>
-              <iframe title={`${browser.label} live preview`} src={browser.path} className={`h-[calc(100%-28px)] w-full border-0 bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`} loading="lazy" />
+              {cleanPresentation ? null : <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md"><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /></div>}
+              <div className={`${cleanPresentation ? 'h-full' : 'h-[calc(100%-28px)]'} w-full overflow-y-auto bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}><Demo embedded /></div>
             </div>
           );
         })}
@@ -1544,7 +1549,7 @@ function NestedRecoveryBrowsers() {
               ))}
             </div>
           </motion.div>
-          <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} backgroundImage="/visual-english-landscape-2.jpg" />
+          <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} cleanPresentation />
         </div>
       </div>
     </section>
