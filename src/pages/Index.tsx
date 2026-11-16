@@ -1123,6 +1123,7 @@ function ControlSection() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
           <motion.div {...revealProps} className="lg:sticky lg:top-28">
+            <LandingEyebrow>Continuous recovery control</LandingEyebrow>
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
               <span className="heading-tone-dark">Never lose track of what changed—or what that change left unresolved.</span>
             </h2>
