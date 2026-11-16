@@ -712,6 +712,7 @@ function RealityCheckSection() {
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.68fr)_minmax(0,1.32fr)] lg:gap-8">
         <div className="flex flex-col justify-center">
         <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center">
+          <LandingEyebrow>Post-case financial control</LandingEyebrow>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
             <span className="heading-tone-dark">Amazon can close the case. Your financial position still needs an answer.</span>
           </h2>
@@ -792,6 +793,7 @@ function FinancialWorkProofSection() {
       <div className={containerClass}>
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-20">
           <motion.div {...revealProps} className="max-w-[620px]">
+            <LandingEyebrow>Inspectable financial work</LandingEyebrow>
             <h2 id="financial-work-proof-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
               See the investigation behind the financial result.
             </h2>
@@ -1002,6 +1004,7 @@ function RecoveryHarnessSection() {
     <section className="recovery-harness-surface relative overflow-hidden border-y border-[#D8E3EA] bg-white py-12 sm:py-14 md:py-20" aria-labelledby="recovery-harness-title">
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[760px]">
+          <LandingEyebrow>Financial control principles</LandingEyebrow>
           <h2 id="recovery-harness-title" className="font-lora text-[36px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
             <span className="heading-tone-dark">Evidence before action.</span> <span className="heading-tone-muted">Control before commitment.</span>
           </h2>
@@ -1480,6 +1483,7 @@ function NestedRecoveryBrowsers() {
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:gap-14">
           <motion.div {...revealProps} className="order-1 lg:order-2">
+            <LandingEyebrow>Recovery outcome control</LandingEyebrow>
             <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Don't hand Finance a closed case with an open financial question.</span></h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Margin brings the case evidence, Amazon decisions, recorded adjustments and settlement activity together to establish the recovery&apos;s financial result. It identifies what was recovered or otherwise resolved, what has been accounted for, and whether any residual difference remains between the expected and observed position.'} mobile={'Margin connects case evidence, Amazon decisions, adjustments and settlement activity to establish what was resolved, what was accounted for and whether a residual difference remains.'} /></p>
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="View Recovery Record">View Recovery Record <ChevronRight className="h-4 w-4" /></button>

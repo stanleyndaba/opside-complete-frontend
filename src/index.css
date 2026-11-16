@@ -1733,6 +1733,18 @@ html, body, #root {
   color: #FFFFFF;
 }
 
+/* Landing section eyebrows stay compact, sentence-case, and indigo even when
+   a section or legacy label rule supplies a darker inherited text color. */
+.landing-page .landing-section-eyebrow {
+  color: #635BFF !important;
+  font-family: var(--font-google-sans) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.25 !important;
+  text-transform: none !important;
+}
+
 /* The hero uses a pale-indigo CTA, so its label and chevron stay bright indigo
    instead of inheriting the white treatment used by orange landing CTAs. */
 .landing-page .hero-section .landing-action-cta,
