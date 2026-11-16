@@ -579,11 +579,6 @@ function DuplicatePipelineDemoSection() {
           className="overflow-hidden rounded-[5px] bg-[#E5F0F3] p-2 sm:p-4"
           style={{ backgroundImage: 'linear-gradient(rgba(247,250,249,0.3), rgba(247,250,249,0.46)), url(/demo-english-reservoir.jpg)', backgroundPosition: 'center', backgroundSize: 'cover' }}
         >
-          <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md" aria-label="Mac browser preview chrome">
-              <span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" aria-hidden="true" />
-          </div>
           <div className="relative h-[min(600px,62vw)] min-h-[320px] overflow-y-auto overscroll-contain rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7] shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
             <ScaledDemoStage designHeight={780}>
               <DuplicatePipelineVisual />
