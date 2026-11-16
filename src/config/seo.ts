@@ -196,6 +196,30 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-fourteen'),
     image: SITE_META.image,
   },
+  '/try-demo-fifteen': {
+    path: '/try-demo-fifteen',
+    title: 'Try the Margin Initial Financial Position Review | Margin',
+    description:
+      'Explore the direct Recovery Workspace visual for a read-only review of what Amazon records can and cannot establish.',
+    canonical: routeUrl('/try-demo-fifteen'),
+    ogTitle: 'Try the Margin Initial Financial Position Review | Margin',
+    ogDescription:
+      'Review supported exposure, accounted-for activity, evidence gaps, and unresolved financial positions before deciding what work is justified.',
+    ogUrl: routeUrl('/try-demo-fifteen'),
+    image: SITE_META.image,
+  },
+  '/try-demo-sixteen': {
+    path: '/try-demo-sixteen',
+    title: 'Try the Margin Resolution Evaluation Visual | Margin',
+    description:
+      'Explore the direct Accuracy Graph visual that preserves evidence, decisions, linked financial events, and verified outcomes for future investigations.',
+    canonical: routeUrl('/try-demo-sixteen'),
+    ogTitle: 'Try the Margin Resolution Evaluation Visual | Margin',
+    ogDescription:
+      'See how resolved discrepancies become reusable evidence for later financial investigations and control decisions.',
+    ogUrl: routeUrl('/try-demo-sixteen'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',

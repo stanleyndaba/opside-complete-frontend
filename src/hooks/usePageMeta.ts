@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 type MetaConfig = {
+  enabled?: boolean;
   title: string;
   description: string;
   url?: string;
@@ -37,6 +38,7 @@ const updateCanonical = (href?: string) => {
 
 export const usePageMeta = (config: MetaConfig) => {
   const {
+    enabled = true,
     title,
     description,
     url,
@@ -49,7 +51,7 @@ export const usePageMeta = (config: MetaConfig) => {
     preloadImages
   } = config || {};
   useEffect(() => {
-    if (typeof document === 'undefined') return;
+    if (!enabled || typeof document === 'undefined') return;
     const resolvedOgTitle = ogTitle || title;
     const resolvedOgDescription = ogDescription || description;
     const resolvedOgUrl = ogUrl || url;
@@ -66,7 +68,7 @@ export const usePageMeta = (config: MetaConfig) => {
     updateMeta('twitter:title', resolvedOgTitle);
     updateMeta('twitter:description', resolvedOgDescription);
     if (image) updateMeta('twitter:image', image);
-  }, [title, description, url, image, canonical, robots, ogTitle, ogDescription, ogUrl]);
+  }, [enabled, title, description, url, image, canonical, robots, ogTitle, ogDescription, ogUrl]);
 
   useEffect(() => {
     if (typeof document === 'undefined' || !preloadImages?.length) return;
@@ -91,5 +93,4 @@ export const usePageMeta = (config: MetaConfig) => {
     };
   }, [preloadImages]);
 };
-
 

@@ -134,10 +134,11 @@ function WorkspaceResponseBuild({ onFirstParagraphComplete }: { onFirstParagraph
   );
 }
 
-export default function RecoveryWorkspace() {
+export default function RecoveryWorkspace({ embedded = false }: { embedded?: boolean }) {
   const [showRecoveryPipeline, setShowRecoveryPipeline] = useState(false);
 
   usePageMeta({
+    enabled: !embedded,
     title: 'Recovery Workspace | Margin',
     description: 'Review the Audit position and determine the appropriate enterprise recovery operating structure.',
     url: `${SITE_META.url}/recovery-workspace`,

@@ -3,7 +3,9 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
+import { ScaledDemoStage } from "@/components/landing/ScaledDemoStage";
+import RecoveryWorkspace from "@/pages/RecoveryWorkspace";
+import { AccuracyGraphContent } from "@/pages/AccuracyGraph";
 
 interface LandingAuditCtaProps {
   onAuditCta: (location: string) => void;
@@ -56,6 +58,16 @@ const revealProps = {
   transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 };
 
+function DirectMountedPreview({ children, designHeight }: { children: React.ReactNode; designHeight: number }) {
+  return (
+    <div className="relative h-auto min-h-0 overflow-y-auto overscroll-contain rounded-none border-0 bg-transparent shadow-none sm:h-[min(600px,62vw)] sm:min-h-[320px] sm:rounded-[10px] sm:border sm:border-[#C9D9E1] sm:bg-[#E7E9EB] sm:shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+      <ScaledDemoStage designWidth={1180} designHeight={designHeight}>
+        {children}
+      </ScaledDemoStage>
+    </div>
+  );
+}
+
 export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
   <section className="audit-routing-section relative bg-white py-10 sm:py-10 md:py-14">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
@@ -68,7 +80,9 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-2">
-          <FinalDelegationPreview compactMobile tallMobile src="/recovery-workspace" title="Recovery Workspace page preview" />
+          <DirectMountedPreview designHeight={980}>
+            <RecoveryWorkspace embedded />
+          </DirectMountedPreview>
         </motion.div>
       </div>
 
@@ -81,7 +95,9 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[1.26fr_0.74fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-1">
-          <FinalDelegationPreview compactMobile tallMobile src="/accuracy-graph" title="Accuracy Graph page preview" />
+          <DirectMountedPreview designHeight={900}>
+            <AccuracyGraphContent />
+          </DirectMountedPreview>
         </motion.div>
         <motion.div {...revealProps} className="enterprise-routing-copy order-1 max-w-[780px] lg:order-2">
           <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Make every resolved discrepancy easier to account for next time.</h2>
