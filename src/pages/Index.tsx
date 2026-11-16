@@ -56,6 +56,7 @@ import { BlogSection } from "@/components/landing/BlogSection";
 import { GoogleMark } from "@/components/GoogleMark";
 import { HeroInboxVisual } from "@/components/landing/HeroInboxVisual";
 import { DiscrepancyModalVisual } from "@/components/landing/DiscrepancyModalVisual";
+import { ScaledDemoStage } from "@/components/landing/ScaledDemoStage";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -731,7 +732,11 @@ function ReconstructionGapSection() {
             </div>
           </motion.div>
           <motion.div {...revealProps} className="relative order-2 min-w-0 overflow-hidden lg:order-2">
-            <DiscrepancyModalVisual compactMobile />
+            <div className="rounded-[14px] bg-[#DDE8ED]/65 p-2 shadow-[0_24px_70px_rgba(72,103,122,0.13)] sm:p-4 md:p-6">
+              <ScaledDemoStage>
+                <DiscrepancyModalVisual />
+              </ScaledDemoStage>
+            </div>
           </motion.div>
         </div>
       </div>
