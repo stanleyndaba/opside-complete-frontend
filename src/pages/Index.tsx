@@ -63,6 +63,7 @@ import { DuplicatePipelineVisual } from "@/pages/DuplicatePipelinePreview";
 import ProgressReview from "@/pages/ProgressReview";
 import EvidenceRequired from "@/pages/EvidenceRequired";
 import { AutoSubmitPresentation } from "@/pages/AutoSubmitPreview";
+import { ReportGenerationStage } from "@/components/report-generation";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -1022,7 +1023,11 @@ function MarginLifecycleSection() {
       <div className={containerClass}>
         <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
         <motion.div {...revealProps} className="relative order-2 h-fit self-start lg:order-1">
-          <FinalDelegationPreview compactMobile expandedMobile priority src="/report-generation" title="Report generation page preview" />
+          <div className="relative h-auto min-h-0 overflow-y-auto overscroll-contain rounded-none border-0 bg-transparent shadow-none sm:h-[min(600px,62vw)] sm:min-h-[320px] sm:rounded-[10px] sm:border sm:border-[#C9D9E1] sm:bg-[#E7E9EB] sm:shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+            <ScaledDemoStage designWidth={1180} designHeight={620}>
+              <ReportGenerationStage embedded />
+            </ScaledDemoStage>
+          </div>
         </motion.div>
         <div className="order-1 flex flex-col justify-center lg:order-2">
         <motion.div {...revealProps} className="max-w-[980px]">

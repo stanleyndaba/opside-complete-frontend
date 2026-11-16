@@ -128,7 +128,7 @@ function CompilingCheck() {
   );
 }
 
-export function ReportGenerationStage({ onComplete }: { onComplete?: () => void } = {}) {
+export function ReportGenerationStage({ onComplete, embedded = false }: { onComplete?: () => void; embedded?: boolean } = {}) {
   const [phase, setPhase] = useState<Phase>('extracting');
   const [extractedCount, setExtractedCount] = useState(0);
   const [evidenceMatches, setEvidenceMatches] = useState<Set<string>>(new Set());
@@ -205,8 +205,8 @@ export function ReportGenerationStage({ onComplete }: { onComplete?: () => void 
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#FAFAF7] p-0 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1180px] items-center">
+    <main className={`${embedded ? 'overflow-x-hidden bg-[#FAFAF7]' : 'min-h-screen'} p-0 font-google-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8`}>
+      <div className={`${embedded ? 'flex w-full items-center' : 'mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1180px] items-center'}`}>
       <section
         className={`flex min-h-[620px] w-full flex-col overflow-hidden border-0 bg-white shadow-none sm:rounded-[3px] sm:border sm:border-[#DCE8EE] sm:shadow-[0_1px_2px_rgba(24,32,38,0.03)] ${
           phase === 'output' ? 'h-[min(420px,calc(100vh-180px))]' : 'h-[min(620px,calc(100vh-180px))]'

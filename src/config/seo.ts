@@ -136,6 +136,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-nine'),
     image: SITE_META.image,
   },
+  '/try-demo-ten': {
+    path: '/try-demo-ten',
+    title: 'Try the Margin Case Follow-through Visual | Margin',
+    description:
+      'Explore the direct case follow-through visual that connects submitted evidence, Amazon responses, subsequent adjustments, settlement records, and outcome verification.',
+    canonical: routeUrl('/try-demo-ten'),
+    ogTitle: 'Try the Margin Case Follow-through Visual | Margin',
+    ogDescription:
+      'See how Margin carries an authorized discrepancy investigation beyond Amazon case closure while keeping Finance in control of consequential decisions.',
+    ogUrl: routeUrl('/try-demo-ten'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',

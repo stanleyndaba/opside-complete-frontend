@@ -31,6 +31,7 @@ import TryDemoSix from "./pages/TryDemoSix";
 import TryDemoSeven from "./pages/TryDemoSeven";
 import TryDemoEight from "./pages/TryDemoEight";
 import TryDemoNine from "./pages/TryDemoNine";
+import TryDemoTen from "./pages/TryDemoTen";
 
 // Route-level code splitting
 const Dashboard = lazy(() => import("@/components/layout/Dashboard").then(m => ({ default: m.Dashboard })));
@@ -311,7 +312,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 const RouteOverlays = () => {
   const location = useLocation();
   usePrivateRouteRobots(location.pathname);
-  const hidePublicChat = ['/review-consent', '/try-demo', '/try-demo-two', '/try-demo-three', '/try-demo-four', '/try-demo-five', '/try-demo-six', '/try-demo-seven', '/try-demo-eight', '/try-demo-nine', '/designsimulate', '/platformsimulate', '/documentsimulate', '/auditsimulate', '/platformfly', '/accuracy-graph', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/evidence-match', '/rejection-loop', '/report-generation', '/duplicate-pipeline-preview', '/routine', '/progress-review', '/evidence-required', '/issues-found', '/filing-pipeline-preview', '/progress-preview', '/amazon-thread-review', '/auto-submit-preview', '/appeals-review', '/financial-reconciliation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/openstatement', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate', '/timeline-simulation', '/readiness-simulate', '/readiness-simulate-two', '/memory-simulate', '/reconciliation-simulate', '/currency-margin', '/standalone'].includes(location.pathname);
+  const hidePublicChat = ['/review-consent', '/try-demo', '/try-demo-two', '/try-demo-three', '/try-demo-four', '/try-demo-five', '/try-demo-six', '/try-demo-seven', '/try-demo-eight', '/try-demo-nine', '/try-demo-ten', '/designsimulate', '/platformsimulate', '/documentsimulate', '/auditsimulate', '/platformfly', '/accuracy-graph', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/evidence-match', '/rejection-loop', '/report-generation', '/duplicate-pipeline-preview', '/routine', '/progress-review', '/evidence-required', '/issues-found', '/filing-pipeline-preview', '/progress-preview', '/amazon-thread-review', '/auto-submit-preview', '/appeals-review', '/financial-reconciliation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/openstatement', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate', '/timeline-simulation', '/readiness-simulate', '/readiness-simulate-two', '/memory-simulate', '/reconciliation-simulate', '/currency-margin', '/standalone'].includes(location.pathname);
 
   return (
     <>
@@ -367,6 +368,7 @@ const App = () => (
                         <Route path='/try-demo-seven' element={<TryDemoSeven />} />
                         <Route path='/try-demo-eight' element={<TryDemoEight />} />
                         <Route path='/try-demo-nine' element={<TryDemoNine />} />
+                        <Route path='/try-demo-ten' element={<TryDemoTen />} />
                         <Route path='/evidence-required' element={<EvidenceRequired />} />
                         <Route path='/amazon-thread-review' element={<AmazonThreadReview />} />
                         <Route path='/progress-review' element={<ProgressReview />} />
