@@ -65,6 +65,7 @@ import EvidenceRequired from "@/pages/EvidenceRequired";
 import { AutoSubmitPresentation } from "@/pages/AutoSubmitPreview";
 import { ReportGenerationStage } from "@/components/report-generation";
 import { AppealsReviewPresentation } from "@/pages/AppealsReview";
+import { FinancialReconciliationPresentation } from "@/pages/FinancialReconciliation";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -1860,7 +1861,11 @@ function FinancialReconciliationSection() {
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See the Outcome">See the Outcome <ChevronRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden">
-            <FinalDelegationPreview compactMobile expandedMobile src="/financial-reconciliation" title="Financial closeout page preview" />
+            <div className="relative h-auto min-h-0 overflow-y-auto overscroll-contain rounded-none border-0 bg-transparent shadow-none sm:h-[min(600px,62vw)] sm:min-h-[320px] sm:rounded-[10px] sm:border sm:border-[#C9D9E1] sm:bg-[#E7E9EB] sm:shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+              <ScaledDemoStage designWidth={1180} designHeight={1200}>
+                <FinancialReconciliationPresentation embedded />
+              </ScaledDemoStage>
+            </div>
           </motion.div>
         </div>
       </div>

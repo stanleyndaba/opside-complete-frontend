@@ -160,6 +160,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-eleven'),
     image: SITE_META.image,
   },
+  '/try-demo-twelve': {
+    path: '/try-demo-twelve',
+    title: 'Try the Margin Financial Reconciliation Visual | Margin',
+    description:
+      'Explore the direct financial reconciliation visual that connects approved recoveries to reimbursement, adjustment, settlement, payout, attribution, and ledger records.',
+    canonical: routeUrl('/try-demo-twelve'),
+    ogTitle: 'Try the Margin Financial Reconciliation Visual | Margin',
+    ogDescription:
+      'See what Amazon approved, what was recorded, what reached settlement, and what remains unresolved before a financial position is treated as closed.',
+    ogUrl: routeUrl('/try-demo-twelve'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',

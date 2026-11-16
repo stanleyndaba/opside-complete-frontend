@@ -129,14 +129,7 @@ function SettlementOutcomeSequence({ enabled, onComplete }: { enabled: boolean; 
   );
 }
 
-export default function FinancialReconciliation() {
-  usePageMeta({
-    title: 'Financial Reconciliation | Margin',
-    description: 'See what the recovery was expected to produce, what Amazon approved, what reached settlement, and how the financial position was closed.',
-    url: `${SITE_META.url}/financial-reconciliation`,
-    image: SITE_META.image,
-  });
-
+export function FinancialReconciliationPresentation({ embedded = false }: { embedded?: boolean } = {}) {
   const [showVerifiedOutcomes, setShowVerifiedOutcomes] = useState(false);
   const [sequenceCycle, setSequenceCycle] = useState(0);
   const restartSequence = () => {
@@ -145,7 +138,7 @@ export default function FinancialReconciliation() {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-google-sans text-[#182026]">
+    <div className={`${embedded ? 'h-auto' : 'min-h-screen'} overflow-x-hidden bg-[#FAFAF7] font-google-sans text-[#182026]`}>
       <main className="mx-auto max-w-[1180px] px-5 py-5 sm:px-7 sm:py-7">
         <section className="border-b border-[#DCE5E5] pb-5 sm:pb-6" aria-labelledby="approved-reimbursements-title">
           <div className="flex flex-col gap-3">
@@ -222,4 +215,15 @@ export default function FinancialReconciliation() {
       </main>
     </div>
   );
+}
+
+export default function FinancialReconciliation() {
+  usePageMeta({
+    title: 'Financial Reconciliation | Margin',
+    description: 'See what the recovery was expected to produce, what Amazon approved, what reached settlement, and how the financial position was closed.',
+    url: `${SITE_META.url}/financial-reconciliation`,
+    image: SITE_META.image,
+  });
+
+  return <FinancialReconciliationPresentation />;
 }
