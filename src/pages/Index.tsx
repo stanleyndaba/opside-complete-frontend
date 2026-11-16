@@ -67,6 +67,7 @@ import { ReportGenerationStage } from "@/components/report-generation";
 import { AppealsReviewPresentation } from "@/pages/AppealsReview";
 import { FinancialReconciliationPresentation } from "@/pages/FinancialReconciliation";
 import Routine from "@/pages/Routine";
+import CaseDetailDuplicateDemo from "@/pages/CaseDetailDuplicateDemo";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -1822,7 +1823,11 @@ function RiskSection() {
             <Link to="/privacy" className="landing-action-cta mt-7 inline-flex h-11 w-fit items-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2">View Security <ChevronRight className="h-4 w-4" aria-hidden="true" /></Link>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 overflow-hidden">
-            <iframe title="Amazon Thread Review page preview" src="/amazon-thread-review" className="block h-[520px] w-full rounded-b-[8px] border-0 bg-[#FBFAF7] sm:h-[600px]" loading="lazy" />
+            <div className="relative h-[330px] w-full overflow-y-auto overscroll-contain rounded-none border-0 bg-transparent shadow-none sm:h-[min(600px,62vw)] sm:min-h-[320px] sm:rounded-[10px] sm:border sm:border-[#C9D9E1] sm:bg-[#E7E9EB] sm:shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+              <ScaledDemoStage designWidth={1280} designHeight={920}>
+                <CaseDetailDuplicateDemo />
+              </ScaledDemoStage>
+            </div>
           </motion.div>
         </div>
       </div>
