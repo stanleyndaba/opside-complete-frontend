@@ -184,6 +184,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/try-demo-thirteen'),
     image: SITE_META.image,
   },
+  '/try-demo-fourteen': {
+    path: '/try-demo-fourteen',
+    title: 'Try the Margin Repeatable Controls Visual | Margin',
+    description:
+      'Explore the direct Routine visual that preserves established findings and turns recurring financial work into repeatable, evidence-backed controls.',
+    canonical: routeUrl('/try-demo-fourteen'),
+    ogTitle: 'Try the Margin Repeatable Controls Visual | Margin',
+    ogDescription:
+      'See how Margin carries prior evidence, explanations, decisions, and outcomes forward so recurring discrepancies do not require the same investigation twice.',
+    ogUrl: routeUrl('/try-demo-fourteen'),
+    image: SITE_META.image,
+  },
   '/pricing': {
     path: '/pricing',
     title: 'Margin Pricing | Engagement-Based Financial Control',
