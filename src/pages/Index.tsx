@@ -1464,7 +1464,7 @@ function FinancialCertaintyNestedVisual() {
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof financialCertaintyBrowsers>('issues');
 
   return (
-    <div className="relative min-h-[620px] overflow-hidden rounded-[5px] bg-[#EEF3F0] p-2 sm:min-h-[570px] sm:p-4" style={{ backgroundImage: 'linear-gradient(rgba(246,249,247,0.38), rgba(246,249,247,0.54)), url(/visual-english-landscape-1.jpg)', backgroundPosition: 'center', backgroundSize: 'cover' }}>
+    <div className="relative min-h-[620px] overflow-hidden sm:min-h-[570px]">
       <div className="relative h-full min-h-[590px] sm:min-h-[538px]">
         {(Object.keys(financialCertaintyBrowsers) as Array<keyof typeof financialCertaintyBrowsers>).map((key) => {
           const browser = financialCertaintyBrowsers[key];
@@ -1474,8 +1474,7 @@ function FinancialCertaintyNestedVisual() {
             : 'bottom-[2%] right-[1%] h-[76%] w-[92%] sm:bottom-[3%] sm:right-[3%] sm:h-[73%] sm:w-[78%]';
           return (
             <div key={key} role="button" tabIndex={0} onClick={() => setActiveBrowser(key)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setActiveBrowser(key); }} aria-label={`Show ${browser.label}`} className={`absolute overflow-hidden rounded-[10px] border text-left transition-all duration-500 ${frameClass} ${isActive ? 'z-20 border-white/95 shadow-[0_24px_48px_rgba(37,73,91,0.25)]' : 'z-10 border-white/65 shadow-[0_12px_30px_rgba(37,73,91,0.14)]'}`}>
-              <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md"><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /></div>
-              <iframe title={`${browser.label} page preview`} src={browser.path} className={`h-[calc(100%-28px)] w-full border-0 bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`} loading="lazy" />
+              <iframe title={`${browser.label} page preview`} src={browser.path} className={`h-full w-full border-0 bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`} loading="lazy" />
             </div>
           );
         })}
