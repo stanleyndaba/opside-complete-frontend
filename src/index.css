@@ -1933,6 +1933,13 @@ html, body, #root {
   padding-block: clamp(3.25rem, 6vw, 5.75rem) !important;
 }
 
+/* Final brand exception: the landing-wide Google Sans reset is more specific
+   than the earlier wordmark rule. Keep every public Margin wordmark in Merriweather. */
+.landing-google-sans.landing-google-sans .brand-wordmark.font-merriweather,
+.landing-google-sans.landing-google-sans .brand-wordmark.font-merriweather * {
+  font-family: 'Merriweather', Georgia, serif !important;
+}
+
 .team-page main > section:first-of-type {
   padding-bottom: clamp(3.5rem, 6.5vw, 6.5rem) !important;
   padding-top: clamp(8.5rem, 13vw, 12rem) !important;
