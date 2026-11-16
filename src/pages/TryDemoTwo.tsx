@@ -9,9 +9,11 @@ export default function TryDemoTwo() {
   return (
     <div className="min-h-screen overflow-hidden bg-[#EAF1F5] p-2 sm:p-4 md:p-6">
       <div className="mx-auto max-w-[1280px] rounded-[14px] bg-[#DDE8ED]/65 p-2 shadow-[0_24px_70px_rgba(72,103,122,0.13)] sm:p-4 md:p-6">
-        <ScaledDemoStage designHeight={620}>
-          <ReconciliationPipelineVisual />
-        </ScaledDemoStage>
+        <div className="relative max-h-[calc(100vh-1rem)] overflow-y-auto overscroll-contain rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7] shadow-[0_10px_30px_rgba(37,49,58,0.09)] sm:max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-3rem)]">
+          <ScaledDemoStage designHeight={620}>
+            <ReconciliationPipelineVisual />
+          </ScaledDemoStage>
+        </div>
       </div>
     </div>
   );
