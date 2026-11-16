@@ -18,6 +18,7 @@ export function PersonalRecoverySupportSection() {
     <section className="relative overflow-hidden border-y border-[#D6E3E8] bg-white py-12 sm:py-14 md:py-20" aria-labelledby="personal-recovery-support-title">
       <div className="relative mx-auto grid w-full max-w-[1280px] items-center gap-10 px-5 sm:px-6 md:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16 lg:px-10 2xl:px-12">
         <motion.div {...revealProps} className="max-w-[600px]">
+          <p className="font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Explainable recovery work</p>
           <h2 id="personal-recovery-support-title" className="font-lora text-[36px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
             <span className="heading-tone-dark">Have someone who can explain the decision—not just tell you what to submit.</span>
           </h2>

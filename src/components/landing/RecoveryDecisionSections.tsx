@@ -73,6 +73,7 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
+          <p className="font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Initial financial review</p>
           <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Find out what your Amazon records can—and cannot—prove.</h2>
           <p className="audit-routing-body mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">The Initial Financial Position Review examines the Amazon records supplied, connecting relevant transactions, settlement activity, inventory movements and adjustments to establish what the available evidence explains. It separates supported exposure from accounted-for activity, unresolved differences and conclusions that cannot yet be verified.</p>
           <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Read-only records review. No claim submission. No commitment to paid recovery work.</p>
@@ -100,6 +101,7 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
           </DirectMountedPreview>
         </motion.div>
         <motion.div {...revealProps} className="enterprise-routing-copy order-1 max-w-[780px] lg:order-2">
+          <p className="font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Resolution continuity</p>
           <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Make every resolved discrepancy easier to account for next time.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin preserves established evidence, prior decisions, linked financial events and verified outcomes so later investigations can build on what is already known. It can compare new activity against previously examined events, identify recurring patterns and distinguish a genuinely new discrepancy from a timing difference, reversal or previously resolved item.</p>
           <p className="mt-4 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Each examination adds to the record of what has been established, reducing the need to reconstruct the same financial history repeatedly.</p>
@@ -132,6 +134,7 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
   <section className="enterprise-onboarding-section relative overflow-hidden bg-white py-12 sm:py-14 md:py-20" aria-labelledby="enterprise-onboarding-title">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <motion.div {...revealProps} className="max-w-[850px]">
+        <p className="font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Operating model</p>
         <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Know how your recovery operation will work before it goes live.</h2>
         <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8"><LandingResponsiveCopy desktop={'During the defined 30–45 day engagement, Margin works with your team to examine the agreed records, establish the initial financial position, configure the recovery and control workflow, and assign responsibility to outstanding exceptions. The engagement establishes a documented operating process and agreed control state; Amazon&apos;s decisions and payment timelines remain external dependencies.'} mobile={'Across the 30–45 day engagement, Margin examines the agreed records, establishes the initial position and sets up the investigation, approval and ownership workflows for outstanding exceptions. Amazon response and payment times remain external dependencies.'} /></p>
       </motion.div>
@@ -169,9 +172,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
     <section className="recovery-routing-section relative bg-white py-10 sm:py-10 md:py-14" aria-labelledby="recovery-routing-title">
       <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
         <motion.div {...revealProps} className="routing-copy max-w-[760px]">
-          <div className="mb-5 flex items-center gap-3">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">24 / ROUTING</span>
-          </div>
+          <p className="font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Choose the justified work</p>
           <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the problem. Choose only the work it justifies.</h2>
           <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Initial Financial Position Review establishes the financial position supported by the records available, identifies material unresolved differences and determines whether further investigation or recovery is justified. First establish the position. Then decide what work is justified.</p>
         </motion.div>
