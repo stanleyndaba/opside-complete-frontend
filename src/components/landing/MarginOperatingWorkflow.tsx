@@ -226,7 +226,7 @@ export function MarginOperatingWorkflow() {
         </motion.div>
         <div className="grid items-start gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           <motion.div initial={reduceMotion ? false : { opacity: 0, y: 14 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-48px" }} transition={{ duration: 0.6 }} className="max-w-[560px] lg:sticky lg:top-28">
-            <p className="font-google-sans text-[10px] font-semibold uppercase tracking-tight text-[#71808A]">The operating workflow</p>
+            <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight !text-[#635BFF]">The operating workflow</p>
             <h2 id="margin-operating-workflow-title" className="mt-4 font-lora text-[35px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
               Financial activity becomes explainable.
             </h2>

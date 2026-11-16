@@ -120,7 +120,7 @@ export function AudienceFaqSection({ audience }: { audience: Audience }) {
     <section className="relative overflow-hidden bg-white py-14 sm:py-20 md:py-24" aria-labelledby={`${audience}-faq-title`}>
       <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
         <div className="max-w-[900px]">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8B857F]">Trust and access</p>
+          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight !text-[#635BFF]">Trust and access</p>
           <h2 id={`${audience}-faq-title`} className="mt-3 font-lora text-[34px] font-normal leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]">Questions worth answering before you give anyone access to your financial records.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">Margin’s approach to evidence, access, authorization and financial closure should remain clear regardless of who owns the problem inside the business.</p>
         </div>

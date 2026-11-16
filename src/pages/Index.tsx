@@ -153,7 +153,7 @@ function LandingResponsiveCopy({ desktop, mobile }: { desktop: string; mobile: s
 }
 
 function LandingEyebrow({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <p className={`landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF] ${className}`}>{children}</p>;
+  return <p className={`landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight !text-[#635BFF] ${className}`}>{children}</p>;
 }
 const sectionBodyClass =
   "mt-6 max-w-[740px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px] md:leading-9";
@@ -261,7 +261,7 @@ function AccountingEvidenceSection() {
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-x-20 lg:gap-y-10 xl:gap-x-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:col-start-1 lg:row-start-1 lg:pt-1">
-            <LandingEyebrow>Controlled system access</LandingEyebrow>
+            <LandingEyebrow className="!text-[#635BFF]">Controlled system access</LandingEyebrow>
             <h2 id="accounting-section-title" className="mt-4 max-w-[620px] font-google-sans text-[39px] leading-[0.98] tracking-[-0.045em] text-[#182026] sm:text-[50px] md:text-[60px]" style={{ fontWeight: 500 }}>
               <span className="heading-tone-dark">Get the answers without replacing the systems your team already relies on.</span>
             </h2>
