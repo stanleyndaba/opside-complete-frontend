@@ -68,18 +68,6 @@ import { AppealsReviewPresentation } from "@/pages/AppealsReview";
 import { FinancialReconciliationPresentation } from "@/pages/FinancialReconciliation";
 import Routine from "@/pages/Routine";
 import CaseDetailDuplicateDemo from "@/pages/CaseDetailDuplicateDemo";
-import {
-  AmazonAuthorizationBoundarySection,
-  EnterpriseAssessmentSection,
-  EnterpriseAssuranceSection,
-  EnterpriseCategoryStatement,
-  EnterpriseOperatingBoundarySection,
-  EnterpriseOperatingBriefsSection,
-  EnterpriseOperatingModelSection,
-  EnterpriseOperatingScaleSection,
-  EnterpriseQualificationBand,
-  FinancialPositionInspectionSection,
-} from "@/components/landing/EnterprisePositioningSections";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -547,6 +535,7 @@ function BuyerRealitySection() {
           <LandingEyebrow>The problem Margin owns</LandingEyebrow>
           <h2 id="buyer-reality-title" className="mt-4 max-w-[760px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Amazon businesses do not just have a recovery problem. They have a financial control problem.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">An operational event occurs. A financial outcome is expected. But the actual result may be missing, duplicated, delayed, reversed, incorrectly assessed or reflected differently across multiple systems. Margin connects operational events, financial records and evidence so Finance can establish what happened, what was affected and whether the resulting financial position has actually been resolved.</p>
+          <p className="mt-5 max-w-[760px] border-l-2 border-[#635BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">Margin is the financial investigation and controlled recovery layer for complex Amazon operations—not another dashboard for your team to interpret.</p>
         </motion.div>
         <motion.div {...revealProps} className="mt-10 w-full max-w-[1120px] overflow-hidden">
           <img src="/mg-platform-hero-integrations.png" alt="Mg platform connecting Amazon, finance, operations and collaboration systems" className="block h-auto w-full object-contain" loading="lazy" />
@@ -631,6 +620,7 @@ function BuiltForSection() {
     { label: "Multi-brand", title: "Aggregators & Multi-brand Operators", src: "/abstract-object-04.png", description: "For operators managing multiple Amazon brands, businesses and product portfolios. Bring consistency to financial investigations, recovery oversight and unresolved work across operations.", lead: "Maintain financial oversight across an entire portfolio.", href: "/aggregators-multi-brand" },
     { label: "Enterprise", title: "Enterprise & Multi-marketplace Businesses", src: "/abstract-object-05.png", description: "For businesses operating across marketplaces, entities, currencies and large transaction volumes. Maintain traceability, controlled workflows and accountable financial outcomes across the agreed scope.", lead: "Establish financial control across greater complexity.", href: "/enterprise-multi-marketplace" },
   ];
+  const operatingDimensions = ["Multi-marketplace", "Multi-entity", "High transaction volume", "Evidence-linked outcomes", "Finance-controlled action"];
 
   const renderAudience = (audience: (typeof audiences)[number]) => (
     <article key={audience.title} className="built-for-marquee-card group relative aspect-[4/5] shrink-0 overflow-hidden rounded-[6px] bg-[#E9E9E5]">
@@ -663,6 +653,9 @@ function BuiltForSection() {
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">
             Margin takes on the continuous work of investigating discrepancies, reconstructing financial history, managing recovery activity and verifying outcomes across complex Amazon operations.
           </p>
+          <div className="mt-6 flex max-w-[920px] flex-wrap gap-x-5 gap-y-2 border-y border-[#D8E3E8] py-3 text-[11px] font-semibold tracking-tight text-[#66737F]">
+            {operatingDimensions.map((dimension) => <span key={dimension} className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#635BFF]" />{dimension}</span>)}
+          </div>
         </motion.div>
         <div className="built-for-marquee-viewport mt-10 sm:mt-14" aria-label="Built for audience profiles">
           <div className="built-for-marquee-track">
@@ -817,6 +810,9 @@ function FinancialWorkProofSection() {
             </h2>
             <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-[#5F6D77] md:mt-5 md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Financial understanding at scale requires more than matching two numbers. It requires examining source records, testing relationships, calculating differences, preserving evidence, tracking decisions and checking subsequent financial events. Margin brings this work into a structured financial operation.'} mobile={'Margin connects transaction analysis, source evidence, investigation logic and recovery status so each material finding can be inspected against its records and calculations.'} /></p>
             <p className="mt-3 max-w-[560px] text-[15px] leading-6 text-[#5F6D77] md:mt-4 md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Your team can review the financial basis, approve consequential actions and monitor recovered, unresolved and reconciled value without having to assemble the investigation independently.'} mobile={'Finance can challenge findings, approve actions and monitor recovered, unresolved and reconciled value without rebuilding the investigation.'} /></p>
+            <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-semibold uppercase tracking-tight text-[#66737F] sm:text-[11px]">
+              <span className="text-[#635BFF]">Investigate</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Establish</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Govern</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Reconcile</span>
+            </div>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[#D8E3E8]">
@@ -838,6 +834,7 @@ function FinancialWorkProofSection() {
           </motion.div>
         </div>
         <button type="button" className={`${landingPrimaryCtaClass} mt-5 md:mt-8`} aria-label="View the Record">View the Record <ChevronRight className="h-4 w-4" /></button>
+        <p className="mt-5 max-w-[760px] text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">Event <span className="px-1 text-[#AEB8BC]">→</span> Evidence <span className="px-1 text-[#AEB8BC]">→</span> Decision <span className="px-1 text-[#AEB8BC]">→</span> Action <span className="px-1 text-[#AEB8BC]">→</span> Verified outcome</p>
       </div>
     </section>
   );
@@ -2113,7 +2110,9 @@ function SecuritySection() {
         <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
           <Link to="/security" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#635BFF] hover:decoration-[#635BFF]">More about security <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
           <Link to="/access-scope" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#635BFF] hover:decoration-[#635BFF]">Review the Amazon access scope <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+          <Link to="/sales" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#635BFF] hover:decoration-[#635BFF]">Discuss enterprise control <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
         </div>
+        <p className="mt-5 max-w-[900px] border-t border-[#DCE2E5] pt-4 text-[11px] font-semibold uppercase tracking-tight text-[#7A858A]">Read-only by default <span className="px-2 text-[#B1BBBE]">·</span> Purpose-limited access <span className="px-2 text-[#B1BBBE]">·</span> Seller approval before consequential action <span className="px-2 text-[#B1BBBE]">·</span> Tenant-level separation</p>
       </div>
     </section>
   );
@@ -2171,10 +2170,6 @@ export default function Index() {
       <main>
         {/* Phase 1 — Make the prospect care: problem recognition */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
-        <EnterpriseQualificationBand />
-        <EnterpriseCategoryStatement />
-        <EnterpriseOperatingModelSection />
-        <EnterpriseOperatingScaleSection />
         <DuplicatePipelineDemoSection />
         <BuiltForSection />
         <BuyerRealitySection />
@@ -2196,9 +2191,6 @@ export default function Index() {
         <MarginEngineSection />
         <MarginStandardSection />
         <FinancialWorkProofSection />
-        <AmazonAuthorizationBoundarySection />
-        <FinancialPositionInspectionSection />
-        <EnterpriseOperatingBoundarySection />
         <EnterpriseReviewsSection />
 
         {/* Phase 4 — Demonstrate the operating capability: product proof */}
@@ -2255,14 +2247,11 @@ export default function Index() {
 
         {/* Phase 6 — Remove implementation and trust objections */}
         <SecuritySection />
-        <EnterpriseAssuranceSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
 
         {/* Phase 7 — Make the commercial decision easy */}
         <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
         <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
-        <EnterpriseOperatingBriefsSection />
-        <EnterpriseAssessmentSection />
         <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
         <BlogSection />
         <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">

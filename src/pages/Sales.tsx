@@ -108,6 +108,9 @@ export default function Sales() {
                             <p className="max-w-2xl text-[13px] leading-[1.5] tracking-tight text-[#667177] sm:text-[17px] sm:leading-8">
                                 Margin gives your finance and operations teams a controlled view of what Amazon paid, missed, reversed, or left unresolved—then turns the evidence into a clear recovery plan your team can own.
                             </p>
+                            <p className="max-w-2xl border-l-2 border-[#F05A3C] pl-4 text-[14px] font-semibold leading-6 tracking-tight text-[#30343B] sm:text-[16px] sm:leading-7">
+                                Margin is the financial investigation and controlled recovery layer for complex Amazon operations.
+                            </p>
                         </div>
 
                         <div className="flex flex-wrap items-center gap-6">
@@ -495,6 +498,10 @@ export default function Sales() {
                                     <span>{item}</span>
                                 </div>
                             ))}
+                        </div>
+                        <div className="lg:col-span-7 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-[#E1E5E5] pt-5 text-[13px] font-semibold">
+                            <a href="/security" className="inline-flex items-center gap-2 text-[#30343B] underline decoration-[#B8C0C1] underline-offset-4 hover:text-[#F05A3C]">Read security practices <ArrowRight className="h-4 w-4" /></a>
+                            <a href="/access-scope" className="inline-flex items-center gap-2 text-[#30343B] underline decoration-[#B8C0C1] underline-offset-4 hover:text-[#F05A3C]">Review Amazon access scope <ArrowRight className="h-4 w-4" /></a>
                         </div>
                     </div>
                 </section>
