@@ -498,15 +498,15 @@ function KineticHeroSection({
         </motion.div>
         </div>
       </div>
-      <div className="relative z-10 flex w-full items-center pt-6 sm:pt-0">
-        <div className="max-w-[860px]">
+      <div className="relative z-10 flex min-w-0 w-full max-w-full items-center pt-6 sm:pt-0">
+        <div className="min-w-0 w-full max-w-[860px]">
           <LandingEyebrow className="hero-eyebrow">AI-native financial intelligence and control for Amazon businesses</LandingEyebrow>
           <h1 id="margin-hero-title" className="font-sora mt-3 max-w-[820px] text-[32px] leading-[0.98] tracking-[-0.045em] sm:mt-5 sm:text-[51px] md:text-[63px] lg:text-[71px]" style={{ fontWeight: 600 }}>
             <motion.span className="block font-[600] text-[#000000] sm:hidden" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>
-              <span className="block whitespace-nowrap">Margin does the</span>
-              <span className="block whitespace-nowrap">financial investigation</span>
-              <span className="block whitespace-nowrap">behind your Amazon</span>
-              <span className="block whitespace-nowrap">operation.</span>
+              <span className="block whitespace-normal break-words">Margin does the</span>
+              <span className="block whitespace-normal break-words">financial investigation</span>
+              <span className="block whitespace-normal break-words">behind your Amazon</span>
+              <span className="block whitespace-normal break-words">operation.</span>
             </motion.span>
             <motion.span className="hidden font-[600] text-[#000000] sm:block" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Margin does the financial investigation behind your Amazon operation.</motion.span>
           </h1>
