@@ -9,10 +9,10 @@ export function MarginEngineSection() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(178,220,232,0.28),transparent_38%)]" />
       <div className="relative mx-auto w-full max-w-[1240px] px-5 sm:px-8">
         <div className="mb-10 max-w-[720px] md:mb-14">
-          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Controlled recovery decisions</p>
-          <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Never let an unexplained difference become an unsupported claim.</h2>
-          <p className="mt-4 max-w-[660px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Margin evaluates the underlying event, expected treatment, observed records and available supporting evidence before determining whether a recovery is justified. It identifies missing proof, distinguishes recoverable exposure from accounted-for activity, and prepares the basis for an action your team can inspect and authorize.</p>
-          <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Your team retains decision authority. Margin supplies the investigation and evidence behind it.</p>
+          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Evidence before action</p>
+          <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Do not let an uncertain position trigger the wrong action.</h2>
+          <p className="mt-4 max-w-[660px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Margin examines the originating event, expected financial treatment, available evidence, alternative explanations and materiality before determining whether recovery or further resolution work is justified.</p>
+          <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Your team retains approval authority. Margin performs the investigation and supplies the evidence behind it.</p>
         </div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="mx-auto w-full max-w-[1040px] lg:max-w-[1350px]">
@@ -24,7 +24,7 @@ export function MarginEngineSection() {
         </motion.div>
 
         <div className="mt-10 flex flex-col items-start gap-4 sm:items-center">
-          <p className="text-center font-lora text-[18px] leading-tight tracking-tight text-[#34414A] sm:text-[22px]" style={{ fontWeight: 400 }}>A clear position, without the operational drag.</p>
+          <p className="text-center font-lora text-[18px] leading-tight tracking-tight text-[#34414A] sm:text-[22px]" style={{ fontWeight: 400 }}>A verified position, without the operational drag.</p>
           <button type="button" className="landing-pressable inline-flex h-11 items-center justify-center gap-2 rounded-[7px] bg-white px-5 text-[13px] font-semibold text-[#635BFF] transition-colors hover:bg-[#F1F0FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/35 focus-visible:ring-offset-2" aria-label="See the recovery operating model">See the recovery operating model <ChevronRight className="h-4 w-4" /></button>
         </div>
       </div>

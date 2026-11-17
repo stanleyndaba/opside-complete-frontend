@@ -41,11 +41,11 @@ export function BlogSection() {
               id="landing-blog-title"
               className="mt-3 font-lora text-[34px] font-normal leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[52px]"
             >
-              The questions behind better Amazon financial control.
+              The questions behind dependable Amazon financial control.
             </h2>
           </div>
           <p className="max-w-[340px] text-[14px] leading-6 text-[#66737F] md:pb-1">
-            Practical perspectives for the people responsible for recovery, reconciliation and financial confidence.
+            Practical perspectives on the gap between Amazon activity, financial visibility, operational follow-through and verified resolution.
           </p>
         </div>
 

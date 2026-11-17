@@ -15,31 +15,31 @@ const pathOptions = [
   {
     label: "01 / DEFINED ENGAGEMENT",
     title: "Defined Recovery Engagement",
-    subtitle: "For a specific, established recovery opportunity that needs investigation, evidence preparation and authorised follow-through.",
+    subtitle: "For an established financial exposure that requires investigation, evidence preparation, authorised recovery and outcome verification.",
     copy: "",
     itemHeading: "Best suited to",
-    items: ["A specific, established recovery opportunity that needs investigation, evidence preparation and authorised follow-through."],
-    cta: "Discuss a Recover Once engagement",
+    items: ["A defined financial exposure that requires investigation, authorised action and verified resolution."],
+    cta: "Discuss a Defined Recovery",
     ctaLocation: "homepage_recover_once",
   },
   {
     label: "02 / FINANCIAL CONTROL PILOT",
     title: "Financial Control Pilot",
-    subtitle: "For businesses that want to examine a defined area of financial activity and establish a repeatable control workflow.",
+    subtitle: "For a defined area of activity where your business needs a repeatable investigation, control and resolution process.",
     copy: "",
     itemHeading: "Best suited to",
-    items: ["Businesses that want to examine a defined area of financial activity and establish a repeatable control workflow."],
-    cta: "Scope an Enterprise Control Pilot",
+    items: ["A repeatable process for financial investigation, control and resolution."],
+    cta: "Scope a Control Pilot",
     ctaLocation: "homepage_control_pilot",
   },
   {
     label: "03 / ONGOING FINANCIAL CONTROL",
     title: "Ongoing Financial Control",
-    subtitle: "For businesses that need continuing examination, investigation, recovery management and outcome reconciliation.",
+    subtitle: "For businesses that need continuing investigation, discrepancy management, authorised intervention and financial outcome verification.",
     copy: "",
     itemHeading: "Best suited to",
-    items: ["Businesses that need continuing examination, investigation, recovery management and outcome reconciliation."],
-    cta: "Discuss ongoing control",
+    items: ["Continuing investigation, authorised work and verified financial outcomes."],
+    cta: "Discuss Ongoing Control",
     ctaLocation: "homepage_recovery_workspace",
   },
 ];
@@ -73,10 +73,10 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
-          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Initial financial review</p>
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Find out what your Amazon records can—and cannot—prove.</h2>
+          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Start with the financial position</p>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Establish what happened. Let Margin carry the work through to resolution.</h2>
           <p className="audit-routing-body mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">The Initial Financial Position Review examines the Amazon records supplied, connecting relevant transactions, settlement activity, inventory movements and adjustments to establish what the available evidence explains. It separates supported exposure from accounted-for activity, unresolved differences and conclusions that cannot yet be verified.</p>
-          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Read-only records review. No claim submission. No commitment to paid recovery work.</p>
+          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Read-only review to begin. Start with the evidence, then commit only to the work it justifies.</p>
           <p className="mt-4 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8"></p>
         </motion.div>
 
@@ -173,7 +173,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
       <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
         <motion.div {...revealProps} className="routing-copy max-w-[760px]">
           <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Choose the justified work</p>
-          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the problem. Choose only the work it justifies.</h2>
+          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the financial problem. Choose only the work it justifies.</h2>
           <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Initial Financial Position Review establishes the financial position supported by the records available, identifies material unresolved differences and determines whether further investigation or recovery is justified. First establish the position. Then decide what work is justified.</p>
         </motion.div>
         <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
@@ -214,7 +214,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           )})}
         </div>
         <motion.div {...revealProps} className="routing-note mt-9 border-l-2 border-[var(--margin-border)] pl-5">
-          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">Not sure what the records support? Start with an Initial Financial Position Review.</p>
+          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">First establish what the records support. Then commit only to the work the evidence justifies.</p>
           <p className="mt-2 text-[14px] leading-6 text-[#182026]">The review establishes what the available records support before you commit to paid work. Its findings determine whether a defined recovery, a financial control pilot, ongoing financial control or no further action is appropriate.</p>
         </motion.div>
       </div>
