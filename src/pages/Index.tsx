@@ -68,6 +68,18 @@ import { AppealsReviewPresentation } from "@/pages/AppealsReview";
 import { FinancialReconciliationPresentation } from "@/pages/FinancialReconciliation";
 import Routine from "@/pages/Routine";
 import CaseDetailDuplicateDemo from "@/pages/CaseDetailDuplicateDemo";
+import {
+  AmazonAuthorizationBoundarySection,
+  EnterpriseAssessmentSection,
+  EnterpriseAssuranceSection,
+  EnterpriseCategoryStatement,
+  EnterpriseOperatingBoundarySection,
+  EnterpriseOperatingBriefsSection,
+  EnterpriseOperatingModelSection,
+  EnterpriseOperatingScaleSection,
+  EnterpriseQualificationBand,
+  FinancialPositionInspectionSection,
+} from "@/components/landing/EnterprisePositioningSections";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -2159,6 +2171,10 @@ export default function Index() {
       <main>
         {/* Phase 1 — Make the prospect care: problem recognition */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <EnterpriseQualificationBand />
+        <EnterpriseCategoryStatement />
+        <EnterpriseOperatingModelSection />
+        <EnterpriseOperatingScaleSection />
         <DuplicatePipelineDemoSection />
         <BuiltForSection />
         <BuyerRealitySection />
@@ -2180,6 +2196,9 @@ export default function Index() {
         <MarginEngineSection />
         <MarginStandardSection />
         <FinancialWorkProofSection />
+        <AmazonAuthorizationBoundarySection />
+        <FinancialPositionInspectionSection />
+        <EnterpriseOperatingBoundarySection />
         <EnterpriseReviewsSection />
 
         {/* Phase 4 — Demonstrate the operating capability: product proof */}
@@ -2236,11 +2255,14 @@ export default function Index() {
 
         {/* Phase 6 — Remove implementation and trust objections */}
         <SecuritySection />
+        <EnterpriseAssuranceSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
 
         {/* Phase 7 — Make the commercial decision easy */}
         <RecoveryRoutingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/audit-start"); }} />
         <EnterpriseOnboardingSection onAuditCta={(location) => { trackEarlyAccessCtaClicked(location); navigate("/sales"); }} />
+        <EnterpriseOperatingBriefsSection />
+        <EnterpriseAssessmentSection />
         <ConsumerRecoverySection onCta={() => { trackEarlyAccessCtaClicked("homepage_consumer_recovery"); navigate("/early-access"); }} />
         <BlogSection />
         <section className="trust-faq-section relative bg-white py-10 md:py-14" aria-labelledby="trust-faq-title">
