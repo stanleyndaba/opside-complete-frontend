@@ -500,7 +500,7 @@ function KineticHeroSection({
       </div>
       <div className="relative z-10 flex w-full items-center pt-6 sm:pt-0">
         <div className="max-w-[860px]">
-          <LandingEyebrow>AI-native financial intelligence and control for Amazon businesses</LandingEyebrow>
+          <LandingEyebrow className="hero-eyebrow">AI-native financial intelligence and control for Amazon businesses</LandingEyebrow>
           <h1 id="margin-hero-title" className="font-sora mt-3 max-w-[820px] text-[34px] leading-[0.98] tracking-[-0.045em] min-[390px]:text-[39px] sm:mt-5 sm:text-[51px] md:text-[63px] lg:text-[71px]" style={{ fontWeight: 600 }}>
             <motion.span className="block font-[600] text-[#000000]" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Margin does the financial investigation behind your Amazon operation.</motion.span>
           </h1>
