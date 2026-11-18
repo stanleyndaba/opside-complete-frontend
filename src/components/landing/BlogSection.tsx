@@ -7,6 +7,7 @@ const articles = [
     title: "Your Amazon recovery provider says the work is done. Can Finance verify the outcome?",
     audience:
       "CFOs, Controllers, Finance Directors and established Amazon brands already using recovery providers",
+    image: "/margin-blog-provider-accountability.png",
     href: "/blog/provider-accountability",
   },
   {
@@ -14,6 +15,7 @@ const articles = [
     title: "As your Amazon operation grows, can your financial controls keep up?",
     audience:
       "COOs, Heads of Marketplace Operations, Finance Directors and established FBA brands.",
+    image: "/margin-blog-operational-complexity.png",
     href: "/blog/operational-complexity",
   },
   {
@@ -21,6 +23,7 @@ const articles = [
     title: "What does a properly closed Amazon financial period actually look like?",
     audience:
       "CFOs, Controllers, Financial Directors and enterprise Amazon businesses.",
+    image: "/margin-blog-financial-period-closure.png",
     href: "/blog/financial-period-closure",
   },
 ] as const;
@@ -53,8 +56,15 @@ export function BlogSection() {
           {articles.map((article) => (
             <article
               key={article.title}
-              className="group flex min-h-[250px] w-[min(85vw,380px)] shrink-0 snap-start flex-col rounded-[14px] bg-white p-5 shadow-none transition-transform duration-200 hover:-translate-y-1 sm:p-6"
+              className="group flex min-h-[470px] w-[min(85vw,380px)] shrink-0 snap-start flex-col rounded-[14px] bg-white p-4 shadow-none transition-transform duration-200 hover:-translate-y-1 sm:min-h-[500px] sm:p-5"
             >
+              <img
+                src={article.image}
+                alt=""
+                aria-hidden="true"
+                className="aspect-[3/2] w-full rounded-[10px] object-cover transition-transform duration-500 group-hover:scale-[1.015]"
+                loading="lazy"
+              />
               <p className="font-mono text-[11px] font-medium tracking-tight text-[#F05A3C]">
                 {article.eyebrow}
               </p>
