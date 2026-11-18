@@ -382,6 +382,16 @@ html, body, #root {
 @keyframes system-log-marquee-left { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
 @keyframes system-log-marquee-right { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
 
+@keyframes announcement-marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.announcement-marquee-track {
+  animation: announcement-marquee-left 28s linear infinite;
+  will-change: transform;
+}
+
 .system-log-track {
   animation: system-log-marquee-left var(--duration, 42s) linear infinite;
   will-change: transform;
@@ -417,6 +427,11 @@ html, body, #root {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .announcement-marquee-track {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+  }
+
   .built-for-marquee-track {
     animation: none;
     transform: translate3d(0, 0, 0);

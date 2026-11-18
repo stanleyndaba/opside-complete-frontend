@@ -20,10 +20,33 @@ type PublicNavbarProps = {
     ctaLabel?: string;
     ctaTo?: string;
     wide?: boolean;
-    topOffset?: boolean;
 };
 
-export const PublicNavbar = ({ variant = 'dark', topOffset = false }: PublicNavbarProps) => {
+const announcementText = 'What does a properly closed Amazon financial period actually look like?';
+
+function PublicAnnouncementBanner() {
+    return (
+        <div className="fixed inset-x-0 top-0 z-[60] h-9 overflow-hidden bg-black text-white">
+            <a
+                href="https://margin-finance.com/blog/financial-period-closure"
+                aria-label={announcementText}
+                className="group flex h-full w-full items-center overflow-hidden text-[11px] leading-4 tracking-tight text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80 sm:text-[12px]"
+            >
+                <span className="sr-only">{announcementText}</span>
+                <span aria-hidden="true" className="announcement-marquee-track flex min-w-max shrink-0 items-center">
+                    {[0, 1].map((copy) => (
+                        <span key={copy} className="flex shrink-0 items-center gap-8 px-5 sm:gap-12 sm:px-8">
+                            <span>{announcementText}</span>
+                            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/70 transition-transform group-hover:translate-x-1" />
+                        </span>
+                    ))}
+                </span>
+            </a>
+        </div>
+    );
+}
+
+export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
     const effectiveVariant = variant === 'light' && isOverDarkSurface ? 'dark' : variant;
@@ -96,10 +119,11 @@ export const PublicNavbar = ({ variant = 'dark', topOffset = false }: PublicNavb
     }, [variant]);
 
     return (
+        <>
+        <PublicAnnouncementBanner />
         <header
             className={cn(
-                "landing-navbar-google-sans fixed left-0 right-0 z-50 border-transparent bg-transparent transition-colors",
-                topOffset ? "top-[52px] md:top-[36px]" : "top-0",
+                "landing-navbar-google-sans fixed left-0 right-0 top-9 z-50 border-transparent bg-transparent transition-colors",
             )}
         >
             <div className="w-full px-0 py-0">
@@ -329,5 +353,6 @@ export const PublicNavbar = ({ variant = 'dark', topOffset = false }: PublicNavb
                 </AnimatePresence>
             </div>
         </header>
+        </>
     );
 };
