@@ -20,9 +20,10 @@ type PublicNavbarProps = {
     ctaLabel?: string;
     ctaTo?: string;
     wide?: boolean;
+    topOffset?: boolean;
 };
 
-export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
+export const PublicNavbar = ({ variant = 'dark', topOffset = false }: PublicNavbarProps) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
     const effectiveVariant = variant === 'light' && isOverDarkSurface ? 'dark' : variant;
@@ -97,7 +98,8 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
     return (
         <header
             className={cn(
-                "landing-navbar-google-sans fixed left-0 right-0 top-0 z-50 border-transparent bg-transparent transition-colors",
+                "landing-navbar-google-sans fixed left-0 right-0 z-50 border-transparent bg-transparent transition-colors",
+                topOffset ? "top-[52px] md:top-[36px]" : "top-0",
             )}
         >
             <div className="w-full px-0 py-0">

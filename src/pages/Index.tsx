@@ -145,6 +145,22 @@ const supportedMarketplaces = [
 
 const containerClass = "mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12";
 
+function LandingArticleBanner() {
+  return (
+    <div className="fixed inset-x-0 top-0 z-[60] min-h-[52px] bg-black text-white md:min-h-[36px]">
+      <a
+        href="https://margin-finance.com/blog/financial-period-closure"
+        className="flex min-h-[36px] items-center justify-center gap-2 px-4 py-2 text-center font-google-sans text-[11px] leading-4 tracking-tight text-white transition-colors hover:bg-[#181818] sm:text-[12px]"
+        aria-label="Read the article: What does a properly closed Amazon financial period actually look like?"
+      >
+        <span className="text-white/60">Article</span>
+        <span>What does a properly closed Amazon financial period actually look like?</span>
+        <ChevronRight aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-white/70" />
+      </a>
+    </div>
+  );
+}
+
 function LandingResponsiveCopy({ desktop, mobile }: { desktop: string; mobile: string }) {
   return <>
     <span className="landing-copy-desktop">{desktop}</span>
@@ -2165,7 +2181,8 @@ export default function Index() {
   };
   return (
     <div className="landing-page landing-google-sans min-h-screen bg-[var(--margin-canvas)] selection:bg-[var(--margin-blue)]/16 selection:text-[var(--margin-text-primary)]">
-      <PublicNavbar variant="light" wide />
+      <LandingArticleBanner />
+      <PublicNavbar variant="light" wide topOffset />
 
       <main>
         {/* Phase 1 — Make the prospect care: problem recognition */}
