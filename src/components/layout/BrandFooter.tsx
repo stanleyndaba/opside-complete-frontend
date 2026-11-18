@@ -244,7 +244,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
             </p>
           </div>
 
-          <div className="grid gap-12 border-t border-[#D8E3EA] pt-12 lg:grid-cols-[1.1fr_1fr_1.25fr] lg:gap-16">
+          <div className="grid gap-12 border-t border-[#D8E3EA] pt-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.25fr)_minmax(300px,1fr)] lg:gap-14">
             <div className="max-w-[380px]">
               <Link to="/" className="inline-flex items-center gap-3 transition-opacity hover:opacity-85">
                 <img src="/logoimagetwo.png" alt="Margin" width="32" height="32" className="h-8 w-auto object-contain" />
@@ -275,7 +275,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-8 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,0.85fr)_minmax(0,1.3fr)] lg:gap-7">
               <div>
                 <FooterColumn title="Company" links={companyLinks} />
                 <div className="mt-8">
