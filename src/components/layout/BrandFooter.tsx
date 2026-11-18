@@ -244,7 +244,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
             </p>
           </div>
 
-          <div className="grid gap-12 border-t border-[#D8E3EA] pt-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.25fr)_minmax(300px,1fr)] lg:gap-14">
+          <div className="grid gap-12 border-t border-[#D8E3EA] pt-12 lg:grid-cols-[minmax(280px,0.9fr)_minmax(0,2.1fr)] lg:gap-14">
             <div className="max-w-[380px]">
               <Link to="/" className="inline-flex items-center gap-3 transition-opacity hover:opacity-85">
                 <img src="/logoimagetwo.png" alt="Margin" width="32" height="32" className="h-8 w-auto object-contain" />
@@ -275,7 +275,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,0.85fr)_minmax(0,1.3fr)] lg:gap-7">
+            <div className="grid grid-cols-2 gap-8 lg:col-start-2 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-8">
               <div>
                 <FooterColumn title="Company" links={companyLinks} />
                 <div className="mt-8">
@@ -295,12 +295,14 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               </div>
             </div>
 
-            <div className="border-t border-[#D8E3EA] pt-8 lg:border-l lg:border-t-0 lg:border-[#D8E3EA] lg:pl-10 lg:pt-0">
-              <p className="text-lg font-medium tracking-tight text-[#182026]">Talk to Margin</p>
-              <p className="mt-2 max-w-[310px] text-sm leading-6 tracking-tight" style={{ color: '#52616A' }}>
-                There are people behind the product. Choose the route that matches what you need.
-              </p>
-              <form onSubmit={handleDirectContact} className="mt-6 space-y-3" aria-label="Contact Margin directly">
+            <div className="border-t border-[#D8E3EA] pt-8 lg:col-start-2 lg:flex lg:items-end lg:justify-between lg:gap-10 lg:border-l-0 lg:pl-0 lg:pt-8">
+              <div className="min-w-0">
+                <p className="text-lg font-medium tracking-tight text-[#182026]">Talk to Margin</p>
+                <p className="mt-2 max-w-[420px] text-sm leading-6 tracking-tight" style={{ color: '#52616A' }}>
+                  There are people behind the product. Choose the route that matches what you need.
+                </p>
+              </div>
+              <form onSubmit={handleDirectContact} className="mt-6 w-full space-y-3 lg:mt-0 lg:max-w-[560px]" aria-label="Contact Margin directly">
                 <label htmlFor="footer-contact-email" className="sr-only">Your email address</label>
                 <input
                   id="footer-contact-email"
