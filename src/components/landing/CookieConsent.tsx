@@ -65,14 +65,14 @@ export function CookieConsent() {
         >
             <div
                 className={cn(
-                    'pointer-events-auto mx-auto w-full max-w-[1180px] overflow-hidden rounded-[14px] border border-[#E5E2DA] bg-white text-[#182026] shadow-[0_18px_60px_rgba(24,32,38,0.14)]'
+                    'pointer-events-auto mx-auto w-full max-w-[1180px] overflow-hidden rounded-[3px] border border-[#E5E2DA] bg-white text-[#182026] shadow-[0_18px_60px_rgba(24,32,38,0.14)]'
                 )}
             >
                 {view === 'banner' ? (
-                    <div className="relative border-t-2 border-[#635BFF] px-5 py-5 sm:px-7 sm:py-6 md:px-8 md:py-7">
+                    <div className="relative px-5 py-5 sm:px-7 sm:py-6 md:px-8 md:py-7">
                         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
                             <div className="max-w-[700px]">
-                                <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#635BFF]">Privacy choices</p>
+                                <p className="text-[10px] font-semibold uppercase tracking-tight text-[#635BFF]">Privacy choices</p>
                                 <h2 id="cookie-consent-title" className="mt-2 font-lora text-2xl font-normal leading-tight tracking-[-0.02em] text-[#182026] sm:text-3xl">
                                     Help improve your experience
                                 </h2>
