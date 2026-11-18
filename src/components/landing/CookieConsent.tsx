@@ -16,7 +16,6 @@ import {
 export function CookieConsent() {
     const [isVisible, setIsVisible] = useState(false);
     const [view, setView] = useState<'banner' | 'settings'>('banner');
-    const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
     const [preferences, setPreferences] = useState<CookiePreferences>(DEFAULT_COOKIE_PREFERENCES);
 
     useEffect(() => {
@@ -42,31 +41,6 @@ export function CookieConsent() {
         return () => window.removeEventListener(COOKIE_SETTINGS_OPEN_EVENT, reopen);
     }, []);
 
-    useEffect(() => {
-        const updateSurfaceTone = () => {
-            if (typeof window === 'undefined' || typeof document === 'undefined') return;
-
-            const probeY = Math.max(window.innerHeight - 120, 24);
-            const darkSections = Array.from(document.querySelectorAll<HTMLElement>('[data-navbar-theme="dark"]'));
-
-            setIsOverDarkSurface(
-                darkSections.some((section) => {
-                    const rect = section.getBoundingClientRect();
-                    return rect.top <= probeY && rect.bottom >= probeY;
-                })
-            );
-        };
-
-        updateSurfaceTone();
-        window.addEventListener('scroll', updateSurfaceTone, { passive: true });
-        window.addEventListener('resize', updateSurfaceTone);
-
-        return () => {
-            window.removeEventListener('scroll', updateSurfaceTone);
-            window.removeEventListener('resize', updateSurfaceTone);
-        };
-    }, []);
-
     const save = (nextPreferences: CookiePreferences) => {
         setPreferences(nextPreferences);
         saveCookiePreferences(nextPreferences);
@@ -81,8 +55,6 @@ export function CookieConsent() {
 
     if (!isVisible) return null;
 
-    const isDarkSurface = isOverDarkSurface && view === 'banner';
-
     return (
         <div
             className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-3 pb-3 sm:px-5 sm:pb-5"
@@ -93,37 +65,19 @@ export function CookieConsent() {
         >
             <div
                 className={cn(
-                    'pointer-events-auto mx-auto w-full max-w-[1180px] overflow-hidden rounded-[24px] border shadow-[0_28px_90px_rgba(37,49,58,0.18)] backdrop-blur-2xl transition-colors duration-300',
-                    isDarkSurface
-                        ? 'border-white/15 bg-[#182026]/96 text-white'
-                        : 'border-[#CFE0EA] bg-[#FAFAF7]/[0.98] text-[#182026]'
+                    'pointer-events-auto mx-auto w-full max-w-[1180px] overflow-hidden rounded-[14px] border border-[#E5E2DA] bg-white text-[#182026] shadow-[0_18px_60px_rgba(24,32,38,0.14)]'
                 )}
             >
                 {view === 'banner' ? (
-                    <div className="relative px-5 py-5 sm:px-7 sm:py-6 md:px-8 md:py-7">
-                        <div className={cn(
-                            'pointer-events-none absolute inset-x-0 top-0 h-20 bg-[radial-gradient(circle_at_12%_0%,rgba(11,116,222,0.12),transparent_58%)]',
-                            isDarkSurface && 'opacity-60'
-                        )} />
+                    <div className="relative border-t-2 border-[#635BFF] px-5 py-5 sm:px-7 sm:py-6 md:px-8 md:py-7">
                         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
                             <div className="max-w-[700px]">
-                                <p className={cn(
-                                    'text-[10px] font-semibold uppercase tracking-tight',
-                                    isDarkSurface ? 'text-blue-300' : 'text-[#0B74DE]'
-                                )}>
-                                    Site preferences
-                                </p>
-                                <h2 id="cookie-consent-title" className={cn(
-                                    'mt-2 font-lora text-2xl font-normal leading-tight tracking-[-0.02em] sm:text-3xl',
-                                    isDarkSurface ? 'text-white' : 'text-[#182026]'
-                                )}>
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#635BFF]">Privacy choices</p>
+                                <h2 id="cookie-consent-title" className="mt-2 font-lora text-2xl font-normal leading-tight tracking-[-0.02em] text-[#182026] sm:text-3xl">
                                     Help improve your experience
                                 </h2>
-                                <p id="cookie-consent-description" className={cn(
-                                    'mt-3 max-w-[660px] text-[13px] leading-6',
-                                    isDarkSurface ? 'text-white/70' : 'text-[#66737F]'
-                                )}>
-                                    We use necessary cookies to keep Margin working. With your permission, optional analytics cookies help us understand what is useful and improve the site. You can change your choices at any time in <Link to="/privacy" className={cn('font-medium underline underline-offset-2 transition-colors', isDarkSurface ? 'text-white hover:text-blue-200' : 'text-[#182026] hover:text-[#0B74DE]')}>Privacy Policy</Link>.
+                                <p id="cookie-consent-description" className="mt-3 max-w-[660px] text-[13px] leading-6 text-[#66737F]">
+                                    We use necessary cookies to keep Margin working. With your permission, optional analytics cookies help us understand what is useful and improve the site. You can change your choices at any time in <Link to="/privacy" className="font-medium text-[#182026] underline underline-offset-2 transition-colors hover:text-[#635BFF]">Privacy Policy</Link>.
                                 </p>
                             </div>
                             <div className="grid shrink-0 gap-2 sm:grid-cols-2 lg:min-w-[300px] lg:grid-cols-1 xl:grid-cols-2">
@@ -131,19 +85,14 @@ export function CookieConsent() {
                                     type="button"
                                     onClick={() => setView('settings')}
                                     variant="outline"
-                                    className={cn(
-                                        'h-11 rounded-[6px] px-5 text-[10px] font-semibold uppercase tracking-tight transition-colors',
-                                        isDarkSurface
-                                            ? 'border-white/20 bg-transparent text-white/75 hover:bg-white/10 hover:text-white'
-                                            : 'border-[#D8E3EA] bg-white text-[#66737F] hover:bg-[#F3F6F8] hover:text-[#182026]'
-                                    )}
+                                    className="h-11 rounded-[4px] border-[#D8E3EA] bg-white px-5 text-[10px] font-semibold uppercase tracking-tight text-[#66737F] transition-colors hover:bg-[#F5F6F4] hover:text-[#182026]"
                                 >
                                     Manage settings
                                 </Button>
                                 <Button
                                     type="button"
                                     onClick={handleAcceptAll}
-                                    className="h-11 rounded-[6px] bg-[#182026] px-5 text-[10px] font-semibold uppercase tracking-tight text-white hover:bg-[#33363D]"
+                                    className="h-11 rounded-[4px] bg-[#F05A3C] px-5 text-[10px] font-semibold uppercase tracking-tight text-white shadow-none hover:bg-[#D9472D]"
                                 >
                                     Accept all
                                 </Button>
@@ -204,7 +153,7 @@ export function CookieConsent() {
                             <Button
                                 type="button"
                                 onClick={handleSaveSettings}
-                                className="h-11 rounded-[6px] bg-[#182026] px-6 text-[10px] font-semibold uppercase tracking-tight text-white hover:bg-[#33363D]"
+                                className="h-11 rounded-[4px] bg-[#F05A3C] px-6 text-[10px] font-semibold uppercase tracking-tight text-white shadow-none hover:bg-[#D9472D]"
                             >
                                 Save choices
                             </Button>
