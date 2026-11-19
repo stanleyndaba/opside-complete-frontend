@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { MousePointer2 } from "lucide-react";
 import EvidenceRequired from "./EvidenceRequired";
 import {
   FinancialAnalysisWorkspace,
@@ -45,6 +46,7 @@ const principleStages = [
   "Create routine",
   "Routine plan",
   "All routines",
+  "Select Slack handoff",
   "Team handoff",
   "Implementing routine",
   "Platform simulation",
@@ -58,6 +60,7 @@ const principleStages = [
   "Resolution workflow",
   "Case build",
   "Approve once",
+  "Select Slack handoff",
   "Team handoff",
   "Account query",
   "Amazon correspondence",
@@ -66,7 +69,7 @@ const principleStages = [
   "Learning from recovery",
 ] as const;
 
-const demoTestsShellStages = new Set([0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29, 30]);
+const demoTestsShellStages = new Set([0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 18, 19, 20, 21, 22, 23, 24, 25, 26, 29, 30, 31, 32]);
 
 const wheelItems = [
   "Settlement variance requiring review",
@@ -105,12 +108,51 @@ function ApproveOnceStage({ onComplete }: { onComplete: () => void }) {
   return <main className="flex min-h-screen items-center justify-center bg-white px-5 font-google-sans text-[#182026]"><div className="w-full max-w-[620px] rounded-[12px] border border-[#D8E3E8] bg-white p-6 shadow-[0_12px_30px_rgba(24,32,38,0.06)]"><p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#7B8A97]">Seller approval gate</p><h1 className="mt-2 text-[22px] font-medium tracking-tight">Approve the supported action once.</h1><p className="mt-3 text-[13px] leading-5 text-[#59636B]">The evidence-linked position is bounded, the remaining exceptions are visible, and only the permitted recovery action is ready to move forward.</p><button type="button" onClick={onComplete} className="mt-6 rounded-[8px] bg-[#0B74DE] px-4 py-2.5 text-[12px] font-semibold text-white">Approve once</button></div></main>;
 }
 
+function SlackHandoffTransition({ onComplete }: { onComplete: () => void }) {
+  const reduceMotion = useReducedMotion();
+  const [phase, setPhase] = useState<"idle" | "moving" | "selected">(reduceMotion ? "selected" : "idle");
+  useEffect(() => {
+    if (reduceMotion) {
+      const timer = window.setTimeout(onComplete, 1200);
+      return () => window.clearTimeout(timer);
+    }
+    const moveTimer = window.setTimeout(() => setPhase("moving"), 600);
+    const selectTimer = window.setTimeout(() => setPhase("selected"), 1900);
+    const completeTimer = window.setTimeout(onComplete, 3100);
+    return () => {
+      window.clearTimeout(moveTimer);
+      window.clearTimeout(selectTimer);
+      window.clearTimeout(completeTimer);
+    };
+  }, [onComplete, reduceMotion]);
+
+  const platforms = [
+    { name: "Gmail", src: "/gmailicon.png", tone: "bg-[#FFF6F4]", position: "left-0" },
+    { name: "Amazon", src: "/amazon-logo-transparent-circle.png", tone: "bg-[#FFF9EE]", position: "left-1/3" },
+    { name: "Slack", src: "/slack-icon-2019.png", tone: "bg-[#F3F0FF]", position: "left-2/3" },
+    { name: "QuickBooks", src: "/quickbooks.png", tone: "bg-[#F0FAF4]", position: "right-0" },
+  ];
+
+  return <main className="flex min-h-screen items-center justify-center bg-white px-5 py-12 font-google-sans text-[#182026] sm:px-10">
+    <div className="w-full max-w-[860px] text-center">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7B8A97]">Connected operating context</p>
+      <h1 className="mt-3 text-[24px] font-medium tracking-[-0.04em] sm:text-[34px]">Choose where the handoff should happen.</h1>
+      <p className="mx-auto mt-3 max-w-[540px] text-[12px] leading-5 tracking-tight text-[#66737F] sm:text-[14px]">Margin has assembled the evidence-backed position. The next step is to route the controlled handoff to the team’s working channel.</p>
+      <div className="relative mx-auto mt-14 h-[138px] max-w-[720px] sm:mt-20 sm:h-[164px]" aria-label="Connected systems: Gmail, Amazon, Slack, and QuickBooks">
+        {platforms.map((platform) => <motion.div key={platform.name} animate={phase === "selected" && platform.name === "Slack" ? { y: -8, scale: 1.06, borderColor: "#611F69", boxShadow: "0 18px 35px rgba(97,31,105,0.16)" } : { y: 0, scale: 1, borderColor: "#DCE5E8", boxShadow: "0 8px 20px rgba(24,32,38,0.05)" }} transition={{ duration: reduceMotion ? 0 : 0.38 }} className={`absolute top-0 flex h-[112px] w-[23%] min-w-[74px] flex-col items-center justify-center gap-3 rounded-[14px] border bg-white sm:h-[138px] ${platform.position}`}><span className={`flex h-12 w-12 items-center justify-center rounded-[13px] p-2.5 sm:h-16 sm:w-16 sm:p-3.5 ${platform.tone}`}><img src={platform.src} alt="" className="h-full w-full object-contain" /></span><span className="text-[10px] font-semibold tracking-tight text-[#52616A] sm:text-[12px]">{platform.name}</span></motion.div>)}
+        <motion.div aria-hidden="true" animate={phase === "idle" ? { left: "8%", top: "126%" } : phase === "moving" ? { left: "72%", top: "100%" } : { left: "72%", top: "48%" }} transition={{ duration: reduceMotion ? 0 : 1.15, ease: [0.22, 1, 0.36, 1] }} className="pointer-events-none absolute z-20 text-[#182026] drop-shadow-[0_5px_6px_rgba(24,32,38,0.2)]"><MousePointer2 className="h-8 w-8 fill-white stroke-[1.8] sm:h-10 sm:w-10" /></motion.div>
+      </div>
+      <motion.p animate={{ opacity: phase === "selected" ? 1 : 0.65 }} className="mt-8 text-[11px] font-medium tracking-tight text-[#52616A] sm:text-[13px]">{phase === "selected" ? "Slack selected · opening Team Handoff" : "Connected records ready · selecting handoff channel"}</motion.p>
+    </div>
+  </main>;
+}
+
 export default function SandboxDemo() {
   const reduceMotion = useReducedMotion();
   const [stage, setStage] = useState(0);
   const advance = useCallback(() => setStage((current) => Math.min(current + 1, principleStages.length - 1)), []);
   useEffect(() => {
-    const staticDurations: Record<number, number> = { 0: 9000, 1: 9000, 2: 12000, 3: 11000, 4: 9000, 5: 12000, 6: 9000, 7: 11000, 8: 7000, 9: 12000, 10: 7000, 11: 9000, 12: 9000, 13: 10000, 14: 8000, 15: 12000, 16: 7000, 17: 6500, 18: 7000, 19: 9500, 20: 9000, 21: 9000, 22: 14000, 23: 28000, 24: 14000, 25: 9000, 26: 8500, 27: 15000, 28: 9000, 29: 15000, 30: 12000, 31: 9000 };
+    const staticDurations: Record<number, number> = { 0: 9000, 1: 9000, 2: 12000, 3: 11000, 4: 9000, 5: 12000, 6: 9000, 7: 11000, 8: 7000, 9: 12000, 10: 7000, 11: 9000, 12: 9000, 13: 4200, 14: 10000, 15: 8000, 16: 12000, 17: 7000, 18: 6500, 19: 7000, 20: 9500, 21: 9000, 22: 9000, 23: 14000, 24: 28000, 25: 14000, 26: 9000, 27: 4200, 28: 8500, 29: 15000, 30: 15000, 31: 12000, 32: 12000, 33: 9000 };
     const duration = reduceMotion ? 900 : staticDurations[stage];
     if (!duration) return;
     const timer = window.setTimeout(advance, duration);
@@ -133,25 +175,27 @@ export default function SandboxDemo() {
     case 10: content = <CreateRoutineStage onComplete={advance} />; break;
     case 11: content = <RoutinePlanStage />; break;
     case 12: content = <AllRoutines reduceMotion={Boolean(reduceMotion)} />; break;
-    case 13: content = <SlackInterface embedded />; break;
-    case 14: content = <ImplementingRoutine reduceMotion={Boolean(reduceMotion)} />; break;
-    case 15: content = <PlatformSimulationStage {...common} />; break;
-    case 16: content = <GeneratingPlanStage />; break;
-    case 17: content = <ActivityWheel />; break;
-    case 18: content = <EvidenceIntakeStage stage="dropzone" />; break;
-    case 19: content = <EvidenceIntakeStage stage="documents" />; break;
-    case 20: content = <EvidenceRegisterStage />; break;
-    case 21: content = <EvidenceMatchStage />; break;
-    case 22: content = <ArtifactAnalysisStage {...common} />; break;
-    case 23: content = <FinancialResolutionWorkflow />; break;
-    case 24: content = <ReportGenerationStage onComplete={advance} />; break;
-    case 25: content = <ApproveOnceStage onComplete={advance} />; break;
-    case 26: content = <SlackInterface embedded />; break;
-    case 27: content = <QueryStage {...common} />; break;
-    case 28: content = <CaseDetailDuplicateDemo />; break;
-    case 29: content = <ReconciledAnomalies cards={__previewRecords} />; break;
-    case 30: content = <RecoveryPositionStage />; break;
-    case 31: content = <AccuracyLearningStage />; break;
+    case 13: content = <SlackHandoffTransition onComplete={advance} />; break;
+    case 14: content = <SlackInterface embedded />; break;
+    case 15: content = <ImplementingRoutine reduceMotion={Boolean(reduceMotion)} />; break;
+    case 16: content = <PlatformSimulationStage {...common} />; break;
+    case 17: content = <GeneratingPlanStage />; break;
+    case 18: content = <ActivityWheel />; break;
+    case 19: content = <EvidenceIntakeStage stage="dropzone" />; break;
+    case 20: content = <EvidenceIntakeStage stage="documents" />; break;
+    case 21: content = <EvidenceRegisterStage />; break;
+    case 22: content = <EvidenceMatchStage />; break;
+    case 23: content = <ArtifactAnalysisStage {...common} />; break;
+    case 24: content = <FinancialResolutionWorkflow />; break;
+    case 25: content = <ReportGenerationStage onComplete={advance} />; break;
+    case 26: content = <ApproveOnceStage onComplete={advance} />; break;
+    case 27: content = <SlackHandoffTransition onComplete={advance} />; break;
+    case 28: content = <SlackInterface embedded />; break;
+    case 29: content = <QueryStage {...common} />; break;
+    case 30: content = <CaseDetailDuplicateDemo />; break;
+    case 31: content = <ReconciledAnomalies cards={__previewRecords} />; break;
+    case 32: content = <RecoveryPositionStage />; break;
+    case 33: content = <AccuracyLearningStage />; break;
   }
   const renderedContent = demoTestsShellStages.has(stage) ? <DemoTestsShell>{content}</DemoTestsShell> : content;
   return <main className="min-h-screen bg-white font-google-sans text-[#182026]"><div className="sticky top-0 z-50 flex items-center justify-between border-b border-[#E8EFF1] bg-white/95 px-4 py-3 backdrop-blur-sm sm:px-8"><span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#7B8A97]">Margin · Super Demo</span><span className="text-[10px] tabular-nums text-[#8A99A5]">{String(stage + 1).padStart(2, "0")} / {principleStages.length} · {principleStages[stage]}</span></div><AnimatePresence mode="wait"><motion.div key={stage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3 }}>{renderedContent}</motion.div></AnimatePresence></main>;
