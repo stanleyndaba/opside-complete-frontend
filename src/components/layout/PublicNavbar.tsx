@@ -33,9 +33,13 @@ function PublicAnnouncementBanner() {
                 className="group flex h-full w-full items-center justify-center overflow-hidden text-[11px] leading-4 tracking-tight text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80 sm:text-[12px]"
             >
                 <span className="sr-only">{announcementText}</span>
-                <span aria-hidden="true" className="announcement-marquee-track flex min-w-max shrink-0 items-center">
-                    <span className="flex shrink-0 items-center gap-8 px-5 sm:gap-12 sm:px-8">
+                <span aria-hidden="true" className="announcement-marquee-track flex w-full items-center justify-center">
+                    <span className="hidden items-center justify-center gap-8 px-5 text-center sm:gap-12 sm:px-8 md:flex">
                         <span>{announcementText}</span>
+                        <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/70 transition-transform group-hover:translate-x-1" />
+                    </span>
+                    <span className="flex items-center justify-center gap-2 px-5 text-center md:hidden">
+                        <span>The $6M Amazon Financial Period: <span className="underline decoration-1 underline-offset-2">&quot;Amazon Vendor&quot;</span></span>
                         <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/70 transition-transform group-hover:translate-x-1" />
                     </span>
                 </span>
