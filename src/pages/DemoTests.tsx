@@ -1,10 +1,14 @@
 import { useMemo, useState } from "react";
 import {
+  Files,
+  Layers3,
   List,
+  ListChecks,
   MessageSquare,
   MoreHorizontal,
   Plus,
   Search,
+  SlidersHorizontal,
   Star,
   Store,
   UserRound,
@@ -36,6 +40,13 @@ const filters: LibraryItem[] = [
   { label: "Favourites", count: 20, icon: "favorites" },
   { label: "My workflows", count: 13, icon: "mine" },
 ];
+
+const assessmentItems = [
+  { label: "Control record", icon: ListChecks },
+  { label: "Source register", icon: Layers3 },
+  { label: "Evidence position", icon: Files },
+  { label: "Authority boundary", icon: SlidersHorizontal },
+] as const;
 
 const promptCards: Prompt[] = [
   {
@@ -142,6 +153,18 @@ export default function DemoTests() {
           <nav aria-label="Saved filters" className="mt-8 space-y-1">
             <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#a0a1a1]">Your space</p>
             {filters.map((item) => <CountedItem key={item.label} item={item} active={active === item.label} onClick={() => setActive(item.label)} />)}
+          </nav>
+
+          <nav aria-label="Assessment navigation" className="mt-8 border-t border-[#ececec] pt-5">
+            <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#a0a1a1]">Assessment</p>
+            <div className="space-y-1">
+              {assessmentItems.map(({ label, icon: Icon }) => (
+                <button key={label} type="button" className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-left text-[12px] font-medium tracking-[-0.02em] text-[#525455] transition-colors hover:bg-[#f5f5f5] sm:py-2.5 sm:text-[14px]">
+                  <Icon className="h-[18px] w-[18px] shrink-0 stroke-[1.8] text-[#1c1d1e]" />
+                  <span className="truncate">{label}</span>
+                </button>
+              ))}
+            </div>
           </nav>
 
           <div className="mt-auto border-t border-[#ececec] px-3 pt-5">
