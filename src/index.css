@@ -396,8 +396,15 @@ html, body, #root {
 }
 
 .announcement-marquee-track {
-  animation: announcement-marquee-left 28s linear infinite;
+  animation: none;
+  transform: translate3d(0, 0, 0);
   will-change: transform;
+}
+
+@media (max-width: 767px) {
+  .announcement-marquee-track {
+    animation: announcement-marquee-left 28s linear infinite;
+  }
 }
 
 .system-log-track {

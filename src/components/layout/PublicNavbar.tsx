@@ -30,12 +30,12 @@ function PublicAnnouncementBanner() {
             <a
                 href="https://margin-finance.com/blog/financial-period-closure"
                 aria-label={announcementText}
-                className="group flex h-full w-full items-center overflow-hidden text-[11px] leading-4 tracking-tight text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80 sm:text-[12px]"
+                className="group flex h-full w-full items-center justify-center overflow-hidden text-[11px] leading-4 tracking-tight text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80 sm:text-[12px]"
             >
                 <span className="sr-only">{announcementText}</span>
                 <span aria-hidden="true" className="announcement-marquee-track flex min-w-max shrink-0 items-center">
                     {[0, 1].map((copy) => (
-                        <span key={copy} className="flex shrink-0 items-center gap-8 px-5 sm:gap-12 sm:px-8">
+                        <span key={copy} className={`flex shrink-0 items-center gap-8 px-5 sm:gap-12 sm:px-8 ${copy === 1 ? 'md:hidden' : ''}`}>
                             <span>{announcementText}</span>
                             <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/70 transition-transform group-hover:translate-x-1" />
                         </span>
