@@ -3,73 +3,63 @@ import { AtSign, Headphones, MoreHorizontal, Paperclip, Pencil, Plus, Search, Se
 
 const channels = [
   { name: 'general' },
-  { name: 'quality' },
-  { name: 'stability-ops', unread: 1 },
-  { name: 'regulatory' },
-  { name: 'clinical-ops' },
-  { name: 'supply-chain', unread: 3 },
-  { name: 'launches' },
+  { name: 'recovery-operations', unread: 1 },
+  { name: 'evidence-review' },
+  { name: 'fulfilment-ops' },
+  { name: 'finance-control' },
+  { name: 'amazon-responses', unread: 3 },
+  { name: 'settlement-review' },
   { name: 'random' },
 ];
 
 const directMessages = [
-  { name: 'Mara Chen', initials: 'MC', color: '#e8a34b', status: 'online', unread: 2 },
-  { name: 'Jon Bell', initials: 'JB', color: '#5da5cf', status: 'away' },
-  { name: 'Priya Shah', initials: 'PS', color: '#b56bc1', status: 'online' },
-  { name: 'Eli Turner', initials: 'ET', color: '#77a86e', status: 'offline' },
-  { name: 'Nina Okafor', initials: 'NO', color: '#d47767', status: 'online' },
-  { name: 'Slackbot', initials: 'S', color: '#7b5a8f', status: 'online' },
+  { name: 'Finance Operations', initials: 'FO', color: '#e8a34b', status: 'online', unread: 2 },
+  { name: 'Fulfilment Operations', initials: 'FO', color: '#5da5cf', status: 'away' },
+  { name: 'Controller · Financial Control', initials: 'FC', color: '#b56bc1', status: 'online' },
+  { name: 'Recovery Owner', initials: 'RO', color: '#77a86e', status: 'offline' },
+  { name: 'Margin', initials: 'M', color: '#d47767', status: 'online' },
+  { name: 'Marginbot', initials: 'M', color: '#7b5a8f', status: 'online' },
 ];
 
 const messages = [
   {
-    author: 'Mara Chen',
-    initials: 'MC',
+    author: 'Margin',
+    initials: 'M',
     color: '#e8a34b',
-    time: '9:04 AM',
-    text: 'Morning team — the stability review for the north chamber is ready when everyone has a minute.',
+    time: 'Just now',
+    text: 'Resolution work prepared · supported exposure $1,284.60. Margin connected the receiving record, cost basis, and settlement line. The supported position is separated from accounted-for value and unresolved exceptions. Seller approval remains required before submission.',
+    documents: ['Receiving Event Record', 'Unit Cost Basis', 'Settlement Detail'],
   },
   {
-    author: 'Jon Bell',
-    initials: 'JB',
+    author: 'Finance Operations',
+    initials: 'FO',
+    color: '#e8a34b',
+    time: 'Just now',
+    text: 'Investigation packet is ready. The source population, affected units, valuation basis, and next action are assembled. No manual record chase is required to begin review.',
+    documents: ['Evidence Register', 'Unit Cost Basis'],
+  },
+  {
+    author: 'Fulfilment Operations',
+    initials: 'FO',
     color: '#5da5cf',
-    time: '9:07 AM',
-    text: 'I pulled the overnight readings. We have one excursion to discuss, but the product stayed inside the approved recovery window.',
+    time: 'Just now',
+    text: 'Only the unresolved source question is routed. Margin matched the carrier, receiving, and shipment records. Fulfilment only needs to confirm the remaining custody exception.',
+    documents: ['Carrier Custody Record', 'Receiving Event Record'],
   },
   {
-    author: 'Priya Shah',
-    initials: 'PS',
+    author: 'Controller · Financial Control',
+    initials: 'FC',
     color: '#b56bc1',
-    time: '9:11 AM',
-    text: 'Thanks. Is the deviation report linked to the batch record yet? I want to make sure Quality has the full chain before sign-off.',
-  },
-  {
-    author: 'Mara Chen',
-    initials: 'MC',
-    color: '#e8a34b',
-    time: '9:16 AM',
-    text: 'Yes — I added the sensor export, the alarm acknowledgement, and the operator notes. The only open item is the final QA comment.',
-  },
-  {
-    author: 'Nina Okafor',
-    initials: 'NO',
-    color: '#d47767',
-    time: '9:22 AM',
-    text: 'I can take that. I will compare the chamber log with the release checklist and post the conclusion here before 10:00.',
-  },
-  {
-    author: 'Jon Bell',
-    initials: 'JB',
-    color: '#5da5cf',
-    time: '9:25 AM',
-    text: 'Perfect. I will keep an eye on the live feed and flag anything that moves outside the expected range.',
+    time: 'Just now',
+    text: 'The control position is reviewable. Supported exposure, accounted-for value, approval boundary, and unresolved items remain distinct. The position is ready for a controlled decision.',
+    documents: ['Settlement Reconciliation', 'Approval Boundary'],
   },
 ];
 
 function SlackInterface() {
   usePageMeta({
-    title: 'Slack Interface | Margin',
-    description: 'A populated Slack-style workspace interface.',
+    title: 'Team Handoff | Margin',
+    description: 'A Slack-style recovery operations handoff for a governed Margin investigation.',
     url: '/slack-interface',
     robots: 'noindex, nofollow',
   });
@@ -81,13 +71,13 @@ function SlackInterface() {
         <header className="flex h-8 shrink-0 items-center gap-3 bg-[#47134f] px-3 text-white sm:h-9 sm:px-4">
           <div className="flex w-[142px] shrink-0 items-center gap-2 text-[11px] font-semibold sm:w-[152px]">
             <span className="h-2 w-2 rounded-full bg-[#f4bd45]" aria-hidden="true" />
-            <span>Meridian Bio</span>
+            <span>Northstar Commerce</span>
             <span className="ml-auto text-[10px] text-white/75">⌄</span>
           </div>
           <div className="flex min-w-0 flex-1 justify-center">
             <div className="flex h-5 w-full max-w-[420px] items-center justify-center gap-2 rounded-[4px] bg-[#6f3c72] px-3 text-[9px] text-white/85 shadow-inner sm:h-6 sm:text-[10px]">
               <Search className="h-3 w-3 shrink-0" strokeWidth={2} />
-              <span>Search Meridian Bio</span>
+              <span>Search Northstar Commerce</span>
             </div>
           </div>
           <div className="w-[142px] shrink-0" aria-hidden="true" />
@@ -96,7 +86,7 @@ function SlackInterface() {
         <div className="flex min-h-0 flex-1">
           <aside className="w-[142px] shrink-0 overflow-y-auto bg-[#4a0c4f] px-2.5 py-3 text-white sm:w-[152px] sm:px-3.5">
             <div className="mb-5 flex items-center justify-between">
-              <span className="text-[11px] font-bold tracking-[-0.01em]">Meridian Bio</span>
+              <span className="text-[11px] font-bold tracking-[-0.01em]">Northstar Commerce</span>
               <button type="button" className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#4a0c4f] shadow-sm transition hover:bg-[#f4eaf5]" aria-label="Compose new message">
                 <Pencil className="h-3 w-3" strokeWidth={2.5} />
               </button>
@@ -110,7 +100,7 @@ function SlackInterface() {
                 </div>
                 <nav className="space-y-0.5" aria-label="Channels">
                   {channels.map((channel) => {
-                    const active = channel.name === 'stability-ops';
+                            const active = channel.name === 'recovery-operations';
                     return (
                       <button
                         key={channel.name}
@@ -159,8 +149,8 @@ function SlackInterface() {
           <div className="flex min-w-0 flex-1 flex-col bg-white">
             <header className="flex h-9 shrink-0 items-center justify-between border-b border-[#ece8eb] px-4 sm:h-10 sm:px-5">
               <div className="flex min-w-0 items-center gap-2">
-                <h1 className="truncate text-[11px] font-bold text-[#25232a] sm:text-[12px]"><span className="mr-1 text-[#55515a]">#</span>stability-ops</h1>
-                <span className="hidden truncate text-[9px] text-[#817d83] sm:inline">Excursions, deviations, chamber alarms</span>
+                <h1 className="truncate text-[11px] font-bold text-[#25232a] sm:text-[12px]"><span className="mr-1 text-[#55515a]">#</span>recovery-operations</h1>
+                <span className="hidden truncate text-[9px] text-[#817d83] sm:inline">Evidence-backed recovery handoff</span>
               </div>
               <button type="button" className="rounded p-1 text-[#817d83] transition hover:bg-[#f4f1f4] hover:text-[#4a0c4f]" aria-label="Start a huddle">
                 <Headphones className="h-3.5 w-3.5" strokeWidth={1.8} />
@@ -183,10 +173,12 @@ function SlackInterface() {
                           <h2 className="text-[10px] font-bold text-[#292530] sm:text-[11px]">{message.author}</h2>
                           <time className="text-[8px] text-[#aaa5ac] sm:text-[9px]">{message.time}</time>
                         </div>
-                        <p className="mt-0.5 max-w-[690px] text-[10px] leading-[1.55] text-[#4e4a52] sm:text-[11px]">{message.text}</p>
+                          <p className="mt-0.5 max-w-[690px] text-[10px] leading-[1.55] text-[#4e4a52] sm:text-[11px]">{message.text}</p>
+                          {message.documents?.length ? <div className="mt-1.5 flex flex-wrap gap-1.5">{message.documents.map((document) => <span key={document} className="rounded-[3px] bg-[#f6f2f7] px-1.5 py-1 text-[8px] font-medium text-[#6b4671] sm:text-[9px]">{document}</span>)}</div> : null}
                       </div>
                     </article>
                   ))}
+                  <p className="flex items-center gap-2 text-[9px] font-medium tracking-tight text-[#26704e]"><span className="h-1.5 w-1.5 rounded-full bg-[#26704e]" />Investigation carried by Margin · Decision rights retained by Finance</p>
                 </div>
               </div>
 
@@ -199,7 +191,7 @@ function SlackInterface() {
                     <button type="button" className="rounded hover:text-[#4a0c4f]" aria-label="Add list"><span className="text-[10px]">≡</span></button>
                     <button type="button" className="rounded hover:text-[#4a0c4f]" aria-label="Add code"><span className="text-[10px]">&lt;&gt;</span></button>
                   </div>
-                  <div className="flex min-h-[40px] items-center px-2.5 text-[10px] text-[#8d8990] sm:min-h-[44px] sm:text-[11px]">Message #stability-ops</div>
+                  <div className="flex min-h-[40px] items-center px-2.5 text-[10px] text-[#8d8990] sm:min-h-[44px] sm:text-[11px]">Message #recovery-operations</div>
                   <div className="flex items-center justify-between px-2.5 pb-2 text-[#aaa5ac]">
                     <div className="flex items-center gap-2.5">
                       <button type="button" className="rounded-full hover:text-[#4a0c4f]" aria-label="Add attachment"><Plus className="h-3.5 w-3.5" strokeWidth={2.2} /></button>
