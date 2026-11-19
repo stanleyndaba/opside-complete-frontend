@@ -401,12 +401,6 @@ html, body, #root {
   will-change: transform;
 }
 
-@media (max-width: 767px) {
-  .announcement-marquee-track {
-    animation: announcement-marquee-left 28s linear infinite;
-  }
-}
-
 .system-log-track {
   animation: system-log-marquee-left var(--duration, 42s) linear infinite;
   will-change: transform;
