@@ -5,24 +5,21 @@ const articles = [
   {
     eyebrow: "Provider accountability",
     title: "Your Amazon recovery provider says the work is done. Can Finance verify the outcome?",
-    audience:
-      "CFOs, Controllers, Finance Directors and established Amazon brands already using recovery providers",
+    context: "Oct, 2026 · CEO at Margin",
     image: "/margin-blog-provider-accountability.png",
     href: "/blog/provider-accountability",
   },
   {
     eyebrow: "Operational complexity",
     title: "As your Amazon operation grows, can your financial controls keep up?",
-    audience:
-      "COOs, Heads of Marketplace Operations, Finance Directors and established FBA brands.",
+    context: "Vendor Amazon seller",
     image: "/margin-blog-operational-complexity.png",
     href: "/blog/operational-complexity",
   },
   {
     eyebrow: "Financial-period closure",
     title: "What does a properly closed Amazon financial period actually look like?",
-    audience:
-      "CFOs, Controllers, Financial Directors and enterprise Amazon businesses.",
+    context: "Finance leader · Financial controller",
     image: "/margin-blog-financial-period-closure.png",
     href: "/blog/financial-period-closure",
   },
@@ -71,8 +68,8 @@ export function BlogSection() {
               <h3 className="mt-5 max-w-[360px] font-lora text-[25px] font-normal leading-[1.08] tracking-[-0.04em] text-[#182026] sm:text-[29px]">
                 {article.title}
               </h3>
-              <p className="mt-5 max-w-[370px] text-[12px] leading-5 text-[#71808A]">
-                {article.audience}
+              <p className="mt-5 max-w-[370px] text-[12px] font-medium leading-5 tracking-[-0.015em] text-[#52616A]">
+                {article.context}
               </p>
               <div className="mt-auto flex flex-col items-start gap-2 pt-7">
                 <span className="text-[11px] font-medium tracking-tight text-[#71808A]">3 min read</span>
