@@ -39,7 +39,7 @@ function PublicAnnouncementBanner() {
                         <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/70 transition-transform group-hover:translate-x-1" />
                     </span>
                     <span className="flex items-center justify-center gap-2 px-5 text-center md:hidden">
-                        <span>The $6M Amazon Financial Period: What Does Proper…</span>
+                        <span>The $6M Amazon Financial Period: <span className="underline decoration-1 underline-offset-2">What Does Proper…</span></span>
                         <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/70 transition-transform group-hover:translate-x-1" />
                     </span>
                 </span>
