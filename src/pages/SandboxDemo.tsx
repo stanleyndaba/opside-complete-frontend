@@ -28,6 +28,7 @@ import {
   __previewRecords,
 } from "./DuplicatePipelinePreview";
 import { ReportGenerationStage } from "@/components/report-generation";
+import { DemoTestsShell } from "./DemoTests";
 import { SlackInterface } from "./SlackInterface";
 
 const principleStages = [
@@ -64,6 +65,8 @@ const principleStages = [
   "Recovery positions",
   "Learning from recovery",
 ] as const;
+
+const demoTestsShellStages = new Set([0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 30]);
 
 const wheelItems = [
   "Settlement variance requiring review",
@@ -150,5 +153,6 @@ export default function SandboxDemo() {
     case 30: content = <RecoveryPositionStage />; break;
     case 31: content = <AccuracyLearningStage />; break;
   }
-  return <main className="min-h-screen bg-white font-google-sans text-[#182026]"><div className="sticky top-0 z-50 flex items-center justify-between border-b border-[#E8EFF1] bg-white/95 px-4 py-3 backdrop-blur-sm sm:px-8"><span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#7B8A97]">Margin · Super Demo</span><span className="text-[10px] tabular-nums text-[#8A99A5]">{String(stage + 1).padStart(2, "0")} / {principleStages.length} · {principleStages[stage]}</span></div><AnimatePresence mode="wait"><motion.div key={stage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3 }}>{content}</motion.div></AnimatePresence></main>;
+  const renderedContent = demoTestsShellStages.has(stage) ? <DemoTestsShell>{content}</DemoTestsShell> : content;
+  return <main className="min-h-screen bg-white font-google-sans text-[#182026]"><div className="sticky top-0 z-50 flex items-center justify-between border-b border-[#E8EFF1] bg-white/95 px-4 py-3 backdrop-blur-sm sm:px-8"><span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#7B8A97]">Margin · Super Demo</span><span className="text-[10px] tabular-nums text-[#8A99A5]">{String(stage + 1).padStart(2, "0")} / {principleStages.length} · {principleStages[stage]}</span></div><AnimatePresence mode="wait"><motion.div key={stage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3 }}>{renderedContent}</motion.div></AnimatePresence></main>;
 }
