@@ -22,7 +22,7 @@ type PublicNavbarProps = {
     wide?: boolean;
 };
 
-const announcementText = 'What does a properly closed Amazon financial period actually look like?';
+const announcementText = 'The $6M Amazon Financial Period: What Does Proper Financial Closure Actually Look Like?';
 
 function PublicAnnouncementBanner() {
     return (
