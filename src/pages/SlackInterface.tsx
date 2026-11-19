@@ -1,12 +1,75 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { Headphones, MoreHorizontal, Pencil, Search, Send, Smile, Sparkles, AtSign, Plus, Paperclip } from 'lucide-react';
+import { AtSign, Headphones, MoreHorizontal, Paperclip, Pencil, Plus, Search, Send, Smile, Sparkles } from 'lucide-react';
 
-const channels = ['general', 'quality', 'stability-ops', 'regulatory', 'random'];
+const channels = [
+  { name: 'general' },
+  { name: 'quality' },
+  { name: 'stability-ops', unread: 1 },
+  { name: 'regulatory' },
+  { name: 'clinical-ops' },
+  { name: 'supply-chain', unread: 3 },
+  { name: 'launches' },
+  { name: 'random' },
+];
+
+const directMessages = [
+  { name: 'Mara Chen', initials: 'MC', color: '#e8a34b', status: 'online', unread: 2 },
+  { name: 'Jon Bell', initials: 'JB', color: '#5da5cf', status: 'away' },
+  { name: 'Priya Shah', initials: 'PS', color: '#b56bc1', status: 'online' },
+  { name: 'Eli Turner', initials: 'ET', color: '#77a86e', status: 'offline' },
+  { name: 'Nina Okafor', initials: 'NO', color: '#d47767', status: 'online' },
+  { name: 'Slackbot', initials: 'S', color: '#7b5a8f', status: 'online' },
+];
+
+const messages = [
+  {
+    author: 'Mara Chen',
+    initials: 'MC',
+    color: '#e8a34b',
+    time: '9:04 AM',
+    text: 'Morning team — the stability review for the north chamber is ready when everyone has a minute.',
+  },
+  {
+    author: 'Jon Bell',
+    initials: 'JB',
+    color: '#5da5cf',
+    time: '9:07 AM',
+    text: 'I pulled the overnight readings. We have one excursion to discuss, but the product stayed inside the approved recovery window.',
+  },
+  {
+    author: 'Priya Shah',
+    initials: 'PS',
+    color: '#b56bc1',
+    time: '9:11 AM',
+    text: 'Thanks. Is the deviation report linked to the batch record yet? I want to make sure Quality has the full chain before sign-off.',
+  },
+  {
+    author: 'Mara Chen',
+    initials: 'MC',
+    color: '#e8a34b',
+    time: '9:16 AM',
+    text: 'Yes — I added the sensor export, the alarm acknowledgement, and the operator notes. The only open item is the final QA comment.',
+  },
+  {
+    author: 'Nina Okafor',
+    initials: 'NO',
+    color: '#d47767',
+    time: '9:22 AM',
+    text: 'I can take that. I will compare the chamber log with the release checklist and post the conclusion here before 10:00.',
+  },
+  {
+    author: 'Jon Bell',
+    initials: 'JB',
+    color: '#5da5cf',
+    time: '9:25 AM',
+    text: 'Perfect. I will keep an eye on the live feed and flag anything that moves outside the expected range.',
+  },
+];
 
 function SlackInterface() {
   usePageMeta({
     title: 'Slack Interface | Margin',
-    description: 'An empty Slack-style workspace interface.',
+    description: 'A populated Slack-style workspace interface.',
     url: '/slack-interface',
     robots: 'noindex, nofollow',
   });
@@ -32,7 +95,7 @@ function SlackInterface() {
         </header>
 
         <div className="flex min-h-0 flex-1">
-          <aside className="w-[142px] shrink-0 bg-[#4a0c4f] px-2.5 py-3 text-white sm:w-[152px] sm:px-3.5">
+          <aside className="w-[142px] shrink-0 overflow-y-auto bg-[#4a0c4f] px-2.5 py-3 text-white sm:w-[152px] sm:px-3.5">
             <div className="mb-5 flex items-center justify-between">
               <span className="text-[11px] font-bold tracking-[-0.01em]">Meridian Bio</span>
               <button type="button" className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#4a0c4f] shadow-sm transition hover:bg-[#f4eaf5]" aria-label="Compose new message">
@@ -40,30 +103,52 @@ function SlackInterface() {
               </button>
             </div>
 
-            <div className="space-y-3 text-[9px] leading-none text-white/65 sm:text-[10px]">
+            <div className="space-y-4 text-[9px] leading-none text-white/65 sm:text-[10px]">
               <div>
-                <p className="mb-2 font-medium text-white/75">Channels</p>
+                <div className="mb-2 flex items-center justify-between px-1.5">
+                  <p className="font-medium text-white/75">Channels</p>
+                  <button type="button" className="text-white/55 transition hover:text-white" aria-label="Add a channel"><Plus className="h-3 w-3" /></button>
+                </div>
                 <nav className="space-y-0.5" aria-label="Channels">
                   {channels.map((channel) => {
-                    const active = channel === 'stability-ops';
+                    const active = channel.name === 'stability-ops';
                     return (
                       <button
-                        key={channel}
+                        key={channel.name}
                         type="button"
                         className={`flex h-5 w-full items-center gap-1.5 rounded-[2px] px-1.5 text-left transition ${active ? 'bg-[#0f86bd] font-bold text-white' : 'text-white/75 hover:bg-white/10 hover:text-white'}`}
                         aria-current={active ? 'page' : undefined}
                       >
                         <span className="text-[10px] text-white/75">#</span>
-                        <span className="truncate">{channel}</span>
-                        {active && <span className="ml-auto flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-white px-1 text-[8px] font-bold text-[#1684b7]">1</span>}
+                        <span className="truncate">{channel.name}</span>
+                        {channel.unread && <span className="ml-auto flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-white px-1 text-[8px] font-bold text-[#1684b7]">{channel.unread}</span>}
                       </button>
                     );
                   })}
                 </nav>
               </div>
 
+              <div>
+                <div className="mb-2 flex items-center justify-between px-1.5">
+                  <p className="font-medium text-white/75">Direct messages</p>
+                  <button type="button" className="text-white/55 transition hover:text-white" aria-label="Start a direct message"><Plus className="h-3 w-3" /></button>
+                </div>
+                <nav className="space-y-0.5" aria-label="Direct messages">
+                  {directMessages.map((person) => (
+                    <button key={person.name} type="button" className="flex h-5 w-full items-center gap-1.5 rounded-[2px] px-1.5 text-left text-white/75 transition hover:bg-white/10 hover:text-white">
+                      <span className="relative flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-[3px] text-[7px] font-bold text-white" style={{ backgroundColor: person.color }}>
+                        {person.initials}
+                        <span className={`absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full border border-[#4a0c4f] ${person.status === 'online' ? 'bg-[#54c48b]' : person.status === 'away' ? 'bg-[#f2b84b]' : 'bg-[#8b8590]'}`} />
+                      </span>
+                      <span className="truncate">{person.name}</span>
+                      {person.unread && <span className="ml-auto flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-white px-1 text-[8px] font-bold text-[#4a0c4f]">{person.unread}</span>}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+
               <div className="pt-1">
-                <p className="mb-2 font-medium text-white/75">Apps</p>
+                <p className="mb-2 px-1.5 font-medium text-white/75">Apps</p>
                 <button type="button" className="flex items-center gap-1.5 px-1.5 text-white/75 transition hover:text-white">
                   <span className="flex h-3.5 w-3.5 items-center justify-center rounded-[2px] bg-white/90 text-[8px] font-bold text-[#4a0c4f]">E</span>
                   <span>Enjamb</span>
@@ -84,7 +169,28 @@ function SlackInterface() {
             </header>
 
             <div className="relative flex min-h-0 flex-1 flex-col">
-              <div className="flex-1" aria-label="Empty channel message history" />
+              <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5" aria-label="Channel message history">
+                <div className="mb-4 flex items-center gap-3 text-[9px] text-[#aaa5ac]">
+                  <span className="h-px flex-1 bg-[#eee9ed]" />
+                  <span>Today</span>
+                  <span className="h-px flex-1 bg-[#eee9ed]" />
+                </div>
+                <div className="space-y-4">
+                  {messages.map((message) => (
+                    <article key={`${message.author}-${message.time}`} className="flex gap-2.5">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[4px] text-[9px] font-bold text-white" style={{ backgroundColor: message.color }}>{message.initials}</div>
+                      <div className="min-w-0 pt-0.5">
+                        <div className="flex items-baseline gap-2">
+                          <h2 className="text-[10px] font-bold text-[#292530] sm:text-[11px]">{message.author}</h2>
+                          <time className="text-[8px] text-[#aaa5ac] sm:text-[9px]">{message.time}</time>
+                        </div>
+                        <p className="mt-0.5 max-w-[690px] text-[10px] leading-[1.55] text-[#4e4a52] sm:text-[11px]">{message.text}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+
               <div className="px-4 pb-3 sm:px-5 sm:pb-4">
                 <div className="overflow-hidden rounded-[4px] border border-[#d4d1d5] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] focus-within:border-[#7c3b80] focus-within:ring-1 focus-within:ring-[#7c3b80]/20">
                   <div className="flex h-6 items-center gap-3 border-b border-[#f0edf0] px-2.5 text-[#aaa5ac] sm:h-7">
@@ -94,7 +200,7 @@ function SlackInterface() {
                     <button type="button" className="rounded hover:text-[#4a0c4f]" aria-label="Add list"><span className="text-[10px]">≡</span></button>
                     <button type="button" className="rounded hover:text-[#4a0c4f]" aria-label="Add code"><span className="text-[10px]">&lt;&gt;</span></button>
                   </div>
-                  <div className="flex min-h-[48px] items-center px-2.5 text-[10px] text-[#8d8990] sm:min-h-[52px] sm:text-[11px]">Message #stability-ops</div>
+                  <div className="flex min-h-[40px] items-center px-2.5 text-[10px] text-[#8d8990] sm:min-h-[44px] sm:text-[11px]">Message #stability-ops</div>
                   <div className="flex items-center justify-between px-2.5 pb-2 text-[#aaa5ac]">
                     <div className="flex items-center gap-2.5">
                       <button type="button" className="rounded-full hover:text-[#4a0c4f]" aria-label="Add attachment"><Plus className="h-3.5 w-3.5" strokeWidth={2.2} /></button>
