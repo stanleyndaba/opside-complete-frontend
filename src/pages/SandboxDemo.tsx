@@ -21,7 +21,6 @@ import {
   EvidenceRegisterStage,
   EvidenceMatchStage,
   ArtifactAnalysisStage,
-  TeamHandoffStage,
   AmazonCorrespondenceStage,
   AccuracyLearningStage,
   ReconciledAnomalies,
@@ -29,6 +28,7 @@ import {
   __previewRecords,
 } from "./DuplicatePipelinePreview";
 import { ReportGenerationStage } from "@/components/report-generation";
+import { SlackInterface } from "./SlackInterface";
 
 const principleStages = [
   "Record intake",
@@ -130,7 +130,7 @@ export default function SandboxDemo() {
     case 10: content = <CreateRoutineStage onComplete={advance} />; break;
     case 11: content = <RoutinePlanStage />; break;
     case 12: content = <AllRoutines reduceMotion={Boolean(reduceMotion)} />; break;
-    case 13: content = <TeamHandoffStage />; break;
+    case 13: content = <SlackInterface embedded />; break;
     case 14: content = <ImplementingRoutine reduceMotion={Boolean(reduceMotion)} />; break;
     case 15: content = <PlatformSimulationStage {...common} />; break;
     case 16: content = <GeneratingPlanStage />; break;
@@ -143,7 +143,7 @@ export default function SandboxDemo() {
     case 23: content = <FinancialResolutionWorkflow />; break;
     case 24: content = <ReportGenerationStage onComplete={advance} />; break;
     case 25: content = <ApproveOnceStage onComplete={advance} />; break;
-    case 26: content = <TeamHandoffStage />; break;
+    case 26: content = <SlackInterface embedded />; break;
     case 27: content = <QueryStage {...common} />; break;
     case 28: content = <AmazonCorrespondenceStage />; break;
     case 29: content = <ReconciledAnomalies cards={__previewRecords} />; break;

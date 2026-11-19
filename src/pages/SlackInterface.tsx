@@ -56,11 +56,11 @@ const messages = [
   },
 ];
 
-function SlackInterface() {
+export function SlackInterface({ embedded = false }: { embedded?: boolean }) {
   usePageMeta({
-    title: 'Team Handoff | Margin',
-    description: 'A Slack-style recovery operations handoff for a governed Margin investigation.',
-    url: '/slack-interface',
+    title: embedded ? 'Super Demo | Margin' : 'Team Handoff | Margin',
+    description: embedded ? 'Margin’s full-length operating narrative.' : 'A Slack-style recovery operations handoff for a governed Margin investigation.',
+    url: embedded ? '/sandbox-demo' : '/slack-interface',
     robots: 'noindex, nofollow',
   });
 
