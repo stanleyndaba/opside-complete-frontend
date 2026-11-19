@@ -6,6 +6,7 @@ import {
   Plus,
   Search,
   Star,
+  Store,
   UserRound,
   UsersRound,
 } from "lucide-react";
@@ -160,7 +161,10 @@ export default function DemoTests() {
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 stroke-[1.7] text-[#656767]" />
               <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search prompts" className="h-[42px] w-full rounded-[20px] border-0 bg-[#f0f0f0] pl-10 pr-3 text-[12px] text-[#1e2021] outline-none placeholder:text-[#7d7e7f] focus:ring-2 focus:ring-[#ccd0d0] sm:text-[15px]" />
             </div>
-            <button type="button" aria-label="Account" className="hidden h-8 w-8 items-center justify-center rounded-full bg-[#25292a] text-white sm:flex"><UserRound className="h-4 w-4" /></button>
+            <div className="flex items-center gap-2">
+              <button type="button" aria-label="Open store" className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-[#dedede] bg-white text-[#25292a] shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-colors hover:bg-[#f4f4f4]"><Store className="h-4 w-4" strokeWidth={1.9} /></button>
+              <button type="button" aria-label="Account" className="hidden h-8 w-8 items-center justify-center rounded-full bg-[#25292a] text-white sm:flex"><UserRound className="h-4 w-4" /></button>
+            </div>
           </div>
 
           <div className="mt-7 max-w-[760px] sm:mt-9">
