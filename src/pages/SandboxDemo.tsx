@@ -21,7 +21,6 @@ import {
   EvidenceRegisterStage,
   EvidenceMatchStage,
   ArtifactAnalysisStage,
-  AmazonCorrespondenceStage,
   AccuracyLearningStage,
   ReconciledAnomalies,
   RecoveryPositionStage,
@@ -30,6 +29,7 @@ import {
 import { ReportGenerationStage } from "@/components/report-generation";
 import { DemoTestsShell } from "./DemoTests";
 import { SlackInterface } from "./SlackInterface";
+import CaseDetailDuplicateDemo from "./CaseDetailDuplicateDemo";
 
 const principleStages = [
   "Record intake",
@@ -66,7 +66,7 @@ const principleStages = [
   "Learning from recovery",
 ] as const;
 
-const demoTestsShellStages = new Set([0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 29, 30]);
+const demoTestsShellStages = new Set([0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29, 30]);
 
 const wheelItems = [
   "Settlement variance requiring review",
@@ -148,7 +148,7 @@ export default function SandboxDemo() {
     case 25: content = <ApproveOnceStage onComplete={advance} />; break;
     case 26: content = <SlackInterface embedded />; break;
     case 27: content = <QueryStage {...common} />; break;
-    case 28: content = <AmazonCorrespondenceStage />; break;
+    case 28: content = <CaseDetailDuplicateDemo />; break;
     case 29: content = <ReconciledAnomalies cards={__previewRecords} />; break;
     case 30: content = <RecoveryPositionStage />; break;
     case 31: content = <AccuracyLearningStage />; break;
