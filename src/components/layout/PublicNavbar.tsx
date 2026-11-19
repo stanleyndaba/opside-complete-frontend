@@ -28,7 +28,7 @@ function PublicAnnouncementBanner() {
     return (
         <div className="fixed inset-x-0 top-0 z-[60] h-9 overflow-hidden bg-black text-white">
             <a
-                href="https://margin-finance.com/blog/financial-period-closure"
+                href="https://margin-finance.com/blog/six-million-amazon-financial-period"
                 aria-label={announcementText}
                 className="group flex h-full w-full items-center justify-center overflow-hidden text-[11px] leading-4 tracking-tight text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80 sm:text-[12px]"
             >
