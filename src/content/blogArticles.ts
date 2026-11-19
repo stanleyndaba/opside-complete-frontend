@@ -1,3 +1,5 @@
+import { sixMillionFinancialPeriodArticle } from './blogSixMillionFinancialPeriod';
+
 export type BlogArticle = {
   slug: string;
   eyebrow: string;
@@ -19,6 +21,7 @@ export type BlogArticle = {
 };
 
 export const blogArticles: BlogArticle[] = [
+  sixMillionFinancialPeriodArticle,
   {
     slug: 'provider-accountability',
     eyebrow: 'Provider accountability',

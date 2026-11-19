@@ -3,6 +3,13 @@ import { Link } from "react-router-dom";
 
 const articles = [
   {
+    eyebrow: "Financial control",
+    title: "The $6M Amazon Financial Period: What Does Proper Financial Closure Actually Look Like?",
+    context: "Aug 2026 · CFO · Financial controller",
+    image: "/margin-blog-six-million-financial-period.png",
+    href: "/blog/six-million-amazon-financial-period",
+  },
+  {
     eyebrow: "Provider accountability",
     title: "Your Amazon recovery provider says the work is done. Can Finance verify the outcome?",
     context: "Oct 2026 · CEO at Margin",
