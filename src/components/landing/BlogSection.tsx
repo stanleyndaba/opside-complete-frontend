@@ -7,7 +7,7 @@ const articles = [
     eyebrow: "Financial control",
     title: "The $6M Amazon Financial Period: What Does Proper Financial Closure Actually Look Like?",
     context: "Aug 2026 · CFO · Financial controller",
-    image: "/margin-blog-six-million-financial-period.png",
+    image: "/margin-blog-six-million-financial-period-orange.png",
     href: "/blog/six-million-amazon-financial-period",
   },
   {
