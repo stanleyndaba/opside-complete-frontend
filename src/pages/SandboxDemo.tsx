@@ -127,22 +127,16 @@ function SlackHandoffTransition({ onComplete }: { onComplete: () => void }) {
   }, [onComplete, reduceMotion]);
 
   const platforms = [
-    { name: "Gmail", src: "/gmailicon.png", tone: "bg-[#FFF6F4]", position: "left-0" },
-    { name: "Amazon", src: "/amazon-logo-transparent-circle.png", tone: "bg-[#FFF9EE]", position: "left-1/3" },
-    { name: "Slack", src: "/slack-icon-2019.png", tone: "bg-[#F3F0FF]", position: "left-2/3" },
-    { name: "QuickBooks", src: "/quickbooks.png", tone: "bg-[#F0FAF4]", position: "right-0" },
+    { name: "Gmail", src: "/gmailicon.png", tone: "bg-[#FFF6F4]" },
+    { name: "Amazon", src: "/amazon-logo-transparent-circle.png", tone: "bg-[#FFF9EE]" },
+    { name: "Slack", src: "/slack-icon-2019.png", tone: "bg-[#F3F0FF]" },
+    { name: "QuickBooks", src: "/quickbooks.png", tone: "bg-[#F0FAF4]" },
   ];
 
-  return <main className="flex min-h-screen items-center justify-center bg-white px-5 py-12 font-google-sans text-[#182026] sm:px-10">
-    <div className="w-full max-w-[860px] text-center">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7B8A97]">Connected operating context</p>
-      <h1 className="mt-3 text-[24px] font-medium tracking-[-0.04em] sm:text-[34px]">Choose where the handoff should happen.</h1>
-      <p className="mx-auto mt-3 max-w-[540px] text-[12px] leading-5 tracking-tight text-[#66737F] sm:text-[14px]">Margin has assembled the evidence-backed position. The next step is to route the controlled handoff to the team’s working channel.</p>
-      <div className="relative mx-auto mt-14 h-[138px] max-w-[720px] sm:mt-20 sm:h-[164px]" aria-label="Connected systems: Gmail, Amazon, Slack, and QuickBooks">
-        {platforms.map((platform) => <motion.div key={platform.name} animate={phase === "selected" && platform.name === "Slack" ? { y: -8, scale: 1.06, borderColor: "#611F69", boxShadow: "0 18px 35px rgba(97,31,105,0.16)" } : { y: 0, scale: 1, borderColor: "#DCE5E8", boxShadow: "0 8px 20px rgba(24,32,38,0.05)" }} transition={{ duration: reduceMotion ? 0 : 0.38 }} className={`absolute top-0 flex h-[112px] w-[23%] min-w-[74px] flex-col items-center justify-center gap-3 rounded-[14px] border bg-white sm:h-[138px] ${platform.position}`}><span className={`flex h-12 w-12 items-center justify-center rounded-[13px] p-2.5 sm:h-16 sm:w-16 sm:p-3.5 ${platform.tone}`}><img src={platform.src} alt="" className="h-full w-full object-contain" /></span><span className="text-[10px] font-semibold tracking-tight text-[#52616A] sm:text-[12px]">{platform.name}</span></motion.div>)}
-        <motion.div aria-hidden="true" animate={phase === "idle" ? { left: "8%", top: "126%" } : phase === "moving" ? { left: "72%", top: "100%" } : { left: "72%", top: "48%" }} transition={{ duration: reduceMotion ? 0 : 1.15, ease: [0.22, 1, 0.36, 1] }} className="pointer-events-none absolute z-20 text-[#182026] drop-shadow-[0_5px_6px_rgba(24,32,38,0.2)]"><MousePointer2 className="h-8 w-8 fill-white stroke-[1.8] sm:h-10 sm:w-10" /></motion.div>
-      </div>
-      <motion.p animate={{ opacity: phase === "selected" ? 1 : 0.65 }} className="mt-8 text-[11px] font-medium tracking-tight text-[#52616A] sm:text-[13px]">{phase === "selected" ? "Slack selected · opening Team Handoff" : "Connected records ready · selecting handoff channel"}</motion.p>
+  return <main className="flex min-h-screen items-center justify-center bg-white px-5 py-12 font-google-sans sm:px-10">
+    <div className="relative flex w-full max-w-[460px] items-center justify-center gap-4 sm:max-w-[560px] sm:gap-8" aria-label="Connected systems">
+      {platforms.map((platform) => <motion.span key={platform.name} animate={phase === "selected" && platform.name === "Slack" ? { y: -7, scale: 1.14, boxShadow: "0 14px 28px rgba(97,31,105,0.2)" } : { y: 0, scale: 1, boxShadow: "0 5px 14px rgba(24,32,38,0.06)" }} transition={{ duration: reduceMotion ? 0 : 0.38 }} className={`flex h-[68px] w-[68px] shrink-0 items-center justify-center rounded-[16px] p-3 sm:h-[86px] sm:w-[86px] sm:rounded-[19px] sm:p-4 ${platform.tone}`}><img src={platform.src} alt="" className="h-full w-full object-contain" /></motion.span>)}
+      <motion.span aria-hidden="true" animate={phase === "idle" ? { left: "8%", top: "125%" } : phase === "moving" ? { left: "72%", top: "108%" } : { left: "72%", top: "45%" }} transition={{ duration: reduceMotion ? 0 : 1.15, ease: [0.22, 1, 0.36, 1] }} className="pointer-events-none absolute z-20 text-[#182026] drop-shadow-[0_5px_6px_rgba(24,32,38,0.2)]"><MousePointer2 className="h-8 w-8 fill-white stroke-[1.8] sm:h-10 sm:w-10" /></motion.span>
     </div>
   </main>;
 }
