@@ -224,10 +224,10 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                            className="fixed inset-0 z-[60] bg-black/[0.12] backdrop-blur-sm md:hidden">
-                            <div className="mobile-menu-panel flex h-[100dvh] flex-col overflow-y-auto bg-[#182026]/[0.82] text-white shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl backdrop-saturate-[160%]">
-                                <div className="flex min-h-[76px] shrink-0 items-center justify-between border-b border-white/10 bg-white/[0.08] text-white shadow-[0_4px_18px_rgba(0,0,0,0.12)] backdrop-blur-xl">
-                                    <button type="button" onClick={() => setMobileMenuOpen(false)} className="inline-flex h-[76px] min-w-[132px] items-center justify-start rounded-br-[28px] px-5 text-[12px] font-sans font-medium text-white/75 transition-colors hover:text-white">Close</button>
+                            className="fixed inset-x-0 bottom-0 top-9 z-[60] bg-black/[0.12] backdrop-blur-sm md:hidden">
+                            <div className="mobile-menu-panel flex h-full flex-col overflow-y-auto bg-[#58636D]/[0.76] text-white shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl backdrop-saturate-[160%]">
+                                <div className="flex min-h-[56px] shrink-0 items-center justify-between border-b border-white/10 bg-white/[0.12] text-white shadow-[0_4px_18px_rgba(0,0,0,0.12)] backdrop-blur-xl">
+                                    <button type="button" onClick={() => setMobileMenuOpen(false)} className="inline-flex h-[56px] min-w-[132px] items-center justify-start rounded-br-[28px] px-5 text-[12px] font-sans font-medium text-white/75 transition-colors hover:text-white">Close</button>
                                     <Link to="/" onClick={() => setMobileMenuOpen(false)} className="absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-2 text-white">
                                         <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain invert brightness-0" />
                                         <span className="brand-wordmark font-merriweather text-[17px] tracking-tight">Margin</span>

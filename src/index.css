@@ -1872,25 +1872,6 @@ html, body, #root {
   padding: 0 0.12em 0.04em;
 }
 
-/* Mobile navigation is a clean white dropdown, including its expanded groups. */
-.mobile-menu-panel {
-  background: #FFFFFF !important;
-  color: #182026 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-.mobile-menu-panel [class*="text-white"] {
-  color: #182026 !important;
-}
-.mobile-menu-panel [class*="border-white"] {
-  border-color: #E5E7EB !important;
-}
-.mobile-menu-panel .landing-action-cta,
-.mobile-menu-panel .landing-action-cta [class*="text-white"] {
-  color: #FFFFFF !important;
-}
-
-
 /* Shared supporting-copy scale for public editorial pages. */
 @media (max-width: 767px) {
   .about-page main p:not([class*="text-[10px]"]):not([class*="text-[11px]"]):not([class*="text-[12px]"]),
