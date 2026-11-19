@@ -1388,38 +1388,26 @@ function NestedRecoveryVisual({
   progressPath = nestedRecoveryBrowsers.progress.path,
   backgroundImage = '/visual-english-landscape-2.jpg',
   cleanPresentation = false,
-  universalMobileLayout = false,
 }: {
   activeBrowser: keyof typeof nestedRecoveryBrowsers;
   onBrowserChange: (browser: keyof typeof nestedRecoveryBrowsers) => void;
   progressPath?: string;
   backgroundImage?: string;
   cleanPresentation?: boolean;
-  universalMobileLayout?: boolean;
 }) {
   const browsers = {
     ...nestedRecoveryBrowsers,
     progress: { ...nestedRecoveryBrowsers.progress, path: progressPath },
   };
 
-  const frameClass = (key: keyof typeof browsers) => {
-    if (universalMobileLayout) {
-      return key === 'progress'
-        ? 'left-[1%] top-[3%] h-[78%] w-[92%]'
-        : 'bottom-[2%] right-[1%] h-[76%] w-[92%]';
-    }
-
-    return key === 'progress'
+  const frameClass = (key: keyof typeof browsers) => key === 'progress'
       ? 'left-[1%] top-[3%] h-[78%] w-[92%] sm:left-[3%] sm:top-[5%] sm:h-[76%] sm:w-[78%]'
       : 'bottom-[2%] right-[1%] h-[76%] w-[92%] sm:bottom-[3%] sm:right-[3%] sm:h-[73%] sm:w-[78%]';
-  };
 
-  const visualClass = universalMobileLayout
-    ? 'min-h-[620px] rounded-[12px] bg-[#EEF3F0] p-2'
-    : cleanPresentation
-      ? 'min-h-[620px] rounded-none bg-transparent p-0 sm:min-h-[570px] sm:rounded-[12px] sm:bg-[#EEF3F0] sm:p-4'
-      : 'min-h-[620px] rounded-[12px] bg-[#EEF3F0] p-2 sm:min-h-[570px] sm:p-4';
-  const innerClass = universalMobileLayout ? 'min-h-[590px]' : 'min-h-[590px] sm:min-h-[538px]';
+  const visualClass = cleanPresentation
+    ? 'min-h-[620px] rounded-none bg-transparent p-0 sm:min-h-[570px] sm:rounded-[12px] sm:bg-[#EEF3F0] sm:p-4'
+    : 'min-h-[620px] rounded-[12px] bg-[#EEF3F0] p-2 sm:min-h-[570px] sm:p-4';
+  const innerClass = 'min-h-[590px] sm:min-h-[538px]';
 
   return (
     <motion.div {...revealProps} className={`relative overflow-visible ${visualClass}`} style={cleanPresentation ? undefined : { backgroundImage: `linear-gradient(rgba(246,249,247,0.4), rgba(246,249,247,0.56)), url(${backgroundImage})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>
@@ -1599,7 +1587,7 @@ function FooterNestedRecoveryVisual() {
     <section className="relative overflow-hidden bg-white pb-10 pt-5 sm:pb-14 sm:pt-8 md:pb-16 md:pt-10" aria-labelledby="footer-nested-recovery-title">
       <div className={containerClass}>
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Keep the next financial action from getting lost between people.</span></h2>
-        <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} backgroundImage="/visual-english-landscape-3.jpg" universalMobileLayout />
+        <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} cleanPresentation />
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
           <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Every case, decision and evidence requirement stays linked to the financial event it concerns.</p>
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a free review. Margin establishes what the records explain, what remains unresolved and whether further action is justified.</p>
