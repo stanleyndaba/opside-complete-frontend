@@ -134,26 +134,28 @@ export function ProductServiceItem({
 }) {
     const className = cn(
         'landing-menu-item group flex items-start gap-3 rounded-[9px] border border-transparent px-3 py-3 transition-[background-color,border-color,transform] duration-150 hover:-translate-y-0.5',
-            'hover:border-[#E7E0D6] hover:bg-[#F7F4EE] hover:shadow-[0_8px_20px_rgba(24,32,38,0.05)]'
+            variant === 'dark'
+                ? 'hover:border-white/15 hover:bg-white/10 hover:shadow-[0_8px_20px_rgba(0,0,0,0.12)]'
+                : 'hover:border-[#E7E0D6] hover:bg-[#F7F4EE] hover:shadow-[0_8px_20px_rgba(24,32,38,0.05)]'
     );
     const content = (
         <>
             <div className={cn(
-                'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] bg-[#F6F0EC] p-1 transition-colors',
-                'text-[#7B8790] group-hover:text-[#F05A3C]'
+                'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] p-1 transition-colors',
+                variant === 'dark' ? 'bg-white/10 text-white/70 group-hover:text-white' : 'bg-[#F6F0EC] text-[#7B8790] group-hover:text-[#F05A3C]'
             )}>
                 <Icon className="h-full w-full" strokeWidth={1.5} />
             </div>
             <div className="min-w-0">
                 <span className={cn(
                     'block text-[12px] font-sans font-semibold leading-snug tracking-tight transition-colors',
-                    'text-[#182026] group-hover:text-[#D9472D]'
+                    variant === 'dark' ? 'text-white/90 group-hover:text-white' : 'text-[#182026] group-hover:text-[#D9472D]'
                 )}>
                     {title}
                 </span>
                 <p className={cn(
                     'mt-1 text-[10px] font-sans font-normal leading-[1.5] tracking-tight',
-                    'text-[#66737F]'
+                    variant === 'dark' ? 'text-white/65' : 'text-[#66737F]'
                 )}>
                     {description}
                 </p>
