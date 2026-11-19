@@ -108,6 +108,7 @@ const AdminRevenue = lazy(() => import("./pages/AdminRevenue"));
 const QueueDashboard = lazy(() => import("./pages/QueueDashboard"));
 const Contact = lazy(() => import("./pages/Contact"));
 const ConsumerRecovery = lazy(() => import("./pages/ConsumerRecovery"));
+const SlackInterface = lazy(() => import("./pages/SlackInterface"));
 
 const Sales = lazy(() => import("./pages/Sales"));
 const SalesLeads = lazy(() => import("./pages/SalesLeads"));
@@ -318,7 +319,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 const RouteOverlays = () => {
   const location = useLocation();
   usePrivateRouteRobots(location.pathname);
-  const hidePublicChat = ['/review-consent', '/try-demo', '/try-demo-two', '/try-demo-three', '/try-demo-four', '/try-demo-five', '/try-demo-six', '/try-demo-seven', '/try-demo-eight', '/try-demo-nine', '/try-demo-ten', '/try-demo-eleven', '/try-demo-twelve', '/try-demo-thirteen', '/try-demo-fourteen', '/try-demo-fifteen', '/try-demo-sixteen', '/designsimulate', '/platformsimulate', '/documentsimulate', '/auditsimulate', '/platformfly', '/accuracy-graph', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/evidence-match', '/rejection-loop', '/report-generation', '/duplicate-pipeline-preview', '/routine', '/progress-review', '/evidence-required', '/issues-found', '/filing-pipeline-preview', '/progress-preview', '/amazon-thread-review', '/auto-submit-preview', '/appeals-review', '/financial-reconciliation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/openstatement', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate', '/timeline-simulation', '/readiness-simulate', '/readiness-simulate-two', '/memory-simulate', '/reconciliation-simulate', '/currency-margin', '/standalone'].includes(location.pathname);
+  const hidePublicChat = ['/review-consent', '/try-demo', '/try-demo-two', '/try-demo-three', '/try-demo-four', '/try-demo-five', '/try-demo-six', '/try-demo-seven', '/try-demo-eight', '/try-demo-nine', '/try-demo-ten', '/try-demo-eleven', '/try-demo-twelve', '/try-demo-thirteen', '/try-demo-fourteen', '/try-demo-fifteen', '/try-demo-sixteen', '/designsimulate', '/platformsimulate', '/documentsimulate', '/auditsimulate', '/platformfly', '/accuracy-graph', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/evidence-match', '/rejection-loop', '/report-generation', '/duplicate-pipeline-preview', '/routine', '/progress-review', '/evidence-required', '/issues-found', '/filing-pipeline-preview', '/progress-preview', '/amazon-thread-review', '/auto-submit-preview', '/appeals-review', '/financial-reconciliation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/openstatement', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate', '/timeline-simulation', '/readiness-simulate', '/readiness-simulate-two', '/memory-simulate', '/reconciliation-simulate', '/currency-margin', '/standalone', '/slack-interface'].includes(location.pathname);
 
   return (
     <>
@@ -415,6 +416,7 @@ const App = () => (
                         <Route path="/refund-policy" element={<RefundPolicy />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/consumer-recovery" element={<ConsumerRecovery />} />
+                        <Route path="/slack-interface" element={<SlackInterface />} />
                         <Route path="/sales" element={<Sales />} />
                         <Route path="/amazon-fba-reimbursement" element={<AmazonFbaReimbursement />} />
                         <Route path="/amazon-lost-inventory-reimbursement" element={<ReimbursementAcquisitionPage />} />

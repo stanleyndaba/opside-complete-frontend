@@ -31,6 +31,14 @@
   stroke-width: 1.9;
 }
 
+.slack-interface__pattern {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.78) 1px, transparent 1.2px),
+    radial-gradient(circle, rgba(96, 186, 225, 0.24) 1px, transparent 1.2px);
+  background-position: 0 0, 3px 3px;
+  background-size: 6px 6px;
+}
+
 @media (hover: none) and (pointer: coarse) {
   .hero-section {
     flex-direction: column;

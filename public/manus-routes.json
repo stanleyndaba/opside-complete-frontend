@@ -269,6 +269,10 @@
       "title": "Contact"
     },
     {
+      "path": "/slack-interface",
+      "title": "Slack Interface"
+    },
+    {
       "path": "/consumer-recovery",
       "title": "Consumer Recovery"
     },
