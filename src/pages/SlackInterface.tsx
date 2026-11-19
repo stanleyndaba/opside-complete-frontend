@@ -75,8 +75,7 @@ function SlackInterface() {
   });
 
   return (
-    <main className="slack-interface min-h-screen overflow-hidden bg-[#b9e5f8] p-3 font-sans text-[#292530] sm:p-6 lg:p-10">
-      <div className="slack-interface__pattern pointer-events-none fixed inset-0 opacity-80" aria-hidden="true" />
+    <main className="slack-interface min-h-screen overflow-hidden bg-white p-3 font-sans text-[#292530] sm:p-6 lg:p-10">
 
       <section className="slack-window relative mx-auto flex h-[calc(100vh-24px)] min-h-[560px] w-full max-w-[1120px] flex-col overflow-hidden rounded-[7px] bg-white shadow-[0_25px_70px_rgba(39,55,76,0.26)] sm:h-[calc(100vh-48px)] lg:h-[640px]" aria-label="Slack workspace interface">
         <header className="flex h-8 shrink-0 items-center gap-3 bg-[#47134f] px-3 text-white sm:h-9 sm:px-4">
