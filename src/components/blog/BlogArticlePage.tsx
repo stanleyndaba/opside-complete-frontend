@@ -57,7 +57,7 @@ export function BlogArticlePage({ article }: Props) {
     title: `${article.title} | Margin`,
     description: article.description,
     url: `${SITE_META.url}/blog/${article.slug}`,
-    image: SITE_META.image,
+    image: article.image ?? SITE_META.image,
   });
 
   const relatedArticles = article.related.map((slug) => blogArticleBySlug[slug]).filter(Boolean);
@@ -78,6 +78,14 @@ export function BlogArticlePage({ article }: Props) {
                 <span className="h-1 w-1 rounded-full bg-[#F05A3C]" aria-hidden="true" />
                 <span>{article.audience}</span>
               </div>
+              {article.image && (
+                <img
+                  src={article.image}
+                  alt=""
+                  aria-hidden="true"
+                  className="mt-9 aspect-[3/2] w-full rounded-[10px] object-cover"
+                />
+              )}
             </div>
           </div>
         </section>

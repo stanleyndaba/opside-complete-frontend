@@ -4,6 +4,7 @@ export const sixMillionFinancialPeriodArticle: BlogArticle = {
   slug: 'six-million-amazon-financial-period',
   eyebrow: 'Financial control',
   title: 'The $6M Amazon Financial Period: What Does Proper Financial Closure Actually Look Like?',
+  image: '/margin-blog-six-million-financial-period.png',
   audience: 'CFOs, Controllers, Finance Directors and established Amazon businesses operating at meaningful transaction volume.',
   description: 'A $6 million Amazon operation can close its books while material financial work remains unexplained, unsupported or unresolved. Proper closure establishes what happened to the money—not only that the period was recorded.',
   readTime: '6 min read',

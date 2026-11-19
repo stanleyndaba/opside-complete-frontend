@@ -4,6 +4,7 @@ export type BlogArticle = {
   slug: string;
   eyebrow: string;
   title: string;
+  image?: string;
   audience: string;
   description: string;
   readTime: string;
