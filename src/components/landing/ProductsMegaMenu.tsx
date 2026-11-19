@@ -55,7 +55,7 @@ type ProductsMegaMenuProps = {
 
 export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
     const triggerClassName = variant === 'light'
-        ? 'h-10 rounded-[9px] border border-transparent bg-transparent px-3.5 text-[13px] font-sans font-medium tracking-[-0.01em] text-[#52616C] outline-none ring-0 transition-colors hover:border-transparent hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)] focus:border-transparent focus:bg-transparent focus:text-[var(--margin-text-primary)] focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-[#DCE3E7] data-[state=open]:!bg-[#F2F5F6] data-[state=open]:!text-[var(--margin-text-primary)] data-[state=open]:!shadow-[0_3px_10px_rgba(24,32,38,0.06)]'
+        ? 'h-10 rounded-[9px] border border-transparent bg-transparent px-3.5 text-[13px] font-sans font-medium tracking-[-0.01em] text-[#52616C] outline-none ring-0 transition-colors hover:border-transparent hover:bg-[#F7F4EE] hover:text-[var(--margin-text-primary)] focus:border-transparent focus:bg-transparent focus:text-[var(--margin-text-primary)] focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-[#E7E3DC] data-[state=open]:!bg-[#F7F4EE] data-[state=open]:!text-[var(--margin-text-primary)] data-[state=open]:!shadow-[0_3px_10px_rgba(24,32,38,0.06)]'
         : 'h-10 rounded-[9px] !border-0 bg-transparent px-3.5 text-[13px] font-medium tracking-[-0.01em] text-white/85 shadow-none outline-none ring-0 transition-colors hover:!border-0 hover:bg-white/10 hover:text-white focus:!border-0 focus:bg-transparent focus:text-white focus-visible:!border-0 focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-0 data-[state=open]:!bg-white/10 data-[state=open]:!text-white data-[state=open]:!shadow-[0_4px_16px_rgba(0,0,0,0.12)]';
 
     return (
@@ -66,7 +66,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                         For Teams
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className={cn("relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[16px] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[80px] lg:w-[94vw] lg:max-w-[1080px] lg:-translate-x-1/2", variant === 'light' ? "border border-white/25 bg-[rgba(105,115,124,0.96)] shadow-[0_24px_70px_rgba(24,32,38,0.28),0_2px_8px_rgba(24,32,38,0.14)] backdrop-blur-2xl" : "border border-[#E2E8EB] bg-white shadow-[0_24px_70px_rgba(24,32,38,0.16),0_2px_8px_rgba(24,32,38,0.06)]")}>
+                        <div className="relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[16px] border border-[#E7E3DC] bg-[#FFFEFB] shadow-[0_24px_70px_rgba(24,32,38,0.14),0_2px_8px_rgba(24,32,38,0.05)] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[80px] lg:w-[94vw] lg:max-w-[1080px] lg:-translate-x-1/2">
                             <div className="grid grid-cols-1 lg:grid-cols-3">
                                 {productMenuGroups.map((group, index) => (
                                     <div
@@ -77,7 +77,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                         )}
                                     >
                                         <div className="mb-2 flex items-center justify-between gap-3">
-                                            <h4 className={cn("text-[11px] font-lora font-medium tracking-wide", variant === 'light' ? "text-white/65" : "text-[#7B8790]")}>
+                                            <h4 className="text-[11px] font-lora font-medium tracking-wide text-[#8B857F]">
                                                 {group.label}
                                             </h4>
                                             {group.badge && (
@@ -94,17 +94,17 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                                     title={item.title}
                                                     description={item.description}
                                                     href={item.href}
-                                                    variant={variant === 'light' ? 'dark' : 'light'}
+                                                    variant="light"
                                                 />
                                             ))}
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            <div className={cn("border-t px-6 py-4 lg:flex lg:items-center lg:justify-between lg:px-8", variant === 'light' ? "border-white/12 bg-white/10" : "border-[#E5ECEF] bg-[#F6F9FA]")}>
+                            <div className="border-t border-[#E7E3DC] bg-[#F7F4EE] px-6 py-4 lg:flex lg:items-center lg:justify-between lg:px-8">
                                 <div>
-                                    <p className={cn("text-[14px] font-semibold tracking-tight", variant === 'light' ? "text-white" : "text-[#182026]")}>Built for serious FBA operations</p>
-                                    <p className={cn("mt-0.5 max-w-[680px] text-[11px] font-normal tracking-tight", variant === 'light' ? "text-white/65" : "text-[#66737F]")}>
+                                    <p className="text-[14px] font-semibold tracking-tight text-[#182026]">Built for serious FBA operations</p>
+                                    <p className="mt-0.5 max-w-[680px] text-[11px] font-normal tracking-tight text-[#66737F]">
                                         Margin is designed for businesses where recovery crosses multiple shipments, systems and people, and where missed windows, weak evidence or incorrect payouts materially affect margin.
                                     </p>
                                 </div>
@@ -132,31 +132,28 @@ export function ProductServiceItem({
     onClick?: () => void,
     variant?: 'dark' | 'light'
 }) {
-    const isLight = variant === 'light';
     const className = cn(
         'landing-menu-item group flex items-start gap-3 rounded-[9px] border border-transparent px-3 py-3 transition-[background-color,border-color,transform] duration-150 hover:-translate-y-0.5',
-        isLight
-            ? 'hover:border-[#E5ECEF] hover:bg-[#F7FAFB] hover:shadow-[0_8px_20px_rgba(24,32,38,0.05)]'
-            : 'hover:bg-white/[0.03] hover:border-white/10'
+            'hover:border-[#E7E0D6] hover:bg-[#F7F4EE] hover:shadow-[0_8px_20px_rgba(24,32,38,0.05)]'
     );
     const content = (
         <>
             <div className={cn(
-                'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] bg-[#F1F5F6] p-1 transition-colors',
-                isLight ? 'text-[#6B7280] group-hover:text-[#0B74DE]' : 'border border-[#D9D7FF]/35 bg-[#D9D7FF]/15 text-[#E8E7FF] group-hover:border-[#D9D7FF]/60 group-hover:bg-[#635BFF]/55 group-hover:text-white'
+                'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] bg-[#F6F0EC] p-1 transition-colors',
+                'text-[#7B8790] group-hover:text-[#F05A3C]'
             )}>
                 <Icon className="h-full w-full" strokeWidth={1.5} />
             </div>
             <div className="min-w-0">
                 <span className={cn(
                     'block text-[12px] font-sans font-semibold leading-snug tracking-tight transition-colors',
-                    isLight ? 'text-[#182026] group-hover:text-[#0B74DE]' : 'text-white group-hover:text-blue-400'
+                    'text-[#182026] group-hover:text-[#D9472D]'
                 )}>
                     {title}
                 </span>
                 <p className={cn(
                     'mt-1 text-[10px] font-sans font-normal leading-[1.5] tracking-tight',
-                    isLight ? 'text-[#66737F]' : 'text-white/50'
+                    'text-[#66737F]'
                 )}>
                     {description}
                 </p>
