@@ -1,4 +1,5 @@
-import { ArrowRight } from "lucide-react";
+import { useRef } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const articles = [
@@ -33,6 +34,15 @@ const articles = [
 ] as const;
 
 export function BlogSection() {
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const moveCarousel = (direction: -1 | 1) => {
+    carouselRef.current?.scrollBy({
+      left: direction * Math.max(carouselRef.current.clientWidth * 0.82, 320),
+      behavior: "smooth",
+    });
+  };
+
   return (
     <section
       className="relative bg-[#F7F8F7] py-14 sm:py-18 md:py-24"
@@ -56,7 +66,7 @@ export function BlogSection() {
           </p>
         </div>
 
-        <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 md:gap-5">
+        <div ref={carouselRef} className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 scrollbar-hide md:gap-5">
           {articles.map((article) => (
             <article
               key={article.title}
@@ -90,6 +100,24 @@ export function BlogSection() {
               </div>
             </article>
           ))}
+        </div>
+        <div className="mt-3 flex w-fit items-center gap-1.5 rounded-full bg-[#FFF0EB] p-1.5 md:ml-auto">
+          <button
+            type="button"
+            onClick={() => moveCarousel(-1)}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F05A3C] text-white transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/40 focus-visible:ring-offset-2"
+            aria-label="Show previous article"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => moveCarousel(1)}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F05A3C] text-white transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/40 focus-visible:ring-offset-2"
+            aria-label="Show next article"
+          >
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
       </div>
     </section>
