@@ -69,6 +69,13 @@ const contactLinks = [
   { label: 'Partnerships', email: 'partnerships@margin-finance.com' }
 ];
 
+const directContactLinks = [
+  { label: 'Sales', email: 'sales@margin-finance.com' },
+  { label: 'Support', email: 'support@margin-finance.com' },
+  { label: 'Finance', email: 'finance@margin-finance.com' },
+  { label: 'Inquiries', email: 'inquuiries@margin-finance.com' },
+];
+
 const socialLinks = [
   {
     label: 'Facebook',
@@ -329,6 +336,18 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
                   <button type="submit" className="h-10 shrink-0 rounded-[7px] bg-[#F05A3C] px-3 text-[12px] font-medium text-white transition-colors hover:bg-[#D9472D]">Email Margin <ChevronRight className="-ml-[0.5px] inline-block h-3.5 w-3.5 align-[-2px]" /></button>
                 </div>
               </form>
+            </div>
+
+            <div className="border-t border-[#D8E3EA] pt-8 lg:col-start-2">
+              <p className="text-lg font-medium tracking-tight text-[#182026]">Direct Contact</p>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {directContactLinks.map(({ label, email }) => (
+                  <div key={email} className="min-w-0">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#7A858A]">{label}</p>
+                    <a href={`mailto:${email}`} className="mt-1 inline-block max-w-full truncate text-[13px] font-medium text-[#635BFF] transition-colors hover:text-[#5148E5] hover:underline">{email}</a>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
