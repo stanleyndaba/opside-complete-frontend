@@ -2241,7 +2241,7 @@ export default function Index() {
                 <img
                   src="/margin-global-recovery-network.png"
                   alt="Margin parent source connected to supported Amazon marketplaces across the Americas, Europe, Asia-Pacific and the Middle East"
-                  className="block h-auto w-full max-w-full object-contain"
+                  className="block h-auto w-full max-w-full scale-[1.08] object-contain sm:scale-[1.1] lg:scale-[1.12]"
                   loading="lazy"
                 />
               </motion.div>
