@@ -1340,11 +1340,11 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       title: "The next action stays accountable.",
       copy: "Each open position carries its current status, outstanding requirement, responsible owner and next justified action. Margin preserves the financial context as work moves between investigators, approvers and existing business systems, so handoffs do not lose the reason the action exists.",
       visual: (
-        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
+        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#C9D9E1]/80 bg-[#EAF2FF] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <img
-            src="/recovery-thread-card-3-final.png"
-            alt="Financial investigation with four accountable actions and connected service integrations"
-            className="block h-full w-full object-cover object-center"
+            src="/recovery-thread-card-3-blue.png"
+            alt="Accountable next-action workflow with connected service records and status ownership"
+            className="block h-full w-full object-contain object-center"
             loading="lazy"
           />
         </div>
