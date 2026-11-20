@@ -1582,21 +1582,34 @@ function AutoSubmitSection() {
 
 function FooterNestedRecoveryVisual() {
   const navigate = useNavigate();
-  const [activeBrowser, setActiveBrowser] = useState<keyof typeof nestedRecoveryBrowsers>('progress');
   return (
     <section className="relative overflow-hidden bg-white pb-10 pt-5 sm:pb-14 sm:pt-8 md:pb-16 md:pt-10" aria-labelledby="footer-nested-recovery-title">
       <div className={containerClass}>
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Keep the next financial action from getting lost between people.</span></h2>
-        <DemoTestsShell embedded>
-          <div className="mb-3 flex items-center gap-1 rounded-[10px] border border-[#e4e4e4] bg-white p-1" role="tablist" aria-label="Recovery workspace pages">
-            {(Object.keys(nestedRecoveryBrowsers) as Array<keyof typeof nestedRecoveryBrowsers>).map((key) => (
-              <button key={key} type="button" role="tab" aria-selected={activeBrowser === key} onClick={() => setActiveBrowser(key)} className={`flex-1 rounded-[8px] px-3 py-2 text-left text-[11px] font-semibold tracking-[-0.01em] transition-colors sm:text-[12px] ${activeBrowser === key ? 'bg-[#25292a] text-white' : 'text-[#656767] hover:bg-[#f3f3f3]'}`}>
-                {nestedRecoveryBrowsers[key].label}
-              </button>
-            ))}
-          </div>
-          <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} cleanPresentation />
-        </DemoTestsShell>
+        <div className="space-y-6">
+          <DemoTestsShell embedded>
+            <div className="mb-3 rounded-[10px] border border-[#e4e4e4] bg-white px-3 py-2">
+              <p className="text-[11px] font-semibold tracking-[-0.01em] text-[#25292a] sm:text-[12px]">Progress review</p>
+              <p className="mt-0.5 text-[10px] text-[#969797]">The governed event record, from control intake through financial close.</p>
+            </div>
+            <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]">
+              <ScaledDemoStage designWidth={900} designHeight={620}>
+                <ProgressReview embedded showSidebar={false} />
+              </ScaledDemoStage>
+            </div>
+          </DemoTestsShell>
+          <DemoTestsShell embedded>
+            <div className="mb-3 rounded-[10px] border border-[#e4e4e4] bg-white px-3 py-2">
+              <p className="text-[11px] font-semibold tracking-[-0.01em] text-[#25292a] sm:text-[12px]">Evidence required</p>
+              <p className="mt-0.5 text-[10px] text-[#969797]">The supporting records, matches and sufficiency log behind the position.</p>
+            </div>
+            <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]">
+              <ScaledDemoStage designWidth={900} designHeight={620}>
+                <EvidenceRequired embedded showSidebar={false} />
+              </ScaledDemoStage>
+            </div>
+          </DemoTestsShell>
+        </div>
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
           <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Every case, decision and evidence requirement stays linked to the financial event it concerns.</p>
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a free review. Margin establishes what the records explain, what remains unresolved and whether further action is justified.</p>
