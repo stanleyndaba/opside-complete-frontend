@@ -65,8 +65,8 @@ export function DemoTestsShell({ children, embedded = false }: { children?: Reac
 
   return (
     <main className={`${embedded ? "min-h-0 w-full p-0" : "min-h-screen px-3 py-3 sm:px-6 sm:py-6 lg:px-10 lg:py-10"} overflow-x-hidden bg-white text-[#18191a]`}>
-      <section className={`${embedded ? "min-h-0 max-w-none rounded-none shadow-none" : "min-h-[calc(100vh-0.75rem)] max-w-[1420px] rounded-[16px] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]"} mx-auto flex w-full overflow-hidden bg-[#fafafa]`}>
-        <aside className={`${embedded ? "hidden md:flex md:w-[184px] md:min-w-[184px] md:px-3 md:py-4" : "flex w-[210px] min-w-[210px] px-3 py-5 sm:w-[240px] sm:min-w-[240px] sm:px-4 sm:py-6"} shrink-0 flex-col border-r border-[#e1e1e1] bg-white`}>
+      <section className={`${embedded ? "min-h-0 max-w-none rounded-[14px] border border-[#e1e1e1] shadow-[0_12px_36px_rgba(15,34,39,0.08)]" : "min-h-[calc(100vh-0.75rem)] max-w-[1420px] rounded-[16px] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]"} mx-auto flex w-full overflow-hidden bg-[#fafafa]`}>
+        <aside className={`${embedded ? "flex w-[136px] min-w-[136px] px-2 py-3 sm:w-[184px] sm:min-w-[184px] sm:px-3 sm:py-4" : "flex w-[210px] min-w-[210px] px-3 py-5 sm:w-[240px] sm:min-w-[240px] sm:px-4 sm:py-6"} shrink-0 flex-col border-r border-[#e1e1e1] bg-white`}>
           <div className="mb-8 flex items-center justify-between px-2">
             <div>
               <p className="text-[13px] font-semibold tracking-[-0.03em] text-[#18191a]">Margin Library</p>

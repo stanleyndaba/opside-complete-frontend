@@ -1588,6 +1588,13 @@ function FooterNestedRecoveryVisual() {
       <div className={containerClass}>
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Keep the next financial action from getting lost between people.</span></h2>
         <DemoTestsShell embedded>
+          <div className="mb-3 flex items-center gap-1 rounded-[10px] border border-[#e4e4e4] bg-white p-1" role="tablist" aria-label="Recovery workspace pages">
+            {(Object.keys(nestedRecoveryBrowsers) as Array<keyof typeof nestedRecoveryBrowsers>).map((key) => (
+              <button key={key} type="button" role="tab" aria-selected={activeBrowser === key} onClick={() => setActiveBrowser(key)} className={`flex-1 rounded-[8px] px-3 py-2 text-left text-[11px] font-semibold tracking-[-0.01em] transition-colors sm:text-[12px] ${activeBrowser === key ? 'bg-[#25292a] text-white' : 'text-[#656767] hover:bg-[#f3f3f3]'}`}>
+                {nestedRecoveryBrowsers[key].label}
+              </button>
+            ))}
+          </div>
           <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} cleanPresentation />
         </DemoTestsShell>
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
