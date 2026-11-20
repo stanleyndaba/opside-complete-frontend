@@ -73,7 +73,7 @@ const directContactLinks = [
   { label: 'Sales', email: 'sales@margin-finance.com' },
   { label: 'Support', email: 'support@margin-finance.com' },
   { label: 'Finance', email: 'finance@margin-finance.com' },
-  { label: 'Inquiries', email: 'inquuiries@margin-finance.com' },
+  { label: 'Inquiries', email: 'inquiries@margin-finance.com' },
 ];
 
 const socialLinks = [
