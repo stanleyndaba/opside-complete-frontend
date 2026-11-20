@@ -343,8 +343,8 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {directContactLinks.map(({ label, email }) => (
                   <div key={email} className="min-w-0">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#7A858A]">{label}</p>
-                    <a href={`mailto:${email}`} className="mt-1 inline-block max-w-full truncate text-[13px] font-medium text-[#635BFF] transition-colors hover:text-[#5148E5] hover:underline">{email}</a>
+                    <p className="text-[14px] font-medium text-[#182026]">{label}</p>
+                    <a href={`mailto:${email}`} className="mt-1 inline-block max-w-full truncate text-[13px] font-normal text-[#52616A] transition-colors hover:text-[#635BFF] hover:underline">{email}</a>
                   </div>
                 ))}
               </div>
