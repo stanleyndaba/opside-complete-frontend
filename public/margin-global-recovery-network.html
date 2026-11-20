@@ -35,11 +35,7 @@
     .links path { fill: none; stroke: var(--line); stroke-width: 2; opacity: .74; }
     .links path.secondary { stroke: var(--line-soft); stroke-width: 1.5; opacity: .95; }
     .origin { position: absolute; left: 0; top: 236px; width: 226px; height: 156px; border-radius: 28px; background: rgba(180, 236, 166, .92); box-shadow: 0 22px 42px rgba(71, 137, 77, .14); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .origin .mark { display: flex; align-items: center; gap: 9px; font-family: Georgia, serif; font-size: 31px; }
-    .origin .symbol { width: 27px; height: 17px; position: relative; }
-    .origin .symbol::before, .origin .symbol::after { content: ""; position: absolute; left: 0; background: #182026; border-radius: 2px; }
-    .origin .symbol::before { top: 0; width: 27px; height: 7px; }
-    .origin .symbol::after { bottom: 0; width: 18px; height: 7px; }
+    .origin .mark { display: flex; align-items: center; justify-content: center; font-family: Georgia, serif; font-size: 31px; }
     .origin p { margin: 9px 0 0; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #436348; }
     .region { position: absolute; width: 458px; }
     .region-title { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; color: #7c8b95; font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
@@ -60,17 +56,6 @@
 <body>
   <main>
     <div class="wash"></div>
-    <header class="header">
-      <div>
-        <div class="eyebrow">Margin · global operating context</div>
-        <h1>One recovery operation across every market.</h1>
-        <p class="subhead">Margin connects the records, evidence, and recovery work across the marketplaces your business operates.</p>
-      </div>
-      <div>
-        <div class="source-mark"><span class="source-symbol"></span>Margin</div>
-        <div class="source-label">Parent source · financial control</div>
-      </div>
-    </header>
     <section class="network" aria-label="Margin global marketplace coverage">
       <svg class="links" viewBox="0 0 1464 674" preserveAspectRatio="none" aria-hidden="true">
         <path d="M150 314 C 292 294, 365 81, 420 66" />
@@ -87,7 +72,7 @@
         <path class="secondary" d="M150 314 C 460 456, 745 425, 910 418" />
         <path class="secondary" d="M150 314 C 460 485, 748 500, 910 480" />
       </svg>
-      <div class="origin"><div class="mark"><span class="symbol"></span>Margin</div><p>Parent source</p></div>
+      <div class="origin"><div class="mark">Margin</div><p>Parent source</p></div>
       <div class="region americas"><div class="region-title">Americas</div><div class="region-grid">
         <div class="country"><img class="flag" src="flags/us.svg"><div><div class="country-name">United States</div><div class="country-meta">Americas · US</div></div></div>
         <div class="country"><img class="flag" src="flags/ca.svg"><div><div class="country-name">Canada</div><div class="country-meta">Americas · CA</div></div></div>
@@ -115,7 +100,6 @@
         <div class="country"><img class="flag" src="flags/sa.svg"><div><div class="country-name">Saudi Arabia</div><div class="country-meta">Middle East · SA</div></div></div>
       </div></div>
     </section>
-    <div class="footer-note"><span></span>Connected marketplace context · read-only financial control view</div>
   </main>
 </body>
 </html>
