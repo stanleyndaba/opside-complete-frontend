@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check, Files, Layers3, ListChecks, Search } from "lucide-react";
+import { DemoTestsShell } from "@/pages/DemoTests";
+import { ScaledDemoStage } from "@/components/landing/ScaledDemoStage";
 
 type EvidenceItem = {
   kind: string;
@@ -146,9 +148,10 @@ type EvidenceRequiredProps = {
   showSidebar?: boolean;
   flat?: boolean;
   embedded?: boolean;
+  withDemoShell?: boolean;
 };
 
-export default function EvidenceRequired({ showSearch = true, showSidebar = true, flat = false, embedded = false }: EvidenceRequiredProps) {
+function EvidenceRequiredContent({ showSearch = true, showSidebar = true, flat = false, embedded = false }: EvidenceRequiredProps) {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const reduceMotion = useReducedMotion();
@@ -232,4 +235,18 @@ export default function EvidenceRequired({ showSearch = true, showSidebar = true
       </div>
     </div>
   </main>;
+}
+
+export default function EvidenceRequired({ showSearch = true, showSidebar = true, flat = false, embedded = false, withDemoShell = false }: EvidenceRequiredProps) {
+  const content = withDemoShell
+    ? <EvidenceRequiredContent showSearch={false} showSidebar={false} flat embedded />
+    : <EvidenceRequiredContent showSearch={showSearch} showSidebar={showSidebar} flat={flat} embedded={embedded} />;
+  if (!withDemoShell) return content;
+  return (
+    <DemoTestsShell embedded>
+      <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]">
+        <ScaledDemoStage designWidth={900} designHeight={620}>{content}</ScaledDemoStage>
+      </div>
+    </DemoTestsShell>
+  );
 }

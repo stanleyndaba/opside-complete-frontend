@@ -383,9 +383,9 @@ const App = () => (
                         <Route path='/try-demo-fourteen' element={<TryDemoFourteen />} />
                         <Route path='/try-demo-fifteen' element={<TryDemoFifteen />} />
                         <Route path='/try-demo-sixteen' element={<TryDemoSixteen />} />
-                        <Route path='/evidence-required' element={<EvidenceRequired />} />
+                        <Route path='/evidence-required' element={<EvidenceRequired withDemoShell />} />
                         <Route path='/amazon-thread-review' element={<AmazonThreadReview />} />
-                        <Route path='/progress-review' element={<ProgressReview />} />
+                        <Route path='/progress-review' element={<ProgressReview withDemoShell />} />
                         <Route path='/progress-preview' element={<ProgressReview />} />
                         <Route path='/financial-reconciliation' element={<FinancialReconciliation />} />
                         <Route path='/payment-proof-demo' element={<PaymentProofDemo />} />

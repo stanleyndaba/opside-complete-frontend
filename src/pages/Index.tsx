@@ -68,7 +68,6 @@ import { AppealsReviewPresentation } from "@/pages/AppealsReview";
 import { FinancialReconciliationPresentation } from "@/pages/FinancialReconciliation";
 import Routine from "@/pages/Routine";
 import CaseDetailDuplicateDemo from "@/pages/CaseDetailDuplicateDemo";
-import { DemoTestsShell } from "@/pages/DemoTests";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
 const landingPrimaryCtaClass = "landing-action-cta landing-pressable inline-flex h-11 w-fit items-center justify-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2";
@@ -1587,28 +1586,8 @@ function FooterNestedRecoveryVisual() {
       <div className={containerClass}>
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Keep the next financial action from getting lost between people.</span></h2>
         <div className="space-y-6">
-          <DemoTestsShell embedded>
-            <div className="mb-3 rounded-[10px] border border-[#e4e4e4] bg-white px-3 py-2">
-              <p className="text-[11px] font-semibold tracking-[-0.01em] text-[#25292a] sm:text-[12px]">Progress review</p>
-              <p className="mt-0.5 text-[10px] text-[#969797]">The governed event record, from control intake through financial close.</p>
-            </div>
-            <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]">
-              <ScaledDemoStage designWidth={900} designHeight={620}>
-                <ProgressReview embedded showSidebar={false} />
-              </ScaledDemoStage>
-            </div>
-          </DemoTestsShell>
-          <DemoTestsShell embedded>
-            <div className="mb-3 rounded-[10px] border border-[#e4e4e4] bg-white px-3 py-2">
-              <p className="text-[11px] font-semibold tracking-[-0.01em] text-[#25292a] sm:text-[12px]">Evidence required</p>
-              <p className="mt-0.5 text-[10px] text-[#969797]">The supporting records, matches and sufficiency log behind the position.</p>
-            </div>
-            <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]">
-              <ScaledDemoStage designWidth={900} designHeight={620}>
-                <EvidenceRequired embedded showSidebar={false} />
-              </ScaledDemoStage>
-            </div>
-          </DemoTestsShell>
+          <ProgressReview withDemoShell />
+          <EvidenceRequired withDemoShell />
         </div>
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
           <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Every case, decision and evidence requirement stays linked to the financial event it concerns.</p>

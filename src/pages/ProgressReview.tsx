@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { ArrowRight, Check, ChevronDown, Files, Layers3, ListChecks, Mail, Search, SlidersHorizontal, UserRound, Workflow } from "lucide-react";
+import { DemoTestsShell } from "@/pages/DemoTests";
+import { ScaledDemoStage } from "@/components/landing/ScaledDemoStage";
 
 type ProgressEvent = {
   type: string;
@@ -50,7 +52,7 @@ const documentSourceIcons = [
   { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
 ] as const;
 
-export default function ProgressReview({ embedded = false, showSidebar = true }: { embedded?: boolean; showSidebar?: boolean } = {}) {
+function ProgressReviewContent({ embedded = false, showSidebar = true }: { embedded?: boolean; showSidebar?: boolean } = {}) {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const filteredEvents = useMemo(() => {
@@ -152,4 +154,18 @@ export default function ProgressReview({ embedded = false, showSidebar = true }:
       </div>
     </div>
   </main>;
+}
+
+export default function ProgressReview({ embedded = false, showSidebar = true, withDemoShell = false }: { embedded?: boolean; showSidebar?: boolean; withDemoShell?: boolean } = {}) {
+  const content = withDemoShell
+    ? <ProgressReviewContent embedded showSidebar={false} />
+    : <ProgressReviewContent embedded={embedded} showSidebar={showSidebar} />;
+  if (!withDemoShell) return content;
+  return (
+    <DemoTestsShell embedded>
+      <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]">
+        <ScaledDemoStage designWidth={900} designHeight={620}>{content}</ScaledDemoStage>
+      </div>
+    </DemoTestsShell>
+  );
 }
