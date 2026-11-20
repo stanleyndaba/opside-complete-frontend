@@ -413,6 +413,38 @@ html, body, #root {
   to { transform: translate3d(-50%, 0, 0); }
 }
 
+@keyframes integration-mobile-marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes integration-mobile-marquee-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+.integration-mobile-marquee {
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent 0, black 7%, black 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, black 7%, black 93%, transparent 100%);
+}
+
+.integration-mobile-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 12px;
+  will-change: transform;
+}
+
+.integration-mobile-marquee-track-left {
+  animation: integration-mobile-marquee-left 24s linear infinite;
+}
+
+.integration-mobile-marquee-track-right {
+  animation: integration-mobile-marquee-right 24s linear infinite;
+}
+
 .built-for-marquee-viewport {
   width: 100%;
   overflow: hidden;
@@ -442,6 +474,12 @@ html, body, #root {
   }
 
   .built-for-marquee-track {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .integration-mobile-marquee-track-left,
+  .integration-mobile-marquee-track-right {
     animation: none;
     transform: translate3d(0, 0, 0);
   }

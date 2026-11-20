@@ -238,18 +238,29 @@ const integrationFieldLayout = [
 ] as const;
 function AccountingIntegrationField() {
   const sources = new Map(accountingSources.map((source) => [source.id, source]));
+  const mobileRows = [integrationFieldLayout.slice(0, 8), integrationFieldLayout.slice(8, 15), integrationFieldLayout.slice(15)];
+  const renderTile = (id: (typeof integrationFieldLayout)[number][0], index: number, keyPrefix: string, hidden = false) => {
+    const source = sources.get(id);
+    if (!source) return null;
+    return (
+      <motion.div key={`${keyPrefix}-${source.id}-${index}`} initial={{ opacity: 0, scale: 0.86 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ ...revealProps.transition, delay: 0.12 + index * 0.035 }} className="flex h-[64px] w-[64px] shrink-0 items-center justify-center rounded-[12px] bg-[#ECEAE6] shadow-[0_10px_24px_rgba(44,55,63,0.06)] sm:h-[72px] sm:w-[72px]" title={hidden ? undefined : source.name} aria-label={hidden ? undefined : source.name} aria-hidden={hidden || undefined}>
+        {source.src ? <img src={source.src} alt={hidden ? "" : source.name} className={`h-9 w-9 object-contain sm:h-10 sm:w-10 ${source.id === "linear" ? "rounded-[5px]" : ""}`} /> : source.icon === "edi" ? <FileInput className="h-8 w-8 text-[#0F9F9A] sm:h-9 sm:w-9" aria-hidden="true" /> : <Truck className="h-8 w-8 text-[#D97706] sm:h-9 sm:w-9" aria-hidden="true" />}
+      </motion.div>
+    );
+  };
   return (
     <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-1 min-w-0 lg:order-2">
-      <div className="grid grid-cols-3 place-items-center gap-3 py-2 sm:grid-cols-4 sm:gap-4 sm:py-4 lg:grid-cols-5 lg:gap-5">
-        {integrationFieldLayout.map(([id], index) => {
-          const source = sources.get(id);
-          if (!source) return null;
-          return (
-            <motion.div key={source.id} initial={{ opacity: 0, scale: 0.86 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ ...revealProps.transition, delay: 0.12 + index * 0.035 }} className="flex h-[68px] w-[68px] items-center justify-center rounded-[12px] bg-[#ECEAE6] shadow-[0_10px_24px_rgba(44,55,63,0.06)] sm:h-[82px] sm:w-[82px]" title={source.name} aria-label={source.name}>
-              {source.src ? <img src={source.src} alt={source.name} className={`h-9 w-9 object-contain sm:h-11 sm:w-11 ${source.id === "linear" ? "rounded-[5px]" : ""}`} /> : source.icon === "edi" ? <FileInput className="h-8 w-8 text-[#0F9F9A] sm:h-9 sm:w-9" aria-hidden="true" /> : <Truck className="h-8 w-8 text-[#D97706] sm:h-9 sm:w-9" aria-hidden="true" />}
-            </motion.div>
-          );
-        })}
+      <div className="space-y-3 overflow-hidden py-2 lg:hidden" aria-label="Connected systems">
+        {mobileRows.map((row, rowIndex) => (
+          <div key={`mobile-integration-row-${rowIndex}`} className="integration-mobile-marquee" role="list">
+            <div className={`integration-mobile-marquee-track ${rowIndex === 1 ? "integration-mobile-marquee-track-left" : "integration-mobile-marquee-track-right"}`}>
+              {[...row, ...row].map(([id], index) => renderTile(id, index, `mobile-${rowIndex}`, index >= row.length))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="hidden grid-cols-5 place-items-center gap-5 py-4 lg:grid">
+        {integrationFieldLayout.map(([id], index) => renderTile(id, index, "desktop"))}
       </div>
     </motion.div>
   );
