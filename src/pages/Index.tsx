@@ -240,13 +240,13 @@ function AccountingIntegrationField() {
   const sources = new Map(accountingSources.map((source) => [source.id, source]));
   return (
     <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-1 min-w-0 lg:order-2">
-      <div className="grid grid-cols-5 place-items-center gap-x-3 gap-y-5 py-2 sm:gap-x-5 sm:gap-y-8 sm:py-4">
-        {integrationFieldLayout.map(([id, tile], index) => {
+      <div className="grid grid-cols-3 place-items-center gap-3 py-2 sm:grid-cols-4 sm:gap-4 sm:py-4 lg:grid-cols-5 lg:gap-5">
+        {integrationFieldLayout.map(([id], index) => {
           const source = sources.get(id);
           if (!source) return null;
           return (
-            <motion.div key={source.id} initial={{ opacity: 0, scale: 0.86 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ ...revealProps.transition, delay: 0.12 + index * 0.035 }} className={`flex h-14 w-14 items-center justify-center sm:h-[72px] sm:w-[72px] ${tile ? "rounded-[14px] bg-[#F8F7F4] shadow-[0_10px_24px_rgba(44,55,63,0.05)]" : "bg-transparent"}`} title={source.name} aria-label={source.name}>
-              {source.src ? <img src={source.src} alt={source.name} className={`h-8 w-8 object-contain sm:h-10 sm:w-10 ${source.id === "linear" ? "rounded-[5px]" : ""}`} /> : source.icon === "edi" ? <FileInput className="h-8 w-8 text-[#0F9F9A] sm:h-9 sm:w-9" aria-hidden="true" /> : <Truck className="h-8 w-8 text-[#D97706] sm:h-9 sm:w-9" aria-hidden="true" />}
+            <motion.div key={source.id} initial={{ opacity: 0, scale: 0.86 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ ...revealProps.transition, delay: 0.12 + index * 0.035 }} className="flex h-[68px] w-[68px] items-center justify-center rounded-[12px] bg-[#ECEAE6] shadow-[0_10px_24px_rgba(44,55,63,0.06)] sm:h-[82px] sm:w-[82px]" title={source.name} aria-label={source.name}>
+              {source.src ? <img src={source.src} alt={source.name} className={`h-9 w-9 object-contain sm:h-11 sm:w-11 ${source.id === "linear" ? "rounded-[5px]" : ""}`} /> : source.icon === "edi" ? <FileInput className="h-8 w-8 text-[#0F9F9A] sm:h-9 sm:w-9" aria-hidden="true" /> : <Truck className="h-8 w-8 text-[#D97706] sm:h-9 sm:w-9" aria-hidden="true" />}
             </motion.div>
           );
         })}
@@ -256,7 +256,7 @@ function AccountingIntegrationField() {
 }
 function AccountingEvidenceSection() {
   return (
-    <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F6F8F9] py-10 md:py-16" aria-labelledby="accounting-section-title">
+    <section data-navbar-theme="light" className="context-audit-surface relative overflow-x-hidden bg-[#F3F2EF] py-12 md:py-20" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-x-20 lg:gap-y-10 xl:gap-x-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:col-start-1 lg:row-start-1 lg:pt-1">
