@@ -1317,37 +1317,31 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       title: "See the population. Know its financial position.",
       copy: "Margin maintains a structured view of the recovery population, connecting each examined event to its source records, investigation status, supported exposure, accounted-for value and outstanding actions. Finance can distinguish active opportunities from resolved items and exceptions that still require attention.",
       visual: (
-        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#C9D9E1]/80 bg-[#EAF2FF] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
-          <img src="/recovery-population-trace-blue.png" alt="Recovery population investigation trace showing source records, examined events, supported exposure and unresolved variance" className="block h-full w-full object-contain object-center" loading="lazy" />
-        </div>
+        <img src="/recovery-population-trace-blue.png" alt="Recovery population investigation trace showing source records, examined events, supported exposure and unresolved variance" className="block h-full w-full rounded-[8px] object-cover object-center" loading="lazy" />
       ),
     },
 	    {
-	      title: "The recovery record stays connected.",
-	      copy: "Margin keeps the relevant shipment, inventory, transaction, evidence, Amazon response and settlement references associated with the same underlying financial event. The investigation, case history and recorded outcome remain connected rather than scattered across separate operational records.",
-	      visual: (
-	        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#EAF2FF] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
-	          <img
-	            src="/margin-recovery-record-connected-network-blue.png"
-	            alt="Recovery record connected with evidence, Amazon response, and settlement references"
-	            className="block h-full w-full object-contain object-center"
-	            loading="lazy"
-	          />
-        </div>
+      title: "The recovery record stays connected.",
+      copy: "Margin keeps the relevant shipment, inventory, transaction, evidence, Amazon response and settlement references associated with the same underlying financial event. The investigation, case history and recorded outcome remain connected rather than scattered across separate operational records.",
+      visual: (
+        <img
+          src="/margin-recovery-record-connected-network-blue.png"
+          alt="Recovery record connected with evidence, Amazon response, and settlement references"
+          className="block h-full w-full rounded-[8px] object-contain object-center"
+          loading="lazy"
+        />
       ),
     },
     {
       title: "The next action stays accountable.",
       copy: "Each open position carries its current status, outstanding requirement, responsible owner and next justified action. Margin preserves the financial context as work moves between investigators, approvers and existing business systems, so handoffs do not lose the reason the action exists.",
       visual: (
-        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#C9D9E1]/80 bg-[#EAF2FF] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
-          <img
-            src="/recovery-thread-card-3-blue.png"
-            alt="Accountable next-action workflow with connected service records and status ownership"
-            className="block h-full w-full object-contain object-center"
-            loading="lazy"
-          />
-        </div>
+        <img
+          src="/recovery-thread-card-3-blue.png"
+          alt="Accountable next-action workflow with connected service records and status ownership"
+          className="block h-full w-full rounded-[8px] object-cover object-center"
+          loading="lazy"
+        />
       ),
     },
   ];
@@ -1364,7 +1358,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
         <div className="mt-10 grid gap-5 md:grid-cols-3 md:gap-6 lg:mt-12 lg:gap-8">
           {recoveryThreadCards.map((card, index) => (
             <motion.article key={card.title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="min-w-0 pt-4">
-              <div className="relative aspect-[1.4] overflow-hidden rounded-[8px] bg-transparent shadow-none">{card.visual}</div>
+              <div className="relative aspect-[16/9] overflow-hidden rounded-[8px]">{card.visual}</div>
               <h3 className="mt-2 font-lora text-[25px] leading-[1.06] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]">{card.title}</h3>
               <p className="mt-3 text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">{card.copy}</p>
             </motion.article>
