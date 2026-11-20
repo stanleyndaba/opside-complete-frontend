@@ -1322,17 +1322,17 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
         </div>
       ),
     },
-    {
-      title: "The recovery record stays connected.",
-      copy: "Margin keeps the relevant shipment, inventory, transaction, evidence, Amazon response and settlement references associated with the same underlying financial event. The investigation, case history and recorded outcome remain connected rather than scattered across separate operational records.",
-      visual: (
-        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#171512] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
-          <img
-            src="/margin-recovery-record-connected-no-star.png"
-            alt="Recovery record connected with evidence, Amazon response, and settlement references"
-            className="block h-full w-full object-cover object-center"
-            loading="lazy"
-          />
+	    {
+	      title: "The recovery record stays connected.",
+	      copy: "Margin keeps the relevant shipment, inventory, transaction, evidence, Amazon response and settlement references associated with the same underlying financial event. The investigation, case history and recorded outcome remain connected rather than scattered across separate operational records.",
+	      visual: (
+	        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#EAF2FF] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
+	          <img
+	            src="/margin-recovery-record-connected-network-blue.png"
+	            alt="Recovery record connected with evidence, Amazon response, and settlement references"
+	            className="block h-full w-full object-contain object-center"
+	            loading="lazy"
+	          />
         </div>
       ),
     },
