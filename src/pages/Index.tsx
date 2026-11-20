@@ -2237,13 +2237,13 @@ export default function Index() {
             <h2 id="marketplace-scope-title" className="mt-3 max-w-[520px] font-lora text-[30px] font-normal leading-[1.06] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[44px]">Stop treating each Amazon marketplace as a separate financial picture.</h2>
                 <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><LandingResponsiveCopy desktop={'Operating across marketplaces introduces more records, currencies, settlement activity and operational histories to understand. Margin is designed to examine supported activity across multiple Amazon marketplaces while preserving the marketplace, entity and currency context needed to interpret each record. Coverage and available evidence depend on the records, marketplace permissions and workflows supported for the engagement.'} mobile={'Operating across marketplaces introduces more records, currencies, settlement activity and operational histories to understand. Margin is designed to examine supported activity across multiple Amazon marketplaces while preserving the marketplace, entity and currency context needed to interpret each record. Coverage and available evidence depend on the records, marketplace permissions and workflows supported for the engagement.'} /></p>
               </motion.div>
-              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="grid border-t border-[var(--margin-border)] sm:grid-cols-2 sm:border-t-0 lg:grid-cols-3">
-                {supportedMarketplaces.map((marketplace, index) => (
-                  <div key={marketplace.code} className={cn("flex items-center gap-3 py-3.5 sm:px-4", index > 0 ? "border-t border-[var(--margin-border)] sm:border-t-0" : "", index % 2 === 1 ? "sm:border-l sm:border-[var(--margin-border)]" : "", index >= 2 ? "sm:border-t sm:border-[var(--margin-border)]" : "", index % 3 !== 0 ? "lg:border-l lg:border-[var(--margin-border)]" : "lg:border-l-0", index >= 3 ? "lg:border-t lg:border-[var(--margin-border)]" : "lg:border-t-0")}>
-                    <img src={`/flags/${marketplace.flagAsset}.svg`} alt={`${marketplace.country} flag`} className="h-[23px] w-[34px] shrink-0 rounded-[2px] object-cover" />
-                    <span className="min-w-0"><span className="block truncate text-[13px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">{marketplace.country}</span><span className="mt-0.5 block text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">{marketplace.region} · {marketplace.code}</span></span>
-                  </div>
-                ))}
+              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="flex min-w-0 items-center justify-center overflow-hidden">
+                <img
+                  src="/margin-global-recovery-network.png"
+                  alt="Margin parent source connected to supported Amazon marketplaces across the Americas, Europe, Asia-Pacific and the Middle East"
+                  className="block h-auto w-full max-w-full object-contain"
+                  loading="lazy"
+                />
               </motion.div>
             </div>
           </div>
