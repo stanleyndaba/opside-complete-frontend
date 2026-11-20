@@ -1419,7 +1419,7 @@ function NestedRecoveryVisual({
           return (
             <div key={key} role="button" tabIndex={0} onClick={() => onBrowserChange(key)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onBrowserChange(key); }} aria-label={`Show ${browser.label}`} className={`absolute overflow-hidden rounded-[10px] border text-left transition-all duration-500 ${frameClass(key)} ${isActive ? 'z-20 border-white/95 shadow-[0_24px_48px_rgba(37,73,91,0.25)]' : 'z-10 border-white/65 shadow-[0_12px_30px_rgba(37,73,91,0.14)]'}`}>
               {cleanPresentation ? null : <div className="flex h-7 items-center gap-1.5 border-b border-white/55 bg-white/35 px-2 backdrop-blur-md"><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /><span className="h-2 w-2 rounded-full bg-[#B8C0C6]/80" /></div>}
-              <div className={`${cleanPresentation ? 'h-full' : 'h-[calc(100%-28px)]'} w-full overflow-y-auto bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}><ScaledDemoStage designWidth={900} designHeight={620}><Demo embedded /></ScaledDemoStage></div>
+              <div className={`${cleanPresentation ? 'h-full' : 'h-[calc(100%-28px)]'} w-full overflow-y-auto bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}><ScaledDemoStage designWidth={900} designHeight={620}><Demo embedded showSidebar={false} /></ScaledDemoStage></div>
             </div>
           );
         })}
@@ -1587,7 +1587,9 @@ function FooterNestedRecoveryVisual() {
     <section className="relative overflow-hidden bg-white pb-10 pt-5 sm:pb-14 sm:pt-8 md:pb-16 md:pt-10" aria-labelledby="footer-nested-recovery-title">
       <div className={containerClass}>
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Keep the next financial action from getting lost between people.</span></h2>
-        <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} cleanPresentation />
+        <DemoTestsShell embedded>
+          <NestedRecoveryVisual activeBrowser={activeBrowser} onBrowserChange={setActiveBrowser} cleanPresentation />
+        </DemoTestsShell>
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
           <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Every case, decision and evidence requirement stays linked to the financial event it concerns.</p>
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a free review. Margin establishes what the records explain, what remains unresolved and whether further action is justified.</p>

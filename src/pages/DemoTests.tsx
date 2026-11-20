@@ -60,13 +60,13 @@ function CountedItem({ item, active, onClick }: { item: LibraryItem; active?: bo
   );
 }
 
-export function DemoTestsShell({ children }: { children?: ReactNode }) {
+export function DemoTestsShell({ children, embedded = false }: { children?: ReactNode; embedded?: boolean }) {
   const [active, setActive] = useState("Workflows");
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-white px-3 py-3 text-[#18191a] sm:px-6 sm:py-6 lg:px-10 lg:py-10">
-      <section className="mx-auto flex min-h-[calc(100vh-0.75rem)] w-full max-w-[1420px] overflow-hidden rounded-[16px] bg-[#fafafa] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]">
-        <aside className="flex w-[210px] min-w-[210px] shrink-0 flex-col border-r border-[#e1e1e1] bg-white px-3 py-5 sm:w-[240px] sm:min-w-[240px] sm:px-4 sm:py-6">
+    <main className={`${embedded ? "min-h-0 w-full p-0" : "min-h-screen px-3 py-3 sm:px-6 sm:py-6 lg:px-10 lg:py-10"} overflow-x-hidden bg-white text-[#18191a]`}>
+      <section className={`${embedded ? "min-h-0 max-w-none rounded-none shadow-none" : "min-h-[calc(100vh-0.75rem)] max-w-[1420px] rounded-[16px] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]"} mx-auto flex w-full overflow-hidden bg-[#fafafa]`}>
+        <aside className={`${embedded ? "hidden md:flex md:w-[184px] md:min-w-[184px] md:px-3 md:py-4" : "flex w-[210px] min-w-[210px] px-3 py-5 sm:w-[240px] sm:min-w-[240px] sm:px-4 sm:py-6"} shrink-0 flex-col border-r border-[#e1e1e1] bg-white`}>
           <div className="mb-8 flex items-center justify-between px-2">
             <div>
               <p className="text-[13px] font-semibold tracking-[-0.03em] text-[#18191a]">Margin Library</p>
@@ -110,7 +110,7 @@ export function DemoTestsShell({ children }: { children?: ReactNode }) {
           </div>
         </aside>
 
-        <section className="min-w-0 flex-1 overflow-y-auto bg-[#fbfbfb] px-3 py-5 sm:px-6 sm:py-6 lg:px-8 xl:px-10">
+        <section className={`${embedded ? "px-3 py-3 md:px-5 md:py-4" : "px-3 py-5 sm:px-6 sm:py-6 lg:px-8 xl:px-10"} min-w-0 flex-1 overflow-y-auto bg-[#fbfbfb]`}>
           <div className="flex items-center justify-between gap-3">
             <div className="relative min-w-0 max-w-[610px] flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 stroke-[1.7] text-[#656767]" />
@@ -122,7 +122,7 @@ export function DemoTestsShell({ children }: { children?: ReactNode }) {
             </div>
           </div>
 
-          <div className="mt-7 min-h-[calc(100vh-150px)] overflow-hidden sm:mt-9">
+          <div className={`${embedded ? "mt-3 min-h-0" : "mt-7 min-h-[calc(100vh-150px)] sm:mt-9"} overflow-hidden`}>
             {children}
           </div>
         </section>

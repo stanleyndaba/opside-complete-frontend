@@ -50,7 +50,7 @@ const documentSourceIcons = [
   { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
 ] as const;
 
-export default function ProgressReview({ embedded = false }: { embedded?: boolean } = {}) {
+export default function ProgressReview({ embedded = false, showSidebar = true }: { embedded?: boolean; showSidebar?: boolean } = {}) {
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const filteredEvents = useMemo(() => {
@@ -84,7 +84,7 @@ export default function ProgressReview({ embedded = false }: { embedded?: boolea
       </div>
     </header>}
     <div className={`mx-auto flex ${embedded ? 'max-w-[1320px] gap-3 px-0 py-0' : 'min-w-[820px] max-w-[1320px] gap-3 px-4 py-4 sm:min-w-0 sm:px-6 sm:py-6'} items-start`}>
-      <aside aria-label="Progress preview controls" className="sticky top-[76px] flex w-[220px] shrink-0 flex-col gap-1 rounded-[5px] bg-white p-2">
+      {showSidebar ? <aside aria-label="Progress preview controls" className="sticky top-[76px] flex w-[220px] shrink-0 flex-col gap-1 rounded-[5px] bg-white p-2">
         {assessmentRail.map(({ label, href, icon: Icon }, index) => (
           <a key={label} href={href} title={label} aria-label={label} className={`flex h-10 w-full items-center gap-3 rounded-[5px] px-3 text-[12px] font-medium tracking-tight text-[#52616A] hover:bg-[#F0F3F4] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35 ${index === 0 ? 'bg-[#E7ECEE] text-[#26333A]' : ''}`}>
             <Icon className="h-4 w-4 shrink-0" strokeWidth={1.8} />
@@ -92,7 +92,7 @@ export default function ProgressReview({ embedded = false }: { embedded?: boolea
             {label === 'Agent (Cappy)' ? <span className="ml-1 h-2 w-2 rounded-full bg-[#3B82F6]" aria-label="Agent online" title="Agent online" /> : null}
           </a>
         ))}
-      </aside>
+      </aside> : null}
       <div className="min-w-0 flex-1">
         <section id="progress-record" className="rounded-[5px] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
         <div className="mb-4 pb-3"><h1 id="progress-review-title" className="font-google-sans text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Updated Review</h1></div>

@@ -188,7 +188,7 @@ export default function EvidenceRequired({ showSearch = true, showSidebar = true
         <button type="button" title="Control layers" aria-label="Control layers" onClick={() => setToast("Control layers selected")} className="mt-12 flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
           <Layers3 className="h-4 w-4" strokeWidth={1.8} />
         </button>
-      </aside> : <div aria-hidden="true" className="w-[52px] shrink-0" />}
+      </aside> : null}
       <div className="min-w-0 flex-1">
         {embedded ? null : showSearch ? <nav aria-label="Evidence preview search" className="mb-3 rounded-[10px] border border-[#DCE3E7] bg-white p-1.5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
           <label className="flex h-9 items-center gap-2 rounded-[10px] bg-[#FBFCFC] px-3 focus-within:ring-2 focus-within:ring-[#0B74DE]/10">
