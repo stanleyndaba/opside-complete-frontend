@@ -68,7 +68,7 @@ import { AppealsReviewPresentation } from "@/pages/AppealsReview";
 import { FinancialReconciliationPresentation } from "@/pages/FinancialReconciliation";
 import Routine from "@/pages/Routine";
 import CaseDetailDuplicateDemo from "@/pages/CaseDetailDuplicateDemo";
-
+import { DemoTestsShell } from "@/pages/DemoTests";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
 const landingPrimaryCtaClass = "landing-action-cta landing-pressable inline-flex h-11 w-fit items-center justify-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2";
