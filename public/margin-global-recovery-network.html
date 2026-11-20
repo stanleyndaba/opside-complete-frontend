@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Margin global recovery network</title>
+  <style>
+    :root {
+      --ink: #182026;
+      --muted: #6b7a84;
+      --line: #c8d9e7;
+      --line-soft: #e7eff5;
+      --blue: #0b74de;
+      --canvas: #f8fbfd;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-width: 1600px; background: var(--canvas); }
+    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); }
+    main { position: relative; width: 1600px; min-height: 1000px; overflow: hidden; background:
+      radial-gradient(circle at 72% 42%, rgba(219, 237, 250, .68), transparent 36%),
+      linear-gradient(135deg, #fff 0%, #f8fbfd 54%, #f2f8fc 100%); }
+    .wash { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(255,255,255,.94) 0%, rgba(255,255,255,.74) 28%, rgba(255,255,255,0) 58%); }
+    .header { position: relative; z-index: 2; padding: 64px 88px 0; display: flex; align-items: flex-start; justify-content: space-between; }
+    .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #7a8994; }
+    h1 { margin: 14px 0 0; max-width: 660px; font-size: 54px; line-height: .98; letter-spacing: -.055em; font-weight: 400; }
+    .subhead { margin: 18px 0 0; max-width: 610px; font-size: 16px; line-height: 1.6; color: #52616a; }
+    .source-label { margin-top: 7px; text-align: right; font-size: 12px; color: #84939d; letter-spacing: .04em; }
+    .source-mark { display: inline-flex; align-items: center; gap: 9px; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.74); box-shadow: 0 8px 28px rgba(33,79,108,.08); color: var(--ink); font-family: Georgia, serif; font-size: 23px; }
+    .source-symbol { width: 25px; height: 15px; position: relative; display: inline-block; }
+    .source-symbol::before, .source-symbol::after { content: ""; position: absolute; left: 0; height: 6px; border-radius: 2px; background: #182026; }
+    .source-symbol::before { width: 25px; top: 0; }
+    .source-symbol::after { width: 17px; bottom: 0; }
+    .network { position: absolute; z-index: 1; left: 76px; right: 60px; top: 246px; height: 674px; }
+    svg.links { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    .links path { fill: none; stroke: var(--line); stroke-width: 2; opacity: .74; }
+    .links path.secondary { stroke: var(--line-soft); stroke-width: 1.5; opacity: .95; }
+    .origin { position: absolute; left: 0; top: 236px; width: 226px; height: 156px; border-radius: 28px; background: rgba(180, 236, 166, .92); box-shadow: 0 22px 42px rgba(71, 137, 77, .14); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .origin .mark { display: flex; align-items: center; gap: 9px; font-family: Georgia, serif; font-size: 31px; }
+    .origin .symbol { width: 27px; height: 17px; position: relative; }
+    .origin .symbol::before, .origin .symbol::after { content: ""; position: absolute; left: 0; background: #182026; border-radius: 2px; }
+    .origin .symbol::before { top: 0; width: 27px; height: 7px; }
+    .origin .symbol::after { bottom: 0; width: 18px; height: 7px; }
+    .origin p { margin: 9px 0 0; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #436348; }
+    .region { position: absolute; width: 458px; }
+    .region-title { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; color: #7c8b95; font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .region-title::after { content: ""; height: 1px; flex: 1; background: rgba(174, 201, 219, .7); }
+    .region-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 12px; }
+    .country { min-height: 54px; padding: 9px 11px; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(203,220,232,.84); border-radius: 11px; background: rgba(255,255,255,.74); box-shadow: 0 7px 18px rgba(31,74,101,.045); }
+    .flag { width: 27px; height: 19px; flex: none; object-fit: cover; border-radius: 3px; box-shadow: 0 0 0 1px rgba(24,32,38,.10); }
+    .country-name { font-size: 13px; line-height: 1.15; font-weight: 650; color: #26353d; }
+    .country-meta { margin-top: 3px; font-size: 10px; line-height: 1.1; color: #82919b; }
+    .americas { left: 330px; top: 0; }
+    .europe { left: 820px; top: 0; }
+    .asia { left: 330px; top: 352px; }
+    .middle-east { left: 820px; top: 352px; }
+    .footer-note { position: absolute; left: 88px; bottom: 52px; z-index: 2; display: flex; align-items: center; gap: 12px; font-size: 13px; color: #70818c; }
+    .footer-note span { width: 30px; height: 1px; background: #8cb7d3; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="wash"></div>
+    <header class="header">
+      <div>
+        <div class="eyebrow">Margin · global operating context</div>
+        <h1>One recovery operation across every market.</h1>
+        <p class="subhead">Margin connects the records, evidence, and recovery work across the marketplaces your business operates.</p>
+      </div>
+      <div>
+        <div class="source-mark"><span class="source-symbol"></span>Margin</div>
+        <div class="source-label">Parent source · financial control</div>
+      </div>
+    </header>
+    <section class="network" aria-label="Margin global marketplace coverage">
+      <svg class="links" viewBox="0 0 1464 674" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M150 314 C 292 294, 365 81, 420 66" />
+        <path d="M150 314 C 300 310, 368 155, 420 128" />
+        <path d="M150 314 C 294 318, 368 228, 420 190" />
+        <path d="M150 314 C 302 344, 367 276, 420 252" />
+        <path d="M150 314 C 452 255, 724 73, 910 66" />
+        <path d="M150 314 C 475 299, 730 145, 910 128" />
+        <path d="M150 314 C 478 330, 733 220, 910 190" />
+        <path d="M150 314 C 475 352, 735 278, 910 252" />
+        <path class="secondary" d="M150 314 C 295 420, 368 433, 420 418" />
+        <path class="secondary" d="M150 314 C 308 444, 370 507, 420 480" />
+        <path class="secondary" d="M150 314 C 310 476, 372 570, 420 542" />
+        <path class="secondary" d="M150 314 C 460 456, 745 425, 910 418" />
+        <path class="secondary" d="M150 314 C 460 485, 748 500, 910 480" />
+      </svg>
+      <div class="origin"><div class="mark"><span class="symbol"></span>Margin</div><p>Parent source</p></div>
+      <div class="region americas"><div class="region-title">Americas</div><div class="region-grid">
+        <div class="country"><img class="flag" src="flags/us.svg"><div><div class="country-name">United States</div><div class="country-meta">Americas · US</div></div></div>
+        <div class="country"><img class="flag" src="flags/ca.svg"><div><div class="country-name">Canada</div><div class="country-meta">Americas · CA</div></div></div>
+        <div class="country"><img class="flag" src="flags/mx.svg"><div><div class="country-name">Mexico</div><div class="country-meta">Americas · MX</div></div></div>
+        <div class="country"><img class="flag" src="flags/br.svg"><div><div class="country-name">Brazil</div><div class="country-meta">Americas · BR</div></div></div>
+      </div></div>
+      <div class="region europe"><div class="region-title">Europe</div><div class="region-grid">
+        <div class="country"><img class="flag" src="flags/gb.svg"><div><div class="country-name">United Kingdom</div><div class="country-meta">Europe · UK</div></div></div>
+        <div class="country"><img class="flag" src="flags/de.svg"><div><div class="country-name">Germany</div><div class="country-meta">Europe · DE</div></div></div>
+        <div class="country"><img class="flag" src="flags/fr.svg"><div><div class="country-name">France</div><div class="country-meta">Europe · FR</div></div></div>
+        <div class="country"><img class="flag" src="flags/it.svg"><div><div class="country-name">Italy</div><div class="country-meta">Europe · IT</div></div></div>
+        <div class="country"><img class="flag" src="flags/es.svg"><div><div class="country-name">Spain</div><div class="country-meta">Europe · ES</div></div></div>
+        <div class="country"><img class="flag" src="flags/nl.svg"><div><div class="country-name">Netherlands</div><div class="country-meta">Europe · NL</div></div></div>
+        <div class="country"><img class="flag" src="flags/be.svg"><div><div class="country-name">Belgium</div><div class="country-meta">Europe · BE</div></div></div>
+        <div class="country"><img class="flag" src="flags/pl.svg"><div><div class="country-name">Poland</div><div class="country-meta">Europe · PL</div></div></div>
+        <div class="country"><img class="flag" src="flags/se.svg"><div><div class="country-name">Sweden</div><div class="country-meta">Europe · SE</div></div></div>
+      </div></div>
+      <div class="region asia"><div class="region-title">Asia-Pacific</div><div class="region-grid">
+        <div class="country"><img class="flag" src="flags/au.svg"><div><div class="country-name">Australia</div><div class="country-meta">Asia-Pacific · AU</div></div></div>
+        <div class="country"><img class="flag" src="flags/jp.svg"><div><div class="country-name">Japan</div><div class="country-meta">Asia-Pacific · JP</div></div></div>
+        <div class="country"><img class="flag" src="flags/in.svg"><div><div class="country-name">India</div><div class="country-meta">Asia-Pacific · IN</div></div></div>
+      </div></div>
+      <div class="region middle-east"><div class="region-title">Middle East</div><div class="region-grid">
+        <div class="country"><img class="flag" src="flags/ae.svg"><div><div class="country-name">United Arab Emirates</div><div class="country-meta">Middle East · AE</div></div></div>
+        <div class="country"><img class="flag" src="flags/sa.svg"><div><div class="country-name">Saudi Arabia</div><div class="country-meta">Middle East · SA</div></div></div>
+      </div></div>
+    </section>
+    <div class="footer-note"><span></span>Connected marketplace context · read-only financial control view</div>
+  </main>
+</body>
+</html>
