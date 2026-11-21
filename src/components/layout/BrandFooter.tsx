@@ -282,7 +282,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-8 lg:col-start-2 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-8">
+            <div className="grid grid-cols-2 gap-8 lg:col-start-2 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,0.92fr)_minmax(0,1.08fr)_minmax(0,1fr)] lg:gap-8">
               <div>
                 <FooterColumn title="Company" links={companyLinks} />
                 <div className="mt-8">
@@ -298,6 +298,19 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               <div className="col-span-2 lg:col-span-1">
                 <div className="mt-8 lg:mt-0">
                   <FooterColumn title="Solutions" links={solutionLinks} />
+                </div>
+              </div>
+              <div className="col-span-2 lg:col-span-1">
+                <div className="mt-8 lg:mt-0">
+                  <h3 className="text-lg font-medium tracking-tight" style={{ color: '#182026' }}>Direct Contact</h3>
+                  <nav className="mt-5 flex flex-col gap-3" aria-label="Direct Contact">
+                    {directContactLinks.map(({ label, email }) => (
+                      <div key={email} className="min-w-0">
+                        <p className="text-sm font-normal leading-6 tracking-tight text-[#52616A]">{label}</p>
+                        <a href={`mailto:${email}`} className="inline-block max-w-full truncate text-[11px] font-normal leading-5 tracking-tight text-[#52616A] transition-colors hover:text-[#635BFF] hover:underline">{email}</a>
+                      </div>
+                    ))}
+                  </nav>
                 </div>
               </div>
             </div>
@@ -338,17 +351,6 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
               </form>
             </div>
 
-            <div className="border-t border-[#D8E3EA] pt-8 lg:col-start-2">
-              <p className="text-lg font-medium tracking-tight text-[#182026]">Direct Contact</p>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {directContactLinks.map(({ label, email }) => (
-                  <div key={email} className="min-w-0">
-                    <p className="text-[14px] font-medium text-[#182026]">{label}</p>
-                    <a href={`mailto:${email}`} className="mt-1 inline-block max-w-full truncate text-[13px] font-normal text-[#52616A] transition-colors hover:text-[#635BFF] hover:underline">{email}</a>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#D8E3EA] pt-8 md:flex-row">
