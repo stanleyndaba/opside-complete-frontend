@@ -22,9 +22,11 @@ import {
   ArrowRight,
   Check,
   ChevronRight,
+  Files,
   Landmark,
   Database,
   FileInput,
+  ListChecks,
   Monitor,
   PlayCircle,
   ReceiptText,
@@ -62,7 +64,6 @@ import { OneRecordAnalysisVisual } from "@/components/landing/OneRecordAnalysisV
 import { DuplicatePipelineVisual } from "@/pages/DuplicatePipelinePreview";
 import ProgressReview from "@/pages/ProgressReview";
 import EvidenceRequired from "@/pages/EvidenceRequired";
-import TryDemoSix from "@/pages/TryDemoSix";
 import { AutoSubmitPresentation } from "@/pages/AutoSubmitPreview";
 import { ReportGenerationStage } from "@/components/report-generation";
 import { AppealsReviewPresentation } from "@/pages/AppealsReview";
@@ -1587,11 +1588,25 @@ function AutoSubmitSection() {
 
 function FooterNestedRecoveryVisual() {
   const navigate = useNavigate();
+  const [activeView, setActiveView] = useState<'progress' | 'evidence'>('progress');
   return (
     <section className="relative overflow-hidden bg-white pb-10 pt-5 sm:pb-14 sm:pt-8 md:pb-16 md:pt-10" aria-labelledby="footer-nested-recovery-title">
       <div className={containerClass}>
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Keep the next financial action from getting lost between people.</span></h2>
-        <TryDemoSix />
+        <div className="relative overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#EAF1F5] shadow-[0_24px_70px_rgba(37,91,116,0.14)]">
+          <div className="flex min-h-[620px] items-stretch sm:min-h-[570px]">
+            <aside aria-label="Recovery platform views" className="z-10 flex w-12 shrink-0 flex-col items-center gap-2 border-r border-[#D7E3E8] bg-[#EEF3F5] px-1.5 py-4 sm:w-16 sm:px-2">
+              <button type="button" title="Progress review" aria-label="Show progress review" aria-pressed={activeView === 'progress'} onClick={() => setActiveView('progress')} className={`flex h-9 w-9 items-center justify-center rounded-[6px] transition-colors sm:h-10 sm:w-10 ${activeView === 'progress' ? 'bg-[#D9E0E3] text-[#26333A]' : 'text-[#66737F] hover:bg-[#E1E8EB]'}`}><ListChecks className="h-4 w-4" strokeWidth={1.8} /></button>
+              <button type="button" title="Evidence" aria-label="Show Evidence" aria-pressed={activeView === 'evidence'} onClick={() => setActiveView('evidence')} className={`flex h-9 w-9 items-center justify-center rounded-[6px] transition-colors sm:h-10 sm:w-10 ${activeView === 'evidence' ? 'bg-[#D9E0E3] text-[#26333A]' : 'text-[#66737F] hover:bg-[#E1E8EB]'}`}><Files className="h-4 w-4" strokeWidth={1.8} /></button>
+              <div className="mt-auto flex h-9 w-9 items-center justify-center rounded-[6px] text-[#87959D] sm:h-10 sm:w-10" aria-hidden="true"><Check className="h-4 w-4" strokeWidth={1.8} /></div>
+            </aside>
+            <div className="min-w-0 flex-1 overflow-hidden bg-[#FBFAF7]">
+              <ScaledDemoStage designWidth={900} designHeight={620}>
+                {activeView === 'progress' ? <ProgressReview embedded showSidebar={false} /> : <EvidenceRequired embedded showSidebar={false} showSearch={false} flat />}
+              </ScaledDemoStage>
+            </div>
+          </div>
+        </div>
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
           <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Every case, decision and evidence requirement stays linked to the financial event it concerns.</p>
           <p className="mt-3 font-google-sans text-[13px] leading-6 text-[#66737F]">Start with a free review. Margin establishes what the records explain, what remains unresolved and whether further action is justified.</p>
