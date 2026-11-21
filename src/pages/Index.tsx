@@ -429,7 +429,7 @@ function KineticHeroSection({
     <motion.section
       style={{ scale: reduceMotion ? 1 : heroScale, opacity: reduceMotion ? 1 : heroOpacity }}
       data-navbar-theme="light"
-      className="hero-section relative isolate flex min-h-svh overflow-hidden bg-[#FAFAF7] px-4 pb-16 pt-36 text-[#182026] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
+      className="hero-section relative isolate flex min-h-svh overflow-hidden bg-[#FAFAF7] px-4 pb-16 pt-[10.5rem] text-[#182026] sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
       aria-labelledby="margin-hero-title"
     >
       <div aria-hidden="true" className="hero-atmosphere pointer-events-none absolute inset-0 z-0" />
