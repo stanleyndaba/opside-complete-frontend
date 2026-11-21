@@ -1583,7 +1583,7 @@ html, body, #root {
      mobile viewport. This must outrank the generic section rhythm above so
      the hero eyebrow cannot render underneath that fixed stack. */
   .landing-page > main > section.hero-section {
-    padding-top: 10.5rem !important;
+    padding-top: 7.5rem !important;
   }
 
   .landing-page > main > section[aria-label="Recovery operations demo"],
