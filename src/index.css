@@ -433,8 +433,14 @@ html, body, #root {
 .integration-mobile-marquee-track {
   display: flex;
   width: max-content;
-  gap: 12px;
+  gap: 0;
   will-change: transform;
+}
+
+.integration-mobile-marquee-track > * {
+  margin-right: 12px;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 .integration-mobile-marquee-track-left {
