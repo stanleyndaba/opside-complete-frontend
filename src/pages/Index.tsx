@@ -464,7 +464,7 @@ function KineticHeroSection({
                 <div className="mt-0.5 text-[#263438]">Amazon decision · partial approval</div>
                 <span className="shrink-0">Outbound</span>
               </div>
-              <p className="truncate text-[#46545B]">[Case ID: 19822888381] Partial approval issued — $26,000 | <span className="font-semibold text-[var(--margin-recovery-orange-text)]">$18,650 residual</span></p>
+              <p className="truncate text-[9px] leading-4 text-[#46545B] sm:text-[10px]">[Case ID: 19822888381] Partial approval issued — $26,000 | <span className="font-semibold text-[var(--margin-recovery-orange-text)]">$18,650 residual</span></p>
             </div>
           </div>
         </motion.div>
@@ -476,12 +476,12 @@ function KineticHeroSection({
           className="absolute right-[3%] top-[36%] origin-top-right w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5"
         >
           <div className="flex items-center gap-2.5">
-            <img src="/favicon-margin.svg" alt="Margin" className="h-[18.4px] w-[18.4px] shrink-0" />
+            <img src="/logoimagetwo.png" alt="Margin" className="h-[18.4px] w-[18.4px] shrink-0 object-contain" />
             <ArrowRight className="h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
             <img src="/slack-icon-2019.png" alt="Slack" className="h-[18.4px] w-[18.4px] shrink-0 object-contain" />
             <div className="min-w-0 flex-1 text-[9px] leading-4 tracking-tight text-[#46545B] sm:text-[10px]">
               <div className="flex items-baseline justify-end gap-3"><span className="shrink-0">05/09/26, 13:24:17</span></div>
-              <p className="truncate text-[#263438]">[Case ID: 19822888381] Residual evidence response prepared | $2,850</p>
+              <p className="truncate text-[9px] leading-4 text-[#263438] sm:text-[10px]">[Case ID: 19822888381] Residual evidence response prepared | $2,850</p>
             </div>
           </div>
         </motion.div>
@@ -493,7 +493,7 @@ function KineticHeroSection({
           className="absolute right-[3%] top-[45%] origin-top-right w-[min(480px,90%)] rounded-[10px] border border-white/80 bg-white/90 px-3 py-2 shadow-[0_18px_44px_rgba(24,32,38,0.16)] backdrop-blur-xl sm:px-3.5 sm:py-2.5"
         >
           <div className="flex items-start gap-2.5">
-            <img src="/favicon-margin.svg" alt="Margin" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0" />
+            <img src="/logoimagetwo.png" alt="Margin" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0 object-contain" />
             <ArrowRight className="mt-0.5 h-3 w-3 shrink-0 text-[#89969D]" aria-hidden="true" />
             <img src="/linear-icon.svg" alt="Linear" className="mt-0.5 h-[18.4px] w-[18.4px] shrink-0 rounded-[5px] object-contain" />
             <div className="min-w-0 flex-1 text-[9px] leading-4 tracking-tight text-[#46545B] sm:text-[10px]">
@@ -502,7 +502,7 @@ function KineticHeroSection({
                 <span className="shrink-0">05/09/26, 11:28:00</span>
               </div>
               <div className="mt-0.5 text-[#263438]">To: Sarah Mitchell · Business Lead</div>
-              <p className="truncate text-[#46545B]">Amazon approved $26,000 — <span className="font-semibold text-[var(--margin-recovery-orange-text)]">$19,240 remains open</span></p>
+              <p className="truncate text-[9px] leading-4 text-[#46545B] sm:text-[10px]">Amazon approved $26,000 — <span className="font-semibold text-[var(--margin-recovery-orange-text)]">$19,240 remains open</span></p>
             </div>
           </div>
         </motion.div>
