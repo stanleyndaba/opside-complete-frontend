@@ -1579,6 +1579,13 @@ html, body, #root {
     padding-bottom: var(--landing-mobile-section-y);
   }
 
+  /* The announcement banner and fixed public navbar occupy the top of the
+     mobile viewport. This must outrank the generic section rhythm above so
+     the hero eyebrow cannot render underneath that fixed stack. */
+  .landing-page > main > section.hero-section {
+    padding-top: 10.5rem !important;
+  }
+
   .landing-page > main > section[aria-label="Recovery operations demo"],
   .landing-page > main > section.margin-standard-deliverable-section,
   .landing-page > main > section.auto-submit-section,
