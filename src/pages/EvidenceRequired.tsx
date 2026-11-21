@@ -153,6 +153,7 @@ type EvidenceRequiredProps = {
 
 function EvidenceRequiredContent({ showSearch = true, showSidebar = true, flat = false, embedded = false }: EvidenceRequiredProps) {
   const [toast, setToast] = useState<string | null>(null);
+  const [activeView, setActiveView] = useState<"home" | "evidence">("home");
   const [searchQuery, setSearchQuery] = useState("");
   const reduceMotion = useReducedMotion();
   const [revealStep, setRevealStep] = useState(0);
@@ -181,11 +182,11 @@ function EvidenceRequiredContent({ showSearch = true, showSidebar = true, flat =
   return <main className={`preview-google-sans ${embedded ? "min-h-0" : "min-h-screen"} overflow-x-auto text-[#182026] ${flat ? "bg-white" : "bg-[#FAFAF7]"}`}>
     {toast ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[8px] bg-[#26333A] px-4 py-3 text-[12px] font-semibold tracking-tight text-white shadow-[0_14px_32px_rgba(24,32,38,0.22)]">{toast}</div> : null}
     <div className="mx-auto flex min-w-[820px] max-w-[1320px] items-start gap-3 px-4 py-2 sm:min-w-0 sm:px-6 sm:py-4">
-      {showSidebar ? <aside aria-label="Evidence preview controls" className="sticky top-4 flex w-[52px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1.5">
-        <button type="button" title="Evidence record" aria-label="Evidence record" onClick={() => setToast("Evidence record selected")} className="flex h-9 w-9 items-center justify-center rounded-[5px] bg-[#D9E0E3] text-[#26333A] hover:bg-[#D1DADD] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
+      {showSidebar ? <aside aria-label="Margin library" className="sticky top-4 flex w-[52px] shrink-0 flex-col items-center gap-2 rounded-[5px] border border-[#DDE3E6] bg-[#EEF1F2] p-1.5">
+        <button type="button" title="Checklist" aria-label="Checklist" aria-pressed={activeView === "home"} onClick={() => setActiveView("home")} className={`flex h-9 w-9 items-center justify-center rounded-[5px] ${activeView === "home" ? "bg-[#D9E0E3] text-[#26333A]" : "text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A]"} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35`}>
           <ListChecks className="h-4 w-4" strokeWidth={1.8} />
         </button>
-        <button type="button" title="Evidence files" aria-label="Evidence files" onClick={() => setToast("Evidence files selected")} className="flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
+        <button type="button" title="Evidence" aria-label="Evidence" aria-pressed={activeView === "evidence"} onClick={() => setActiveView("evidence")} className={`flex h-9 w-9 items-center justify-center rounded-[5px] ${activeView === "evidence" ? "bg-[#D9E0E3] text-[#26333A]" : "text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A]"} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35`}>
           <Files className="h-4 w-4" strokeWidth={1.8} />
         </button>
         <button type="button" title="Control layers" aria-label="Control layers" onClick={() => setToast("Control layers selected")} className="mt-12 flex h-9 w-9 items-center justify-center rounded-[5px] text-[#52616A] hover:bg-[#D9E0E3] hover:text-[#26333A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35">
@@ -202,6 +203,16 @@ function EvidenceRequiredContent({ showSearch = true, showSidebar = true, flat =
         </nav> : <div aria-hidden="true" className="mb-3 h-[51px]" />}
         <section className={flat ? "overflow-hidden bg-white" : "overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]"}>
         <div>
+        {activeView === "home" ? <section className="px-5 pb-6 pt-5 sm:px-6 sm:pt-6">
+          <div className="flex items-start justify-between gap-4 border-b border-[#E7EEF2] pb-5">
+            <div><p className="text-[10px] font-semibold uppercase tracking-tight text-[#7B8991]">Margin library</p><h2 className="mt-1 text-[22px] font-semibold tracking-tight text-[#26333A]">Evidence required</h2><p className="mt-2 max-w-[520px] text-[12px] leading-5 tracking-tight text-[#66737F]">Build the governed record before a recovery position moves forward.</p></div>
+            <div className="shrink-0 text-right"><p className="text-[24px] font-semibold tracking-tight text-[#26333A]">10/12</p><p className="text-[10px] tracking-tight text-[#7B8991]">available</p></div>
+          </div>
+          <div className="mt-5 space-y-2">
+            {["Define the expected inbound position", "Match observed delivery and Amazon receiving", "Test settlement, reimbursement, and later movement", "Confirm valuation basis and prepare controlled action"].map((label, index) => <div key={label} className="flex items-center gap-3 rounded-[5px] border border-[#E1E9ED] bg-[#FBFCFC] px-3 py-3"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#4F8067]"><Check className="h-3 w-3 text-white" strokeWidth={3} /></span><span className="text-[12px] font-medium tracking-tight text-[#36404A]">{label}</span><span className="ml-auto text-[10px] tracking-tight text-[#8A99A3]">{index === 3 ? "Ready for review" : "Matched"}</span></div>)}
+          </div>
+          <div className="mt-5 flex items-center justify-between rounded-[5px] bg-[#F1F5F6] px-3 py-3"><span className="text-[11px] tracking-tight text-[#66737F]">Two source classes remain outstanding.</span><button type="button" onClick={() => setActiveView("evidence")} className="inline-flex items-center gap-1 text-[11px] font-semibold tracking-tight text-[#26333A] hover:text-[#0B74DE]">Review evidence <ArrowRight className="h-3.5 w-3.5" /></button></div>
+        </section> : <>
         <section className="px-5 pb-5 pt-3 sm:px-6 sm:pt-4">
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Governed evidence population</h2><span className="text-[11px] font-medium text-[#9AA7B0]">12 required · 10 available · 2 outstanding</span><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
           <div className="relative">
@@ -230,6 +241,7 @@ function EvidenceRequiredContent({ showSearch = true, showSidebar = true, flat =
             </motion.div> : null)}
           </div>
         </section>
+        </>}
         </div>
       </section>
       </div>
