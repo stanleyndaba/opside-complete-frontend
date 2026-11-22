@@ -14,9 +14,9 @@
 
 .hero-atmosphere {
   background:
-    radial-gradient(ellipse at 57% 88%, rgba(99, 91, 255, 0.09), transparent 42%),
+    radial-gradient(ellipse at 57% 88%, rgba(240, 90, 60, 0.10), transparent 42%),
     radial-gradient(ellipse at 70% 72%, rgba(24, 32, 38, 0.06), transparent 50%),
-    radial-gradient(circle at 93% 78%, rgba(99, 91, 255, 0.05), transparent 25%);
+    radial-gradient(circle at 93% 78%, rgba(240, 90, 60, 0.06), transparent 25%);
 }
 
 .hero-inbox-frame {
@@ -62,9 +62,9 @@
 
   .hero-atmosphere {
     background:
-      radial-gradient(ellipse at 16% 86%, rgba(99, 91, 255, 0.10), transparent 43%),
+      radial-gradient(ellipse at 16% 86%, rgba(240, 90, 60, 0.11), transparent 43%),
       radial-gradient(ellipse at 38% 76%, rgba(24, 32, 38, 0.07), transparent 50%),
-      radial-gradient(circle at 92% 83%, rgba(99, 91, 255, 0.05), transparent 22%);
+      radial-gradient(circle at 92% 83%, rgba(240, 90, 60, 0.06), transparent 22%);
   }
 
   .hero-inbox-frame {
@@ -1841,13 +1841,12 @@ html, body, #root {
   }
 }
 
-/* The hero uses a pale-indigo CTA, so its label and chevron stay bright indigo
-   instead of inheriting the white treatment used by orange landing CTAs. */
+/* The hero uses the Margin orange CTA, so its label and chevron stay white. */
 .landing-page .hero-section .landing-action-cta,
 .landing-page .hero-section .landing-action-cta > svg,
 .landing-page .hero-section .landing-action-cta:hover > svg,
 .landing-page .hero-section .landing-action-cta:focus-visible > svg {
-  color: #4338CA !important;
+  color: #FFFFFF !important;
 }
 
 /* Final hero-only correction: keep the main headline and highlighted phrase
