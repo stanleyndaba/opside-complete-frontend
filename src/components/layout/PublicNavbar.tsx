@@ -224,35 +224,35 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                            className="fixed inset-x-0 bottom-0 top-9 z-[60] bg-black/[0.12] backdrop-blur-sm md:hidden">
-                            <div className="mobile-menu-panel flex h-full flex-col overflow-y-auto bg-[#58636D]/[0.76] text-white shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl backdrop-saturate-[160%]">
-                                <div className="flex min-h-[56px] shrink-0 items-center justify-between border-b border-white/10 bg-white/[0.12] text-white shadow-[0_4px_18px_rgba(0,0,0,0.12)] backdrop-blur-xl">
-                                    <button type="button" onClick={() => setMobileMenuOpen(false)} className="inline-flex h-[56px] min-w-[132px] items-center justify-start rounded-br-[28px] px-5 text-[12px] font-sans font-medium text-white/75 transition-colors hover:text-white">Close</button>
-                                    <Link to="/" onClick={() => setMobileMenuOpen(false)} className="absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-2 text-white">
-                                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain invert brightness-0" />
+                            className={cn("fixed inset-x-0 bottom-0 top-9 z-[60] backdrop-blur-sm md:hidden", isLight ? "bg-white/[0.12]" : "bg-black/[0.12]")}>
+                            <div className={cn("mobile-menu-panel flex h-full flex-col overflow-y-auto shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl backdrop-saturate-[160%]", isLight ? "bg-white/[0.38] text-[#25313A]" : "bg-[#58636D]/[0.76] text-white backdrop-blur-2xl")}>
+                                <div className={cn("flex min-h-[56px] shrink-0 items-center justify-between border-b shadow-[0_4px_18px_rgba(0,0,0,0.12)] backdrop-blur-xl", isLight ? "border-[#DCE5E7]/60 bg-white/[0.38] text-[#25313A]" : "border-white/10 bg-white/[0.12] text-white")}>
+                                    <button type="button" onClick={() => setMobileMenuOpen(false)} className={cn("inline-flex h-[56px] min-w-[132px] items-center justify-start rounded-br-[28px] px-5 text-[12px] font-sans font-medium transition-colors", isLight ? "text-[#52616C] hover:text-[#182026]" : "text-white/75 hover:text-white")}>Close</button>
+                                    <Link to="/" onClick={() => setMobileMenuOpen(false)} className={cn("absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-2", isLight ? "text-[#25313A]" : "text-white")}>
+                                        <img src="/logoimagetwo.png" alt="Margin" className={cn("h-5 w-auto object-contain", isLight ? "" : "invert brightness-0")} />
                                         <span className="brand-wordmark font-merriweather text-[17px] tracking-tight">Margin</span>
                                     </Link>
-                                    <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="px-5 text-[12px] font-sans font-medium text-white/75 transition-colors hover:text-white">Log in</Link>
+                                    <Link to="/login" onClick={() => setMobileMenuOpen(false)} className={cn("px-5 text-[12px] font-sans font-medium transition-colors", isLight ? "text-[#52616C] hover:text-[#182026]" : "text-white/75 hover:text-white")}>Log in</Link>
                                 </div>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="teams" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors",
-                                            "justify-between text-white outline-none hover:no-underline hover:text-white data-[state=open]:bg-white/10"
+                                            "flex items-center rounded-none border-b px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors",
+                                            isLight ? "border-[#DCE5E7]/60 justify-between text-[#25313A] outline-none hover:no-underline hover:text-[#182026] data-[state=open]:bg-white/20" : "border-white/15 justify-between text-white outline-none hover:no-underline hover:text-white data-[state=open]:bg-white/10"
                                         )}>
                                             For Teams
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none bg-transparent px-3 pb-5 pt-2 space-y-3">
-                                            {productMenuGroups.map((group) => (
+                                                    {productMenuGroups.map((group) => (
                                                     <div key={group.label} className="space-y-2 pt-3">
-                                                        <h5 className="px-2 text-[11px] font-sans font-medium tracking-normal text-white/60">
+                                                        <h5 className={cn("px-2 text-[11px] font-sans font-medium tracking-normal", isLight ? "text-[#7B8790]" : "text-white/60")}>
                                                             {group.label}
                                                         </h5>
                                                         <div className="grid gap-1">
                                                             {group.items.map((item) => (
                                                                 <ProductServiceItem
                                                                     key={item.title}
-                                                                    variant="dark"
+                                                                    variant={isLight ? "light" : "dark"}
                                                                     icon={item.icon}
                                                                     title={item.title}
                                                                     description={item.description}
@@ -267,23 +267,23 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     </AccordionItem>
                                     <AccordionItem value="api" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors",
-                                            "justify-between text-white outline-none hover:no-underline hover:text-white data-[state=open]:bg-white/10"
+                                            "flex items-center rounded-none border-b px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors",
+                                            isLight ? "border-[#DCE5E7]/60 justify-between text-[#25313A] outline-none hover:no-underline hover:text-[#182026] data-[state=open]:bg-white/20" : "border-white/15 justify-between text-white outline-none hover:no-underline hover:text-white data-[state=open]:bg-white/10"
                                         )}>
                                             Workflows
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none bg-transparent px-3 pb-5 pt-2">
                                             <div className="space-y-6">
                                                 {apiMenuGroups.map((group) => (
-                                                    <div key={group.label} className="space-y-2 pt-3">
-                                                        <h5 className="px-2 text-[11px] font-sans font-medium tracking-normal text-white/60">
+                                                            <div key={group.label} className="space-y-2 pt-3">
+                                                                <h5 className={cn("px-2 text-[11px] font-sans font-medium tracking-normal", isLight ? "text-[#7B8790]" : "text-white/60")}>
                                                             {group.label}
                                                         </h5>
                                                         <div className="grid gap-1">
                                                             {group.items.map((item) => (
-                                                                <ApiServiceItem
-                                                                    key={item.title}
-                                                                    variant="dark"
+                                                                    <ApiServiceItem
+                                                                        key={item.title}
+                                                                        variant={isLight ? "light" : "dark"}
                                                                     icon={item.icon}
                                                                     title={item.title}
                                                                     description={item.description}
@@ -301,36 +301,36 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                 <Link
                                     to="/pricing"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
+                                    className={cn("flex items-center rounded-none border-b px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors", isLight ? "border-[#DCE5E7]/60 text-[#25313A] hover:bg-white/20 hover:text-[#182026]" : "border-white/15 text-white hover:bg-white/10 hover:text-white")}>
                                     Pricing
                                 </Link>
                                 <Link
                                     to="/security"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
+                                    className={cn("flex items-center rounded-none border-b px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors", isLight ? "border-[#DCE5E7]/60 text-[#25313A] hover:bg-white/20 hover:text-[#182026]" : "border-white/15 text-white hover:bg-white/10 hover:text-white")}>
                                     Security
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
+                                    className={cn("flex items-center rounded-none border-b px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors", isLight ? "border-[#DCE5E7]/60 text-[#25313A] hover:bg-white/20 hover:text-[#182026]" : "border-white/15 text-white hover:bg-white/10 hover:text-white")}>
                                     Enterprise
                                 </Link>
                                 <Link
                                     to="/about"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
+                                    className={cn("flex items-center rounded-none border-b px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors", isLight ? "border-[#DCE5E7]/60 text-[#25313A] hover:bg-white/20 hover:text-[#182026]" : "border-white/15 text-white hover:bg-white/10 hover:text-white")}>
                                     Company
                                 </Link>
                                 <Link
                                     to="/consumer-recovery"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none border-b border-white/15 px-5 py-4 text-[13px] font-sans font-medium tracking-normal text-white transition-colors hover:bg-white/10 hover:text-white">
+                                    className={cn("flex items-center rounded-none border-b px-5 py-4 text-[13px] font-sans font-medium tracking-normal transition-colors", isLight ? "border-[#DCE5E7]/60 text-[#25313A] hover:bg-white/20 hover:text-[#182026]" : "border-white/15 text-white hover:bg-white/10 hover:text-white")}>
                                     B2C Recovery
                                 </Link>
                                 <div className="mt-auto px-5 pb-3 pt-7">
-                                    <p className="font-sans text-[13px] font-medium leading-5 text-white/80">Start with a controlled financial review.</p>
-                                    <p className="mt-1 max-w-[30rem] font-sans text-[12px] leading-5 text-white/55">
+                                    <p className={cn("font-sans text-[13px] font-medium leading-5", isLight ? "text-[#52616C]" : "text-white/80")}>Start with a controlled financial review.</p>
+                                    <p className={cn("mt-1 max-w-[30rem] font-sans text-[12px] leading-5", isLight ? "text-[#7B8790]" : "text-white/55")}>
                                         See what the records establish before deciding what work is justified.
                                     </p>
                                 </div>
@@ -344,7 +344,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     <Link
                                         to="/contact"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[46px] w-full items-center justify-center gap-3 rounded-full border-0 bg-white/10 px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white transition-colors duration-200 hover:bg-white/15">
+                                        className={cn("flex min-h-[46px] w-full items-center justify-center gap-3 rounded-full border-0 px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal transition-colors duration-200", isLight ? "bg-white/35 text-[#25313A] hover:bg-white/50" : "bg-white/10 text-white hover:bg-white/15")}>
                                         <img src="/gmailicon.png" alt="" aria-hidden="true" className="h-5 w-5 object-contain" />
                                         Talk to Margin <ChevronRight aria-hidden="true" className="h-4 w-4" />
                                     </Link>
