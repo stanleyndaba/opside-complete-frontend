@@ -60,6 +60,8 @@ import { ScaledDemoStage } from "@/components/landing/ScaledDemoStage";
 import { ReconciliationPipelineVisual } from "@/components/landing/ReconciliationPipelineVisual";
 import { OneRecordAnalysisVisual } from "@/components/landing/OneRecordAnalysisVisual";
 import { DuplicatePipelineVisual } from "@/pages/DuplicatePipelinePreview";
+import { DemoTestsShell } from "@/pages/DemoTests";
+import { DiscrepanciesPresentation } from "@/pages/Discrepancies";
 import ProgressReview from "@/pages/ProgressReview";
 import EvidenceRequired from "@/pages/EvidenceRequired";
 import { AutoSubmitPresentation } from "@/pages/AutoSubmitPreview";
@@ -1433,9 +1435,23 @@ function NestedRecoveryVisual({
 }
 
 const financialCertaintyBrowsers = {
-  issues: { label: 'Issues found', path: '/try-demo-four' },
-  operations: { label: 'Recovery operations', path: '/try-demo-two' },
+  issues: { label: 'Issues found' },
+  operations: { label: 'Recovery operations' },
 } as const;
+
+function FinancialCertaintyDemoShell({ type }: { type: keyof typeof financialCertaintyBrowsers }) {
+  return (
+    <ScaledDemoStage designWidth={900} designHeight={620}>
+      <div className="h-[620px] w-[900px]">
+        <DemoTestsShell embedded>
+          <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]">
+            {type === 'issues' ? <DiscrepanciesPresentation eyebrow={null} title="Financial Marketplace Issues" /> : <ReconciliationPipelineVisual />}
+          </div>
+        </DemoTestsShell>
+      </div>
+    </ScaledDemoStage>
+  );
+}
 
 function FinancialCertaintyNestedVisual() {
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof financialCertaintyBrowsers>('issues');
@@ -1451,7 +1467,9 @@ function FinancialCertaintyNestedVisual() {
             : 'bottom-[2%] right-[1%] h-[76%] w-[92%] sm:bottom-[3%] sm:right-[3%] sm:h-[73%] sm:w-[78%]';
           return (
             <div key={key} role="button" tabIndex={0} onClick={() => setActiveBrowser(key)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setActiveBrowser(key); }} aria-label={`Show ${browser.label}`} className={`absolute overflow-hidden rounded-[10px] border text-left transition-all duration-500 ${frameClass} ${isActive ? 'z-20 border-white/95 shadow-[0_24px_48px_rgba(37,73,91,0.25)]' : 'z-10 border-white/65 shadow-[0_12px_30px_rgba(37,73,91,0.14)]'}`}>
-              <iframe title={`${browser.label} page preview`} src={browser.path} className={`h-full w-full border-0 bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`} loading="lazy" />
+              <div className={`h-full w-full bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <FinancialCertaintyDemoShell type={key} />
+              </div>
             </div>
           );
         })}

@@ -64,8 +64,8 @@ export function DemoTestsShell({ children, embedded = false }: { children?: Reac
   const [active, setActive] = useState("Workflows");
 
   return (
-    <main className={`${embedded ? "min-h-0 w-full p-0" : "min-h-screen px-3 py-3 sm:px-6 sm:py-6 lg:px-10 lg:py-10"} overflow-x-hidden bg-white text-[#18191a]`}>
-      <section className={`${embedded ? "min-h-0 max-w-none rounded-[14px] border border-[#e1e1e1] shadow-[0_12px_36px_rgba(15,34,39,0.08)]" : "min-h-[calc(100vh-0.75rem)] max-w-[1420px] rounded-[16px] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]"} mx-auto flex w-full overflow-hidden bg-[#fafafa]`}>
+    <main className={`${embedded ? "h-full min-h-0 w-full p-0" : "min-h-screen px-3 py-3 sm:px-6 sm:py-6 lg:px-10 lg:py-10"} overflow-x-hidden bg-white text-[#18191a]`}>
+      <section className={`${embedded ? "h-full min-h-0 max-w-none rounded-[14px] border border-[#e1e1e1] shadow-[0_12px_36px_rgba(15,34,39,0.08)]" : "min-h-[calc(100vh-0.75rem)] max-w-[1420px] rounded-[16px] shadow-[0_30px_80px_rgba(15,34,39,0.22)] sm:min-h-[calc(100vh-1.5rem)] lg:min-h-[calc(100vh-2.5rem)]"} mx-auto flex w-full overflow-hidden bg-[#fafafa]`}>
         <aside className={`${embedded ? "flex w-[136px] min-w-[136px] px-2 py-3 sm:w-[184px] sm:min-w-[184px] sm:px-3 sm:py-4" : "flex w-[210px] min-w-[210px] px-3 py-5 sm:w-[240px] sm:min-w-[240px] sm:px-4 sm:py-6"} shrink-0 flex-col border-r border-[#e1e1e1] bg-white`}>
           <div className="mb-8 flex items-center justify-between px-2">
             <div>
@@ -110,7 +110,7 @@ export function DemoTestsShell({ children, embedded = false }: { children?: Reac
           </div>
         </aside>
 
-        <section className={`${embedded ? "px-3 py-3 md:px-5 md:py-4" : "px-3 py-5 sm:px-6 sm:py-6 lg:px-8 xl:px-10"} min-w-0 flex-1 overflow-y-auto bg-[#fbfbfb]`}>
+        <section className={`${embedded ? "h-full px-3 py-3 md:px-5 md:py-4" : "px-3 py-5 sm:px-6 sm:py-6 lg:px-8 xl:px-10"} min-w-0 flex-1 overflow-y-auto bg-[#fbfbfb]`}>
           <div className="flex items-center justify-between gap-3">
             <div className="relative min-w-0 max-w-[610px] flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 stroke-[1.7] text-[#656767]" />
