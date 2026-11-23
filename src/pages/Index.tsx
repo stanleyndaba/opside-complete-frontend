@@ -1931,7 +1931,7 @@ function RecoveryOutcomeExplorer() {
   return (
     <section aria-labelledby="recovery-outcome-title" className="audit-palette-surface relative bg-[#F6F8F9] py-10 md:py-12">
       <div className={containerClass}>
-        <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
+        <div className="grid items-start gap-10 lg:grid-cols-[1.18fr_0.82fr] lg:gap-16">
           <motion.div {...revealProps} className="order-1 lg:order-2 lg:sticky lg:top-28">
             <LandingEyebrow>Response and appeal control</LandingEyebrow>
             <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">A rejection should never be the last explanation Finance receives.</span></h2>
