@@ -24,7 +24,7 @@ export function PersonalRecoverySupportSection() {
             <span className="heading-tone-dark">Margin performs the investigation—not just explains what to submit.</span>
           </h2>
           <p className="mt-5 max-w-[560px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">Margin makes the investigation, case history, evidence requirements, Amazon responses and outstanding actions accessible as one connected case position. Your team can ask about the status, the reason for a decision, the evidence supporting it or what is preventing progress, and receive an explanation grounded in the recorded financial work.</p>
-          <p className="mt-4 max-w-[560px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>The work should end with a verified financial position—not another status label for your team to chase.</p>
+          <p className="mt-4 max-w-[560px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}>The result is less investigative work for your team and a clearer account of what has actually happened.</p>
           <button type="button" className="landing-action-cta landing-pressable mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2" aria-label="Discuss Your Recovery">Discuss Your Recovery <ChevronRight className="h-4 w-4" aria-hidden="true" /></button>
         </motion.div>
 

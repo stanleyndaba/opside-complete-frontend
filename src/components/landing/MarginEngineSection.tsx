@@ -9,9 +9,9 @@ export function MarginEngineSection() {
       <div className="relative mx-auto w-full max-w-[1240px] px-5 sm:px-8">
         <div className="mb-10 max-w-[720px] md:mb-14">
           <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Evidence before action</p>
-          <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Do not let an uncertain position trigger the wrong action.</h2>
-          <p className="mt-4 max-w-[660px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Margin examines the originating event, expected financial treatment, available evidence, alternative explanations and materiality before determining whether recovery or further resolution work is justified.</p>
-          <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Your team retains approval authority. Margin performs the investigation and supplies the evidence behind it.</p>
+          <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Make decisions with the investigation behind them.</h2>
+          <p className="mt-4 max-w-[660px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Margin examines the originating event, expected financial treatment, available records and alternative explanations before determining whether further action is justified.</p>
+          <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Your team can inspect the basis of a finding, challenge it, approve it or hold it. Consequential actions remain within the authority granted by your business.</p>
         </div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="mx-auto w-full max-w-[1040px] lg:max-w-[1350px]">

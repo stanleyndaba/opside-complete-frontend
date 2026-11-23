@@ -73,9 +73,9 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
-          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Start with the financial position</p>
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Establish what happened. Let Margin carry the work through to resolution.</h2>
-          <p className="audit-routing-body mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">The Initial Financial Position Review examines the Amazon records supplied, connecting relevant transactions, settlement activity, inventory movements and adjustments to establish what the available evidence explains. It separates supported exposure from accounted-for activity, unresolved differences and conclusions that cannot yet be verified.</p>
+          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Choose the justified engagement</p>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with your financial position. Decide what should happen next.</h2>
+          <p className="audit-routing-body mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">Not every business needs the same level of financial investigation or ongoing control. Margin begins by establishing what the available records support, then scopes the work according to the complexity, evidence requirements and responsibility involved.</p>
           <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Read-only review to begin. Start with the evidence, then commit only to the work it justifies.</p>
           <p className="mt-4 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8"></p>
         </motion.div>
@@ -101,7 +101,7 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
           </DirectMountedPreview>
         </motion.div>
         <motion.div {...revealProps} className="enterprise-routing-copy order-1 max-w-[780px] lg:order-2">
-          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Resolution continuity</p>
+          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Keep financial work accountable over time</p>
           <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Make every resolved discrepancy easier to account for next time.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin preserves established evidence, prior decisions, linked financial events and verified outcomes so later investigations can build on what is already known. It can compare new activity against previously examined events, identify recurring patterns and distinguish a genuinely new discrepancy from a timing difference, reversal or previously resolved item.</p>
           <p className="mt-4 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Each examination adds to the record of what has been established, reducing the need to reconstruct the same financial history repeatedly.</p>
@@ -134,8 +134,8 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
   <section className="enterprise-onboarding-section relative overflow-hidden bg-white py-12 sm:py-14 md:py-20" aria-labelledby="enterprise-onboarding-title">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <motion.div {...revealProps} className="max-w-[850px]">
-        <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Operating model</p>
-        <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Know how your recovery operation will work before it goes live.</h2>
+        <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">A defined operating relationship</p>
+        <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Know what Margin will be responsible for before the work begins.</h2>
         <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8"><LandingResponsiveCopy desktop={'During the defined 30–45 day engagement, Margin works with your team to examine the agreed records, establish the initial financial position, configure the recovery and control workflow, and assign responsibility to outstanding exceptions. The engagement establishes a documented operating process and agreed control state; Amazon&apos;s decisions and payment timelines remain external dependencies.'} mobile={'Across the 30–45 day engagement, Margin examines the agreed records, establishes the initial position and sets up the investigation, approval and ownership workflows for outstanding exceptions. Amazon response and payment times remain external dependencies.'} /></p>
       </motion.div>
 

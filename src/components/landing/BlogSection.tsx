@@ -52,17 +52,17 @@ export function BlogSection() {
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between md:gap-8">
           <div className="max-w-[680px]">
             <p className="font-mono text-[5.5px] font-semibold uppercase tracking-tight text-[#F05A3C]">
-              BLOG
+              Margin insights
             </p>
             <h2
               id="landing-blog-title"
               className="mt-3 font-lora text-[34px] font-normal leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[52px]"
             >
-              The questions behind dependable Amazon financial control.
+              Understand the financial questions behind a growing Amazon business.
             </h2>
           </div>
           <p className="max-w-[340px] text-[14px] leading-6 text-[#66737F] md:pb-1">
-            Practical perspectives on the gap between Amazon activity, financial visibility, operational follow-through and verified resolution.
+            Practical perspectives on inventory, financial visibility, marketplace operations, reconciliation and the work required to establish a dependable financial position.
           </p>
         </div>
 
