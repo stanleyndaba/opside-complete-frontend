@@ -835,7 +835,7 @@ function FinancialWorkProofSection() {
             <p className="mx-auto mt-3 max-w-[760px] text-[15px] leading-6 text-[#5F6D77] md:mt-4 md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Your team can review the financial basis, approve consequential actions and monitor recovered, unresolved and reconciled value without having to assemble the investigation independently.'} mobile={'Finance can challenge findings, approve actions and monitor recovered, unresolved and reconciled value without rebuilding the investigation.'} /></p>
         </motion.div>
 
-        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative mt-10 overflow-hidden border-y border-[#D8E3E8] py-7 sm:mt-12 sm:py-9">
+        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative mt-10 overflow-hidden py-7 sm:mt-12 sm:py-9">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-[#F7F8F7] to-transparent sm:w-20" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-[#F7F8F7] to-transparent sm:w-20" />
           <motion.div className="flex w-max" animate={reduceMotion ? { x: 0 } : { x: ["0%", "-50%"] }} transition={reduceMotion ? { duration: 0 } : { duration: 28, repeat: Infinity, ease: "linear" }}>
@@ -844,11 +844,9 @@ function FinancialWorkProofSection() {
           </motion.div>
         </motion.div>
 
-        <div className="mt-8 flex flex-col items-start justify-between gap-5 sm:mt-10 lg:flex-row lg:items-center">
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-semibold uppercase tracking-tight text-[#66737F] sm:text-[11px]"><span className="text-[#635BFF]">Investigate</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Establish</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Govern</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Reconcile</span></div>
+        <div className="mt-8 flex justify-end sm:mt-10">
           <button type="button" className={landingPrimaryCtaClass} aria-label="View the Record">View the Record <ChevronRight className="h-4 w-4" /></button>
         </div>
-        <p className="mt-5 max-w-[760px] text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">Event <span className="px-1 text-[#AEB8BC]">→</span> Evidence <span className="px-1 text-[#AEB8BC]">→</span> Decision <span className="px-1 text-[#AEB8BC]">→</span> Action <span className="px-1 text-[#AEB8BC]">→</span> Verified outcome</p>
       </div>
     </section>
   );
