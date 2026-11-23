@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { PersonalRecoverySupportVisual } from "./PersonalRecoverySupportVisual";
 import { ScaledDemoStage } from "./ScaledDemoStage";
+import { DemoTestsShell } from "@/pages/DemoTests";
 import { ChevronRight } from "lucide-react";
 
 const revealProps = {
@@ -28,9 +29,13 @@ export function PersonalRecoverySupportSection() {
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
-          <div className="relative h-auto min-h-0 overflow-y-auto overscroll-contain rounded-none border-0 bg-transparent shadow-none sm:h-[min(600px,62vw)] sm:min-h-[320px] sm:rounded-[10px] sm:border sm:border-[#C9D9E1] sm:bg-[#E7E9EB] sm:shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
-            <ScaledDemoStage designWidth={900} designHeight={650}>
-              <PersonalRecoverySupportVisual />
+          <div className="relative h-[min(600px,62vw)] min-h-[320px] overflow-y-auto overscroll-contain rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7] shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+            <ScaledDemoStage designWidth={900} designHeight={620}>
+              <div className="h-[620px] w-[900px]">
+                <DemoTestsShell embedded>
+                  <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]"><PersonalRecoverySupportVisual /></div>
+                </DemoTestsShell>
+              </div>
             </ScaledDemoStage>
           </div>
         </motion.div>
