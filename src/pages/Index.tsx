@@ -2195,7 +2195,6 @@ export default function Index() {
         <MarginStandardDeliverableSection />
         <RecoveryWorkStatement />
         <MarginEngineSection />
-        <MarginStandardSection />
         <FinancialWorkProofSection />
 
         {/* Phase 4 — Demonstrate the operating capability: product proof */}
@@ -2216,7 +2215,6 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <OneRecoverySection />
         <ProductReframeSection />
         <AutoSubmitSection />
         <MarginLifecycleSection />
