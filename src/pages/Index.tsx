@@ -787,6 +787,7 @@ function ReconstructionGapSection() {
 }
 
 function FinancialWorkProofSection() {
+  const reduceMotion = useReducedMotion();
   const proofPoints: Array<{ value: string; title: string; description?: string; details?: string[] }> = [
     {
       value: "28+",
@@ -814,42 +815,39 @@ function FinancialWorkProofSection() {
       description: "A coordinated agent architecture supports specialised stages of examination, evidence handling, recovery management and financial control.",
     },
   ];
+  const renderProofPoint = (point: (typeof proofPoints)[number], index: number) => (
+    <article key={`${point.title}-${index}`} className="flex w-[242px] shrink-0 flex-col items-center px-5 text-center sm:w-[286px] sm:px-7 md:w-[310px]">
+      <span className={`${point.value === "SP-API" ? "text-[21px] sm:text-[24px]" : "text-[34px] sm:text-[40px]"} font-lora leading-none tracking-[-0.045em] text-[#182026]`} style={{ fontWeight: 500 }}>{point.value}</span>
+      <h3 className="mt-3 text-[12px] font-semibold leading-5 tracking-tight text-[#182026] sm:text-[13px]">{point.title}</h3>
+      {point.details ? <ul className="mt-3 grid gap-1 text-[10px] leading-4 text-[#5F6D77] sm:text-[11px] sm:leading-5">{point.details.map((detail) => <li key={detail}>{detail}</li>)}</ul> : <p className="mt-3 text-[10px] leading-4 text-[#5F6D77] sm:text-[11px] sm:leading-5">{point.description}</p>}
+    </article>
+  );
 
   return (
-    <section aria-labelledby="financial-work-proof-title" className="financial-work-proof-surface relative overflow-hidden bg-white py-8 text-[#182026] sm:py-10 md:py-16">
+    <section aria-labelledby="financial-work-proof-title" className="financial-work-proof-surface relative overflow-hidden bg-[#F7F8F7] py-10 text-[#182026] sm:py-12 md:py-16">
       <div className={containerClass}>
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-20">
-          <motion.div {...revealProps} className="max-w-[620px]">
+        <motion.div {...revealProps} className="mx-auto max-w-[900px] text-center">
             <LandingEyebrow>Inspectable financial work</LandingEyebrow>
             <h2 id="financial-work-proof-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
               See the investigation behind the financial result.
             </h2>
-            <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-[#5F6D77] md:mt-5 md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Financial understanding at scale requires more than matching two numbers. It requires examining source records, testing relationships, calculating differences, preserving evidence, tracking decisions and checking subsequent financial events. Margin brings this work into a structured financial operation.'} mobile={'Margin connects transaction analysis, source evidence, investigation logic and recovery status so each material finding can be inspected against its records and calculations.'} /></p>
-            <p className="mt-3 max-w-[560px] text-[15px] leading-6 text-[#5F6D77] md:mt-4 md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Your team can review the financial basis, approve consequential actions and monitor recovered, unresolved and reconciled value without having to assemble the investigation independently.'} mobile={'Finance can challenge findings, approve actions and monitor recovered, unresolved and reconciled value without rebuilding the investigation.'} /></p>
-            <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-semibold uppercase tracking-tight text-[#66737F] sm:text-[11px]">
-              <span className="text-[#635BFF]">Investigate</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Establish</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Govern</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Reconcile</span>
-            </div>
-          </motion.div>
+            <p className="mx-auto mt-4 max-w-[760px] text-[15px] leading-6 text-[#5F6D77] md:mt-5 md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Financial understanding at scale requires more than matching two numbers. It requires examining source records, testing relationships, calculating differences, preserving evidence, tracking decisions and checking subsequent financial events. Margin brings this work into a structured financial operation.'} mobile={'Margin connects transaction analysis, source evidence, investigation logic and recovery status so each material finding can be inspected against its records and calculations.'} /></p>
+            <p className="mx-auto mt-3 max-w-[760px] text-[15px] leading-6 text-[#5F6D77] md:mt-4 md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Your team can review the financial basis, approve consequential actions and monitor recovered, unresolved and reconciled value without having to assemble the investigation independently.'} mobile={'Finance can challenge findings, approve actions and monitor recovered, unresolved and reconciled value without rebuilding the investigation.'} /></p>
+        </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[#D8E3E8]">
-            {proofPoints.map((point) => (
-              <div key={point.title} className="grid grid-cols-[92px_minmax(0,1fr)] items-start gap-4 border-b border-[#D8E3E8] py-4 sm:grid-cols-[110px_minmax(0,1fr)] sm:gap-5 sm:py-6">
-                <span className={`${point.value === "SP-API" ? "text-[24px] sm:text-[28px]" : "text-[38px] sm:text-[44px]"} font-lora leading-none tracking-[-0.045em] text-[#182026]`} style={{ fontWeight: 500 }}>{point.value}</span>
-                <div className="min-w-0">
-                  <h3 className="text-[16px] font-semibold leading-5 tracking-tight text-[#182026] sm:text-[17px]">{point.title}</h3>
-                  {point.details ? (
-                    <ul className="mt-2 grid gap-1 text-[13px] leading-5 text-[#5F6D77] sm:text-[14px] sm:leading-6">
-                      {point.details.map((detail) => <li key={detail}>{detail}</li>)}
-                    </ul>
-                  ) : (
-                    <p className="mt-2 text-[13px] leading-5 text-[#5F6D77] sm:text-[14px] sm:leading-6">{point.description}</p>
-                  )}
-                </div>
-              </div>
-            ))}
+        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative mt-10 overflow-hidden border-y border-[#D8E3E8] py-7 sm:mt-12 sm:py-9">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-[#F7F8F7] to-transparent sm:w-20" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-[#F7F8F7] to-transparent sm:w-20" />
+          <motion.div className="flex w-max" animate={reduceMotion ? { x: 0 } : { x: ["0%", "-50%"] }} transition={reduceMotion ? { duration: 0 } : { duration: 28, repeat: Infinity, ease: "linear" }}>
+            <div className="flex shrink-0 divide-x divide-[#D8E3E8]">{proofPoints.map(renderProofPoint)}</div>
+            <div className="flex shrink-0 divide-x divide-[#D8E3E8]">{proofPoints.map(renderProofPoint)}</div>
           </motion.div>
+        </motion.div>
+
+        <div className="mt-8 flex flex-col items-start justify-between gap-5 sm:mt-10 lg:flex-row lg:items-center">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-semibold uppercase tracking-tight text-[#66737F] sm:text-[11px]"><span className="text-[#635BFF]">Investigate</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Establish</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Govern</span><ArrowRight className="h-3 w-3 text-[#AEB8BC]" /><span>Reconcile</span></div>
+          <button type="button" className={landingPrimaryCtaClass} aria-label="View the Record">View the Record <ChevronRight className="h-4 w-4" /></button>
         </div>
-        <button type="button" className={`${landingPrimaryCtaClass} mt-5 md:mt-8`} aria-label="View the Record">View the Record <ChevronRight className="h-4 w-4" /></button>
         <p className="mt-5 max-w-[760px] text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">Event <span className="px-1 text-[#AEB8BC]">→</span> Evidence <span className="px-1 text-[#AEB8BC]">→</span> Decision <span className="px-1 text-[#AEB8BC]">→</span> Action <span className="px-1 text-[#AEB8BC]">→</span> Verified outcome</p>
       </div>
     </section>
