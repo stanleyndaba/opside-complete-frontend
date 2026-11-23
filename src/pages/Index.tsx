@@ -1461,6 +1461,14 @@ function FinancialCertaintyDemoShell({ type }: { type: keyof typeof financialCer
 function FinancialCertaintyNestedVisual() {
   const [activeBrowser, setActiveBrowser] = useState<keyof typeof financialCertaintyBrowsers>('issues');
 
+  useEffect(() => {
+    const mobileQuery = window.matchMedia('(max-width: 639px)');
+    const syncFrontLayer = () => setActiveBrowser(mobileQuery.matches ? 'operations' : 'issues');
+    syncFrontLayer();
+    mobileQuery.addEventListener('change', syncFrontLayer);
+    return () => mobileQuery.removeEventListener('change', syncFrontLayer);
+  }, []);
+
   return (
     <div className="relative min-h-[620px] overflow-hidden sm:min-h-[570px]">
       <div className="relative h-full min-h-[590px] sm:min-h-[538px]">
