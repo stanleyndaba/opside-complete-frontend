@@ -2316,8 +2316,6 @@ export default function Index() {
           </div>
         </section>
       </main>
-        <FooterNestedRecoveryVisual />
-
       <DemoVideoModal
         open={isDemoOpen}
         onOpenChange={setIsDemoOpen}
