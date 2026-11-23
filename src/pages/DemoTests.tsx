@@ -12,6 +12,7 @@ import {
   Store,
   UserRound,
   UsersRound,
+  type LucideIcon,
 } from "lucide-react";
 
 type LibraryItem = {
@@ -60,8 +61,15 @@ function CountedItem({ item, active, onClick }: { item: LibraryItem; active?: bo
   );
 }
 
-export function DemoTestsShell({ children, embedded = false }: { children?: ReactNode; embedded?: boolean }) {
+type DemoTestsWorkspaceItem = { label: string; icon: LucideIcon };
+
+export function DemoTestsShell({ children, embedded = false, workspaceItems = [], activeWorkspace, onWorkspaceChange }: { children?: ReactNode; embedded?: boolean; workspaceItems?: DemoTestsWorkspaceItem[]; activeWorkspace?: string; onWorkspaceChange?: (label: string) => void }) {
   const [active, setActive] = useState("Workflows");
+  const currentActive = activeWorkspace ?? active;
+  const selectItem = (label: string) => {
+    setActive(label);
+    onWorkspaceChange?.(label);
+  };
 
   return (
     <main className={`${embedded ? "h-full min-h-0 w-full p-0" : "min-h-screen px-3 py-3 sm:px-6 sm:py-6 lg:px-10 lg:py-10"} overflow-x-hidden bg-white text-[#18191a]`}>
@@ -79,12 +87,12 @@ export function DemoTestsShell({ children, embedded = false }: { children?: Reac
 
           <nav aria-label="Library navigation" className="space-y-1">
             <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#a0a1a1]">Library</p>
-            {navigation.map((item) => <CountedItem key={item.label} item={item} active={active === item.label} onClick={() => setActive(item.label)} />)}
+            {navigation.map((item) => <CountedItem key={item.label} item={item} active={currentActive === item.label} onClick={() => selectItem(item.label)} />)}
           </nav>
 
           <nav aria-label="Saved filters" className="mt-8 space-y-1">
             <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#a0a1a1]">Your space</p>
-            {filters.map((item) => <CountedItem key={item.label} item={item} active={active === item.label} onClick={() => setActive(item.label)} />)}
+            {filters.map((item) => <CountedItem key={item.label} item={item} active={currentActive === item.label} onClick={() => selectItem(item.label)} />)}
           </nav>
 
           <nav aria-label="Assessment navigation" className="mt-8 border-t border-[#ececec] pt-5">
@@ -92,6 +100,12 @@ export function DemoTestsShell({ children, embedded = false }: { children?: Reac
             <div className="space-y-1">
               {assessmentItems.map(({ label, icon: Icon }) => (
                 <button key={label} type="button" className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-left text-[12px] font-medium tracking-[-0.02em] text-[#525455] transition-colors hover:bg-[#f5f5f5] sm:py-2.5 sm:text-[14px]">
+                  <Icon className="h-[18px] w-[18px] shrink-0 stroke-[1.8] text-[#1c1d1e]" />
+                  <span className="truncate">{label}</span>
+                </button>
+              ))}
+              {workspaceItems.map(({ label, icon: Icon }) => (
+                <button key={label} type="button" onClick={() => selectItem(label)} className={`flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-left text-[12px] font-medium tracking-[-0.02em] transition-colors hover:bg-[#f5f5f5] sm:py-2.5 sm:text-[14px] ${currentActive === label ? "bg-[#efefef] text-[#25292a]" : "text-[#525455]"}`}>
                   <Icon className="h-[18px] w-[18px] shrink-0 stroke-[1.8] text-[#1c1d1e]" />
                   <span className="truncate">{label}</span>
                 </button>
