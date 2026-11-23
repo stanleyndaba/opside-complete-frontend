@@ -1992,8 +1992,8 @@ function EnterpriseReviewsSection() {
         <motion.div {...revealProps} className="mx-auto max-w-[980px] rounded-[12px] bg-[#F05A3C] px-6 py-7 text-white shadow-[0_22px_55px_rgba(240,90,60,0.2)] sm:px-10 sm:py-9 md:px-14 md:py-11">
           <p className="text-[11px] font-semibold tracking-tight text-white/75">Seller perspective</p>
           <h2 id="enterprise-reviews-title" className="mt-3 font-lora text-[30px] leading-[1.03] tracking-[-0.045em] text-white sm:text-[38px] md:text-[44px]" style={{ fontWeight: 400 }}>Financial investigation at operating speed.</h2>
-          <div className="mt-3 text-[12px] leading-5 tracking-tight text-white/90 sm:text-[14px] sm:leading-6"><p className="font-google-sans font-semibold">Finance Director</p><p className="italic">Consumer products business operating across multiple marketplaces.</p></div>
           <blockquote className="mt-7 max-w-[840px] text-[12px] leading-6 tracking-tight text-white/95 sm:mt-8 sm:text-[14px] sm:leading-7"><p>“Margin has taken transactional investigation from a months-long exercise to a matter of minutes. It works across our distributed data as an agentic investigative researcher, completing the initial scope, tracing the relevant records, and connecting the evidence behind the position.”</p><p className="mt-4">Our finance team can focus on the wider financial operation while Margin handles the investigation work. That has fundamentally changed how convenient and practical financial control can be at scale.”</p></blockquote>
+          <div className="mt-6 text-[12px] leading-5 tracking-tight text-white/90 sm:mt-7 sm:text-[14px] sm:leading-6"><p className="font-google-sans font-semibold">Finance Director</p><p className="italic">Consumer products business operating across multiple marketplaces.</p></div>
         </motion.div>
       </div>
     </section>
