@@ -1562,22 +1562,19 @@ function NestedRecoveryBrowsers() {
 
 function MarginStandardDeliverableSection() {
   return (
-    <section className="margin-standard-deliverable-section relative overflow-hidden bg-white py-12 sm:py-16 lg:min-h-screen lg:py-20" style={{ backgroundColor: "#FFFFFF" }} aria-labelledby="margin-standard-deliverable-title">
-      <div className={containerClass}>
-        <motion.div {...revealProps} className="mx-auto max-w-[820px] text-center">
+    <section className="margin-standard-deliverable-section relative overflow-hidden border-y border-[#D6E3E8] bg-white py-12 sm:py-14 md:py-20" aria-labelledby="margin-standard-deliverable-title">
+      <div className={`${containerClass} grid items-center gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16`}>
+        <motion.div {...revealProps} className="max-w-[600px]">
           <LandingEyebrow>Inspectable financial work</LandingEyebrow>
-            <h2 id="margin-standard-deliverable-title" className="mx-auto mt-4 max-w-[760px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>
+          <h2 id="margin-standard-deliverable-title" className="font-lora text-[36px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
             <span className="heading-tone-dark">Give Finance the investigation behind the conclusion—not just the conclusion.</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'A finding should not ask your team to trust a number without understanding how it was reached. For each examined discrepancy, Margin is designed to show the relevant source records, expected treatment, observed outcome, supporting evidence, calculation and variance. Your team can inspect the reasoning, challenge a conclusion, approve an action or hold it where the evidence is insufficient. That makes the financial decision more transparent and the next step more accountable.'} mobile={'Each finding retains its originating records, expected treatment, observed outcome, evidence and calculation—showing which relationships are verified and which remain unresolved.'} /></p>
-          <p className="mx-auto mt-4 max-w-[700px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'The finding can be challenged, approved or held for further investigation, with the decision and subsequent outcome retained in the financial record.'} mobile={'Finance can challenge, approve or hold a finding, with the decision and subsequent outcome preserved in its record.'} /></p>
-          <p className="mx-auto mt-4 max-w-[700px] font-lora text-[20px] leading-[1.12] tracking-[-0.03em] text-[#315C70] sm:text-[24px]" style={{ fontWeight: 400 }}></p>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <button type="button" className="landing-action-cta landing-pressable inline-flex h-11 items-center justify-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2" aria-label="See the Financial Basis">See the Financial Basis <ChevronRight className="h-4 w-4" /></button>
-          </div>
+          <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'A finding should not ask your team to trust a number without understanding how it was reached. For each examined discrepancy, Margin is designed to show the relevant source records, expected treatment, observed outcome, supporting evidence, calculation and variance. Your team can inspect the reasoning, challenge a conclusion, approve an action or hold it where the evidence is insufficient. That makes the financial decision more transparent and the next step more accountable.'} mobile={'Each finding retains its originating records, expected treatment, observed outcome, evidence and calculation—showing which relationships are verified and which remain unresolved.'} /></p>
+          <p className="mt-4 max-w-[560px] text-[15px] leading-7 text-[#5B6A72] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'The finding can be challenged, approved or held for further investigation, with the decision and subsequent outcome retained in the financial record.'} mobile={'Finance can challenge, approve or hold a finding, with the decision and subsequent outcome preserved in its record.'} /></p>
+          <button type="button" className="landing-action-cta landing-pressable mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2" aria-label="See the Financial Basis">See the Financial Basis <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
-        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mx-auto mt-8 flex w-full max-w-[1040px] justify-center sm:mt-10 lg:mt-12">
-          <img src="/finding-evidence-register.png" alt="Finding Evidence Register showing source-backed findings with verified, review, hold, and unresolved states" className="block h-auto w-full max-w-[900px] rounded-[10px] object-contain shadow-[0_20px_55px_rgba(37,73,91,0.12)]" loading="lazy" />
+        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex min-w-0 justify-center lg:justify-end">
+          <img src="/finding-evidence-register.png" alt="Finding Evidence Register showing source-backed findings with verified, review, hold, and unresolved states" className="block h-auto max-h-[620px] w-full max-w-[560px] rounded-[10px] object-contain shadow-[0_20px_55px_rgba(37,73,91,0.12)]" loading="lazy" />
         </motion.div>
       </div>
     </section>
