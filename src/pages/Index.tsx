@@ -770,9 +770,13 @@ function ReconstructionGapSection() {
             </div>
           </motion.div>
           <motion.div {...revealProps} className="relative order-2 min-w-0 overflow-hidden lg:order-2">
-            <div className="rounded-[14px] bg-[#DDE8ED]/65 p-2 shadow-[0_24px_70px_rgba(72,103,122,0.13)] sm:p-4 md:p-6">
-              <ScaledDemoStage>
-                <DiscrepancyModalVisual />
+            <div className="relative h-[min(600px,62vw)] min-h-[320px] overflow-y-auto overscroll-contain rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7] shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+              <ScaledDemoStage designWidth={900} designHeight={620}>
+                <div className="h-[620px] w-[900px]">
+                  <DemoTestsShell embedded>
+                    <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]"><DiscrepancyModalVisual /></div>
+                  </DemoTestsShell>
+                </div>
               </ScaledDemoStage>
             </div>
           </motion.div>
