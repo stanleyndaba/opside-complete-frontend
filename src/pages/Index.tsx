@@ -1599,9 +1599,13 @@ function AutoSubmitSection() {
             <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See Execution">See Execution <ChevronRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full shrink-0 lg:w-[360px]">
-            <div className="mx-auto h-[330px] w-full max-w-[900px] overflow-y-auto overscroll-contain rounded-[10px] bg-[#E7E9EB] shadow-[0_20px_55px_rgba(37,73,91,0.12)] sm:h-[430px] lg:h-[min(54vh,560px)]">
-              <ScaledDemoStage designWidth={820} designHeight={700}>
-                <AutoSubmitPresentation embedded />
+            <div className="relative mx-auto h-[min(600px,62vw)] min-h-[320px] w-full max-w-[900px] overflow-y-auto overscroll-contain rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7] shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
+              <ScaledDemoStage designWidth={900} designHeight={620}>
+                <div className="h-[620px] w-[900px]">
+                  <DemoTestsShell embedded>
+                    <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]"><AutoSubmitPresentation embedded /></div>
+                  </DemoTestsShell>
+                </div>
               </ScaledDemoStage>
             </div>
           </motion.div>
