@@ -515,12 +515,12 @@ function KineticHeroSection({
           <LandingEyebrow className="hero-eyebrow border-l-2 border-[#245BFF] pl-2">Amazon financial operations and control</LandingEyebrow>
           <h1 id="margin-hero-title" className="font-sora mt-3 max-w-[820px] text-[32px] leading-[0.98] tracking-[-0.045em] sm:mt-5 sm:text-[51px] md:text-[63px] lg:text-[71px]" style={{ fontWeight: 600 }}>
             <motion.span className="block font-[600] text-[#000000] sm:hidden" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>
-              <span className="block whitespace-normal break-words">Margin does the</span>
-              <span className="block whitespace-normal break-words">financial investigation</span>
+              <span className="block whitespace-normal break-words">Margin investigates</span>
+              <span className="block whitespace-normal break-words">the financial trail</span>
               <span className="block whitespace-normal break-words">behind your Amazon</span>
               <span className="block whitespace-normal break-words">operation.</span>
             </motion.span>
-            <motion.span className="hidden font-[600] text-[#000000] sm:block" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Know how your Amazon financial position was formed.</motion.span>
+            <motion.span className="hidden font-[600] text-[#000000] sm:block" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Margin investigates the financial trail behind your Amazon operation.</motion.span>
           </h1>
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[900px] font-google-sans text-[15px] leading-7 text-[#000000] sm:mt-8 sm:text-[18px] sm:leading-8">We help established Amazon businesses, typically operating at $5M+ in annual sales, trace the operational and financial events behind their Amazon position—connecting inventory, transactions, settlements and marketplace records into one accountable financial picture.</motion.p>
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-stretch gap-3 font-google-sans sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
