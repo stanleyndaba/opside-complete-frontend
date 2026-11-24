@@ -12,197 +12,85 @@ const primaryCta = "inline-flex h-12 items-center justify-center gap-2 rounded-[
 const secondaryCta = "inline-flex h-12 items-center justify-center gap-2 rounded-[3px] border border-[#C8D6DF] bg-white px-5 text-[14px] font-semibold text-[#182026] transition-colors hover:border-[#245BFF] hover:text-[#245BFF]";
 
 const audiences = [
-  {
-    title: "Finance Teams & Controllers",
-    label: "Financial close",
-    image: "/generated/teams/finance-teams-controllers.png",
-    copy: "Close the gap between reconciliation and explanation. Give Finance a defensible account of what happened, what is supported and what remains open.",
-  },
-  {
-    title: "Founder-led Amazon Businesses",
-    label: "Delegated ownership",
-    image: "/generated/teams/founder-led-amazon-businesses.png",
-    copy: "Stop carrying every unresolved financial question yourself. Margin takes responsibility for an agreed scope and shows you the conclusion.",
-  },
-  {
-    title: "Marketplace Operations Teams",
-    label: "Event accountability",
-    image: "/generated/teams/marketplace-operation-teams.png",
-    copy: "Connect shipments, returns, inventory and marketplace events to the financial consequences they create.",
-  },
-  {
-    title: "Aggregators & Multi-brand Operators",
-    label: "Portfolio control",
-    image: "/generated/teams/aggregators-multi-brand-operators.png",
-    copy: "Maintain one investigative standard across brands, accounts and product portfolios without losing ownership between teams.",
-  },
-  {
-    title: "Enterprise & Multi-marketplace Businesses",
-    label: "Scale control",
-    image: "/generated/teams/enterprise-multi-marketplace-businesses.png",
-    copy: "Establish financial control across marketplaces, entities, currencies, accounts and high-volume operational histories.",
-  },
+  ["Finance Teams & Controllers", "Financial close", "/generated/teams/finance-teams-controllers.png", "Close the gap between reconciliation and explanation."],
+  ["Founder-led Amazon Businesses", "Delegated ownership", "/generated/teams/founder-led-amazon-businesses.png", "Stop carrying every unresolved financial question yourself."],
+  ["Marketplace Operations Teams", "Event accountability", "/generated/teams/marketplace-operation-teams.png", "Connect operational events to the financial consequences they create."],
+  ["Aggregators & Multi-brand Operators", "Portfolio control", "/generated/teams/aggregators-multi-brand-operators.png", "Maintain one investigative standard across the portfolio."],
+  ["Enterprise & Multi-marketplace Businesses", "Scale control", "/generated/teams/enterprise-multi-marketplace-businesses.png", "Establish control across accounts, entities and marketplaces."],
 ];
 
-const lifecycle = [
-  ["Detected", "A potential issue has been identified."],
-  ["Investigated", "Relevant records and connected events have been examined."],
-  ["Validated", "The financial discrepancy has been established or qualified."],
-  ["Actionable", "A justified course of action is clear."],
-  ["Acted upon", "The approved work has been carried out."],
-  ["Resolved", "An outcome has been obtained or the issue otherwise concluded."],
-  ["Reconciled", "The financial outcome has been verified against relevant records."],
-];
+const lifecycle = ["Detected", "Investigated", "Validated", "Actionable", "Acted upon", "Resolved", "Reconciled"];
+const standards = ["No unsupported conclusions", "No unnecessary claims", "No false closure", "No hidden uncertainty", "No abandoned ownership", "No misleading metrics", "No unlimited-capacity promise", "No customer confusion"];
 
-const standards = [
-  "No unsupported conclusions — detection is not proof.",
-  "No unnecessary claims — action follows evidence and circumstances.",
-  "No false closure — a closed Amazon case is not automatic financial resolution.",
-  "No hidden uncertainty — missing evidence and limitations remain visible.",
-  "No abandoned ownership — agreed work has a clear owner and status.",
-  "No misleading metrics — identified, validated, actionable, recovered and reconciled are different outcomes.",
-  "No unlimited-capacity promise — scope and delivery capacity are established before acceptance.",
-  "No customer confusion — the customer understands what was investigated and what remains.",
-];
-
-function SectionIntro({ label, title, copy, dark = false }: { label: string; title: string; copy?: string; dark?: boolean }) {
-  return (
-    <div className="max-w-[850px]">
-      <p className={`${eyebrow} ${dark ? "text-[#86A7FF]" : ""}`}>{label}</p>
-      <h2 className={`${heading} mt-4 text-[36px] sm:text-[48px] md:text-[60px] ${dark ? "text-white" : ""}`}>{title}</h2>
-      {copy ? <p className={`mt-5 max-w-[760px] ${body} ${dark ? "text-white/70" : ""}`}>{copy}</p> : null}
-    </div>
-  );
+function Intro({ label, title, copy, dark = false }: { label: string; title: string; copy?: string; dark?: boolean }) {
+  return <div className="max-w-[860px]"><p className={`${eyebrow} ${dark ? "text-[#86A7FF]" : ""}`}>{label}</p><h2 className={`${heading} mt-4 text-[35px] sm:text-[48px] md:text-[58px] ${dark ? "text-white" : ""}`}>{title}</h2>{copy ? <p className={`mt-5 max-w-[760px] ${body} ${dark ? "text-white/70" : ""}`}>{copy}</p> : null}</div>;
 }
 
-function PositioningPreview() {
-  return (
-    <div className="min-h-screen bg-[#FAFAF7] text-[#182026]">
-      <PublicNavbar variant="light" wide />
-      <div className="border-b border-[#D8E3E8] bg-[#182026] px-5 py-2.5 pt-[calc(2.25rem+0.625rem)] text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-white/75 sm:px-6">
-        Positioning preview — homepage unchanged
+function Narrative({ label, title, copy, tone = "white", image, points, index }: { label: string; title: string; copy: string; tone?: "white" | "canvas" | "blue"; image?: string; points?: string[]; index: number }) {
+  const dark = tone === "blue";
+  return <section className={`${dark ? "bg-[#182026] text-white" : tone === "canvas" ? "bg-[#F7F8F7]" : "bg-white"} border-t border-[#D8E3E8] py-14 sm:py-18 md:py-22`} aria-labelledby={`preview-section-${index}`}>
+    <div className={container}>
+      <div className="grid items-center gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
+        <div><p className={`${eyebrow} ${dark ? "text-[#86A7FF]" : ""}`}>{label}</p><h2 id={`preview-section-${index}`} className={`${heading} mt-4 text-[34px] sm:text-[46px] md:text-[54px] ${dark ? "text-white" : ""}`}>{title}</h2><p className={`mt-5 ${body} ${dark ? "text-white/70" : ""}`}>{copy}</p>{points ? <ul className="mt-6 space-y-3">{points.map((point) => <li key={point} className={`flex gap-3 text-[14px] leading-6 ${dark ? "text-white/80" : "text-[#33454E]"}`}><Check className="mt-1 h-4 w-4 shrink-0 text-[#F05A3C]" />{point}</li>)}</ul> : null}</div>
+        <div className={`${dark ? "border-white/15 bg-white/[0.05]" : "border-[#D8E3E8] bg-white"} overflow-hidden rounded-[8px] border p-5 shadow-[0_16px_40px_rgba(37,49,58,0.07)]`}>
+          {image ? <img src={image} alt="" className="h-auto w-full rounded-[4px] object-cover" loading="lazy" /> : <div className="space-y-3">{(points || ["Operational records", "Evidence and judgment", "Authorised action", "Verified financial outcome"]).map((point, itemIndex) => <div key={point} className={`flex items-center gap-3 rounded-[6px] border p-4 ${dark ? "border-white/10 bg-white/[0.04]" : "border-[#D8E3E8] bg-[#FAFAF7]"}`}><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#245BFF] text-[11px] font-semibold text-white">{String(itemIndex + 1).padStart(2, "0")}</span><span className={`text-[14px] font-semibold ${dark ? "text-white" : "text-[#182026]"}`}>{point}</span><ArrowRight className={`ml-auto h-4 w-4 ${dark ? "text-[#86A7FF]" : "text-[#F05A3C]"}`} /></div>)}</div>}
+        </div>
       </div>
-
-      <main>
-        <section className="relative overflow-hidden bg-[#FAFAF7] py-20 sm:py-28 md:py-36">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(36,91,255,0.12),transparent_27%),radial-gradient(ellipse_at_12%_92%,rgba(240,90,60,0.09),transparent_34%)]" />
-          <div className={`${container} relative`}>
-            <div className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-              <div className="max-w-[800px]">
-                <p className={`${eyebrow} border-l-2 border-[#245BFF] pl-3`}>Amazon financial operations and control</p>
-                <h1 className={`${heading} mt-5 max-w-[780px] text-[48px] sm:text-[64px] md:text-[82px]`}>Know what actually happened to your Amazon money.</h1>
-                <p className="mt-7 max-w-[720px] text-[17px] leading-8 text-[#33454E] sm:text-[20px] sm:leading-9">Margin investigates the connected operational and financial events behind your Amazon records, establishes what is correct, identifies what remains unresolved and takes justified work through to verified financial resolution.</p>
-                <p className="mt-6 max-w-[650px] border-l-2 border-[#F05A3C] pl-4 text-[14px] font-semibold leading-6 text-[#182026] sm:text-[16px] sm:leading-7">For established Amazon businesses with meaningful transaction complexity, recurring financial exceptions and teams that cannot afford to carry every investigation themselves.</p>
-                <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <Link to="/audit-start" className={primaryCta}>Establish your financial position <ChevronRight className="h-4 w-4" /></Link>
-                  <Link to="/sales" className={secondaryCta}>Discuss delegated responsibility <ArrowRight className="h-4 w-4" /></Link>
-                </div>
-                <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold text-[#66737F]
-                ">
-                  {["Evidence before action", "Defined scope ownership", "Verified outcomes"].map((item) => <span key={item} className="inline-flex items-center gap-1.5"><span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#245BFF] text-white"><Check className="h-2.5 w-2.5" strokeWidth={3} /></span>{item}</span>)}
-                </div>
-              </div>
-              <div className="relative min-h-[410px] overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-white p-4 shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:min-h-[500px] sm:p-7">
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(36,91,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(36,91,255,0.05)_1px,transparent_1px)] bg-[size:34px_34px]" />
-                <div className="relative flex h-full min-h-[370px] flex-col justify-between">
-                  <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.1em] text-[#66737F]"><span>Financial position</span><span className="rounded-full bg-[#EEF3FF] px-3 py-1 text-[#245BFF]">Under investigation</span></div>
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    {["Inventory event", "Related adjustment", "Settlement treatment", "Final conclusion"].map((item, index) => <div key={item} className={`rounded-[8px] border p-3 sm:p-4 ${index === 3 ? "border-[#F05A3C] bg-[#FFF5F1]" : "border-[#D8E3E8] bg-[#FAFAF7]"}`}><div className="mb-5 h-2 w-2 rounded-full bg-[#245BFF]" /><p className="text-[13px] font-semibold text-[#182026] sm:text-[14px]">{item}</p><p className="mt-1 text-[11px] leading-5 text-[#66737F]">{index === 3 ? "Verified, qualified or still open" : "Connected evidence"}</p></div>)}
-                  </div>
-                  <div className="flex items-center justify-between border-t border-[#D8E3E8] pt-4 text-[12px] font-semibold text-[#182026]"><span>What happened?</span><span className="inline-flex items-center gap-1 text-[#F05A3C]">Follow through <ArrowRight className="h-3.5 w-3.5" /></span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="border-y border-[#D8E3E8] bg-white py-16 sm:py-20 md:py-24">
-          <div className={container}>
-            <SectionIntro label="The problem" title="A recorded transaction is not the same as a correct financial outcome." copy="A claim can be submitted. A case can be closed. A reimbursement can be received. None of those events, by themselves, establish that the complete financial position is correct." />
-            <div className="mt-12 grid gap-4 md:grid-cols-4">
-              {["Recorded", "Submitted", "Received", "Resolved"].map((item, index) => <div key={item} className={`relative min-h-[170px] rounded-[8px] border p-5 ${index === 3 ? "border-[#245BFF] bg-[#EEF3FF]" : "border-[#D8E3E8] bg-[#FAFAF7]"}`}><span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">0{index + 1}</span><h3 className="mt-8 text-[22px] font-semibold tracking-[-0.03em]">{item}</h3><p className="mt-2 text-[12px] leading-5 text-[#66737F]">{index === 0 ? "An entry exists." : index === 1 ? "A process was started." : index === 2 ? "Money moved." : "The connected financial position is established and documented."}</p>{index < 3 ? <ArrowRight className="absolute right-4 top-1/2 hidden h-4 w-4 translate-x-1/2 text-[#245BFF] md:block" /> : null}</div>)}
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-[#182026] py-16 text-white sm:py-20 md:py-24">
-          <div className={container}>
-            <SectionIntro dark label="The connected chain" title="One Amazon event can create a chain of financial consequences." copy="Margin does not treat each discrepancy as an isolated opportunity. It connects the operational event, related records, evidence, decision, action and final financial treatment." />
-            <div className="mt-12 grid gap-3 md:grid-cols-6">
-              {["Operational event", "Inventory / returns", "Adjustments / fees", "Settlement", "Evidence + decision", "Verified outcome"].map((item, index) => <React.Fragment key={item}><div className="flex min-h-[150px] flex-col justify-between rounded-[8px] border border-white/15 bg-white/[0.05] p-4"><span className="text-[11px] font-semibold text-[#86A7FF]">0{index + 1}</span><p className="max-w-[130px] text-[15px] font-semibold leading-5 text-white">{item}</p></div>{index < 5 ? <div className="hidden items-center justify-center md:flex"><ArrowRight className="h-4 w-4 text-[#F05A3C]" /></div> : null}</React.Fragment>)}
-            </div>
-            <div className="mt-8 rounded-[8px] border border-[#F05A3C]/40 bg-[#F05A3C]/10 p-5 text-[14px] font-semibold leading-6 text-white sm:p-6">The question is not only “did Amazon pay?” It is “what happened, what was the correct treatment, what remains unresolved and has the final position been reconciled?”</div>
-          </div>
-        </section>
-
-        <section className="bg-[#EEF3FF] py-16 sm:py-20 md:py-24">
-          <div className={container}>
-            <SectionIntro label="The responsibility gap" title="The problem is not always finding an exception. It is knowing who owns the complete outcome." copy="Finance sees the settlement. Operations sees the event. A recovery provider sees the claim. Accounting records the entry. The connected chain can still remain unowned." />
-            <div className="mt-12 grid gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
-              <div className="space-y-3">{["Marketplace operations", "Finance / accounting", "Recovery provider"].map((item) => <div key={item} className="flex items-center gap-3 rounded-[8px] border border-[#C9D9E1] bg-white p-4 text-[14px] font-semibold"><span className="h-2.5 w-2.5 rounded-full bg-[#245BFF]" />{item}<span className="ml-auto text-[11px] font-medium text-[#66737F]">sees one part</span></div>)}</div>
-              <div className="flex justify-center"><div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#F05A3C] text-white shadow-[0_10px_24px_rgba(240,90,60,0.25)]"><Link2 className="h-7 w-7" /></div></div>
-              <div className="rounded-[8px] border-2 border-[#245BFF] bg-white p-6 shadow-[0_16px_36px_rgba(36,91,255,0.12)]"><p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#245BFF]">Margin owns the agreed scope</p><h3 className="mt-3 text-[25px] font-semibold leading-tight tracking-[-0.035em]">Connect the work. Explain the conclusion. Verify the outcome.</h3><p className="mt-3 text-[13px] leading-6 text-[#52616A]">Not every question will have a perfect answer. Every conclusion should have a clear basis, owner, status and next step.</p></div>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-white py-16 sm:py-20 md:py-24">
-          <div className={container}>
-            <SectionIntro label="The Margin investigation lifecycle" title="We do not stop at detection, submission or explanation." copy="The value is in moving a financial question through disciplined investigation and responsible follow-through until the conclusion is verified or clearly remains open." />
-            <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-7">{lifecycle.map(([title, copy], index) => <div key={title} className="relative rounded-[8px] border border-[#D8E3E8] bg-[#FAFAF7] p-4"><div className="flex items-center justify-between"><span className="text-[11px] font-semibold text-[#245BFF]">0{index + 1}</span>{index === lifecycle.length - 1 ? <CircleCheck className="h-4 w-4 text-[#F05A3C]" /> : null}</div><h3 className="mt-8 text-[16px] font-semibold">{title}</h3><p className="mt-2 text-[12px] leading-5 text-[#66737F]">{copy}</p>{index < lifecycle.length - 1 ? <ChevronRight className="absolute -right-3 top-1/2 z-10 hidden h-5 w-5 rounded-full bg-white text-[#245BFF] lg:block" /> : null}</div>)}</div>
-            <div className="mt-10 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center"><div className="overflow-hidden rounded-[8px] border border-[#D8E3E8] bg-[#F7F8F7]"><img src="/margin-workflow-section.png" alt="Margin workflow connecting a financial position to authorised action and reconciled outcome" className="h-auto w-full" loading="lazy" /></div><div><p className={`${eyebrow}`}>What the customer receives</p><ul className="mt-5 space-y-3">{["A defined owner for the agreed scope", "Evidence-backed conclusions and visible uncertainty", "Justified action carried through", "An outcome that is verified and documented"].map((item) => <li key={item} className="flex gap-3 text-[15px] leading-6 text-[#33454E]"><Check className="mt-1 h-4 w-4 shrink-0 text-[#F05A3C]" />{item}</li>)}</ul></div></div>
-          </div>
-        </section>
-
-        <section className="bg-[#F7F8F7] py-16 sm:py-20 md:py-24">
-          <div className={container}>
-            <SectionIntro label="Built for established Amazon businesses" title="The work changes by buyer. The standard does not." copy="Margin is designed for businesses where marketplace activity has become too complex for periodic manual checks and too consequential to leave between systems." />
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{audiences.map((audience, index) => <article key={audience.title} className={`group overflow-hidden rounded-[8px] border border-[#D8E3E8] bg-white ${index === audiences.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}><div className="aspect-[4/2.6] overflow-hidden bg-[#E9E9E5]"><img src={audience.image} alt={audience.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" loading="lazy" /></div><div className="p-5 sm:p-6"><p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#245BFF]">{audience.label}</p><h3 className="mt-3 text-[22px] font-semibold leading-tight tracking-[-0.035em]">{audience.title}</h3><p className="mt-3 text-[14px] leading-6 text-[#52616A]">{audience.copy}</p></div></article>)}</div>
-          </div>
-        </section>
-
-        <section className="bg-white py-16 sm:py-20 md:py-24">
-          <div className={container}>
-            <SectionIntro label="Why existing arrangements leave a gap" title="Margin connects the work that other systems often leave distributed." copy="This is not a claim that other providers are incapable. It is a clearer definition of the responsibility Margin is designed to accept." />
-            <div className="mt-12 overflow-x-auto rounded-[8px] border border-[#D8E3E8]"><table className="w-full min-w-[760px] border-collapse text-left text-[13px]"><thead><tr className="bg-[#182026] text-white"><th className="p-4 font-semibold">Category</th><th className="p-4 font-semibold">Primarily provides</th><th className="p-4 font-semibold">The question Margin must answer</th></tr></thead><tbody>{[["Recovery providers", "Recovery investigation and claim management", "Has the underlying financial position been established and closed?"], ["Seller analytics", "Visibility into profitability and performance", "What explains the underlying financial movements?"], ["Accounting platforms", "Settlement imports and accounting workflows", "Were the operational events behind the entries investigated?"], ["Internal finance teams", "Financial judgment and internal execution", "Is there enough capacity and ownership to close every material exception?"], ["Margin", "Connected investigation and justified resolution", "What happened, what is supported, what remains unresolved and is it closed?"]].map(([category, provides, question], index) => <tr key={category} className={`border-t border-[#D8E3E8] ${index === 4 ? "bg-[#EEF3FF] font-semibold" : "bg-white"}`}><td className="p-4 text-[#182026]">{category}</td><td className="p-4 text-[#52616A]">{provides}</td><td className="p-4 text-[#182026]">{question}</td></tr>)}</tbody></table></div>
-          </div>
-        </section>
-
-        <section className="bg-[#182026] py-16 text-white sm:py-20 md:py-24">
-          <div className={container}>
-            <SectionIntro dark label="The Margin standard" title="We establish before acting, and verify before closing." copy="These are not marketing claims. They are the standards that should govern investigations, customer communication, reporting, quality assurance and commercial commitments." />
-            <div className="mt-12 grid gap-x-10 gap-y-4 md:grid-cols-2">{standards.map((standard) => <div key={standard} className="flex gap-3 border-t border-white/15 pt-4 text-[14px] leading-6 text-white/82"><ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#86A7FF]" />{standard}</div>)}</div>
-          </div>
-        </section>
-
-        <section className="bg-[#EEF3FF] py-16 sm:py-20 md:py-24">
-          <div className={container}>
-            <SectionIntro label="Proof that Margin can carry the work" title="Trust is earned by showing the investigation, not by promising sophistication." copy="A strong proof asset makes the responsibility visible: what the customer could not establish, what Margin examined, what it concluded, what action was justified and what was ultimately reconciled." />
-            <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">{[["Investigation record", "Depth, evidence and reasoning"], ["Before-and-after reconciliation", "Financial outcome, not activity"], ["Scope and delivery record", "Ability to manage responsibility"], ["Repeat engagement", "Continued customer confidence"]].map(([title, copy]) => <div key={title} className="rounded-[8px] border border-[#C9D9E1] bg-white p-5"><SearchCheck className="h-6 w-6 text-[#F05A3C]" /><h3 className="mt-8 text-[18px] font-semibold">{title}</h3><p className="mt-2 text-[13px] leading-5 text-[#66737F]">{copy}</p></div>)}</div>
-            <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_1.15fr] lg:items-center"><div><p className={eyebrow}>Illustrative investigation record</p><h3 className={`${heading} mt-4 text-[32px] sm:text-[42px]`}>One discrepancy. Several connected records. One accountable conclusion.</h3><p className={`mt-5 ${body}`}>This is the proof standard: not “we found money,” but “we established what happened, what was already accounted for, what was justified and what remains open.”</p></div><div className="rounded-[8px] border border-[#C9D9E1] bg-white p-5 shadow-[0_16px_36px_rgba(36,91,255,0.08)]"><div className="flex items-center justify-between border-b border-[#D8E3E8] pb-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#66737F]"><span>Investigation summary</span><span className="text-[#F05A3C]">Qualified outcome</span></div>{["Inventory discrepancy linked to adjustment", "Settlement treatment compared with source records", "Evidence threshold and uncertainty recorded", "Justified action followed through", "Financial outcome verified or left open"].map((item) => <div key={item} className="flex items-center gap-3 border-b border-[#EEF2F4] py-3 text-[13px] font-semibold text-[#182026]"><CircleCheck className="h-4 w-4 shrink-0 text-[#245BFF]" />{item}</div>)}</div></div>
-          </div>
-        </section>
-
-        <section className="bg-white py-16 sm:py-20 md:py-24">
-          <div className={container}>
-            <SectionIntro label="What customers buy" title="You are not buying another dashboard. You are transferring responsibility for an agreed scope of financial work." copy="Every engagement needs explicit scope, responsibilities, exclusions, dependencies and escalation paths. The price reflects the complexity, expertise, execution and accountability required." />
-            <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-5">{[["Initial Financial Audit", "Establish the available financial picture and potential exceptions."], ["Defined Financial Resolution", "Own a defined set of investigations and justified actions."], ["Complex Resolution Programme", "Investigate interconnected operational and financial events."], ["Financial Control Pilot", "Ongoing investigation, exception management and reporting."], ["Enterprise Control Programme", "Broader, explicitly scoped financial operations responsibility."]].map(([title, copy], index) => <div key={title} className={`rounded-[8px] border p-5 ${index === 4 ? "border-[#245BFF] bg-[#EEF3FF]" : "border-[#D8E3E8] bg-[#FAFAF7]"}`}><span className="text-[11px] font-semibold text-[#245BFF]">0{index + 1}</span><h3 className="mt-7 text-[18px] font-semibold leading-tight">{title}</h3><p className="mt-3 text-[13px] leading-5 text-[#66737F]">{copy}</p></div>)}</div>
-          </div>
-        </section>
-
-        <section className="bg-[#FAFAF7] py-20 sm:py-28 md:py-36">
-          <div className={`${container} text-center`}>
-            <p className={eyebrow}>Start with the financial position</p>
-            <h2 className={`${heading} mx-auto mt-4 max-w-[920px] text-[42px] sm:text-[58px] md:text-[72px]`}>Stop carrying unresolved Amazon financial work without a clear owner.</h2>
-            <p className={`mx-auto mt-6 max-w-[700px] ${body}`}>Define the scope you need Margin to own. We establish what the available records support, explain what remains uncertain and show how the work will be taken through to its financial conclusion.</p>
-            <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row"><Link to="/sales" className={primaryCta}>Discuss a defined scope of responsibility <ChevronRight className="h-4 w-4" /></Link><Link to="/audit-start" className={secondaryCta}>Start with a financial position review <ArrowRight className="h-4 w-4" /></Link></div>
-            <div className="mx-auto mt-10 flex max-w-[680px] flex-wrap justify-center gap-x-6 gap-y-2 text-[11px] font-semibold text-[#66737F]"><span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#245BFF]" />Defined scope</span><span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#245BFF]" />Evidence-backed work</span><span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#245BFF]" />Verified or clearly unresolved outcome</span></div>
-          </div>
-        </section>
-      </main>
-      <BrandFooter wide />
     </div>
-  );
+  </section>;
+}
+
+const narrativeSections = [
+  ["The reality of operating at scale", "Your Amazon operation has grown. Your financial picture needs to keep up.", "More products, inventory movements, transactions and marketplaces create more relationships for Finance to understand. A shipment, return, adjustment or settlement can affect the financial position in ways that are not obvious from an individual report.", ["Operational complexity is now financial complexity.", "Periodic checks leave work between systems.", "Unresolved exceptions accumulate ownership risk."]],
+  ["The first distinction", "Recorded is not resolved.", "A transaction may be recorded, a case submitted or a reimbursement received without anyone establishing whether the complete connected financial position is correct.", ["A record exists.", "A process was started.", "Money moved.", "The financial position is verified."]],
+  ["Connected operational history", "The meaning of a financial number lives in the events behind it.", "Margin examines the available history across operational and financial records so the customer can see what happened, what explains the result and what still requires attention.", ["Inventory and returns", "Adjustments and fees", "Settlement and reimbursement", "Accounting treatment"]],
+  ["Financial accountability", "Know whether what happened operationally is reflected financially.", "An Amazon event can be delayed, reversed, duplicated, incorrectly assessed or reflected differently across records. Margin connects the relationship, investigates the difference and qualifies the conclusion.", ["Expected outcome", "Actual treatment", "Evidence threshold", "Remaining responsibility"]],
+  ["The responsibility gap", "The problem is not always finding an exception. It is knowing who owns the complete outcome.", "Finance sees the settlement. Operations sees the event. A provider sees the claim. Accounting records the entry. Margin is designed to own the agreed scope between those fragments.", ["One part is visible to each team.", "The connected chain can remain unowned.", "A clear owner makes resolution possible."]],
+  ["AI-native investigation", "An AI can explain a case. Margin does the work required to resolve it.", "AI can summarise a report or identify an anomaly. Margin combines AI-native investigation with deterministic financial logic, connected event records, evidence lineage, approval controls and outcome verification.", ["Explain", "Investigate", "Decide", "Execute", "Verify"]],
+  ["Financial position output", "Turn uncertainty into a position your business can explain.", "Margin helps distinguish supported exposure from accounted-for activity, qualified uncertainty and work that remains unresolved. That gives Finance a clearer basis for close, reporting and decision-making.", ["What is established", "What is supported", "What is uncertain", "What remains open"]],
+  ["Evidence before action", "No finding should become a claim merely because a system detected it.", "The right next step may be to challenge, correct, accept, monitor or stop. Margin makes the evidence and judgment visible before consequential action is taken.", ["Evidence reviewed", "Eligibility tested", "Connected events checked", "Action justified"]],
+  ["Resolution work", "Justified work must move through to a conclusion.", "Margin does not define success as activity. It follows the agreed work through investigation, communication, authorised action, response handling and final outcome verification.", ["Prepare", "Submit or act", "Follow through", "Verify"]],
+  ["Controlled workflow", "Turn financial investigation into work your business can see and control.", "Findings, evidence, decisions, authorised action and subsequent financial outcomes stay connected. Your team can see what is established, who owns the next step and what remains outstanding.", ["Finding", "Investigation", "Decision", "Action", "Outcome"]],
+  ["One standard across teams", "The buyer changes. The Margin standard does not.", "Finance, Operations, Founders, Aggregators and Enterprise teams need different outcomes from the same disciplined operating model: clear scope, evidence-backed judgment and accountable closure.", ["Close confidently", "Delegate responsibly", "Operate consistently", "Scale control"]],
+  ["Portfolio alignment", "Multiple brands should not mean multiple standards of financial truth.", "For aggregators and multi-brand operators, Margin brings consistency to investigations, evidence requirements, exception ownership and verified outcomes across the portfolio.", ["Brand-level context", "Portfolio-level oversight", "Consistent status", "Shared standards"]],
+  ["Multi-marketplace control", "Complexity should be visible, not scattered.", "Across marketplaces, entities, currencies and transaction volumes, Margin preserves the context needed to interpret each record and establish the financial position across the agreed scope.", ["Marketplace", "Entity", "Currency", "Account", "Outcome"]],
+  ["The buyer's actual job", "Help Finance close the question, not just open another workflow.", "Controllers and Finance Directors need a defensible answer. COOs need operational accountability. Founders need reduced burden. Marketplace teams need a partner that actually carries the investigation.", ["Explain the balance", "Own the exception", "Reduce manual burden", "Defend the conclusion"]],
+  ["Responsibility transfer", "You are not buying another dashboard.", "You are transferring responsibility for an agreed scope of financial work to a specialist that can show what it investigated, what it concluded, what it did and what remains unresolved.", ["Defined owner", "Visible scope", "Clear dependencies", "Documented conclusion"]],
+  ["Capacity without overpromising", "Trust begins with an honest scope.", "Margin should establish capacity across transaction volume, accounts, marketplaces, history, exception complexity, evidence quality, human review and turnaround before accepting responsibility.", ["Scope", "Capacity", "Dependencies", "Escalation"]],
+  ["Financial control pilot", "Build a repeatable operating rhythm around unresolved exceptions.", "A control pilot can establish how exceptions are identified, investigated, assigned, actioned, reported and verified over an agreed period.", ["Monitor", "Investigate", "Report", "Improve"]],
+  ["Repeatable routine", "A financial position should not need to be rediscovered every month.", "Margin keeps the investigation history, evidence, decisions and outcomes connected so recurring work becomes a controlled operating process rather than a repeated scramble.", ["Prior history", "Current exceptions", "Open actions", "Verified closure"]],
+  ["The Margin lifecycle", "We establish before acting, and verify before closing.", "Every result should be classified accurately rather than forced into a recovered or not-recovered metric.", lifecycle],
+  ["Outcome discipline", "Detected, validated, actionable and reconciled are different outcomes.", "A rejected claim, accepted claim, corrected record and unresolved discrepancy must remain distinct so management can trust the reporting.", ["Detected", "Validated", "Actionable", "Resolved", "Reconciled"]],
+  ["Risk and uncertainty", "A qualified answer is better than a confident wrong one.", "Margin communicates missing evidence, limitations and unresolved questions instead of turning uncertainty into an unsupported conclusion.", ["Known", "Supported", "Uncertain", "Open"]],
+  ["Enterprise reviews", "The larger the business, the more consequential ownership becomes.", "Scale alone does not create fit. The right customer has material complexity, a recognised gap, an identifiable buyer and a willingness to delegate an agreed responsibility.", ["Complexity", "Exposure", "Accountability", "Readiness"]],
+  ["Why existing tools leave a gap", "Visibility is not the same as responsibility.", "Analytics, accounting platforms, internal teams and recovery providers each create value. Margin competes on the broader question: has the underlying financial position been established and closed?", ["Visibility", "Recording", "Claim management", "Connected resolution"]],
+  ["What Margin refuses to do", "We do not celebrate activity that creates more uncertainty.", "More flags are not automatically more value. Margin distinguishes work that is useful from work that simply moves a problem into another queue.", ["No unsupported conclusions", "No unnecessary claims", "No false closure", "No misleading metrics"]],
+  ["Security and responsibility", "Financial records deserve controlled handling and clear accountability.", "The customer should understand what records are used, what access is required, who can act, how decisions are authorised and how outcomes are documented.", ["Access scope", "Evidence handling", "Approval boundary", "Audit-ready history"]],
+  ["The proof question", "Can Margin actually carry the work?", "Brand claims stop being enough when the buyer is trusting Margin with consequential financial responsibility. Proof must show the work, not just describe the capability.", ["Investigation record", "Scope and delivery record", "Before-and-after reconciliation", "Repeat engagement"]],
+  ["The investigation record", "One discrepancy. Several connected records. One accountable conclusion.", "A strong case study shows what the customer could not establish, what Margin examined, what connected events were discovered, what action was justified and what was finally reconciled.", ["Initial uncertainty", "Records examined", "Conclusion", "Action", "Outcome"]],
+  ["Commercial scope", "Price follows responsibility, complexity and accountability.", "Margin is not charging for a report or a detected opportunity. The engagement reflects the investigation depth, execution, expertise and ownership required to establish and resolve the financial position.", ["Defined Financial Audit", "Defined Financial Resolution", "Complex Resolution Programme", "Financial Control Pilot"]],
+  ["Enterprise control programme", "Broader responsibility requires explicit boundaries.", "An enterprise programme can cover multiple accounts, brands, marketplaces, entities and recurring exception work, provided the scope, exclusions, dependencies and escalation paths are clear.", ["Multi-account", "Multi-brand", "High volume", "Control reporting"]],
+  ["Built for established Amazon businesses", "The work changes by buyer. The standard does not.", "Margin is designed for businesses where marketplace activity has become too complex for periodic manual checks and too consequential to leave between systems.", ["Finance", "Founders", "Operations", "Aggregators", "Enterprise"]],
+];
+
+function PositioningPreview() {
+  return <div className="min-h-screen bg-[#FAFAF7] text-[#182026]"><PublicNavbar variant="light" wide /><div className="border-b border-[#D8E3E8] bg-[#182026] px-5 py-2.5 pt-[calc(2.25rem+0.625rem)] text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-white/75">Positioning preview — homepage unchanged</div><main>
+    <section className="relative overflow-hidden bg-[#FAFAF7] py-20 sm:py-28 md:py-36"><div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(36,91,255,0.12),transparent_27%),radial-gradient(ellipse_at_12%_92%,rgba(240,90,60,0.09),transparent_34%)]" /><div className={`${container} relative`}><div className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20"><div><p className={`${eyebrow} border-l-2 border-[#245BFF] pl-3`}>Amazon financial operations and control</p><h1 className={`${heading} mt-5 max-w-[780px] text-[48px] sm:text-[64px] md:text-[82px]`}>Know what actually happened to your Amazon money.</h1><p className="mt-7 max-w-[720px] text-[17px] leading-8 text-[#33454E] sm:text-[20px] sm:leading-9">Margin investigates the connected operational and financial events behind your Amazon records, establishes what is correct, identifies what remains unresolved and takes justified work through to verified financial resolution.</p><p className="mt-6 max-w-[650px] border-l-2 border-[#F05A3C] pl-4 text-[14px] font-semibold leading-6 text-[#182026] sm:text-[16px] sm:leading-7">For established Amazon businesses with meaningful transaction complexity, recurring financial exceptions and teams that cannot afford to carry every investigation themselves.</p><div className="mt-9 flex flex-col gap-3 sm:flex-row"><Link to="/audit-start" className={primaryCta}>Establish your financial position <ChevronRight className="h-4 w-4" /></Link><Link to="/sales" className={secondaryCta}>Discuss delegated responsibility <ArrowRight className="h-4 w-4" /></Link></div></div><div className="relative min-h-[420px] overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-white p-5 shadow-[0_26px_70px_rgba(37,49,58,0.12)]"><div className="absolute inset-0 bg-[linear-gradient(rgba(36,91,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(36,91,255,0.05)_1px,transparent_1px)] bg-[size:34px_34px]" /><div className="relative flex h-full min-h-[370px] flex-col justify-between"><div className="flex justify-between text-[11px] font-semibold uppercase tracking-[0.1em] text-[#66737F]"><span>Financial position</span><span className="rounded-full bg-[#EEF3FF] px-3 py-1 text-[#245BFF]">Under investigation</span></div><div className="grid grid-cols-2 gap-3">{["Inventory event", "Related adjustment", "Settlement treatment", "Final conclusion"].map((item, i) => <div key={item} className={`rounded-[8px] border p-4 ${i === 3 ? "border-[#F05A3C] bg-[#FFF5F1]" : "border-[#D8E3E8] bg-[#FAFAF7]"}`}><div className="mb-5 h-2 w-2 rounded-full bg-[#245BFF]" /><p className="text-[13px] font-semibold">{item}</p><p className="mt-1 text-[11px] text-[#66737F]">{i === 3 ? "Verified, qualified or still open" : "Connected evidence"}</p></div>)}</div><div className="flex justify-between border-t border-[#D8E3E8] pt-4 text-[12px] font-semibold"><span>What happened?</span><span className="text-[#F05A3C]">Follow through <ArrowRight className="inline h-3.5 w-3.5" /></span></div></div></div></div></div></section>
+
+    <section className="border-t border-[#D8E3E8] bg-white py-14 sm:py-18 md:py-22"><div className={container}><Intro label="The strategic position" title="A financial number rarely tells the whole story on its own." copy="The landing page now needs to hold one idea across every visible section: Margin establishes financial truth, accepts responsible ownership and follows justified work through to a verified conclusion." /><div className="mt-10 grid gap-4 md:grid-cols-3">{[["Why", "Amazon financial complexity creates connected exceptions that periodic checks cannot explain."], ["Why now", "Unresolved balances, close pressure, scale and fragmented ownership create an immediate control problem."], ["Why Margin", "Margin connects the records, evidence, decisions, actions and outcomes instead of stopping at detection."]].map(([title, copy]) => <div key={title} className="rounded-[8px] border border-[#D8E3E8] bg-[#FAFAF7] p-5"><p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#245BFF]">{title}</p><p className="mt-5 text-[17px] font-semibold leading-6">{copy}</p></div>)}</div></div></section>
+
+    {narrativeSections.map(([label, title, copy, points], index) => <React.Fragment key={title}><Narrative label={label} title={title} copy={copy} points={points as string[]} index={index + 1} tone={index % 5 === 1 ? "canvas" : index % 7 === 3 ? "blue" : "white"} image={index === 9 ? "/margin-workflow-section.png" : undefined} /></React.Fragment>)}
+
+    <section className="border-t border-[#D8E3E8] bg-[#F7F8F7] py-14 sm:py-18 md:py-22"><div className={container}><Intro label="The five buyer segments" title="The buyer changes. The standard does not." copy="Each audience card is reframed around the responsibility problem that makes Margin commercially relevant." /><div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{audiences.map(([title, label, image, copy], index) => <article key={title} className={`overflow-hidden rounded-[8px] border border-[#D8E3E8] bg-white ${index === 4 ? "sm:col-span-2 lg:col-span-1" : ""}`}><div className="aspect-[4/2.6] overflow-hidden"><img src={image} alt={title} className="h-full w-full object-cover" loading="lazy" /></div><div className="p-5"><p className={eyebrow}>{label}</p><h3 className="mt-3 text-[21px] font-semibold leading-tight">{title}</h3><p className="mt-3 text-[14px] leading-6 text-[#52616A]">{copy}</p></div></article>)}</div></div></section>
+
+    <section className="border-t border-[#D8E3E8] bg-[#182026] py-16 text-white sm:py-20 md:py-24"><div className={container}><Intro dark label="The Margin standard" title="We establish before acting, and verify before closing." copy="These standards govern the investigation, customer communication, reporting, quality assurance and commercial commitments." /><div className="mt-10 grid gap-x-10 gap-y-4 md:grid-cols-2">{standards.map((standard) => <div key={standard} className="flex gap-3 border-t border-white/15 pt-4 text-[14px] leading-6 text-white/80"><ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#86A7FF]" />{standard}</div>)}</div></div></section>
+
+    <section className="border-t border-[#D8E3E8] bg-[#EEF3FF] py-16 sm:py-20 md:py-24"><div className={container}><Intro label="Proof and trust architecture" title="Trust is earned by showing the investigation, not by promising sophistication." copy="A strong proof asset shows what the customer could not establish, what Margin examined, what connected events were found, what action was justified and what was finally reconciled." /><div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">{[["Investigation record", "Depth, evidence and reasoning"], ["Before-and-after reconciliation", "Financial outcome, not activity"], ["Scope and delivery record", "Ability to manage responsibility"], ["Repeat engagement", "Continued customer confidence"]].map(([title, copy]) => <div key={title} className="rounded-[8px] border border-[#C9D9E1] bg-white p-5"><SearchCheck className="h-6 w-6 text-[#F05A3C]" /><h3 className="mt-7 text-[18px] font-semibold">{title}</h3><p className="mt-2 text-[13px] leading-5 text-[#66737F]">{copy}</p></div>)}</div></div></section>
+
+    <section className="border-t border-[#D8E3E8] bg-white py-16 sm:py-20 md:py-24"><div className={container}><Intro label="Engagements" title="Price follows responsibility, complexity and accountability." copy="The buyer is not paying for a report or a detected opportunity. The engagement reflects the scope, expertise, execution and ownership required to establish and resolve the financial position." /><div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">{[["Initial Financial Audit", "Establish the available financial picture."], ["Defined Financial Resolution", "Own a defined set of investigations."], ["Complex Resolution Programme", "Investigate interconnected events."], ["Financial Control Pilot", "Operate recurring investigation and reporting."], ["Enterprise Control Programme", "Accept broader scoped responsibility."]].map(([title, copy], i) => <div key={title} className={`rounded-[8px] border p-5 ${i === 4 ? "border-[#245BFF] bg-[#EEF3FF]" : "border-[#D8E3E8] bg-[#FAFAF7]"}`}><span className={eyebrow}>0{i + 1}</span><h3 className="mt-7 text-[18px] font-semibold leading-tight">{title}</h3><p className="mt-3 text-[13px] leading-5 text-[#66737F]">{copy}</p></div>)}</div></div></section>
+
+    <section className="border-t border-[#D8E3E8] bg-[#FAFAF7] py-16 sm:py-20 md:py-28"><div className={`${container} text-center`}><p className={eyebrow}>Start with the financial position</p><h2 className={`${heading} mx-auto mt-4 max-w-[920px] text-[42px] sm:text-[58px] md:text-[72px]`}>Stop carrying unresolved Amazon financial work without a clear owner.</h2><p className={`mx-auto mt-6 max-w-[700px] ${body}`}>Define the scope you need Margin to own. We establish what the available records support, explain what remains uncertain and show how the work will be taken through to its financial conclusion.</p><div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row"><Link to="/sales" className={primaryCta}>Discuss a defined scope of responsibility <ChevronRight className="h-4 w-4" /></Link><Link to="/audit-start" className={secondaryCta}>Start with a financial position review <ArrowRight className="h-4 w-4" /></Link></div><div className="mx-auto mt-9 flex max-w-[700px] flex-wrap justify-center gap-x-6 gap-y-2 text-[11px] font-semibold text-[#66737F]"><span className="inline-flex items-center gap-1.5"><CircleCheck className="h-3.5 w-3.5 text-[#245BFF]" />Defined scope</span><span className="inline-flex items-center gap-1.5"><CircleCheck className="h-3.5 w-3.5 text-[#245BFF]" />Evidence-backed work</span><span className="inline-flex items-center gap-1.5"><CircleCheck className="h-3.5 w-3.5 text-[#245BFF]" />Verified or clearly unresolved outcome</span></div></div></section>
+  </main><BrandFooter wide /></div>;
 }
 
 export default PositioningPreview;
