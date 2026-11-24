@@ -91,7 +91,7 @@ export default function Sales() {
                 {/* Hero Section */}
                 <section className="relative mb-24 overflow-hidden border-b border-[#E1E5E5] bg-white px-6 pb-16 pt-16 text-[#30343B] md:mb-28 md:pb-24 md:pt-24">
                     <div className="pointer-events-none absolute right-[-12%] top-[-14%] h-[520px] w-[520px] rounded-full bg-[#EDEFF0] blur-3xl" />
-                    <div className="relative mx-auto grid w-full max-w-[1280px] gap-12 md:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.75fr)] md:items-end md:gap-16">
+                    <div className="relative mx-auto w-full max-w-[1280px]">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -141,11 +141,6 @@ export default function Sales() {
                             </div>
                         </div>
                     </motion.div>
-                    <div className="relative overflow-hidden bg-[#F4F5F4] p-5 shadow-[0_22px_65px_rgba(48,52,59,0.08)] sm:p-6">
-                        <div className="flex items-center justify-between border-b border-[#DDE2E1] pb-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#30343B]"><ShieldCheck className="h-5 w-5" strokeWidth={1.5} /></div><div><p className="text-[12px] font-semibold">Enterprise control surface</p><p className="mt-0.5 text-[10px] text-[#F05A3C]">Evidence-led recovery operations</p></div></div><span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-[#4D7869]"><span className="h-1.5 w-1.5 rounded-full bg-[#4D7869]" /> Ready to assess</span></div>
-                        <div className="space-y-2.5 pt-4">{[['Account coverage','Multiple brands and marketplaces',Database],['Evidence position','Source records linked to findings',FileText],['Decision rights','Your team approves the action',Check]].map(([label, detail, Icon]) => <div key={label as string} className="flex items-center gap-3 bg-white px-3.5 py-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF2F0] text-[#4D7869]"><Icon className="h-4 w-4" strokeWidth={1.6} /></div><div><p className="text-[12px] font-semibold">{label as string}</p><p className="mt-0.5 text-[10px] text-[#F05A3C]">{detail as string}</p></div></div>)}</div>
-                        <div className="mt-4 flex items-center gap-2 border-t border-[#DDE2E1] pt-4 text-[10px] text-[#F05A3C]"><ShieldCheck className="h-3.5 w-3.5" /> Start with the operation you need to control.</div>
-                    </div>
                     </div>
                 </section>
 

@@ -95,7 +95,7 @@ const Security = () => {
       <main>
         <section className="relative overflow-hidden bg-white pb-16 pt-32 sm:pb-20 sm:pt-40 md:pb-28 md:pt-48">
           <div className="pointer-events-none absolute right-[-12%] top-[-14%] h-[520px] w-[520px] rounded-full bg-[#EDEFF0] blur-3xl" />
-          <div className="mx-auto grid w-full max-w-[1280px] gap-12 px-5 sm:px-6 md:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.75fr)] md:items-end md:gap-16 md:px-8 lg:px-10 2xl:px-12">
+          <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
             <div className="relative max-w-[780px]">
               <p className="mb-5 text-[11px] font-semibold uppercase tracking-tight text-[#F05A3C]">Security and data control</p>
               <h1 className="max-w-[780px] font-lora text-[45px] font-normal leading-[0.99] tracking-tight text-[#30343B] sm:text-[62px] md:text-[78px]">Enterprise-grade security.</h1>
@@ -103,28 +103,7 @@ const Security = () => {
               <a href="#practices" className="mt-8 inline-flex items-center gap-2 rounded-[7px] bg-[#F05A3C] px-5 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#30343B]/35 focus-visible:ring-offset-2">Explore our security practices <ArrowRight className="h-4 w-4" aria-hidden="true" /></a>
             </div>
 
-            <div className="relative overflow-hidden rounded-[4px] border border-[#DEE3E2] bg-[#F4F5F4] p-5 shadow-[0_22px_65px_rgba(48,52,59,0.08)] sm:p-6">
-              <div className="flex items-center justify-between border-b border-[#DDE2E1] pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#30343B]"><ShieldCheck className="h-5 w-5" strokeWidth={1.6} /></div>
-                  <div><p className="text-[12px] font-semibold text-[#30343B]">Margin control surface</p><p className="mt-0.5 text-[10px] text-[#F05A3C]">Evidence-led financial workflows</p></div>
-                </div>
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-[#4D7869]"><span className="h-1.5 w-1.5 rounded-full bg-[#4D7869]" /> Active</span>
-              </div>
-              <div className="space-y-2.5 pt-4">
-                {[
-                  ['Authorized data access', 'Seller workspace isolated', Check],
-                  ['Evidence traceability', 'Finding linked to records', FileCheck2],
-                  ['Approval before action', 'Recovery submission held', UserCheck],
-                ].map(([label, detail, Icon]) => (
-                  <div key={label as string} className="flex items-center gap-3 rounded-[3px] bg-white px-3.5 py-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EEF2F0] text-[#4D7869]"><Icon className="h-4 w-4" strokeWidth={1.7} /></div>
-                    <div className="min-w-0"><p className="truncate text-[12px] font-semibold text-[#30343B]">{label as string}</p><p className="mt-0.5 truncate text-[10px] text-[#F05A3C]">{detail as string}</p></div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 flex items-center gap-2 border-t border-[#DDE2E1] pt-4 text-[10px] leading-4 text-[#F05A3C]"><LockKeyhole className="h-3.5 w-3.5 shrink-0" /> Actions remain accountable and under seller control.</div>
-            </div>
+
           </div>
         </section>
 
