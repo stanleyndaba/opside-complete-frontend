@@ -601,7 +601,7 @@ function DuplicatePipelineDemoSection() {
   return (
     <section aria-label="Recovery operations demo" className="relative overflow-hidden bg-white pb-12 pt-10 sm:pb-16 sm:pt-12 md:pb-20 md:pt-16">
       <div className={containerClass}>
-        <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-center sm:mb-10">
+        <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-left sm:mb-10 sm:text-center">
           <LandingEyebrow>A connected financial picture</LandingEyebrow>
             <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>See how operational events affect your financial position.</h2>
           <p className="mt-5 max-w-[780px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">A financial number rarely tells the whole story on its own. Its meaning depends on the events, records and adjustments behind it. Margin examines the available history across operational and financial records to establish what happened, what explains the result and what still requires attention.</p>
