@@ -154,7 +154,7 @@ function LandingResponsiveCopy({ desktop, mobile }: { desktop: string; mobile: s
 }
 
 function LandingEyebrow({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <p className={`landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight !text-[#635BFF] ${className}`}>{children}</p>;
+  return <p className={`landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight !text-[#245BFF] ${className}`}>{children}</p>;
 }
 const sectionBodyClass =
   "mt-6 max-w-[740px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px] md:leading-9";
@@ -273,7 +273,7 @@ function AccountingEvidenceSection() {
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-x-20 lg:gap-y-10 xl:gap-x-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:col-start-1 lg:row-start-1 lg:pt-1">
-            <LandingEyebrow className="!text-[#635BFF]">Controlled system access</LandingEyebrow>
+            <LandingEyebrow className="!text-[#245BFF]">Controlled system access</LandingEyebrow>
             <h2 id="accounting-section-title" className="mt-4 max-w-[620px] font-google-sans text-[39px] leading-[0.98] tracking-[-0.045em] text-[#182026] sm:text-[50px] md:text-[60px]" style={{ fontWeight: 500 }}>
               <span className="heading-tone-dark">Get the answers without replacing the systems your team already relies on.</span>
             </h2>
@@ -547,7 +547,7 @@ function BuyerRealitySection() {
           <LandingEyebrow>The reality of operating at scale</LandingEyebrow>
           <h2 id="buyer-reality-title" className="mt-4 max-w-[760px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Your Amazon operation has grown. Your financial picture needs to keep up.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">More products, more inventory movements, more transactions and more marketplaces create more relationships for Finance to understand. A shipment, return, inventory adjustment or settlement can affect the financial position in ways that are not always obvious from an individual report.</p>
-          <p className="mt-5 max-w-[760px] border-l-2 border-[#635BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">Margin helps your business establish how those events connect, what has been accounted for and where further investigation is needed.</p>
+          <p className="mt-5 max-w-[760px] border-l-2 border-[#245BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">Margin helps your business establish how those events connect, what has been accounted for and where further investigation is needed.</p>
         </motion.div>
         <motion.div {...revealProps} className="mt-10 w-full max-w-[1120px] overflow-hidden">
           <img src="/mg-platform-hero-integrations.png" alt="Mg platform connecting Amazon, finance, operations and collaboration systems" className="block h-auto w-full object-contain" loading="lazy" />
@@ -560,7 +560,7 @@ function BuyerRealitySection() {
 
 function FinancialPositionOutputSection() {
   return (
-    <section className="relative overflow-hidden bg-[#F4FAFC] py-12 sm:py-16 md:py-20" aria-labelledby="position-output-title">
+    <section className="relative overflow-hidden bg-[#EEF3FF] py-12 sm:py-16 md:py-20" aria-labelledby="position-output-title">
       <div className={containerClass}>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-14 xl:gap-20">
           <motion.div {...revealProps} className="min-w-0">
@@ -586,7 +586,7 @@ function BuildObjectionSection() {
             <LandingEyebrow>AI-native financial investigation</LandingEyebrow>
             <h2 id="build-objection-title" className="mt-4 max-w-[640px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>An AI can explain a case. Margin does the work required to resolve it.</h2>
             <p className="mt-7 max-w-[650px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">AI can summarise a report, explain a transaction or identify an anomaly. A recovery platform can file a claim. An accounting system can record an entry. None of those activities, by themselves, establish what happened to the money or whether the original financial position has been resolved.</p>
-            <p className="mt-8 max-w-[620px] border-l-2 border-[#635BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">Margin combines AI-native investigation and execution with deterministic financial logic, connected event records, evidence lineage, approval controls and outcome verification. Margin performs the investigation and carries the authorised work forward.</p>
+            <p className="mt-8 max-w-[620px] border-l-2 border-[#245BFF] pl-4 text-[15px] font-semibold leading-7 text-[#182026] sm:text-[17px] sm:leading-8">Margin combines AI-native investigation and execution with deterministic financial logic, connected event records, evidence lineage, approval controls and outcome verification. Margin performs the investigation and carries the authorised work forward.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex min-w-0 justify-center lg:justify-end">
             <img src="/financial-resolution-workflow.png" alt="Financial Resolution Workflow showing Margin connecting source records, testing supported exposure, and preserving the Finance approval boundary" className="block h-auto w-full max-w-[760px] object-contain" loading="lazy" />
@@ -666,7 +666,7 @@ function BuiltForSection() {
             Margin is designed for established Amazon businesses, typically generating $5M+ in annual sales, where the volume and complexity of marketplace activity demand more than periodic manual checks.
           </p>
           <div className="mt-6 flex max-w-[920px] flex-wrap gap-x-5 gap-y-2 border-y border-[#D8E3E8] py-3 text-[11px] font-semibold tracking-tight text-[#66737F]">
-            {operatingDimensions.map((dimension) => <span key={dimension} className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#635BFF]" />{dimension}</span>)}
+            {operatingDimensions.map((dimension) => <span key={dimension} className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#245BFF]" />{dimension}</span>)}
           </div>
         </motion.div>
         <div className="built-for-marquee-viewport mt-10 sm:mt-14" aria-label="Built for audience profiles">
@@ -1642,16 +1642,16 @@ function FooterNestedRecoveryVisual() {
           </div>
           <div className="mt-6 space-y-5 border-t border-[#E6EDF1] pt-5">
             <div>
-              <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p>
+              <p className="text-[13px] font-semibold leading-5 text-[#245BFF]">Pricing</p>
               <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p>
               <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Pricing reflects the investigation, evidence, recovery work and ongoing responsibility required.</p>
-              <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
+              <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#245BFF] no-underline transition-colors hover:text-[#1747D1]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
             </div>
             <div>
-              <p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Financial Review</p>
+              <p className="text-[13px] font-semibold leading-5 text-[#245BFF]">Financial Review</p>
               <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Find out what your records can establish.</p>
               <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit the Amazon records you have. Margin traces the relevant activity, establishes what can be verified and identifies remaining evidence gaps or justified next steps.</p>
-              <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
+              <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#245BFF] no-underline transition-colors hover:text-[#1747D1]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link>
             </div>
           </div>
         </div>
@@ -2112,9 +2112,9 @@ function SecuritySection() {
           ))}
         </div>
         <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Link to="/security" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#635BFF] hover:decoration-[#635BFF]">More about security <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
-          <Link to="/access-scope" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#635BFF] hover:decoration-[#635BFF]">Review the Amazon access scope <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
-          <Link to="/sales" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#635BFF] hover:decoration-[#635BFF]">Discuss enterprise control <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+          <Link to="/security" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#245BFF] hover:decoration-[#245BFF]">More about security <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+          <Link to="/access-scope" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#245BFF] hover:decoration-[#245BFF]">Review the Amazon access scope <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+          <Link to="/sales" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#30343B] underline decoration-[#AEB8BC] underline-offset-4 transition-colors hover:text-[#245BFF] hover:decoration-[#245BFF]">Discuss enterprise control <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
         </div>
         <p className="mt-5 max-w-[900px] border-t border-[#DCE2E5] pt-4 text-[11px] font-semibold uppercase tracking-tight text-[#7A858A]">Read-only by default <span className="px-2 text-[#B1BBBE]">·</span> Purpose-limited access <span className="px-2 text-[#B1BBBE]">·</span> Seller approval before consequential action <span className="px-2 text-[#B1BBBE]">·</span> Tenant-level separation</p>
       </div>
@@ -2299,7 +2299,7 @@ export default function Index() {
                   <div className="relative mt-8 flex min-h-[270px] flex-1 items-center justify-center overflow-hidden rounded-[12px] bg-white p-3 sm:mt-10 sm:min-h-[330px] sm:p-5"><img src="/journey-step-review.png" alt="Margin follows the evidence through a financial review" className="h-full w-full object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]" /></div>
                   <div className="flex justify-center pt-6 sm:pt-7"><Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable inline-flex h-12 w-fit items-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[14px] font-medium text-white shadow-none transition-transform hover:-translate-y-0.5 hover:bg-[#D9472D] sm:px-6">Start Your Financial Review <ChevronRight className="h-4 w-4" /></Button></div>
                 </motion.article>
-                <motion.article {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="group relative flex min-h-[680px] flex-col overflow-hidden rounded-[18px] bg-[#E7E1F0] px-5 pb-5 pt-7 text-[#24212B] sm:min-h-[760px] sm:px-7 sm:pb-7 sm:pt-9">
+                <motion.article {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="group relative flex min-h-[680px] flex-col overflow-hidden rounded-[18px] bg-[#EEF3FF] px-5 pb-5 pt-7 text-[#24212B] sm:min-h-[760px] sm:px-7 sm:pb-7 sm:pt-9">
                   <h3 className="max-w-[430px] text-[29px] font-google-sans font-normal leading-[1.04] tracking-[-0.045em] text-[#24212B] sm:text-[36px]">Let Margin carry the investigation through to resolution.</h3>
                   <p className="mt-6 max-w-[470px] text-[15px] leading-7 text-[#24212B]/72 sm:text-[16px] sm:leading-7">Keep findings, evidence, decisions and outstanding work connected while Margin handles the authorised investigation, follow-through and outcome verification.</p>
                   <div className="relative mt-8 flex min-h-[270px] flex-1 items-center justify-center overflow-hidden rounded-[12px] bg-white p-3 sm:mt-10 sm:min-h-[330px] sm:p-5"><img src="/journey-step-handoff.png" alt="Organized records handed into an ongoing recovery operation" className="h-full w-full object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]" /></div>
@@ -2310,7 +2310,7 @@ export default function Index() {
                 <div className="mt-6 hidden w-full max-w-[380px] p-0 text-[#182026] md:block lg:max-w-none">
                   <div className="lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.25fr)] lg:gap-10">
                     <div><p className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">Margin does the financial work your Amazon business cannot afford to leave unresolved.</p><p className="mt-3 text-[14px] leading-6 text-[#66737F]">Margin connects operational events to their financial consequences, investigates what happened and why, performs the justified work and follows the outcome through to verified financial resolution.</p><p className="mt-3 text-[14px] leading-6 text-[#66737F]">Margin does the work. Your business gets the financial clarity, control and resolution.</p><div className="mt-5 space-y-3"><Button type="button" onClick={() => navigate('/context-review')} className="landing-action-cta h-10 w-fit rounded-[3px] bg-[#F05A3C] px-4 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(240,90,60,0.18)] hover:bg-[#D9472D]">Start Your Financial Review <ChevronRight className="h-4 w-4" /></Button><p className="text-[11px] leading-5 text-[#66737F]">Start with the evidence before committing to paid work.</p><Button type="button" variant="outline" onClick={() => navigate('/sales')} className="h-10 w-full rounded-[6px] border-[#C8D6DF] bg-white px-4 text-[13px] font-semibold text-[#182026] hover:bg-[#F3F6F8]">Discuss Enterprise Control</Button></div></div>
-                    <div className="mt-6 grid gap-5 border-t border-[#E6EDF1] pt-5 lg:mt-0 lg:grid-cols-2 lg:gap-8 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"><div><p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Pricing</p><p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p><p className="mt-1 text-[11px] leading-5 text-[#66737F]">Engagements are scoped to the investigation's complexity and the financial responsibility involved.</p><Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link></div><div><p className="text-[13px] font-semibold leading-5 text-[#635BFF]">Get Started</p><p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Find out what your records can establish.</p><p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your Amazon records. Margin examines the evidence, establishes what is accounted for and identifies where further action may be justified.</p><Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#635BFF] no-underline transition-colors hover:text-[#5148E5]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link></div></div>
+                    <div className="mt-6 grid gap-5 border-t border-[#E6EDF1] pt-5 lg:mt-0 lg:grid-cols-2 lg:gap-8 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"><div><p className="text-[13px] font-semibold leading-5 text-[#245BFF]">Pricing</p><p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Understand the engagement.</p><p className="mt-1 text-[11px] leading-5 text-[#66737F]">Engagements are scoped to the investigation's complexity and the financial responsibility involved.</p><Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#245BFF] no-underline transition-colors hover:text-[#1747D1]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link></div><div><p className="text-[13px] font-semibold leading-5 text-[#245BFF]">Get Started</p><p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Find out what your records can establish.</p><p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit your Amazon records. Margin examines the evidence, establishes what is accounted for and identifies where further action may be justified.</p><Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#245BFF] no-underline transition-colors hover:text-[#1747D1]">Start a financial review <ChevronRight className="h-3.5 w-3.5" /></Link></div></div>
                   </div>
                 </div>
               </div>

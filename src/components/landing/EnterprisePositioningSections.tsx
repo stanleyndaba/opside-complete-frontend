@@ -4,7 +4,7 @@ import { ArrowRight, Check, Database, FileCheck2, LockKeyhole, ShieldCheck, User
 import { Link } from "react-router-dom";
 
 const shell = "mx-auto w-full max-w-[1180px] px-5 sm:px-7 lg:px-10";
-const eyebrow = "text-[10px] font-semibold uppercase tracking-[0.12em] text-[#635BFF]";
+const eyebrow = "text-[10px] font-semibold uppercase tracking-[0.12em] text-[#245BFF]";
 const heading = "font-lora text-[32px] font-normal leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[43px] md:text-[55px]";
 const body = "text-[14px] leading-7 text-[#52616A] sm:text-[16px] sm:leading-8";
 const cta = "inline-flex h-11 w-fit items-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.16)] transition-colors hover:bg-[#D9472D]";
@@ -37,7 +37,7 @@ export function EnterpriseQualificationBand() {
         <Reveal className="grid border-t border-[#D8E3EA] pt-4 sm:grid-cols-2 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0 xl:grid-cols-3">
           {dimensions.map((item, index) => (
             <div key={item} className={`flex items-center gap-2 py-2 text-[12px] font-medium text-[#52616A] ${index > 0 ? "border-t border-[#D8E3EA] sm:border-t-0" : ""} ${index % 2 === 1 ? "sm:border-l sm:pl-4" : ""} xl:border-l xl:pl-4`}>
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#635BFF]" />
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#245BFF]" />
               {item}
             </div>
           ))}
@@ -58,7 +58,7 @@ export function EnterpriseCategoryStatement() {
         </Reveal>
         <Reveal className="max-w-[700px] lg:pb-1">
           <p className={body}>Amazon-native reporting shows activity. Accounting systems record entries. Recovery providers manage claims. Margin connects the operational event, financial position, evidence, authorization, recovery action, settlement treatment, and remaining responsibility.</p>
-          <p className="mt-5 border-l-2 border-[#635BFF] pl-4 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#182026] sm:text-[18px] sm:leading-8">Margin turns fragmented Amazon activity into a defensible financial position and carries justified work through to a verified outcome.</p>
+          <p className="mt-5 border-l-2 border-[#245BFF] pl-4 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#182026] sm:text-[18px] sm:leading-8">Margin turns fragmented Amazon activity into a defensible financial position and carries justified work through to a verified outcome.</p>
         </Reveal>
       </div>
     </section>
@@ -136,11 +136,11 @@ export function AmazonAuthorizationBoundarySection() {
           <p className={eyebrow}>Amazon authorization boundary</p>
           <h2 id="amazon-authorization-title" className={`${heading} mt-3`}>Amazon-authorized access, scoped to the work.</h2>
           <p className={`mt-5 ${body}`}>Margin can begin with seller-provided records. When the investigation requires more, the seller authorizes only the Amazon roles, reports, marketplaces, and review period required for the defined question.</p>
-          <p className="mt-5 border-l-2 border-[#635BFF] pl-4 text-[14px] font-semibold leading-6 text-[#182026] sm:text-[16px] sm:leading-7">Read access and permission to submit consequential actions are separate permissions.</p>
+          <p className="mt-5 border-l-2 border-[#245BFF] pl-4 text-[14px] font-semibold leading-6 text-[#182026] sm:text-[16px] sm:leading-7">Read access and permission to submit consequential actions are separate permissions.</p>
           <Link to="/access-scope" className={`${mutedCta} mt-6`}>Review the Amazon access scope <ArrowRight className="h-4 w-4" /></Link>
         </Reveal>
         <Reveal className="overflow-hidden rounded-[6px] border border-[#D8E3EA] bg-[#F6F8F9]">
-          <div className="flex items-center justify-between border-b border-[#D8E3EA] px-5 py-4"><div className="flex items-center gap-2"><LockKeyhole className="h-4 w-4 text-[#635BFF]" strokeWidth={1.6} /><span className="text-[12px] font-semibold text-[#182026]">What Margin does not request</span></div><span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#66737F]">Purpose-limited</span></div>
+          <div className="flex items-center justify-between border-b border-[#D8E3EA] px-5 py-4"><div className="flex items-center gap-2"><LockKeyhole className="h-4 w-4 text-[#245BFF]" strokeWidth={1.6} /><span className="text-[12px] font-semibold text-[#182026]">What Margin does not request</span></div><span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#66737F]">Purpose-limited</span></div>
           <div className="grid gap-x-6 sm:grid-cols-2">
             {excludedAccess.map((item) => <div key={item} className="flex items-start gap-2 border-b border-[#D8E3EA] px-5 py-4 text-[12px] leading-5 text-[#52616A]"><Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#2D7B59]" strokeWidth={2.2} />{item}</div>)}
           </div>
@@ -169,9 +169,9 @@ export function FinancialPositionInspectionSection() {
             <p className={`mt-5 ${body}`}>A senior buyer should be able to open one finding and understand how Margin reached the conclusion, what the records prove, who owns the next action, and whether the financial result was actually closed.</p>
           </Reveal>
           <Reveal className="overflow-hidden rounded-[8px] border border-[#D8E3EA] bg-white shadow-[0_18px_44px_rgba(24,32,38,0.06)]">
-            <div className="flex items-center justify-between border-b border-[#D8E3EA] bg-[#F4F8FA] px-5 py-4"><div className="flex items-center gap-2"><FileCheck2 className="h-4 w-4 text-[#635BFF]" strokeWidth={1.7} /><span className="text-[12px] font-semibold text-[#182026]">Financial position inspection</span></div><span className="rounded-full bg-[#E9F5EE] px-2 py-1 text-[10px] font-semibold text-[#2D7B59]">Inspectable</span></div>
+            <div className="flex items-center justify-between border-b border-[#D8E3EA] bg-[#F4F8FA] px-5 py-4"><div className="flex items-center gap-2"><FileCheck2 className="h-4 w-4 text-[#245BFF]" strokeWidth={1.7} /><span className="text-[12px] font-semibold text-[#182026]">Financial position inspection</span></div><span className="rounded-full bg-[#E9F5EE] px-2 py-1 text-[10px] font-semibold text-[#2D7B59]">Inspectable</span></div>
             <div className="divide-y divide-[#E8EEF1]">
-              {inspectionSteps.map(([number, title, detail]) => <div key={number} className="grid grid-cols-[34px_minmax(0,1fr)] gap-3 px-5 py-4"><span className="font-mono text-[10px] font-semibold text-[#635BFF]">{number}</span><div><h3 className="text-[13px] font-semibold text-[#182026]">{title}</h3><p className="mt-1 text-[12px] leading-5 text-[#66737F]">{detail}</p></div></div>)}
+              {inspectionSteps.map(([number, title, detail]) => <div key={number} className="grid grid-cols-[34px_minmax(0,1fr)] gap-3 px-5 py-4"><span className="font-mono text-[10px] font-semibold text-[#245BFF]">{number}</span><div><h3 className="text-[13px] font-semibold text-[#182026]">{title}</h3><p className="mt-1 text-[12px] leading-5 text-[#66737F]">{detail}</p></div></div>)}
             </div>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[#D8E3EA] bg-[#F4F8FA] px-5 py-4 text-[11px] font-medium text-[#52616A]"><span>Supported exposure</span><span>Unresolved balance</span><span>Approval state</span><span>Verified outcome</span></div>
           </Reveal>
@@ -194,7 +194,7 @@ export function EnterpriseOperatingBoundarySection() {
       <div className={shell}>
         <Reveal className="max-w-[760px]"><p className={eyebrow}>Organizational fit</p><h2 id="operating-boundary-title" className={`${heading} mt-3`}>A control layer your operating model can place somewhere.</h2><p className={`mt-5 ${body}`}>Finance owns the position. Operations owns the context. Margin carries the justified work. Amazon remains an external dependency whose response and payment treatment are tracked through the record.</p></Reveal>
         <div className="mt-9 overflow-hidden rounded-[8px] border border-[#D8E3EA] bg-[#F6F8F9]">
-          {lanes.map(([title, detail], index) => <div key={title} className="grid gap-2 border-b border-[#D8E3EA] px-5 py-4 last:border-b-0 sm:grid-cols-[220px_minmax(0,1fr)] sm:gap-8 sm:px-6"><div className="flex items-center gap-2 text-[13px] font-semibold text-[#182026]"><span className="h-1.5 w-1.5 rounded-full bg-[#635BFF]" />{title}</div><p className="text-[12px] leading-5 text-[#66737F]">{detail}</p></div>)}
+          {lanes.map(([title, detail], index) => <div key={title} className="grid gap-2 border-b border-[#D8E3EA] px-5 py-4 last:border-b-0 sm:grid-cols-[220px_minmax(0,1fr)] sm:gap-8 sm:px-6"><div className="flex items-center gap-2 text-[13px] font-semibold text-[#182026]"><span className="h-1.5 w-1.5 rounded-full bg-[#245BFF]" />{title}</div><p className="text-[12px] leading-5 text-[#66737F]">{detail}</p></div>)}
         </div>
       </div>
     </section>
@@ -221,7 +221,7 @@ export function EnterpriseAssuranceSection() {
           <div className="mt-6 flex flex-wrap gap-3"><Link to="/security" className={cta}>Read security practices <ArrowRight className="h-4 w-4" /></Link><Link to="/access-scope" className={mutedCta}>Review access scope <ArrowRight className="h-4 w-4" /></Link></div>
         </Reveal>
         <Reveal className="grid border-t border-[#D8E3EA] sm:grid-cols-2">
-          {assuranceItems.map(([title, detail], index) => <div key={title} className={`border-b border-[#D8E3EA] py-4 sm:px-5 ${index % 2 === 1 ? "sm:border-l" : ""}`}><div className="flex items-center gap-2"><ShieldCheck className="h-3.5 w-3.5 text-[#635BFF]" strokeWidth={1.8} /><h3 className="text-[13px] font-semibold text-[#182026]">{title}</h3></div><p className="mt-1.5 text-[12px] leading-5 text-[#66737F]">{detail}</p></div>)}
+          {assuranceItems.map(([title, detail], index) => <div key={title} className={`border-b border-[#D8E3EA] py-4 sm:px-5 ${index % 2 === 1 ? "sm:border-l" : ""}`}><div className="flex items-center gap-2"><ShieldCheck className="h-3.5 w-3.5 text-[#245BFF]" strokeWidth={1.8} /><h3 className="text-[13px] font-semibold text-[#182026]">{title}</h3></div><p className="mt-1.5 text-[12px] leading-5 text-[#66737F]">{detail}</p></div>)}
         </Reveal>
       </div>
     </section>
@@ -239,7 +239,7 @@ export function EnterpriseOperatingBriefsSection() {
     <section aria-labelledby="enterprise-briefs-title" className="bg-white py-12 sm:py-16 md:py-20">
       <div className={shell}>
         <Reveal className="max-w-[800px]"><p className={eyebrow}>Operating briefs</p><h2 id="enterprise-briefs-title" className={`${heading} mt-3`}>Proof should show the operation, not just the outcome.</h2><p className={`mt-5 ${body}`}>Each enterprise engagement should be understood through its operating scope, record population, evidence state, authorized action, and verified result. These examples are intentionally presented as operating briefs rather than decorative testimonials.</p></Reveal>
-        <div className="mt-9 grid gap-4 lg:grid-cols-3">{briefs.map((brief) => <article key={brief.title} className="flex flex-col border border-[#D8E3EA] bg-[#F6F8F9] p-5 sm:p-6"><p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#635BFF]">{brief.label}</p><h3 className="mt-8 text-[19px] font-semibold leading-[1.12] tracking-[-0.025em] text-[#182026]">{brief.title}</h3><p className="mt-4 text-[11px] font-semibold leading-5 text-[#52616A]">{brief.scope}</p><div className="mt-5 border-t border-[#D8E3EA] pt-4"><p className="text-[12px] leading-6 text-[#66737F]">{brief.result}</p></div><span className="mt-auto pt-7 text-[10px] font-medium text-[#94A3B8]">Illustrative structure — replace with verified customer evidence when available.</span></article>)}</div>
+        <div className="mt-9 grid gap-4 lg:grid-cols-3">{briefs.map((brief) => <article key={brief.title} className="flex flex-col border border-[#D8E3EA] bg-[#F6F8F9] p-5 sm:p-6"><p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#245BFF]">{brief.label}</p><h3 className="mt-8 text-[19px] font-semibold leading-[1.12] tracking-[-0.025em] text-[#182026]">{brief.title}</h3><p className="mt-4 text-[11px] font-semibold leading-5 text-[#52616A]">{brief.scope}</p><div className="mt-5 border-t border-[#D8E3EA] pt-4"><p className="text-[12px] leading-6 text-[#66737F]">{brief.result}</p></div><span className="mt-auto pt-7 text-[10px] font-medium text-[#94A3B8]">Illustrative structure — replace with verified customer evidence when available.</span></article>)}</div>
       </div>
     </section>
   );

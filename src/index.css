@@ -209,6 +209,10 @@
   --margin-text-muted: #94A3B8;
   --margin-blue: #0B74DE;
   --margin-blue-hover: #095fb8;
+  --margin-cobalt: #245BFF;
+  --margin-cobalt-hover: #1747D1;
+  --margin-cobalt-soft: #EEF3FF;
+  --margin-cobalt-border: #C9D7FF;
   --margin-primary: #182026;
   --margin-primary-hover: #2d3748;
   --margin-success: #10B981;
@@ -1669,8 +1673,8 @@ html, body, #root {
   /* Every CTA remains readable and never breaks its action label. When two
      actions cannot breathe, the existing flex layouts may stack naturally. */
   .landing-page .landing-pressable,
-  .landing-page a[class*="bg-[#635BFF]"],
-  .landing-page button[class*="bg-[#635BFF]"] {
+  .landing-page a[class*="bg-[#245BFF]"],
+  .landing-page button[class*="bg-[#245BFF]"] {
     min-height: 44px;
     font-size: 15px !important;
     line-height: 1 !important;
@@ -1775,8 +1779,8 @@ html, body, #root {
   }
 
   .landing-page .landing-pressable,
-  .landing-page a[class*="bg-[#635BFF]"],
-  .landing-page button[class*="bg-[#635BFF]"] {
+  .landing-page a[class*="bg-[#245BFF]"],
+  .landing-page button[class*="bg-[#245BFF]"] {
     font-size: 14px !important;
   }
 }
@@ -1812,10 +1816,10 @@ html, body, #root {
   color: #FFFFFF;
 }
 
-/* Landing section eyebrows stay compact, sentence-case, and indigo even when
+/* Landing section eyebrows stay compact, sentence-case, and cobalt even when
    a section or legacy label rule supplies a darker inherited text color. */
 .landing-page .landing-section-eyebrow {
-  color: #635BFF !important;
+  color: #245BFF !important;
   font-family: var(--font-google-sans) !important;
   font-size: 11px !important;
   font-weight: 600 !important;
@@ -1893,7 +1897,7 @@ html, body, #root {
   font-style: normal !important;
   letter-spacing: 0 !important;
   color: #FFFFFF !important;
-  background: #635BFF !important;
+  background: #245BFF !important;
   border-radius: 3px;
   padding: 0 0.12em 0.04em;
   box-decoration-break: clone;
@@ -1920,7 +1924,7 @@ html, body, #root {
   font-family: 'Sora', var(--font-sans) !important;
   font-weight: 600 !important;
   color: #FFFFFF !important;
-  background: #635BFF !important;
+  background: #245BFF !important;
   border-radius: 3px;
   padding: 0 0.12em 0.04em;
 }
@@ -1975,7 +1979,7 @@ html, body, #root {
 }
 
 .workflow-page main a[class*="bg-[#30343B]"],
-.workflow-page main a[class*="bg-[#635BFF]"],
+.workflow-page main a[class*="bg-[#245BFF]"],
 .workflow-page main a[class*="bg-[#0B74DE]"] {
   background-color: #F05A3C !important;
   color: #FFFFFF !important;
@@ -1983,7 +1987,7 @@ html, body, #root {
 }
 
 .workflow-page main a[class*="bg-[#30343B]"]:hover,
-.workflow-page main a[class*="bg-[#635BFF]"]:hover,
+.workflow-page main a[class*="bg-[#245BFF]"]:hover,
 .workflow-page main a[class*="bg-[#0B74DE]"]:hover {
   background-color: #D9472D !important;
 }
@@ -2068,7 +2072,7 @@ html, body, #root {
 }
 
 .team-page main a[class*="bg-[#30343B]"],
-.team-page main a[class*="bg-[#635BFF]"],
+.team-page main a[class*="bg-[#245BFF]"],
 .team-page main a[class*="bg-[#0B74DE]"] {
   background-color: #F05A3C !important;
   color: #FFFFFF !important;
@@ -2076,7 +2080,7 @@ html, body, #root {
 }
 
 .team-page main a[class*="bg-[#30343B]"]:hover,
-.team-page main a[class*="bg-[#635BFF]"]:hover,
+.team-page main a[class*="bg-[#245BFF]"]:hover,
 .team-page main a[class*="bg-[#0B74DE]"]:hover {
   background-color: #D9472D !important;
 }

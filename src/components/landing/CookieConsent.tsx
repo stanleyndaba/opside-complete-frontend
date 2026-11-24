@@ -72,12 +72,12 @@ export function CookieConsent() {
                     <div className="relative px-5 py-5 sm:px-7 sm:py-6 md:px-8 md:py-7">
                         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
                             <div className="max-w-[700px]">
-                                <p className="text-[10px] font-semibold uppercase tracking-tight text-[#635BFF]">Privacy choices</p>
+                                <p className="text-[10px] font-semibold uppercase tracking-tight text-[#245BFF]">Privacy choices</p>
                                 <h2 id="cookie-consent-title" className="mt-2 font-lora text-2xl font-normal leading-tight tracking-[-0.02em] text-[#182026] sm:text-3xl">
                                     Help improve your experience
                                 </h2>
                                 <p id="cookie-consent-description" className="mt-3 max-w-[660px] text-[13px] leading-6 text-[#66737F]">
-                                    We use necessary cookies to keep Margin working. With your permission, optional analytics cookies help us understand what is useful and improve the site. You can change your choices at any time in <Link to="/privacy" className="font-medium text-[#182026] underline underline-offset-2 transition-colors hover:text-[#635BFF]">Privacy Policy</Link>.
+                                    We use necessary cookies to keep Margin working. With your permission, optional analytics cookies help us understand what is useful and improve the site. You can change your choices at any time in <Link to="/privacy" className="font-medium text-[#182026] underline underline-offset-2 transition-colors hover:text-[#245BFF]">Privacy Policy</Link>.
                                 </p>
                             </div>
                             <div className="grid shrink-0 gap-2 sm:grid-cols-2 lg:min-w-[300px] lg:grid-cols-1 xl:grid-cols-2">

@@ -71,7 +71,7 @@ const layers = [
     label: "Financial truth",
     question: "What is accounted for and what is not",
     icon: ClipboardCheck,
-    tone: "#635BFF",
+    tone: "#245BFF",
     surface: "#F1F0FF",
     nodes: [
       { title: "Trace the actual credit", detail: "Credit or adjustment → Settlement → Payout", icon: RefreshCw, state: "Downstream checked" },
@@ -91,7 +91,7 @@ const lifecycleCards = [
     title: "Financial reconciliation lifecycle",
     detail: "Trace original activity → Connect downstream events → Verify settlement → Account for residuals",
     icon: RefreshCw,
-    tone: "#635BFF",
+    tone: "#245BFF",
   },
 ];
 
@@ -162,7 +162,7 @@ const caseFlow = [
     title: "Verify the credit in settlement",
     detail: "Approved $26,000 · $18,650 matched · $7,350 still open",
     state: "Position remains visible",
-    tone: "#635BFF",
+    tone: "#245BFF",
     platforms: [
       { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
       { src: "/quickbooks.png", alt: "QuickBooks" },
@@ -174,7 +174,7 @@ const caseFlow = [
     title: "Record what is accounted for and what is not",
     detail: "Reconciled amount · residual gap · evidence limitation · next step",
     state: "Financial Position Brief",
-    tone: "#635BFF",
+    tone: "#245BFF",
     platforms: [{ src: "/quickbooks.png", alt: "QuickBooks" }, { src: "/xero.png", alt: "Xero" }],
   },
 ] as const;
@@ -226,7 +226,7 @@ export function MarginOperatingWorkflow() {
         </motion.div>
         <div className="grid items-start gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           <motion.div initial={reduceMotion ? false : { opacity: 0, y: 14 }} whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-48px" }} transition={{ duration: 0.6 }} className="max-w-[560px] lg:sticky lg:top-28">
-            <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight !text-[#635BFF]">The operating workflow</p>
+            <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight !text-[#245BFF]">The operating workflow</p>
             <h2 id="margin-operating-workflow-title" className="mt-4 font-lora text-[35px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
               Financial activity becomes explainable.
             </h2>
@@ -248,7 +248,7 @@ export function MarginOperatingWorkflow() {
                     role="tab"
                     aria-selected={selected}
                     onClick={() => setActiveLayer(layer.id)}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#635BFF]/30 ${selected ? "bg-[#182026] text-white" : "bg-white/75 text-[#66737F] hover:bg-white hover:text-[#182026]"}`}
+                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#245BFF]/30 ${selected ? "bg-[#182026] text-white" : "bg-white/75 text-[#66737F] hover:bg-white hover:text-[#182026]"}`}
                   >
                     <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />
                     {layer.label}
@@ -309,7 +309,7 @@ export function MarginOperatingWorkflow() {
                 return <div key={card.title} className="bg-[#182026] p-4 text-white"><div className="flex items-center gap-2" style={{ color: card.tone }}><Icon className="h-4 w-4" strokeWidth={1.8} /><p className="text-[11px] font-semibold">{card.title}</p></div><p className="mt-2 text-[11px] leading-5 text-white/65">{card.detail}</p></div>;
               })}
             </div>
-            <div className="mt-3 flex items-start gap-3 bg-white p-4 shadow-[0_10px_24px_rgba(48,52,59,0.06)]"><ClipboardCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#635BFF]" strokeWidth={1.7} /><div><p className="text-[12px] font-semibold text-[#182026]">Financial Position Brief</p><p className="mt-1 text-[11px] leading-5 text-[#66737F]">Examined · Supported · Reconciled · Unresolved · Action justified · Limitations recorded</p></div></div>
+            <div className="mt-3 flex items-start gap-3 bg-white p-4 shadow-[0_10px_24px_rgba(48,52,59,0.06)]"><ClipboardCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#245BFF]" strokeWidth={1.7} /><div><p className="text-[12px] font-semibold text-[#182026]">Financial Position Brief</p><p className="mt-1 text-[11px] leading-5 text-[#66737F]">Examined · Supported · Reconciled · Unresolved · Action justified · Limitations recorded</p></div></div>
           </div>
         </div>
       </div>

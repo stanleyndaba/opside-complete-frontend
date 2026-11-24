@@ -8,7 +8,7 @@ export function MarginEngineSection() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(178,220,232,0.28),transparent_38%)]" />
       <div className="relative mx-auto w-full max-w-[1240px] px-5 sm:px-8">
         <div className="mb-10 max-w-[720px] md:mb-14">
-          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#635BFF]">Evidence before action</p>
+          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#245BFF]">Evidence before action</p>
           <h2 id="margin-engine-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[#34414A] sm:text-[44px]" style={{ fontWeight: 400 }}>Make decisions with the investigation behind them.</h2>
           <p className="mt-4 max-w-[660px] text-[16px] leading-6 text-[#48677A] sm:text-[20px] sm:leading-7">Margin examines the originating event, expected financial treatment, available records and alternative explanations before determining whether further action is justified.</p>
           <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Your team can inspect the basis of a finding, challenge it, approve it or hold it. Consequential actions remain within the authority granted by your business.</p>

@@ -29,7 +29,7 @@ const responseBranches = [
     reference: "Evidence packet",
     referenceIcon: "/excel-icon-margin.png",
     referenceSource: "Excel",
-    tone: "text-[#635BFF]",
+    tone: "text-[#245BFF]",
   },
 ] as const;
 
@@ -136,7 +136,7 @@ export function PersonalRecoverySupportVisual({ progressive = false, onComplete 
           </div>
         </div>
 
-        <div className="mx-auto mt-4 flex w-full max-w-[860px] items-center gap-2 border-t border-[#F0F0F0] pt-3 text-[10px] text-[#81919A]"><ChevronRight className="h-3.5 w-3.5 text-[#635BFF]" strokeWidth={2} />One prompt sent · explanation grounded in the recorded financial work</div>
+        <div className="mx-auto mt-4 flex w-full max-w-[860px] items-center gap-2 border-t border-[#F0F0F0] pt-3 text-[10px] text-[#81919A]"><ChevronRight className="h-3.5 w-3.5 text-[#245BFF]" strokeWidth={2} />One prompt sent · explanation grounded in the recorded financial work</div>
       </div>
     </div>
   );
