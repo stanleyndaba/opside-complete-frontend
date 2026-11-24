@@ -132,6 +132,7 @@ const EnterpriseMultiMarketplace = lazy(() => import('./pages/EnterpriseMultiMar
 const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
 const DocumentIngestion = lazy(() => import('./pages/DocumentIngestion'));
 const SpeakToSales = lazy(() => import('./pages/SpeakToSales'));
+const PositioningPreview = lazy(() => import('./pages/PositioningPreview'));
 const FilingPipelinePreview = lazy(() => import('./pages/FilingPipelinePreview'));
 const EvidenceRequired = lazy(() => import('./pages/EvidenceRequired'));
 const AmazonThreadReview = lazy(() => import('./pages/AmazonThreadReview'));
@@ -363,6 +364,7 @@ const App = () => (
                         <Route path='/document-ingestion' element={<DocumentIngestion />} />
                         <Route path='/speak-to-sales' element={<SpeakToSales />} />
                         <Route path='/talk-to-sales' element={<SpeakToSales />} />
+                        <Route path='/positioning-preview' element={<PositioningPreview />} />
                         <Route path='/filing-pipeline-preview' element={<FilingPipelinePreview />} />
                         <Route path='/duplicate-pipeline-preview' element={<DuplicatePipelinePreviewPage />} />
                         <Route path='/routine' element={<Routine />} />
