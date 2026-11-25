@@ -2259,3 +2259,27 @@ html, body, #root {
   color: #1747D1 !important;
   text-decoration-color: #245BFF !important;
 }
+
+/* The pre-footer handoff is an ICP decision surface: warm operating reality
+   around a cool evidence artifact, with orange reserved for the first action
+   and a quiet outlined route for enterprise control. */
+.landing-page .footer-nested-recovery-section {
+  background: var(--landing-recognition-surface) !important;
+  background-color: var(--landing-recognition-surface) !important;
+}
+.landing-page .footer-nested-recovery-visual {
+  width: 100%;
+  max-width: 1040px;
+  margin-inline: auto;
+  border: 1px solid #D8E3EA;
+  border-radius: 12px;
+  background: var(--landing-position-surface);
+  box-shadow: 0 14px 36px rgba(35, 54, 65, 0.08);
+}
+.landing-page .footer-nested-recovery-section > div > div:last-child {
+  color: var(--landing-heading);
+}
+.landing-page .footer-nested-recovery-section h2 {
+  color: var(--landing-heading) !important;
+  -webkit-text-fill-color: var(--landing-heading) !important;
+}

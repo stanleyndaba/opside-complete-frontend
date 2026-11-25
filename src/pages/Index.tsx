@@ -1616,21 +1616,12 @@ function AutoSubmitSection() {
 
 function FooterNestedRecoveryVisual() {
   const navigate = useNavigate();
-  const [activeWorkspace, setActiveWorkspace] = useState<'Progress review' | 'Evidence register'>('Progress review');
   return (
-    <section className="relative overflow-hidden bg-white pb-10 pt-5 sm:pb-14 sm:pt-8 md:pb-16 md:pt-10" aria-labelledby="footer-nested-recovery-title">
+    <section className="footer-nested-recovery-section relative overflow-hidden bg-white pb-10 pt-5 sm:pb-14 sm:pt-8 md:pb-16 md:pt-10" aria-labelledby="footer-nested-recovery-title">
       <div className={containerClass}>
         <h2 className="mb-7 text-center font-google-sans text-[22px] font-semibold leading-tight tracking-tight text-[#182026] md:hidden"><span className="heading-tone-dark">Keep the next financial action from getting lost between people.</span></h2>
-        <div className="relative h-[min(600px,62vw)] min-h-[320px] w-full overflow-y-auto overscroll-contain rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7] shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
-          <ScaledDemoStage designWidth={900} designHeight={620}>
-            <div className="h-[620px] w-[900px]">
-              <DemoTestsShell embedded workspaceItems={[{ label: 'Progress review', icon: SearchCheck }, { label: 'Evidence register', icon: FileInput }]} activeWorkspace={activeWorkspace} onWorkspaceChange={(label) => { if (label === 'Evidence register' || label === 'Progress review') setActiveWorkspace(label); }}>
-                <div className="overflow-hidden rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7]">
-                  {activeWorkspace === 'Evidence register' ? <EvidenceRequired embedded showSidebar={false} /> : <ProgressReview embedded showSidebar={false} />}
-                </div>
-              </DemoTestsShell>
-            </div>
-          </ScaledDemoStage>
+        <div className="footer-nested-recovery-visual">
+          <FinancialCertaintyNestedVisual />
         </div>
         <div className="mx-auto mt-8 w-full max-w-[380px] text-[#182026] md:hidden">
           <p className="font-google-sans text-[20px] font-semibold leading-tight tracking-tight text-[#182026]">Every case, decision and evidence requirement stays linked to the financial event it concerns.</p>
@@ -2320,13 +2311,6 @@ export default function Index() {
         </section>
       </main>
       <FooterNestedRecoveryVisual />
-      <section className="relative overflow-hidden bg-white py-6 sm:py-10 md:py-14" aria-label="Financial certainty visual">
-        <div className={containerClass}>
-          <div className="mx-auto w-full max-w-[1040px]">
-            <FinancialCertaintyNestedVisual />
-          </div>
-        </div>
-      </section>
       <DemoVideoModal
         open={isDemoOpen}
         onOpenChange={setIsDemoOpen}
