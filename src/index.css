@@ -2100,3 +2100,107 @@ html, body, #root {
     line-height: 1.55 !important;
   }
 }
+/* ============================================================
+   HOMEPAGE PERCEPTION LAYER — semantic color roles + type hierarchy
+   This layer deliberately changes perception only: no layout, spacing,
+   component structure, animation, or responsive behavior is altered.
+   ============================================================ */
+.landing-page {
+  --landing-heading: #182026;
+  --landing-body: #52616A;
+  --landing-muted: #66737F;
+  --landing-orientation: #245BFF;
+  --landing-position-surface: #EEF3FF;
+  --landing-recognition-surface: #FAFAF7;
+  --landing-resolved-surface: #F2F7F3;
+}
+
+/* Warm recognition, pale-blue position/evidence, and soft-green resolved work. */
+.landing-page > main > section[aria-labelledby="buyer-reality-title"],
+.landing-page > main > section[aria-labelledby="build-objection-title"],
+.landing-page > main > section[aria-labelledby="built-for-title"],
+.landing-page > main > section[aria-labelledby="founder-note-title"] {
+  background: var(--landing-recognition-surface) !important;
+  background-color: var(--landing-recognition-surface) !important;
+}
+.landing-page > main > section[aria-labelledby="position-output-title"],
+.landing-page > main > section[aria-label="Recovery operations demo"],
+.landing-page > main > section[aria-labelledby="reconstruction-gap-title"],
+.landing-page > main > section[aria-labelledby="financial-work-proof-title"],
+.landing-page > main > section[aria-labelledby="amazon-thread-title"],
+.landing-page > main > section[aria-labelledby="recovery-outcome-title"] {
+  background: var(--landing-position-surface) !important;
+  background-color: var(--landing-position-surface) !important;
+}
+.landing-page > main > section.recovery-harness-surface,
+.landing-page > main > section[aria-labelledby="control-section-title"],
+.landing-page > main > section[aria-labelledby="security-section-title"],
+.landing-page > main > section[aria-labelledby="financial-reconciliation-title"],
+.landing-page > main > section[aria-label="Financial control handoff"] {
+  background: var(--landing-resolved-surface) !important;
+  background-color: var(--landing-resolved-surface) !important;
+}
+
+/* Lora carries considered conclusions; Google Sans carries operations and actions. */
+.landing-page > main > section h2:not(.demo-visual-isolation *),
+.landing-page > main > section h2:not(.demo-visual-isolation *) .heading-tone-dark {
+  font-family: var(--font-serif) !important;
+  font-weight: 400 !important;
+  color: var(--landing-heading) !important;
+  -webkit-text-fill-color: var(--landing-heading) !important;
+}
+.landing-page > main > section h2:not(.demo-visual-isolation *) .heading-tone-muted,
+.landing-page > main > section h3:not(.demo-visual-isolation *) .heading-tone-muted {
+  color: var(--landing-muted) !important;
+  -webkit-text-fill-color: var(--landing-muted) !important;
+}
+.landing-page > main > section p:not(.demo-visual-isolation p):not(.landing-section-eyebrow):not([class*="font-mono"]),
+.landing-page > main > section li:not(.demo-visual-isolation li) {
+  color: var(--landing-body);
+}
+.landing-page > main > section .text-\[var\(--margin-text-secondary\)\],
+.landing-page > main > section [class*="text-[#52616A]"],
+.landing-page > main > section [class*="text-[#66737F]"] {
+  color: var(--landing-body) !important;
+}
+
+/* Cobalt is for orientation and evidence, not for every piece of copy. */
+.landing-page .landing-section-eyebrow {
+  color: var(--landing-orientation) !important;
+  -webkit-text-fill-color: var(--landing-orientation) !important;
+  font-family: var(--font-google-sans) !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* Orange remains reserved for consequential actions and existing proof moments. */
+.landing-page .landing-action-cta {
+  background-color: #F05A3C !important;
+  color: #FFFFFF !important;
+  font-family: var(--font-google-sans) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.015em !important;
+}
+.landing-page .landing-action-cta:hover,
+.landing-page .landing-action-cta:focus-visible {
+  background-color: #D9472D !important;
+}
+.landing-page .landing-secondary-cta,
+.landing-page .landing-pressable:not(.landing-action-cta) {
+  font-family: var(--font-google-sans) !important;
+  letter-spacing: -0.015em !important;
+}
+
+/* Keep the approved black hero proposition and blue financial-position treatment. */
+.landing-page > main #margin-hero-title,
+.landing-page > main #margin-hero-title *:not(.hero-financial-position) {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+.landing-page > main .hero-financial-position,
+.landing-page > main .hero-financial-position--text {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  background-color: var(--landing-orientation) !important;
+}
