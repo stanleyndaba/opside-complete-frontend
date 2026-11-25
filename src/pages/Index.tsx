@@ -73,6 +73,7 @@ import CaseDetailDuplicateDemo from "@/pages/CaseDetailDuplicateDemo";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
 const landingPrimaryCtaClass = "landing-action-cta landing-pressable inline-flex h-11 w-fit items-center justify-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(240,90,60,0.18)] transition-colors hover:bg-[#D9472D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2";
+const landingSupportingCtaClass = "landing-supporting-cta landing-pressable inline-flex h-11 w-fit items-center justify-center gap-2 px-1 text-[13px] font-semibold text-[#245BFF] transition-colors hover:text-[#1747D1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#245BFF]/35 focus-visible:ring-offset-2";
 const landingSecondaryCtaClass = "landing-pressable flex w-fit h-11 items-center justify-start gap-2 rounded-[7px] bg-white px-5 text-left text-[13px] font-semibold text-[#182026] transition-colors hover:bg-[#F7F7F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F05A3C]/35 focus-visible:ring-offset-2 sm:inline-flex sm:justify-center";
 
 const faqs = [
@@ -303,7 +304,7 @@ function IngestedDocumentsOutcomeSection() {
               <span className="heading-tone-dark">Be able to explain the number—not just report it.</span>
             </h2>
             <p className="mt-6 max-w-[570px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">Margin traces the available transactions, adjustments, references and downstream activity behind a financial position. It distinguishes directly supported relationships from inferred matches and unresolved differences, giving Finance an explainable position with the underlying evidence and calculations available for review.</p>
-            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="View Findings">View Findings <ChevronRight className="h-4 w-4" /></button>
+            <button type="button" className={`${landingSupportingCtaClass} mt-6`} aria-label="View Findings">View Findings <ChevronRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="flex min-w-0 justify-center lg:justify-end">
             <img src="/finding-evidence-register.png" alt="Finding Evidence Register showing source-backed findings with verified, review, hold, and unresolved states" className="block h-auto w-full max-w-[760px] object-contain" loading="lazy" />
@@ -605,7 +606,7 @@ function DuplicatePipelineDemoSection() {
           <LandingEyebrow>The connected financial chain</LandingEyebrow>
             <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>See what actually happened across your Amazon financial records.</h2>
           <p className="mt-5 max-w-[780px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">A recorded transaction is not the same as a correct financial outcome. Margin examines the connected operational and financial history to establish what happened, what explains the result and what still requires attention.</p>
-          <button type="button" className={`${landingPrimaryCtaClass} mt-5`} aria-label="See How Margin Works">See How Margin Works <ChevronRight className="h-4 w-4" /></button>
+          <button type="button" className={`${landingSupportingCtaClass} mt-5`} aria-label="See How Margin Works">See How Margin Works <ChevronRight className="h-4 w-4" /></button>
         </motion.div>
         <motion.div
           {...revealProps}
@@ -738,7 +739,7 @@ function RealityCheckSection() {
           </h2>
           <p className="mt-5 max-w-[780px] text-[15px] font-medium leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'As Amazon activity accumulates across transactions, inventory movements, adjustments and settlement periods, the same financial event can appear differently across reports and systems. Margin examines those records together, establishes the relationships that can be supported, and separates explained activity from differences that still require investigation.'} mobile={'Margin examines transactions, inventory movements, adjustments and settlements together, separating explained activity from financial differences the available records cannot yet account for.'} /></p>
           <p className="mt-6 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"><LandingResponsiveCopy desktop={'A charge in one report, an inventory movement in another, a reimbursement in a case history and a settlement adjustment somewhere else may all belong to the same financial story. Finding those connections manually takes time—and the explanation can become harder to reconstruct as records accumulate. Margin examines the available records together, connecting transactions and events where the evidence supports the relationship. Your existing systems remain in place. The investigation becomes easier to examine.'} mobile={'Margin links charges, refunds, reversals, credits and settlements through their available references, dates and amounts—preserving the transaction trail behind the financial position.'} /></p>
-          <Link to="/contact" className={`${landingPrimaryCtaClass} mt-6`}>See How Outcomes Are Verified <ChevronRight className="h-4 w-4" /></Link>
+          <Link to="/contact" className={`${landingSupportingCtaClass} mt-6`}>See How Outcomes Are Verified <ChevronRight className="h-4 w-4" /></Link>
         </motion.div>
         </div>
         <motion.div {...revealProps} className="relative min-w-0 overflow-hidden">
@@ -763,7 +764,7 @@ function ReconstructionGapSection() {
             <div className="mt-6 max-w-[780px] space-y-5 text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
               <p><LandingResponsiveCopy desktop={'A charge in one report, an inventory movement in another, a reimbursement in a case history and a settlement adjustment somewhere else may all belong to the same financial story. Finding those connections manually takes time—and the explanation can become harder to reconstruct as records accumulate. Margin examines the available records together, connecting transactions and events where the evidence supports the relationship. Your existing systems remain in place. The investigation becomes easier to examine.'} mobile={'Margin links charges, refunds, reversals, credits and settlements through their available references, dates and amounts—preserving the transaction trail behind the financial position.'} /></p>
               <p><LandingResponsiveCopy desktop={'Your ERP, accounting platform, warehouse systems and Amazon reports already have jobs to do. Margin is designed to work alongside that environment, examining relevant records and connecting the evidence needed to understand discrepancies and financial outcomes. Access is scoped to the records required for the agreed work. Where supported, read-only access is the starting point; additional permissions require separate justification and authorisation.'} mobile={'Margin examines relevant Amazon, ERP, warehouse, carrier and finance records together while keeping each original system as the source of record. Your existing stack stays in place.'} /></p>
-            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See the Evidence">See the Evidence <ChevronRight className="h-4 w-4" /></button>
+            <button type="button" className={`${landingSupportingCtaClass} mt-6`} aria-label="See the Evidence">See the Evidence <ChevronRight className="h-4 w-4" /></button>
             </div>
           </motion.div>
           <motion.div {...revealProps} className="relative order-2 min-w-0 overflow-hidden lg:order-2">
@@ -842,7 +843,7 @@ function FinancialWorkProofSection() {
         </motion.div>
 
         <div className="mt-8 flex justify-end sm:mt-10">
-          <button type="button" className={landingPrimaryCtaClass} aria-label="View the Record">View the Record <ChevronRight className="h-4 w-4" /></button>
+          <button type="button" className={landingSupportingCtaClass} aria-label="View the Record">View the Record <ChevronRight className="h-4 w-4" /></button>
         </div>
       </div>
     </section>
@@ -1049,7 +1050,7 @@ function RecoveryHarnessSection() {
             </motion.article>
           ))}
         </div>
-        <button type="button" className={`${landingPrimaryCtaClass} mt-8`} aria-label="See the Controls">See the Controls <ChevronRight className="h-4 w-4" /></button>
+        <button type="button" className={`${landingSupportingCtaClass} mt-8`} aria-label="See the Controls">See the Controls <ChevronRight className="h-4 w-4" /></button>
       </div>
     </section>
   );
@@ -1088,7 +1089,7 @@ function MarginLifecycleSection() {
           <motion.p {...revealProps} className="mt-5 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
             <LandingResponsiveCopy desktop={'Finance retains control. Margin carries the investigative and authorized follow-through.'} mobile={'Finance retains control. Margin carries the investigation and authorized follow-through.'} />
           </motion.p>
-          <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See the Workflow">See the Workflow <ChevronRight className="h-4 w-4" /></button>
+          <button type="button" className={`${landingSupportingCtaClass} mt-6`} aria-label="See the Workflow">See the Workflow <ChevronRight className="h-4 w-4" /></button>
         </div>
         </div>
       </div>
@@ -1543,7 +1544,7 @@ function NestedRecoveryBrowsers() {
             <LandingEyebrow>Verified financial outcomes</LandingEyebrow>
             <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">A closed case should not leave Finance with an open financial question.</span></h2>
             <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'Margin brings the case evidence, Amazon decisions, recorded adjustments and settlement activity together to establish the recovery&apos;s financial result. It identifies what was recovered or otherwise resolved, what has been accounted for, and whether any residual difference remains between the expected and observed position.'} mobile={'Margin connects case evidence, Amazon decisions, adjustments and settlement activity to establish what was resolved, what was accounted for and whether a residual difference remains.'} /></p>
-            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="View Recovery Record">View Recovery Record <ChevronRight className="h-4 w-4" /></button>
+            <button type="button" className={`${landingSupportingCtaClass} mt-6`} aria-label="View Recovery Record">View Recovery Record <ChevronRight className="h-4 w-4" /></button>
             <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Nested recovery pages">
               {(Object.keys(browsers) as Array<keyof typeof browsers>).map((key) => (
                 <button key={key} type="button" role="tab" aria-selected={activeBrowser === key} onClick={() => setActiveBrowser(key)} className={`rounded-full px-3 py-1.5 text-[11px] font-medium tracking-tight transition-colors ${activeBrowser === key ? 'bg-[#DCEBF2] text-[#284B5B]' : 'bg-white/70 text-[#6A7D86] hover:bg-white'}`}>{browsers[key].label}</button>
@@ -1594,7 +1595,7 @@ function AutoSubmitSection() {
             <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#3F4C55] md:text-[17px] md:leading-8">
               <LandingResponsiveCopy desktop={'Your business determines the scope, decision authority and approval boundaries. Margin operates within them.'} mobile={'Your business determines the scope, decision authority and approval boundaries. Margin operates within them.'} />
             </p>
-            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See Execution">See Execution <ChevronRight className="h-4 w-4" /></button>
+            <button type="button" className={`${landingSupportingCtaClass} mt-6`} aria-label="See Execution">See Execution <ChevronRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="w-full shrink-0 lg:w-full">
             <div className="relative mx-auto h-[min(600px,62vw)] min-h-[320px] w-full max-w-[900px] overflow-y-auto overscroll-contain rounded-[10px] border border-[#C9D9E1] bg-[#FBFAF7] shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
@@ -1964,7 +1965,7 @@ function FinancialReconciliationSection() {
             <h2 id="financial-reconciliation-title" className="max-w-[560px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}><span className="heading-tone-dark">Make sure the financial outcome fits the records—not just the Amazon case.</span></h2>
             <p className="mt-6 max-w-[580px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7"><LandingResponsiveCopy desktop={'A successful case decision is important. But Finance still needs to understand how the complete result appears in the financial records. Margin traces approved recovery outcomes against available reimbursement, adjustment, settlement and payout information, and accounting records where included in the agreed scope. It distinguishes amounts approved, amounts recorded, amounts reflected in available payout evidence and any remaining differences. The aim is to establish the financial outcome—not simply report a case status.'} mobile={'Margin traces approved recoveries into reimbursement and adjustment records, then checks their treatment in available settlement and payout records. Connected accounting records can be examined when provided and within scope.'} /></p>
             <p className="mt-4 max-w-[580px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}><LandingResponsiveCopy desktop={'The examination distinguishes what Amazon approved, what was actually recorded, what reached the relevant settlement or payout stage, and what remains unaccounted for.'} mobile={'See what Amazon approved, what was recorded, what reached settlement or payout, and what remains unaccounted for.'} /></p>
-            <button type="button" className={`${landingPrimaryCtaClass} mt-6`} aria-label="See the Outcome">See the Outcome <ChevronRight className="h-4 w-4" /></button>
+            <button type="button" className={`${landingSupportingCtaClass} mt-6`} aria-label="See the Outcome">See the Outcome <ChevronRight className="h-4 w-4" /></button>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden">
             <div className="relative h-auto min-h-0 overflow-y-auto overscroll-contain rounded-none border-0 bg-transparent shadow-none sm:h-[min(600px,62vw)] sm:min-h-[320px] sm:rounded-[10px] sm:border sm:border-[#C9D9E1] sm:bg-[#E7E9EB] sm:shadow-[0_10px_30px_rgba(37,49,58,0.09)]">
@@ -2278,7 +2279,7 @@ export default function Index() {
                   </AccordionItem>
                 ))}
               </Accordion>
-              <Button type="button" onClick={() => setShowAllFaqs((current) => !current)} className={`faq-more-button ${landingPrimaryCtaClass} mt-7`}>{showAllFaqs ? "Show Fewer" : "View All Questions"}<ChevronRight className="h-4 w-4" /></Button>
+              <Button type="button" onClick={() => setShowAllFaqs((current) => !current)} className={`faq-more-button ${landingSupportingCtaClass} mt-7`}>{showAllFaqs ? "Show Fewer" : "View All Questions"}<ChevronRight className="h-4 w-4" /></Button>
             </div>
           </div>
         </section>

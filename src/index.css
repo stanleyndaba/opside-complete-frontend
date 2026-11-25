@@ -2186,6 +2186,19 @@ html, body, #root {
 .landing-page .landing-action-cta:focus-visible {
   background-color: #D9472D !important;
 }
+.landing-page .landing-supporting-cta {
+  background: transparent !important;
+  color: var(--landing-orientation) !important;
+  box-shadow: none !important;
+  font-family: var(--font-google-sans) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.015em !important;
+}
+.landing-page .landing-supporting-cta:hover,
+.landing-page .landing-supporting-cta:focus-visible {
+  background: transparent !important;
+  color: #1747D1 !important;
+}
 .landing-page .landing-secondary-cta,
 .landing-page .landing-pressable:not(.landing-action-cta) {
   font-family: var(--font-google-sans) !important;
