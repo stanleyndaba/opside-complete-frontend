@@ -2319,6 +2319,7 @@ export default function Index() {
           </div>
         </section>
       </main>
+      <FooterNestedRecoveryVisual />
       <section className="relative overflow-hidden bg-white py-6 sm:py-10 md:py-14" aria-label="Financial certainty visual">
         <div className={containerClass}>
           <div className="mx-auto w-full max-w-[1040px]">
