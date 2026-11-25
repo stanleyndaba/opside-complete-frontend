@@ -2172,28 +2172,28 @@ export default function Index() {
       <PublicNavbar variant="light" wide />
 
       <main>
-        {/* Phase 1 — Make the prospect care: problem recognition */}
+        {/* Phase 1 — Recognize the buyer's operating reality and desired financial state */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
-        <DuplicatePipelineDemoSection />
-        <BuiltForSection />
         <BuyerRealitySection />
+        <BuiltForSection />
+        <FinancialPositionOutputSection />
         <RealityCheckSection />
-        <NestedRecoveryBrowsers />
+        <ReconstructionGapSection />
+
+        {/* Phase 2 — Show the connected trail, existing system gap, and defensible finding */}
+        <DuplicatePipelineDemoSection />
+        <AccountingEvidenceSection />
+        <IngestedDocumentsOutcomeSection />
+
+        {/* Phase 3 — Establish the Margin standard, proof, and responsibility boundary */}
+        <MarginStandardDeliverableSection />
+        <FinancialWorkProofSection />
         <ControlSection />
         <FounderNoteSection />
-
-        {/* Phase 2 — Show the outcome they actually want: desired state */}
-        <FinancialPositionOutputSection />
-        <IngestedDocumentsOutcomeSection />
-        <ReconstructionGapSection />
-        <AccountingEvidenceSection />
-
-        {/* Phase 3 — Establish why Margin is different: differentiation and financial intelligence */}
         <BuildObjectionSection />
-        <MarginStandardDeliverableSection />
+        <NestedRecoveryBrowsers />
         <RecoveryWorkStatement />
         <MarginEngineSection />
-        <FinancialWorkProofSection />
 
         {/* Phase 4 — Demonstrate the operating capability: product proof */}
         <section className="relative overflow-hidden bg-[#F7F8F7] py-14 sm:py-18 md:py-24" aria-labelledby="landing-workflows-title">
