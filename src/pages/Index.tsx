@@ -2044,13 +2044,13 @@ function FounderNoteSection() {
             <div>
               <LandingEyebrow className="!text-white/75">Margin’s operating thesis</LandingEyebrow>
               <h2 id="founder-note-title" className="landing-human-voice mt-3 max-w-[260px] font-lora text-[30px] font-normal leading-[1.02] tracking-[-0.045em] text-white sm:mt-4 sm:text-[36px] sm:leading-[1.08]">
-                At scale, nobody should have to guess where the money went.
+                At scale, uncertainty becomes a financial liability.
               </h2>
             </div>
             <div className="max-w-[720px] text-[15px] leading-6 text-white/88 sm:text-[16px] sm:leading-8">
-              <p>High transaction volumes create relationships that are difficult to reconstruct manually across reporting periods, operational records and financial systems. Margin is built to trace those relationships, preserve the evidence behind material findings and carry justified recovery work through to its recorded financial outcome.</p>
-              <p className="mt-4 sm:mt-5">The objective is to give Finance an explainable position and a traceable investigation without requiring the team to reconstruct every event from the beginning.</p>
-              <p className="mt-4 font-lora text-[21px] leading-6 tracking-[-0.025em] text-white sm:mt-5 sm:text-[24px] sm:leading-8">The objective is simple: give Finance a defensible position without making the team rebuild every investigation itself.</p>
+              <p>At scale, the financial story does not disappear—it fragments across transactions, inventory movements, settlements, adjustments and case records. Margin follows those fragments back to the underlying event, separates what the evidence establishes from what it cannot support, and carries justified work through to its recorded financial outcome.</p>
+              <p className="mt-4 sm:mt-5">The point is not to produce another report. It is to give Finance an answer it can examine, defend and act on without rebuilding the investigation from the beginning.</p>
+              <p className="mt-4 font-lora text-[21px] leading-6 tracking-[-0.025em] text-white sm:mt-5 sm:text-[24px] sm:leading-8">No unsupported conclusion. No pressure to pursue what the records do not support. No financial outcome treated as settled until the record says it is.</p>
               <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="Speak with the founder">Speak with the founder <ChevronRight className="h-4 w-4" /></button>
               <p className="mt-6 border-t border-white/30 pt-3 text-[12px] font-semibold tracking-tight text-white/75 sm:mt-7 sm:pt-4">— Founder &amp; CEO<br /><span className="mt-1 inline-flex items-center gap-1.5 !text-white"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain brightness-0 invert sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight !text-white sm:text-lg">Margin</span></span></p>
             </div>
