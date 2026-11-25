@@ -2217,3 +2217,45 @@ html, body, #root {
   -webkit-text-fill-color: #FFFFFF !important;
   background-color: var(--landing-orientation) !important;
 }
+
+/* Brand expression: conclusions should read like clear findings under
+   examination, not luxury-editorial statements. Keep the existing Lora
+   family available for selected human voice moments only. */
+.landing-page > main > section h2:not(.demo-visual-isolation *):not(.landing-human-voice),
+.landing-page > main > section h3:not(.demo-visual-isolation *):not(.landing-human-voice) {
+  font-family: 'Sora', var(--font-sans) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.04em !important;
+}
+.landing-page > main > section h2:not(.demo-visual-isolation *):not(.landing-human-voice) .heading-tone-muted,
+.landing-page > main > section h3:not(.demo-visual-isolation *):not(.landing-human-voice) .heading-tone-muted {
+  font-family: 'Sora', var(--font-sans) !important;
+  font-weight: 500 !important;
+}
+.landing-page .landing-human-voice,
+.landing-page .landing-human-voice * {
+  font-family: var(--font-serif) !important;
+  font-weight: 400 !important;
+}
+
+/* Evidence artifacts use quiet borders and low-noise shadows so the record,
+   not decoration, carries the authority. */
+.landing-page .financial-work-proof-surface img,
+.landing-page .recovery-harness-surface article,
+.landing-page [aria-label="Financial control handoff"] article {
+  box-shadow: 0 10px 28px rgba(35, 54, 65, 0.08);
+}
+.landing-page .financial-work-proof-surface img {
+  border-color: #D8E3EA;
+}
+
+/* Security and access links are explanatory controls, not orange decisions. */
+.landing-page > main > section[aria-labelledby="security-section-title"] a {
+  color: var(--landing-orientation) !important;
+  text-decoration-color: #B8C8FF !important;
+}
+.landing-page > main > section[aria-labelledby="security-section-title"] a:hover,
+.landing-page > main > section[aria-labelledby="security-section-title"] a:focus-visible {
+  color: #1747D1 !important;
+  text-decoration-color: #245BFF !important;
+}

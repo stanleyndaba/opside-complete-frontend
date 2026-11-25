@@ -2043,7 +2043,7 @@ function FounderNoteSection() {
           <div className="relative grid gap-6 drop-shadow-[0_2px_10px_rgba(13,8,78,0.34)] sm:gap-8 md:grid-cols-[minmax(180px,0.38fr)_minmax(0,1fr)] md:gap-14">
             <div>
               <LandingEyebrow className="!text-white/75">Margin’s operating thesis</LandingEyebrow>
-              <h2 id="founder-note-title" className="mt-3 max-w-[260px] font-lora text-[30px] font-normal leading-[1.02] tracking-[-0.045em] text-white sm:mt-4 sm:text-[36px] sm:leading-[1.08]">
+              <h2 id="founder-note-title" className="landing-human-voice mt-3 max-w-[260px] font-lora text-[30px] font-normal leading-[1.02] tracking-[-0.045em] text-white sm:mt-4 sm:text-[36px] sm:leading-[1.08]">
                 At scale, nobody should have to guess where the money went.
               </h2>
             </div>
