@@ -2300,3 +2300,11 @@ html, body, #root {
   color: var(--landing-heading) !important;
   -webkit-text-fill-color: var(--landing-heading) !important;
 }
+
+/* Final contrast correction for dark commercial surfaces. */
+.landing-page > main > section[aria-labelledby="founder-note-title"] h2#founder-note-title,
+.landing-page > main > section[aria-labelledby="enterprise-reviews-title"] h2#enterprise-reviews-title,
+.landing-page > main > section.recovery-routing-section .routing-card-item-heading {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
