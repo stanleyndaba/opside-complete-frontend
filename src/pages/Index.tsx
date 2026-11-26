@@ -685,7 +685,7 @@ function BuiltForSection() {
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">
             Margin is designed for established Amazon businesses where recurring financial exceptions, unexplained settlement differences and fragmented ownership make periodic checks insufficient.
           </p>
-          <div className="mt-6 flex max-w-[920px] flex-wrap gap-x-5 gap-y-2 border-y border-[#D8E3E8] py-3 text-[11px] font-semibold tracking-tight text-[#66737F]">
+          <div className="mt-6 hidden max-w-[920px] flex-wrap gap-x-5 gap-y-2 border-y border-[#D8E3E8] py-3 text-[11px] font-semibold tracking-tight text-[#66737F] sm:flex">
             {operatingDimensions.map((dimension) => <span key={dimension} className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#245BFF]" />{dimension}</span>)}
           </div>
         </motion.div>
