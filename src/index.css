@@ -1372,6 +1372,18 @@ html, body, #root {
   -webkit-text-fill-color: #312E81 !important;
 }
 
+/* Text follows the surface: image, indigo, orange, blue-gradient and green surfaces stay legible. */
+.landing-page .built-for-marquee-card p,
+.landing-page > main > section[aria-labelledby="founder-note-title"] .founder-note-content p,
+.landing-page > main > section[aria-labelledby="founder-note-title"] .founder-note-content .landing-section-eyebrow,
+.landing-page > main > section[aria-labelledby="enterprise-reviews-title"] p,
+.landing-page > main > section.recovery-routing-section .routing-card-subtitle,
+.landing-page > main > section[aria-labelledby="consumer-recovery-title"] .consumer-recovery-card p,
+.landing-page > main > section[aria-label="Financial control handoff"] .closing-review-card p {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+
 
 /* Auto Submit is intentionally a light control surface; override positional theming. */
 .landing-google-sans > main > section.auto-submit-section {

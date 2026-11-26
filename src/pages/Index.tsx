@@ -667,8 +667,8 @@ function BuiltForSection() {
         <div className="inline-flex rounded-[3px] bg-white/75 px-3 py-1.5 text-[11px] font-semibold text-[#273036] backdrop-blur-sm">
           {audience.label}
         </div>
-        <p className="mt-3 max-w-[31rem] text-[14px] font-medium leading-5 text-white/95">{audience.lead}</p>
-        <p className="mt-2 max-w-[34rem] text-[12px] leading-[1.45] text-white/75">{audience.description}</p>
+        <p className="mt-3 max-w-[31rem] text-[14px] font-medium leading-5 !text-white">{audience.lead}</p>
+        <p className="mt-2 max-w-[34rem] text-[12px] leading-[1.45] !text-white">{audience.description}</p>
         <Link to={audience.href} className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-[#FF7A5C] no-underline transition-colors hover:text-[#FFB09B]">
           Learn More <ChevronRight className="h-3.5 w-3.5" />
         </Link>
@@ -2072,19 +2072,19 @@ function FounderNoteSection() {
           style={{ backgroundImage: "url('/founder-note-indigo-strips-a.png')" }}
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_22%_48%,rgba(13,8,78,0.24),transparent_54%),radial-gradient(ellipse_at_76%_52%,rgba(13,8,78,0.12),transparent_62%)]" aria-hidden="true" />
-          <div className="relative grid gap-6 drop-shadow-[0_2px_10px_rgba(13,8,78,0.34)] sm:gap-8 md:grid-cols-[minmax(180px,0.38fr)_minmax(0,1fr)] md:gap-14">
+          <div className="founder-note-content relative grid gap-6 drop-shadow-[0_2px_10px_rgba(13,8,78,0.34)] sm:gap-8 md:grid-cols-[minmax(180px,0.38fr)_minmax(0,1fr)] md:gap-14">
             <div>
-              <LandingEyebrow className="!text-white/75">Margin’s operating thesis</LandingEyebrow>
+              <LandingEyebrow className="!text-white">Margin’s operating thesis</LandingEyebrow>
               <h2 id="founder-note-title" className="landing-human-voice mt-3 max-w-[260px] font-lora text-[30px] font-normal leading-[1.02] tracking-[-0.045em] text-white sm:mt-4 sm:text-[36px] sm:leading-[1.08]">
                 At scale, uncertainty becomes a financial liability.
               </h2>
             </div>
-            <div className="max-w-[720px] text-[15px] leading-6 text-white/88 sm:text-[16px] sm:leading-8">
+            <div className="max-w-[720px] text-[15px] leading-6 !text-white sm:text-[16px] sm:leading-8">
               <p>At scale, the financial story does not disappear—it fragments across transactions, inventory movements, settlements, adjustments and case records. Margin follows those fragments back to the underlying event, separates what the evidence establishes from what it cannot support, and carries justified work through to its recorded financial outcome.</p>
               <p className="mt-4 sm:mt-5">The point is not to produce another report. It is to give Finance an answer it can examine, defend and act on without rebuilding the investigation from the beginning.</p>
               <p className="mt-4 font-lora text-[21px] leading-6 tracking-[-0.025em] text-white sm:mt-5 sm:text-[24px] sm:leading-8">No unsupported conclusion. No pressure to pursue what the records do not support. No financial outcome treated as settled until the record says it is.</p>
               <button type="button" className={`${landingSecondaryCtaClass} mt-6`} aria-label="Speak with the founder">Speak with the founder <ChevronRight className="h-4 w-4" /></button>
-              <p className="mt-6 border-t border-white/30 pt-3 text-[12px] font-semibold tracking-tight text-white/75 sm:mt-7 sm:pt-4">— Founder &amp; CEO<br /><span className="mt-1 inline-flex items-center gap-1.5 !text-white"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain brightness-0 invert sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight !text-white sm:text-lg">Margin</span></span></p>
+              <p className="mt-6 border-t border-white/30 pt-3 text-[12px] font-semibold tracking-tight !text-white sm:mt-7 sm:pt-4">— Founder &amp; CEO<br /><span className="mt-1 inline-flex items-center gap-1.5 !text-white"><img src="/logoimagetwo.png" alt="Margin" className="h-4 w-auto object-contain brightness-0 invert sm:h-5" /><span className="brand-wordmark font-merriweather text-base tracking-tight !text-white sm:text-lg">Margin</span></span></p>
             </div>
           </div>
         </motion.div>
@@ -2160,16 +2160,16 @@ function ConsumerRecoverySection({ onCta }: { onCta: () => void }) {
     <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-10 md:py-12" aria-labelledby="consumer-recovery-title">
       <div className={containerClass}>
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:gap-14">
-          <motion.div {...revealProps} role="link" tabIndex={0} onClick={onCta} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onCta(); }} className="group relative flex min-h-[360px] cursor-pointer items-center justify-center overflow-hidden rounded-[4px] p-8 shadow-[0_24px_60px_rgba(72,103,122,0.14)] outline-none transition-transform duration-300 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-[var(--margin-blue)] sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 18% 18%, rgba(184, 247, 250, 0.72) 0%, transparent 42%), radial-gradient(ellipse at 82% 82%, rgba(82, 64, 244, 0.8) 0%, transparent 52%), linear-gradient(135deg, #8DE8F1 0%, #78BDF2 42%, #5A48F5 100%)' }}>
+          <motion.div {...revealProps} role="link" tabIndex={0} onClick={onCta} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') onCta(); }} className="consumer-recovery-card group relative flex min-h-[360px] cursor-pointer items-center justify-center overflow-hidden rounded-[4px] p-8 shadow-[0_24px_60px_rgba(72,103,122,0.14)] outline-none transition-transform duration-300 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-[var(--margin-blue)] sm:min-h-[420px] sm:p-10" style={{ background: 'radial-gradient(ellipse at 18% 18%, rgba(184, 247, 250, 0.72) 0%, transparent 42%), radial-gradient(ellipse at 82% 82%, rgba(82, 64, 244, 0.8) 0%, transparent 52%), linear-gradient(135deg, #8DE8F1 0%, #78BDF2 42%, #5A48F5 100%)' }}>
             <div className="absolute inset-0 bg-white/5" />
               {/* Noise texture overlay */}
               <div className="absolute inset-0 opacity-[0.25] mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.6%22/%3E%3C/svg%3E")', backgroundSize: '120px 120px' }} />
             <div className="relative z-10 flex flex-col items-center text-center text-white">
               <img src="/logoimagetwo.png" alt="Margin" className="h-16 w-auto object-contain brightness-0 invert sm:h-20" />
-              <p className="mt-4 font-lora text-[24px] leading-tight tracking-[-0.04em] sm:text-[30px]">Consumer Financial Resolution</p>
+              <p className="mt-4 font-lora text-[24px] leading-tight tracking-[-0.04em] !text-white sm:text-[30px]">Consumer Financial Resolution</p>
             </div>
-            <p className="absolute bottom-6 left-6 right-6 z-10 mx-auto max-w-[420px] text-center text-[11px] leading-5 text-white/75 sm:bottom-8 sm:text-[12px]">For the initial Early Access program, Margin focuses on high-value Amazon consumer claims where the potential recovery justifies a managed investigation. Each claim is assessed against the available evidence and applicable recovery route before action is taken.</p>
-            <span className="absolute bottom-3 right-5 z-10 text-[11px] font-semibold text-white/90 transition-colors group-hover:text-white sm:bottom-5 sm:right-7">Read more <ArrowRight className="ml-1 inline h-3 w-3" /></span>
+            <p className="absolute bottom-6 left-6 right-6 z-10 mx-auto max-w-[420px] text-center text-[11px] leading-5 !text-white sm:bottom-8 sm:text-[12px]">For the initial Early Access program, Margin focuses on high-value Amazon consumer claims where the potential recovery justifies a managed investigation. Each claim is assessed against the available evidence and applicable recovery route before action is taken.</p>
+            <span className="absolute bottom-3 right-5 z-10 text-[13px] font-semibold text-white underline decoration-white/70 underline-offset-4 transition-colors group-hover:text-white sm:bottom-5 sm:right-7 sm:text-[14px]">Read more <ArrowRight className="ml-1 inline h-3.5 w-3.5" /></span>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="max-w-[620px]">
             <h2 id="consumer-recovery-title" className="font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}>
@@ -2326,9 +2326,9 @@ export default function Index() {
                 <p className="mt-5 max-w-[680px] text-[15px] leading-7 text-[var(--margin-text-secondary)] sm:text-[17px] sm:leading-8">Use the records your business already has. Margin establishes what happened, what the evidence supports and what remains unresolved. There is no pressure to pursue unsupported work; you decide whether Margin should take responsibility for a defined scope.</p>
               </motion.div>
               <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
-                <motion.article {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="group relative flex min-h-[680px] flex-col overflow-hidden rounded-[18px] bg-[#064C38] px-5 pb-5 pt-7 text-white sm:min-h-[760px] sm:px-7 sm:pb-7 sm:pt-9">
+                <motion.article {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="closing-review-card group relative flex min-h-[680px] flex-col overflow-hidden rounded-[18px] bg-[#064C38] px-5 pb-5 pt-7 text-white sm:min-h-[760px] sm:px-7 sm:pb-7 sm:pt-9">
                   <h3 className="max-w-[430px] text-[29px] font-google-sans font-normal leading-[1.04] tracking-[-0.045em] text-white sm:text-[36px]">Find out what your Amazon financial records actually support.</h3>
-                  <p className="mt-6 max-w-[470px] text-[15px] leading-7 text-white/78 sm:text-[16px] sm:leading-7">Start with the evidence. Establish the financial position, distinguish supported exposure from accounted-for activity and identify what remains unresolved—before committing to paid work.</p>
+                  <p className="mt-6 max-w-[470px] text-[15px] leading-7 !text-white sm:text-[16px] sm:leading-7">Start with the evidence. Establish the financial position, distinguish supported exposure from accounted-for activity and identify what remains unresolved—before committing to paid work.</p>
                   <div className="relative mt-8 flex min-h-[270px] flex-1 items-center justify-center overflow-hidden rounded-[12px] bg-white p-3 sm:mt-10 sm:min-h-[330px] sm:p-5"><img src="/journey-step-review.png" alt="Margin follows the evidence through a financial review" className="h-full w-full object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]" /></div>
                   <div className="flex justify-center pt-6 sm:pt-7"><Button onClick={() => { trackEarlyAccessCtaClicked("homepage_closing_cta_audit"); navigate("/audit-start"); }} className="landing-pressable inline-flex h-12 w-fit items-center gap-2 rounded-[3px] bg-[#F05A3C] px-5 text-[14px] font-medium text-white shadow-none transition-transform hover:-translate-y-0.5 hover:bg-[#D9472D] sm:px-6">Start the Initial Financial Position Review <ChevronRight className="h-4 w-4" /></Button></div>
                 </motion.article>
