@@ -77,6 +77,10 @@
       "title": "Sandbox Demo"
     },
     {
+      "path": "/demo-hero",
+      "title": "Demo Hero"
+    },
+    {
       "path": "/try-demo",
       "title": "Try Demo | Margin"
     },

@@ -22,6 +22,7 @@ import Index from "./pages/Index";
 import DuplicatePipelinePreviewPage from "./pages/DuplicatePipelinePreview";
 import Routine from "./pages/Routine";
 import SandboxDemo from "./pages/SandboxDemo";
+import DemoHero from "./pages/DemoHero";
 import TryDemo from "./pages/TryDemo";
 import TryDemoTwo from "./pages/TryDemoTwo";
 import TryDemoThree from "./pages/TryDemoThree";
@@ -369,6 +370,7 @@ const App = () => (
                         <Route path='/duplicate-pipeline-preview' element={<DuplicatePipelinePreviewPage />} />
                         <Route path='/routine' element={<Routine />} />
                         <Route path='/sandbox-demo' element={<SandboxDemo />} />
+                        <Route path='/demo-hero' element={<DemoHero />} />
                         <Route path='/try-demo' element={<TryDemo />} />
                         <Route path='/try-demo-two' element={<TryDemoTwo />} />
                         <Route path='/try-demo-three' element={<TryDemoThree />} />
