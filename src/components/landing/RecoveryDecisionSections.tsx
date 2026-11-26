@@ -19,7 +19,7 @@ const pathOptions = [
     copy: "",
     itemHeading: "Best suited to",
     items: ["A defined financial exposure that requires investigation, authorised action and verified resolution."],
-    cta: "Discuss a Defined Recovery",
+    cta: "Review the scope",
     ctaLocation: "homepage_recover_once",
   },
   {
@@ -29,7 +29,7 @@ const pathOptions = [
     copy: "",
     itemHeading: "Best suited to",
     items: ["A repeatable process for financial investigation, control and resolution."],
-    cta: "Scope a Control Pilot",
+    cta: "Review the scope",
     ctaLocation: "homepage_control_pilot",
   },
   {
@@ -39,7 +39,7 @@ const pathOptions = [
     copy: "",
     itemHeading: "Best suited to",
     items: ["Continuing investigation, authorised work and verified financial outcomes."],
-    cta: "Discuss Ongoing Control",
+    cta: "Review the scope",
     ctaLocation: "homepage_recovery_workspace",
   },
 ];
@@ -105,7 +105,7 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
           <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Make every resolved discrepancy easier to account for next time.</h2>
           <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">Margin preserves established evidence, prior decisions, linked financial events and verified outcomes so later investigations can build on what is already known. It can compare new activity against previously examined events, identify recurring patterns and distinguish a genuinely new discrepancy from a timing difference, reversal or previously resolved item.</p>
           <p className="mt-4 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Each examination adds to the record of what has been established, reducing the need to reconstruct the same financial history repeatedly.</p>
-          <Link to="/sales" className="landing-action-cta landing-pressable mt-6 inline-flex h-11 items-center rounded-[3px] bg-[#F05A3C] px-6 text-[13px] font-bold text-white shadow-[0_18px_48px_rgba(240,90,60,0.24)] transition-colors hover:bg-[#D9472D]">Discuss a Pilot <ChevronRight className="h-4 w-4" /></Link>
+          <Link to="/sales" className="landing-action-cta landing-pressable mt-6 inline-flex h-11 items-center rounded-[3px] bg-[#F05A3C] px-6 text-[13px] font-bold text-white shadow-[0_18px_48px_rgba(240,90,60,0.24)] transition-colors hover:bg-[#D9472D]">Discuss a Defined Responsibility Scope <ChevronRight className="h-4 w-4" /></Link>
         </motion.div>
       </div>
     </div>
@@ -136,7 +136,7 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
       <motion.div {...revealProps} className="max-w-[850px]">
         <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#245BFF]">A defined operating relationship</p>
         <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Know exactly what Margin will own before you commit.</h2>
-        <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8"><LandingResponsiveCopy desktop={'During the defined 30–45 day engagement, Margin examines the agreed records, establishes the initial financial position, configures the recovery and control workflow, and assigns ownership to outstanding exceptions. The scope, required records, permissions, responsibilities and dependencies are clear before paid work begins.'} mobile={'Across the 30–45 day engagement, Margin examines the agreed records, establishes the initial position and sets up the investigation, approval and ownership workflows. Scope, permissions and dependencies are clear before paid work begins.'} /></p>
+        <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8"><LandingResponsiveCopy desktop={'During the defined 30–45 day engagement, Margin examines the agreed records, establishes the initial financial position, configures the recovery and control workflow, and assigns ownership to outstanding exceptions. The scope, required records, permissions, responsibilities, dependencies and delivery capacity are clear before paid work begins.'} mobile={'Across the 30–45 day engagement, Margin examines the agreed records, establishes the initial position and sets up the investigation, approval and ownership workflows. Scope, permissions, dependencies and delivery capacity are clear before paid work begins.'} /></p>
       </motion.div>
 
       <div className="mt-10 overflow-x-auto pb-4 [scrollbar-width:thin] md:mt-14">
@@ -159,7 +159,7 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
       </motion.div>
 
       <motion.div {...revealProps} className="mt-8 md:mt-10">
-        <Button onClick={() => onAuditCta("enterprise_onboarding_timeline")} className="landing-action-cta landing-pressable h-11 rounded-[3px] bg-[#F05A3C] px-6 text-[13px] font-bold text-white shadow-[0_18px_48px_rgba(240,90,60,0.24)] transition-colors hover:bg-[#D9472D]">Discuss a Pilot <ChevronRight className="h-4 w-4" /></Button>
+        <Button onClick={() => onAuditCta("enterprise_onboarding_timeline")} className="landing-action-cta landing-pressable h-11 rounded-[3px] bg-[#F05A3C] px-6 text-[13px] font-bold text-white shadow-[0_18px_48px_rgba(240,90,60,0.24)] transition-colors hover:bg-[#D9472D]">Discuss a Defined Responsibility Scope <ChevronRight className="h-4 w-4" /></Button>
       </motion.div>
     </div>
   </section>
@@ -172,9 +172,9 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
     <section className="recovery-routing-section relative bg-white py-10 sm:py-10 md:py-14" aria-labelledby="recovery-routing-title">
       <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
         <motion.div {...revealProps} className="routing-copy max-w-[760px]">
-          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#245BFF]">Choose the justified work</p>
+          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#245BFF]">Possible next steps after the review</p>
           <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the financial problem. Choose only the work it justifies.</h2>
-          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Initial Financial Position Review establishes the financial position supported by the records available, identifies material unresolved differences and determines whether further investigation or recovery is justified. First establish the position. Then decide what work is justified.</p>
+          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Initial Financial Position Review establishes the financial position supported by the records available, identifies material unresolved differences and determines whether further investigation or recovery is justified. First establish the position. Then decide whether one of these defined scopes—or no further action—is justified.</p>
         </motion.div>
         <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
           {pathOptions.map((option, index) => {
