@@ -78,14 +78,34 @@ const landingSecondaryCtaClass = "landing-pressable flex w-fit h-11 items-center
 
 const faqs = [
   {
-    question: "Does Margin require Amazon account access for the initial review?",
+    question: "What is the Initial Financial Position Review?",
+    answer:
+      "It is a records-based review that establishes what the available evidence supports, what remains unresolved and whether further work is justified. It is read-only to begin. No paid recovery or ongoing engagement is required, and you decide what happens next after seeing the position Margin can establish.",
+  },
+  {
+    question: "What does my team provide, and what does Margin carry?",
+    answer:
+      "Your team provides the agreed records, access and approvals, and retains decision authority over consequential actions. Margin carries the investigation, evidence preparation, action tracking and outcome verification within the agreed scope, so your team does not have to coordinate every step or rebuild the investigation.",
+  },
+  {
+    question: "How will my team know what is happening without managing another system?",
+    answer:
+      "The engagement sets an agreed communication cadence and reporting view before paid work begins. Margin communicates material findings, evidence gaps, required approvals, outstanding dependencies and outcome changes at that cadence. Your team provides the inputs and decisions the scope requires; Margin owns the agreed operating work between those points.",
+  },
+  {
+    question: "How does Margin decide whether it can accept the work?",
+    answer:
+      "Margin does not accept an undefined financial problem and improvise ownership. Before paid work begins, the parties define the records, accounts, marketplaces, exception complexity, operating cadence, responsibilities, dependencies, escalation path and delivery capacity required for the agreed scope.",
+  },
+  {
+    question: "Does Margin require Amazon account access for the Initial Financial Position Review?",
     answer:
       "No Amazon account authorisation is inherently required to begin a records-based review. Margin can examine the relevant records you provide and assess what they establish about your Amazon financial position. The scope depends on the records available. If additional data or access is needed, Margin will explain what is required and why before proceeding.",
   },
   {
     question: "What can Margin read, change or submit?",
     answer:
-      "The initial review is based on the records and access agreed for the engagement. Additional account permissions, integrations or operational actions are scoped separately. The access granted determines what Margin can technically access or do.",
+      "The Initial Financial Position Review is based on the records and access agreed for the engagement. Additional account permissions, integrations or operational actions are scoped separately. The access granted determines what Margin can technically access or do.",
   },
   {
     question: "Can Margin submit a recovery without authorisation?",
@@ -835,6 +855,20 @@ function FinancialWorkProofSection() {
             <p className="mx-auto mt-3 max-w-[760px] text-[14px] font-semibold leading-6 text-[#182026] md:text-[15px] md:leading-7">The responsibility trail stays inspectable: what was unclear, what Margin investigated, what was established, what action was justified, what outcome was verified and what remains unresolved.</p>
         </motion.div>
 
+        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="mt-8 grid gap-3 border-y border-[#D8E3E8] py-5 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ["What was unclear", "The available records did not explain the financial position."],
+            ["What Margin investigated", "Transactions, inventory movements, adjustments and settlements were examined together."],
+            ["What was established", "Supported activity, evidence gaps and unresolved exposure were separated."],
+            ["What happened next", "Justified action was followed through to a verified outcome, with any remainder kept visible."],
+          ].map(([title, body]) => (
+            <div key={title} className="min-w-0 border-l border-[#D8E3E8] pl-3 first:border-l-0 first:pl-0 sm:first:border-l sm:first:pl-3">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#245BFF]">{title}</p>
+              <p className="mt-2 text-[12px] leading-5 text-[#5F6D77]">{body}</p>
+            </div>
+          ))}
+        </motion.div>
+
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative mt-10 overflow-hidden py-7 sm:mt-12 sm:py-9">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-[#F7F8F7] to-transparent sm:w-20" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-[#F7F8F7] to-transparent sm:w-20" />
@@ -1277,6 +1311,7 @@ function MarginStandardSection() {
               <LandingResponsiveCopy desktop={'Margin tests a potential recovery against the original event, expected financial treatment, observed activity, source lineage, materiality and applicable recovery rules. It checks for alternative explanations, duplicate exposure, timing differences and insufficient evidence before recommending whether the position should proceed, remain on hold, be accounted for or be closed.'} mobile={'Margin tests the original event, expected treatment and available evidence before recommending recovery. It separates supported exposure from missing proof and amounts already accounted for.'} />
             </p>
             <p className="mt-4 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8"><LandingResponsiveCopy desktop={'The result is a controlled decision — not a claim generated simply because a discrepancy was detected. An accepted claim, a rejected claim and an unresolved discrepancy remain different outcomes.'} mobile={'Your team retains approval authority. Margin provides the investigation and evidence behind the decision. Accepted, rejected and unresolved outcomes remain distinct.'} /></p>
+            <p className="mt-5 max-w-[660px] border-l-2 border-[#245BFF] pl-4 text-[13px] font-semibold leading-6 text-[#182026] md:text-[14px] md:leading-7">The Margin standard is stable: Detected → Investigated → Validated → Actionable → Acted upon → Resolved → Reconciled. A matter does not become resolved merely because an action was submitted.</p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 border-t border-[var(--margin-border)] lg:order-1">
@@ -1646,7 +1681,7 @@ function FooterNestedRecoveryVisual() {
               <Link to="/pricing" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#245BFF] no-underline transition-colors hover:text-[#1747D1]">How pricing works <ChevronRight className="h-3.5 w-3.5" /></Link>
             </div>
             <div>
-              <p className="text-[13px] font-semibold leading-5 text-[#245BFF]">Financial Review</p>
+              <p className="text-[13px] font-semibold leading-5 text-[#245BFF]">Initial Financial Position Review</p>
               <p className="mt-1 text-[13px] font-semibold leading-5 text-[#182026]">Find out what your records can establish.</p>
               <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Submit the Amazon records you have. Margin establishes what can be verified, identifies evidence gaps and shows whether further work is justified.</p>
               <Link to="/audit-start" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#245BFF] no-underline transition-colors hover:text-[#1747D1]">Start the Initial Financial Position Review <ChevronRight className="h-3.5 w-3.5" /></Link>
