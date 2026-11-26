@@ -619,15 +619,13 @@ function BuildObjectionSection() {
   );
 }
 
-function DuplicatePipelineDemoSection() {
+function FinancialExceptionDemoSection() {
   return (
-    <section aria-label="Recovery operations demo" className="relative overflow-hidden bg-white pb-12 pt-10 sm:pb-16 sm:pt-12 md:pb-20 md:pt-16">
+    <section id="financial-exception-demo" aria-label="Financial exception demo" className="relative overflow-hidden bg-white pb-12 pt-10 sm:pb-16 sm:pt-12 md:pb-20 md:pt-16">
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-left sm:mb-10 sm:text-center">
-          <LandingEyebrow>The connected financial chain</LandingEyebrow>
-            <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>See what actually happened across your Amazon financial records.</h2>
-          <p className="mt-5 max-w-[780px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">A recorded transaction is not the same as a correct financial outcome. Margin examines the connected operational and financial history to establish what happened, what explains the result and what still requires attention.</p>
-          <button type="button" className={`${landingSupportingCtaClass} mt-5`} aria-label="See How Margin Works">See How Margin Works <ChevronRight className="h-4 w-4" /></button>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>The Connected Financial Exception</h2>
+          <p className="mt-4 max-w-[620px] text-[13px] leading-6 text-[#4D5B66] sm:text-[14px] sm:leading-7 md:text-[15px]">From unexplained Amazon financial activity to verified financial resolution.</p>
         </motion.div>
         <motion.div
           {...revealProps}
@@ -2207,6 +2205,7 @@ export default function Index() {
       <main>
         {/* Phase 1 — Recognize the buyer's operating reality and desired financial state */}
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/review-consent"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <FinancialExceptionDemoSection />
         <BuyerRealitySection />
         <BuiltForSection />
         <FinancialPositionOutputSection />
@@ -2214,7 +2213,6 @@ export default function Index() {
         <ReconstructionGapSection />
 
         {/* Phase 2 — Show the connected trail, existing system gap, and defensible finding */}
-        <DuplicatePipelineDemoSection />
         <AccountingEvidenceSection />
         <IngestedDocumentsOutcomeSection />
 

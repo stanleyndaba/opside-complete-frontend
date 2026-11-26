@@ -1609,7 +1609,7 @@ html, body, #root {
     padding-top: 7.5rem !important;
   }
 
-  .landing-page > main > section[aria-label="Recovery operations demo"],
+  .landing-page > main > section#financial-exception-demo,
   .landing-page > main > section.margin-standard-deliverable-section,
   .landing-page > main > section.auto-submit-section,
   .landing-page > main > section[aria-label="Connected operational view visual"] {
@@ -1720,7 +1720,7 @@ html, body, #root {
     max-width: 100%;
   }
 
-  .landing-page > main > section[aria-label="Recovery operations demo"] iframe {
+  .landing-page > main > section#financial-exception-demo iframe {
     height: 430px !important;
   }
 
@@ -2141,7 +2141,7 @@ html, body, #root {
   background-color: var(--landing-recognition-surface) !important;
 }
 .landing-page > main > section[aria-labelledby="position-output-title"],
-.landing-page > main > section[aria-label="Recovery operations demo"],
+.landing-page > main > section#financial-exception-demo,
 .landing-page > main > section[aria-labelledby="reconstruction-gap-title"],
 .landing-page > main > section[aria-labelledby="financial-work-proof-title"],
 .landing-page > main > section[aria-labelledby="amazon-thread-title"],
