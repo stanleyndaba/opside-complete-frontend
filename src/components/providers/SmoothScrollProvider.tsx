@@ -1,5 +1,5 @@
 import { ReactLenis } from '@studio-freight/react-lenis';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface SmoothScrollProviderProps {
@@ -14,9 +14,27 @@ interface SmoothScrollProviderProps {
 export const SmoothScrollProvider = ({ children }: SmoothScrollProviderProps) => {
     const location = useLocation();
     const isPlatformPage = location.pathname.startsWith('/app') || location.pathname === '/audit';
+    const [supportsSmoothScroll, setSupportsSmoothScroll] = useState(false);
+
+    useEffect(() => {
+        const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+        const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const updateScrollMode = () => {
+            const saveData = 'connection' in navigator && Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+            setSupportsSmoothScroll(pointerQuery.matches && !reducedMotionQuery.matches && !saveData);
+        };
+
+        updateScrollMode();
+        pointerQuery.addEventListener?.('change', updateScrollMode);
+        reducedMotionQuery.addEventListener?.('change', updateScrollMode);
+        return () => {
+            pointerQuery.removeEventListener?.('change', updateScrollMode);
+            reducedMotionQuery.removeEventListener?.('change', updateScrollMode);
+        };
+    }, []);
 
     // Return standard scroll for platform pages to ensure maximum utility and compatibility
-    if (isPlatformPage) {
+    if (isPlatformPage || !supportsSmoothScroll) {
         return <>{children}</>;
     }
 

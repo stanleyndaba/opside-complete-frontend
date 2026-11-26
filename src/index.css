@@ -41,6 +41,11 @@
 }
 
 @media (hover: none) and (pointer: coarse) {
+  .landing-page > main > section:not(:first-child) {
+    content-visibility: auto;
+    contain-intrinsic-size: 720px;
+  }
+
   .hero-section {
     flex-direction: column;
   }
