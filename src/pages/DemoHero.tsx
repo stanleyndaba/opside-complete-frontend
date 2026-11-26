@@ -1,150 +1,194 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Check, CircleDot, FileCheck2, Search, ShieldCheck } from "lucide-react";
-import HeroInboxVisual from "@/components/landing/HeroInboxVisual";
+import { BarChart3, FileText, Table2 } from "lucide-react";
 
-const scenes = [
-  {
-    label: "01 · Signal",
-    title: "The inbox is full of requests.",
-    body: "Amazon correspondence, inventory questions and settlement differences arrive as separate threads.",
-    icon: Search,
-    tone: "border-[#D7E3FF] bg-[#F5F8FF] text-[#245BFF]",
-  },
-  {
-    label: "02 · Investigation",
-    title: "The records become one case.",
-    body: "Margin connects the event, evidence, response and financial amount without losing the original trail.",
-    icon: FileCheck2,
-    tone: "border-[#D7E3E8] bg-[#F7FAFA] text-[#187A70]",
-  },
-  {
-    label: "03 · Position",
-    title: "The financial position is clear.",
-    body: "What is supported, what was resolved and what remains open are visible to the people responsible.",
-    icon: ShieldCheck,
-    tone: "border-[#F6D5CB] bg-[#FFF8F5] text-[#D9472D]",
-  },
+const stages = [
+  { id: "person", duration: 3200 },
+  { id: "accounting", duration: 2700 },
+  { id: "reports", duration: 2700 },
+  { id: "provider", duration: 2500 },
+  { id: "team", duration: 2900 },
+  { id: "orbit", duration: 4200 },
+  { id: "question", duration: 5000 },
+  { id: "models", duration: 4100 },
+  { id: "margin", duration: 4200 },
 ] as const;
 
-function SceneCard({ scene, active }: { scene: (typeof scenes)[number]; active: boolean }) {
-  const Icon = scene.icon;
+type StageId = (typeof stages)[number]["id"];
+
+const accounting = [
+  { name: "Xero", src: "/xero.png" },
+  { name: "QuickBooks", src: "/quickbooks.png" },
+  { name: "NetSuite", src: null },
+];
+
+const team = [
+  { name: "Finance", src: "/recovery-finance-avatar.png" },
+  { name: "Operations", src: "/recovery-operations-avatar.png" },
+  { name: "Owner", src: "/recovery-owner-avatar.png" },
+];
+
+const orbitItems = [
+  { label: "Accounting", x: "10%", y: "28%", tone: "border-[#B9D0FF] bg-[#F3F7FF]" },
+  { label: "Reports", x: "74%", y: "24%", tone: "border-[#D6C5FF] bg-[#FAF7FF]" },
+  { label: "Provider", x: "82%", y: "64%", tone: "border-[#F4C9BC] bg-[#FFF8F5]" },
+  { label: "Finance team", x: "13%", y: "70%", tone: "border-[#BFE5D6] bg-[#F4FBF8]" },
+];
+
+function phaseIndex(stage: StageId) {
+  return stages.findIndex((item) => item.id === stage);
+}
+
+function Person({ visible, orbiting }: { visible: boolean; orbiting: boolean }) {
   return (
-    <motion.article
-      animate={{ opacity: active ? 1 : 0.5, y: active ? 0 : 4, scale: active ? 1 : 0.985 }}
-      transition={{ duration: 0.35 }}
-      className={`rounded-[10px] border p-5 transition-shadow ${scene.tone} ${active ? "shadow-[0_16px_34px_rgba(24,32,38,0.10)]" : "shadow-none"}`}
+    <motion.div
+      initial={false}
+      animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : -180, scale: visible ? 1 : 0.92 }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      className={`relative flex flex-col items-center ${orbiting ? "z-20" : "z-10"}`}
     >
-      <div className="flex items-center justify-between gap-3">
-        <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#63717A]">{scene.label}</span>
-        <Icon className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
-      </div>
-      <h2 className="mt-5 max-w-[260px] font-sora text-[20px] font-semibold leading-[1.08] tracking-[-0.04em] text-[#182026]">{scene.title}</h2>
-      <p className="mt-3 text-[13px] leading-6 text-[#52616A]">{scene.body}</p>
-      <div className="mt-5 flex items-center gap-2 text-[11px] font-semibold text-[#52616A]">
-        <span className="h-1.5 w-1.5 rounded-full bg-current" />
-        <span>{active ? "In view" : "Next in the chain"}</span>
-      </div>
-    </motion.article>
+      <motion.div animate={orbiting ? { y: [0, -5, 0] } : { y: 0 }} transition={{ duration: 3, repeat: orbiting ? Infinity : 0, ease: "easeInOut" }} className="relative">
+        <div className="h-[106px] w-[106px] overflow-hidden rounded-full border-[5px] border-white bg-[#E8EEF2] shadow-[0_18px_42px_rgba(24,32,38,0.18)] sm:h-[132px] sm:w-[132px]">
+          <img src="/recovery-finance-avatar.png" alt="Finance leader" className="h-full w-full object-cover" />
+        </div>
+        <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#182026] px-3 py-1.5 text-[10px] font-semibold text-white shadow-[0_8px_20px_rgba(24,32,38,0.16)]">Finance leader</span>
+      </motion.div>
+      <p className="mt-7 text-center font-sora text-[16px] font-semibold tracking-[-0.035em] text-[#182026] sm:text-[19px]">$5M+ Amazon Business</p>
+    </motion.div>
   );
 }
 
-function ResolutionRecord({ active }: { active: boolean }) {
+function AccountingCluster({ visible }: { visible: boolean }) {
   return (
-    <motion.div
-      animate={{ opacity: active ? 1 : 0.62, y: active ? 0 : 8 }}
-      transition={{ duration: 0.45 }}
-      className="relative overflow-hidden rounded-[12px] border border-[#C9D9E1] bg-white shadow-[0_20px_48px_rgba(24,32,38,0.10)]"
-    >
-      <div className="flex items-center justify-between border-b border-[#E5ECEF] px-5 py-4">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7B8A97]">Margin investigation record</p>
-          <p className="mt-1 text-[14px] font-semibold text-[#182026]">EVT-FBA-2026-0001847</p>
-        </div>
-        <span className="rounded-full bg-[#E8F6F0] px-3 py-1 text-[10px] font-bold text-[#187A70]">Position established</span>
+    <motion.div initial={false} animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : -120 }} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }} className="absolute left-[4%] top-[25%] flex flex-col items-center gap-3 sm:left-[8%] sm:top-[28%]">
+      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#667781]">Has accounting software</p>
+      <div className="flex items-center gap-2 rounded-full border border-[#D8E3E8] bg-white px-3 py-2 shadow-[0_10px_24px_rgba(24,32,38,0.08)] sm:gap-3 sm:px-4 sm:py-3">
+        {accounting.map((item) => <div key={item.name} className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E6ECEF] bg-[#FAFCFC] p-1.5 sm:h-11 sm:w-11 sm:p-2">{item.src ? <img src={item.src} alt={item.name} className="h-full w-full object-contain" /> : <span className="text-[8px] font-bold leading-none text-[#68737A]">NS</span>}</div>)}
       </div>
-      <div className="grid gap-3 p-5 sm:grid-cols-3">
-        {[
-          ["Underlying event", "600-unit inbound variance"],
-          ["Supported exposure", "$38,850"],
-          ["Remaining open", "$12,850"],
-        ].map(([label, value], index) => (
-          <div key={label} className={`rounded-[8px] border p-4 ${index === 2 ? "border-[#F6D5CB] bg-[#FFF8F5]" : "border-[#E2EAED] bg-[#FAFCFC]"}`}>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#7B8A97]">{label}</p>
-            <p className="mt-3 text-[14px] font-semibold leading-5 text-[#182026]">{value}</p>
-          </div>
-        ))}
+    </motion.div>
+  );
+}
+
+function ReportsCluster({ visible }: { visible: boolean }) {
+  return (
+    <motion.div initial={false} animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : 120 }} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }} className="absolute right-[4%] top-[24%] flex flex-col items-center gap-3 sm:right-[8%] sm:top-[28%]">
+      <p className="text-center text-[10px] font-bold uppercase tracking-[0.13em] text-[#667781]">Has settlement reports<br />&amp; seller central data</p>
+      <div className="flex items-center gap-3">
+        <div className="flex h-14 w-14 flex-col items-center justify-center rounded-[10px] border border-[#D6C5FF] bg-[#FAF7FF] text-[#7658B5] shadow-[0_10px_24px_rgba(24,32,38,0.08)]"><FileText className="h-5 w-5" /><span className="mt-1 text-[8px] font-semibold">Settlement</span></div>
+        <div className="flex h-14 w-14 flex-col items-center justify-center rounded-[10px] border border-[#B9D0FF] bg-[#F3F7FF] text-[#245BFF] shadow-[0_10px_24px_rgba(24,32,38,0.08)]"><Table2 className="h-5 w-5" /><span className="mt-1 text-[8px] font-semibold">Seller data</span></div>
       </div>
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[#E5ECEF] px-5 py-4 text-[11px] font-semibold text-[#52616A]">
-        <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#187A70]" /> Evidence linked</span>
-        <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#187A70]" /> Amazon response interpreted</span>
-        <span className="inline-flex items-center gap-1.5"><CircleDot className="h-3.5 w-3.5 text-[#D9472D]" /> Next action owned</span>
+    </motion.div>
+  );
+}
+
+function ProviderCluster({ visible }: { visible: boolean }) {
+  return (
+    <motion.div initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : -100 }} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }} className="absolute left-1/2 top-[7%] flex -translate-x-1/2 flex-col items-center gap-3">
+      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#667781]">Uses a reimbursement provider</p>
+      <div className="flex items-center gap-2 rounded-full border border-[#F4C9BC] bg-[#FFF8F5] px-4 py-2.5 shadow-[0_10px_24px_rgba(24,32,38,0.08)]"><span className="flex h-8 w-8 items-center justify-center rounded-[7px] bg-[#D9472D] text-[11px] font-black text-white">C</span><span className="text-[12px] font-semibold text-[#4B555B]">ClaimDesk</span></div>
+    </motion.div>
+  );
+}
+
+function TeamCluster({ visible }: { visible: boolean }) {
+  return (
+    <motion.div initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 100 }} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }} className="absolute bottom-[6%] left-1/2 flex -translate-x-1/2 flex-col items-center gap-3">
+      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#667781]">Has a finance team</p>
+      <div className="flex -space-x-3 rounded-full border border-[#BFE5D6] bg-[#F4FBF8] px-4 py-2.5 shadow-[0_10px_24px_rgba(24,32,38,0.08)]">
+        {team.map((member) => <img key={member.name} src={member.src} alt={member.name} className="h-10 w-10 rounded-full border-2 border-white object-cover" />)}
       </div>
+    </motion.div>
+  );
+}
+
+function Orbit({ visible }: { visible: boolean }) {
+  return (
+    <motion.div initial={false} animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.8 }} transition={{ duration: 0.9 }} className="pointer-events-none absolute inset-[4%]">
+      <div className="absolute inset-[12%] rounded-full border border-dashed border-[#C8D6DE]" />
+      <div className="absolute inset-[24%] rounded-full border border-[#E1E9ED]" />
+      {orbitItems.map((item, index) => <motion.div key={item.label} animate={visible ? { rotate: [0, index % 2 ? -3 : 3, 0] } : {}} transition={{ duration: 4 + index * 0.35, repeat: visible ? Infinity : 0, ease: "easeInOut" }} style={{ left: item.x, top: item.y }} className={`absolute rounded-full border px-3 py-2 text-[10px] font-semibold text-[#53626A] shadow-[0_8px_20px_rgba(24,32,38,0.07)] ${item.tone}`}>{item.label}</motion.div>)}
+    </motion.div>
+  );
+}
+
+function TypeLine({ text, active }: { text: string; active: boolean }) {
+  const [count, setCount] = useState(active ? text.length : 0);
+  useEffect(() => {
+    if (!active) { setCount(0); return; }
+    setCount(0);
+    const timer = window.setInterval(() => setCount((value) => value >= text.length ? value : value + 1), 42);
+    return () => window.clearInterval(timer);
+  }, [active, text]);
+  return <span>{text.slice(0, count)}{active && count < text.length ? <span className="ml-1 inline-block h-[1em] w-px animate-pulse bg-current align-[-0.08em]" /> : null}</span>;
+}
+
+function ModelQuestion({ visible }: { visible: boolean }) {
+  return (
+    <motion.div initial={false} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 20 }} transition={{ duration: 0.7 }} className="absolute inset-0 flex items-center justify-center px-6 text-center">
+      <p className="max-w-[820px] font-sora text-[30px] font-semibold leading-[1.02] tracking-[-0.055em] text-[#182026] sm:text-[52px] md:text-[66px]"><TypeLine active={visible} text="With everything at hand. Can they establish what happened?" /></p>
+    </motion.div>
+  );
+}
+
+function Models({ visible }: { visible: boolean }) {
+  return (
+    <motion.div initial={false} animate={{ opacity: visible ? 1 : 0 }} transition={{ duration: 0.5 }} className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+      <div className="flex items-center gap-12 sm:gap-24">
+        <motion.div initial={false} animate={{ x: visible ? 0 : -180, opacity: visible ? 1 : 0 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }} className="flex flex-col items-center gap-3"><div className="flex h-16 w-16 items-center justify-center rounded-full border border-[#D8E3E8] bg-white p-4 shadow-[0_12px_28px_rgba(24,32,38,0.10)] sm:h-20 sm:w-20"><img src="/ai-logos/claude.svg" alt="Claude" className="h-full w-full object-contain" /></div><span className="text-[11px] font-semibold text-[#697780]">Claude</span></motion.div>
+        <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9AA7AE]">General purpose models</span>
+        <motion.div initial={false} animate={{ x: visible ? 0 : 180, opacity: visible ? 1 : 0 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }} className="flex flex-col items-center gap-3"><div className="flex h-16 w-16 items-center justify-center rounded-full border border-[#D8E3E8] bg-white p-4 shadow-[0_12px_28px_rgba(24,32,38,0.10)] sm:h-20 sm:w-20"><img src="/ai-logos/chatgpt.svg" alt="GPT" className="h-full w-full object-contain" /></div><span className="text-[11px] font-semibold text-[#697780]">GPT</span></motion.div>
+      </div>
+      <p className="mt-10 max-w-[620px] font-sora text-[28px] font-semibold leading-[1.03] tracking-[-0.05em] text-[#182026] sm:text-[46px]">aren&apos;t sufficient.</p>
     </motion.div>
   );
 }
 
 export default function DemoHero() {
   const reduceMotion = useReducedMotion();
-  const [activeScene, setActiveScene] = useState(0);
+  const [stageIndex, setStageIndex] = useState(0);
+  const stage = stages[stageIndex].id;
+  const index = phaseIndex(stage);
+  const auto = useMemo(() => !reduceMotion, [reduceMotion]);
 
   useEffect(() => {
-    if (reduceMotion) return;
-    const timer = window.setInterval(() => setActiveScene((scene) => (scene + 1) % scenes.length), 3600);
-    return () => window.clearInterval(timer);
-  }, [reduceMotion]);
+    if (!auto) return;
+    const timer = window.setTimeout(() => setStageIndex((current) => (current + 1) % stages.length), stages[stageIndex].duration);
+    return () => window.clearTimeout(timer);
+  }, [auto, stageIndex]);
+
+  const showOrbit = index >= phaseIndex("orbit") && index < phaseIndex("question");
+  const showQuestion = stage === "question";
+  const showModels = stage === "models";
+  const showMargin = stage === "margin";
+  const showPeople = index >= phaseIndex("person") && index < phaseIndex("question");
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#FAFAF7] font-google-sans text-[#182026]">
-      <header className="flex items-center justify-between border-b border-[#E3E9EB] bg-white/90 px-5 py-4 backdrop-blur-sm sm:px-10">
-        <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#182026]">Margin</span>
-        <span className="rounded-full border border-[#D8E3E8] bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#7B8A97]">Demo hero test</span>
-      </header>
+    <main className="min-h-screen overflow-hidden bg-white font-google-sans text-[#182026]">
+      <section className="relative flex min-h-screen items-center justify-center px-4 py-10 sm:px-8">
+        <div className="absolute left-5 top-5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#A0ABB1] sm:left-10 sm:top-8">Margin · Scene 01</div>
+        <div className="absolute right-5 top-5 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#A0ABB1] sm:right-10 sm:top-8">Financial complexity</div>
 
-      <section className="relative border-b border-[#E3E9EB] px-5 pb-14 pt-14 sm:px-10 sm:pb-20 sm:pt-20 lg:px-16 lg:pt-24">
-        <div className="mx-auto grid max-w-[1320px] items-center gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
-          <div className="relative z-10 max-w-[620px]">
-            <p className="border-l-2 border-[#245BFF] pl-3 text-[11px] font-bold uppercase tracking-[0.13em] text-[#52616A]">A short-form product story</p>
-            <h1 className="mt-5 max-w-[600px] font-sora text-[42px] font-semibold leading-[0.98] tracking-[-0.055em] text-[#000000] sm:text-[60px] lg:text-[72px]">From a pile of Amazon requests to a financial position you can stand behind.</h1>
-            <p className="mt-7 max-w-[550px] text-[16px] leading-8 text-[#33454E] sm:text-[18px]">The inbox is where the work starts. Margin connects the correspondence, operational event, evidence and outcome so the business can see what actually happened.</p>
-            <div className="mt-8 flex flex-wrap items-center gap-3 text-[11px] font-semibold text-[#52616A]">
-              <span className="rounded-full bg-[#E7EEFF] px-3 py-2 text-[#245BFF]">Inbox signal</span>
-              <ArrowRight className="h-4 w-4 text-[#8A99A3]" aria-hidden="true" />
-              <span className="rounded-full bg-[#E8F6F0] px-3 py-2 text-[#187A70]">Evidence-linked record</span>
-              <ArrowRight className="h-4 w-4 text-[#8A99A3]" aria-hidden="true" />
-              <span className="rounded-full bg-[#FFF0EB] px-3 py-2 text-[#D9472D]">Verified position</span>
-            </div>
-          </div>
+        <div className="relative h-[650px] w-full max-w-[1240px] sm:h-[760px]">
+          <AnimatePresence mode="wait">
+            {showPeople ? <motion.div key="people" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }} className="absolute inset-0">
+              <Person visible={showPeople} orbiting={showOrbit} />
+              <AccountingCluster visible={index >= phaseIndex("accounting")} />
+              <ReportsCluster visible={index >= phaseIndex("reports")} />
+              <ProviderCluster visible={index >= phaseIndex("provider")} />
+              <TeamCluster visible={index >= phaseIndex("team")} />
+              <Orbit visible={showOrbit} />
+            </motion.div> : null}
+          </AnimatePresence>
 
-          <div className="demo-hero-inbox relative h-[390px] overflow-hidden rounded-[12px] border border-[#D8E3E8] bg-[#EEF3FF] shadow-[0_26px_70px_rgba(37,49,58,0.14)] sm:h-[520px] lg:h-[590px]">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_84%_18%,rgba(36,91,255,0.18),transparent_32%),radial-gradient(circle_at_20%_86%,rgba(240,90,60,0.12),transparent_34%)]" aria-hidden="true" />
-            <div className="demo-hero-inbox-stage absolute left-1/2 top-1/2 h-[629px] w-[1136px] -translate-x-1/2 -translate-y-1/2 scale-[0.42] sm:scale-[0.58] lg:scale-[0.72] xl:scale-[0.88]">
-              <HeroInboxVisual />
-            </div>
-            <div className="absolute inset-x-4 bottom-4 rounded-[8px] border border-white/80 bg-white/90 px-4 py-3 shadow-[0_12px_30px_rgba(24,32,38,0.12)] backdrop-blur-md sm:inset-x-6 sm:bottom-6 sm:px-5 sm:py-4">
-              <div className="flex items-center justify-between gap-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#52616A]"><span>Opening signal</span><span className="text-[#D9472D]">Your help needed</span></div>
-              <p className="mt-2 text-[13px] leading-5 text-[#182026] sm:text-[14px]">Amazon’s message is only the beginning of the investigation.</p>
-            </div>
-          </div>
+          <AnimatePresence>
+            {showQuestion ? <ModelQuestion key="question" visible /> : null}
+            {showModels ? <Models key="models" visible /> : null}
+            {showMargin ? <motion.div key="margin" initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }} className="absolute inset-0 flex items-center justify-center px-6 text-center"><div><div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[22px] bg-[#245BFF] text-white shadow-[0_18px_42px_rgba(36,91,255,0.22)]"><BarChart3 className="h-9 w-9" strokeWidth={1.7} /></div><p className="mt-8 font-sora text-[42px] font-semibold leading-none tracking-[-0.06em] text-[#182026] sm:text-[72px]">Margin fixes that.</p><p className="mt-5 text-[14px] leading-6 text-[#667781] sm:text-[16px]">The connected financial investigation behind the answer.</p></div></motion.div> : null}
+          </AnimatePresence>
         </div>
-      </section>
 
-      <section className="px-5 py-14 sm:px-10 sm:py-20 lg:px-16">
-        <div className="mx-auto max-w-[1180px]">
-          <div className="max-w-[700px]">
-            <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-[#245BFF]">The continuation</p>
-            <h2 className="mt-4 font-sora text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[52px]">The message is not the answer. The connected record is.</h2>
-            <p className="mt-5 max-w-[620px] text-[15px] leading-7 text-[#52616A] sm:text-[17px] sm:leading-8">This is the proposed motion after the inbox: signal, investigation, then a financial position with the remaining work clearly owned.</p>
-          </div>
-          <div className="mt-10 grid gap-4 lg:grid-cols-3">
-            {scenes.map((scene, index) => <SceneCard key={scene.label} scene={scene} active={activeScene === index} />)}
-          </div>
-          <div className="mt-10">
-            <ResolutionRecord active={activeScene === 2} />
-          </div>
-          <div className="mt-6 flex items-center justify-center gap-2" aria-label="Demo scene progress">
-            {scenes.map((scene, index) => <button key={scene.label} type="button" onClick={() => setActiveScene(index)} aria-label={`Show ${scene.label}`} className={`h-1.5 rounded-full transition-all ${activeScene === index ? "w-10 bg-[#245BFF]" : "w-5 bg-[#C9D9E1]"}`} />)}
-          </div>
+        <div className="absolute bottom-7 left-1/2 flex -translate-x-1/2 items-center gap-1.5" aria-label="Scene progress">
+          {stages.map((item, itemIndex) => <button key={item.id} type="button" onClick={() => setStageIndex(itemIndex)} aria-label={`Show ${item.id} stage`} className={`h-1 rounded-full transition-all ${itemIndex === stageIndex ? "w-9 bg-[#245BFF]" : "w-3 bg-[#D8E3E8]"}`} />)}
         </div>
       </section>
     </main>
