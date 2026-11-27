@@ -624,8 +624,8 @@ function FinancialExceptionDemoSection() {
     <section id="financial-exception-demo" aria-label="Financial exception demo" className="relative overflow-hidden bg-white pb-12 pt-10 sm:pb-16 sm:pt-12 md:pb-20 md:pt-16">
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto mb-8 max-w-[900px] text-left sm:mb-10 sm:text-center">
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>The Connected Financial Exception</h2>
-          <p className="mt-4 max-w-[620px] text-[13px] leading-6 text-[#4D5B66] sm:text-[14px] sm:leading-7 md:text-[15px]">From unexplained Amazon financial activity to verified financial resolution.</p>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>Turn an unresolved Amazon financial question into a defensible position.</h2>
+          <p className="mt-4 max-w-[620px] text-[13px] leading-6 text-[#4D5B66] sm:text-[14px] sm:leading-7 md:text-[15px]">Margin connects the records behind one financial question, separates what is supported from what is missing, paid, reversed or still unresolved, assigns the next action under your approval, and verifies whether the matter is actually closed.</p>
         </motion.div>
         <motion.div
           {...revealProps}
