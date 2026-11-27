@@ -14,31 +14,31 @@ interface LandingAuditCtaProps {
 const pathOptions = [
   {
     label: "01 / DEFINED ENGAGEMENT",
-    title: "Defined Recovery Engagement",
-    subtitle: "For an established financial exposure that requires investigation, evidence preparation, authorised recovery and outcome verification.",
+    title: "Defined Financial Investigation",
+    subtitle: "For one bounded financial question with a clear evidence boundary and an agreed next action.",
     copy: "",
     itemHeading: "Best suited to",
-    items: ["A defined financial exposure that requires investigation, authorised action and verified resolution."],
+    items: ["One account, period or exposure where Margin can carry defined investigation and authorised follow-through."],
     cta: "Review the scope",
     ctaLocation: "homepage_recover_once",
   },
   {
     label: "02 / FINANCIAL CONTROL PILOT",
     title: "Financial Control Pilot",
-    subtitle: "For a defined area of activity where your business needs a repeatable investigation, control and resolution process.",
+    subtitle: "For recurring financial responsibility that needs a repeatable examination, ownership and reconciliation process.",
     copy: "",
     itemHeading: "Best suited to",
-    items: ["A repeatable process for financial investigation, control and resolution."],
+    items: ["A defined operating standard for exceptions, evidence, approvals, actions and verified outcomes."],
     cta: "Review the scope",
     ctaLocation: "homepage_control_pilot",
   },
   {
     label: "03 / ONGOING FINANCIAL CONTROL",
-    title: "Ongoing Financial Control",
-    subtitle: "For businesses that need continuing investigation, discrepancy management, authorised intervention and financial outcome verification.",
+    title: "Ongoing Financial Workspace",
+    subtitle: "For businesses that need established financial context, ownership and closure tracking to continue over time.",
     copy: "",
     itemHeading: "Best suited to",
-    items: ["Continuing investigation, authorised work and verified financial outcomes."],
+    items: ["Recurring evidence continuity, action tracking, reconciliation and visible unresolved work."],
     cta: "Review the scope",
     ctaLocation: "homepage_recovery_workspace",
   },
@@ -73,11 +73,11 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[0.74fr_1.26fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="audit-routing-copy order-1 max-w-[780px] lg:order-1">
-          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#245BFF]">Choose the justified engagement</p>
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with your financial position. Decide what should happen next.</h2>
-          <p className="audit-routing-body mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">Not every business needs the same level of financial investigation or ongoing control. Margin begins by establishing what the available records support, then scopes the work according to the complexity, evidence requirements and responsibility involved.</p>
-          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Read-only review to begin. Start with the evidence, then commit only to the work it justifies.</p>
-          <p className="mt-4 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">No paid engagement is required to establish the initial position. You see what the available records support before deciding whether further work is justified.</p>
+          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#245BFF]">Choose the work the position justifies</p>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with one financial question. Commit only to the responsibility it requires.</h2>
+          <p className="audit-routing-body mt-6 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[#4D5B66] md:text-[17px] md:leading-8">Not every financial question needs the same level of investigation or ongoing control. Margin begins by establishing what the available records support, then scopes the work according to the evidence required, the complexity involved and the responsibility you want Margin to carry.</p>
+          <p className="audit-routing-lead mt-5 max-w-[760px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[#52616A] sm:text-[24px]" style={{ fontWeight: 400 }}>Read-only to begin. Start with the evidence, then commit only to the work it justifies.</p>
+          <p className="mt-4 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#182026] md:text-[17px] md:leading-8">No paid engagement begins until the scope, ownership boundary, deliverable, dependencies, timeline and fee are clear.</p>
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-2">
@@ -136,8 +136,8 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
       <motion.div {...revealProps} className="max-w-[850px]">
         <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#245BFF]">A defined operating relationship</p>
         <h2 id="enterprise-onboarding-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>Know exactly what Margin will own before you commit.</h2>
-          <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8"><LandingResponsiveCopy desktop={'During the defined 30–45 day engagement, Margin examines the agreed records, establishes the initial financial position, configures the recovery and control workflow, and assigns ownership to outstanding exceptions. The scope, required records, permissions, responsibilities, dependencies and delivery capacity are clear before paid work begins.'} mobile={'Across the 30–45 day engagement, Margin examines the agreed records, establishes the initial position and sets up the investigation, approval and ownership workflows. Scope, permissions, dependencies and delivery capacity are clear before paid work begins.'} /></p>
-          <p className="mt-4 max-w-[780px] text-[15px] leading-7 text-[#4D5B66] md:text-[16px] md:leading-8"><LandingResponsiveCopy desktop={'Your team provides the agreed records, access and approvals. Margin owns the investigation, evidence trail, action tracking and outcome verification within scope. At the agreed update cadence, you receive the established position, evidence gaps, required decisions, outstanding dependencies and verified outcomes—without coordinating every case or rebuilding the financial history.'} mobile={'Your team provides records, access and approvals. Margin owns the investigation, evidence trail and follow-through within scope. At the agreed cadence, you receive findings, evidence gaps, decisions, dependencies and verified outcomes without coordinating every case.'} /></p>
+          <p className="mt-5 max-w-[780px] text-[16px] leading-7 tracking-[-0.01em] text-[#182026] md:text-[18px] md:leading-8"><LandingResponsiveCopy desktop={'Before paid work begins, Margin and the customer agree the financial question, coverage boundary, available records, ownership model, approval points, dependencies, deliverable and closure condition. A control pilot may operate over an agreed 30–45 day period; other engagements are timed to the responsibility and evidence required.'} mobile={'Before paid work begins, Margin and the customer agree the financial question, evidence boundary, ownership model, approval points, dependencies and closure condition. Control pilots may operate over an agreed 30–45 day period; other engagements follow the work required.'} /></p>
+          <p className="mt-4 max-w-[780px] text-[15px] leading-7 text-[#4D5B66] md:text-[16px] md:leading-8"><LandingResponsiveCopy desktop={'Your team provides authorized records, access, context and approvals. Margin owns the agreed investigation, evidence trail, follow-through and outcome verification within scope. At the agreed cadence, you receive the established position, evidence gaps, decisions, dependencies and verified outcomes—without coordinating every case or rebuilding the financial history.'} mobile={'Your team provides records, access, context and approvals. Margin owns the agreed investigation, evidence trail and follow-through within scope. At the agreed cadence, you receive findings, evidence gaps, decisions, dependencies and verified outcomes without coordinating every case.'} /></p>
       </motion.div>
 
       <div className="mt-10 overflow-x-auto pb-4 [scrollbar-width:thin] md:mt-14">
@@ -155,8 +155,8 @@ export const EnterpriseOnboardingSection: React.FC<LandingAuditCtaProps> = ({ on
       </div>
 
       <motion.div {...revealProps} className="mt-5 max-w-[900px] border-l-2 border-[#AABAC3] pl-5 md:mt-8">
-        <p className="text-[14px] font-semibold leading-6 text-[#182026] md:text-[15px]"><LandingResponsiveCopy desktop={"Margin does not accept an undefined financial problem and improvise ownership. The engagement does not promise an unsupported recovery or an Amazon decision by Day 25. It establishes the agreed operating state, with response times, evidence requirements and payment timing tracked as visible dependencies."} mobile={"Margin does not accept an undefined financial problem and improvise ownership. The engagement establishes the agreed operating process—not an unsupported recovery or guaranteed Amazon decision."} /></p>
-        <p className="mt-1 text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7"><LandingResponsiveCopy desktop={"By that point, the agreed operating state is established: reconciled items, supported recovery actions, unresolved exceptions, accountable owners, and defined next steps. Amazon response times and payment timing remain visible dependencies—not hidden assumptions."} mobile={"The agreed operating state documents reconciled items, supported actions, unresolved exceptions, accountable owners and next steps. Amazon response and payment timing remain visible dependencies."} /></p>
+        <p className="text-[14px] font-semibold leading-6 text-[#182026] md:text-[15px]"><LandingResponsiveCopy desktop={"Margin does not accept an undefined financial problem and improvise ownership. The agreed scope records what is known, what is missing, what Margin owns, what requires approval and what must be true before the matter can close."} mobile={"Margin does not accept an undefined financial problem and improvise ownership. The agreed scope records what is known, what is missing, what Margin owns and what must be true before closure."} /></p>
+        <p className="mt-1 text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7"><LandingResponsiveCopy desktop={"A control pilot may establish a recurring operating cadence over 30–45 days. Amazon response times and payment timing remain visible dependencies—not hidden assumptions—and no unsupported recovery or guaranteed Amazon decision is implied."} mobile={"A control pilot may establish a recurring cadence over 30–45 days. Amazon response and payment timing remain visible dependencies, not hidden assumptions."} /></p>
       </motion.div>
 
       <motion.div {...revealProps} className="mt-8 md:mt-10">
@@ -173,9 +173,9 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
     <section className="recovery-routing-section relative bg-white py-10 sm:py-10 md:py-14" aria-labelledby="recovery-routing-title">
       <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
         <motion.div {...revealProps} className="routing-copy max-w-[760px]">
-          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#245BFF]">Possible next steps after the review</p>
-          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the financial problem. Choose only the work it justifies.</h2>
-          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Initial Financial Position Review establishes the financial position supported by the records available, identifies material unresolved differences and determines whether further investigation or recovery is justified. First establish the position. Then decide whether one of these defined scopes—or no further action—is justified.</p>
+          <p className="landing-section-eyebrow font-google-sans text-[11px] font-semibold tracking-tight text-[#245BFF]">The position determines the next step</p>
+          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the financial position. Choose only the responsibility it justifies.</h2>
+          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#182026] md:text-[17px] md:leading-8">The Initial Financial Position Review establishes what the available records support, what remains unresolved and whether further responsibility is justified. From there, Margin may recommend a defined investigation, a complex examination, a control pilot, additional evidence or no further action.</p>
         </motion.div>
         <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
           {pathOptions.map((option, index) => {
@@ -215,8 +215,8 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           )})}
         </div>
         <motion.div {...revealProps} className="routing-note mt-9 border-l-2 border-[var(--margin-border)] pl-5">
-          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">First establish what the records support. Then commit only to the work the evidence justifies.</p>
-          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The review establishes what the available records support before you commit to paid work. Its findings determine whether a defined recovery, a financial control pilot, ongoing financial control or no further action is appropriate.</p>
+          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">First establish what the records support. Then commit only to the responsibility the evidence justifies.</p>
+          <p className="mt-2 text-[14px] leading-6 text-[#182026]">The review does not force a recovery engagement. Its findings determine whether defined investigation, complex examination, a control pilot, ongoing workspace, more evidence or no further action is appropriate.</p>
         </motion.div>
       </div>
     </section>

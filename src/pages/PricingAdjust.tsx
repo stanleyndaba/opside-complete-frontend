@@ -12,55 +12,55 @@ import { SITE_META } from '@/config/site';
 import { cn } from '@/lib/utils';
 
 const auditSteps = [
-  'Identify discrepancies and potential recovery opportunities',
-  'Separate supported findings from unresolved questions',
-  'Understand evidence gaps and the work required to address them',
-  'Establish the appropriate next step',
+  'Define the account, period, entity and financial question',
+  'Separate supported findings from missing or unresolved evidence',
+  'Establish what is accounted for, actionable or not material',
+  'Determine whether further work is justified',
 ];
 
 const definedWork = [
   {
-    title: 'Defined Recovery',
-    eyebrow: 'Bounded recovery work',
-    summary: 'Resolve a clearly bounded financial problem.',
-    body: 'For a defined set of discrepancies or a specific recovery operation where the records, evidence requirements, and scope of work can be established.',
-    detail: 'Margin investigates the agreed scope, determines what the evidence supports, and manages authorized recovery work through to its documented outcome.',
-    cta: 'Discuss a Defined Recovery',
+    title: 'Defined Financial Investigation',
+    eyebrow: 'One bounded financial question',
+    summary: 'For a defined question with a clear evidence boundary.',
+    body: 'Use this when the account, period, records, financial exposure and next action can be established before work begins.',
+    detail: 'Margin connects the relevant records, establishes what the evidence supports, carries authorized follow-through and documents the outcome, including where no further action is justified.',
+    cta: 'Discuss a Defined Investigation',
   },
   {
     title: 'Complex Financial Investigation',
     eyebrow: 'Deeper examination',
-    summary: 'For cases that require deeper examination.',
-    body: 'Some financial discrepancies cannot be resolved through a straightforward claim process. They may involve conflicting records, incomplete evidence, multiple related events, prior decisions, reversals, or unresolved financial outcomes.',
-    detail: 'Margin undertakes a deeper examination to establish the position, determine what action is justified, and carry the agreed work forward.',
+    summary: 'For financial questions that do not close cleanly.',
+    body: 'Use this when records conflict, evidence is incomplete, prior provider work is difficult to verify, or reversals, offsets, related events and multiple stakeholders affect the position.',
+    detail: 'Margin examines the connected history, separates supported facts from assumptions and gaps, determines what action is justified and carries the agreed work forward under a clear responsibility boundary.',
     cta: 'Discuss a Complex Investigation',
   },
   {
     title: 'Financial Control Pilot',
     eyebrow: 'Defined control engagement',
-    summary: 'Establish a stronger financial control process.',
-    body: 'For businesses that need more than a one-time recovery operation.',
-    detail: 'Over a defined engagement, Margin examines the relevant financial workflow, establishes the current position, and demonstrates how evidence-backed investigation, controlled action, and reconciliation can operate together. The pilot is scoped around the records, operational requirements, and outcomes agreed at the outset.',
+    summary: 'For recurring financial responsibility.',
+    body: 'Use this when the issue is not one isolated recovery question, but a recurring need to keep exceptions, evidence, ownership, approvals and reconciliation together.',
+    detail: 'The pilot establishes a repeatable operating standard with recurring examination, evidence-linked exceptions, named owners, approval boundaries, response continuity and verified outcome tracking.',
     cta: 'Discuss a Control Pilot',
   },
 ];
 
 const continuingWork = [
   {
-    title: 'Recovery Workspace',
-    eyebrow: 'Ongoing recovery operations',
-    summary: 'Keep the financial position under examination.',
-    body: 'For businesses that need ongoing investigation, recovery follow-through, and visibility into unresolved financial issues.',
-    detail: 'Margin connects relevant records, maintains evidence-backed cases, tracks authorized actions, and follows financial outcomes through to reconciliation. Your team retains decision authority. Margin takes on the agreed investigative and recovery work.',
-    cta: 'Discuss Ongoing Recovery Operations',
+    title: 'Ongoing Financial Workspace',
+    eyebrow: 'Recurring control relationship',
+    summary: 'Keep established financial context together over time.',
+    body: 'For businesses that need recurring investigation, evidence continuity, ownership tracking and visibility into unresolved financial work.',
+    detail: 'Margin maintains the financial history, tracks open, paid, reversed and unresolved items, coordinates agreed owners and supports recurring reconciliation without taking decision authority away from your team.',
+    cta: 'Discuss Ongoing Financial Control',
   },
   {
-    title: 'Enterprise Control Program',
-    eyebrow: 'Complex operating relationship',
-    summary: 'For complex, multi-account, or ongoing financial operations.',
-    body: 'For businesses that need a defined operating relationship with Margin across larger or more complex financial workloads.',
-    detail: "Engagements may cover multiple accounts or brands, broader record requirements, complex investigations, recurring recovery operations, and tailored control and reporting requirements. The scope is established around the business's financial operations and the responsibility Margin is expected to take on.",
-    cta: 'Discuss an Enterprise Engagement',
+    title: 'Enterprise Control Relationship',
+    eyebrow: 'Broader operating boundary',
+    summary: 'Extend the Margin standard across complex operations.',
+    body: 'For businesses that need one defined responsibility model across accounts, brands, entities, marketplaces and internal or external operators.',
+    detail: "The scope is established around the business's financial operations, evidence requirements, reporting cadence, escalation paths and the responsibility Margin is expected to carry.",
+    cta: 'Discuss an Enterprise Relationship',
   },
 ];
 
@@ -174,10 +174,10 @@ export default function PricingAdjust() {
               <motion.div {...reveal} className="mb-20 max-w-[900px] space-y-6 border-b border-[#E1E5E5] pb-20 md:mb-24 md:pb-24">
                 <div className="flex items-center gap-2 text-[11px] font-semibold tracking-tight text-[#F05A3C]">Pricing</div>
                 <h1 id="pricing-hero-title" className="font-lora text-4xl font-normal leading-[1.02] tracking-tight text-[#30343B] md:text-[72px]">Start with the financial position.</h1>
-                <p className="mt-7 max-w-[720px] text-[13px] leading-[1.5] text-[#48616D] sm:text-[17px] sm:leading-8">Margin examines what happened to the money, establishes what the evidence supports, and carries authorized recovery work through to financial reconciliation.</p>
-                <p className="mt-5 max-w-[720px] text-[13px] leading-[1.5] text-[#66737F] sm:text-[16px] sm:leading-7">Every engagement is scoped to the work required, the complexity of the financial position, and the responsibility Margin takes on.</p>
+                <p className="mt-7 max-w-[720px] text-[13px] leading-[1.5] text-[#48616D] sm:text-[17px] sm:leading-8">Margin examines the records behind an Amazon financial question, establishes what the evidence supports, and helps you choose only the work that position justifies.</p>
+                <p className="mt-5 max-w-[720px] text-[13px] leading-[1.5] text-[#66737F] sm:text-[16px] sm:leading-7">Scope follows the financial question, evidence required, complexity involved and responsibility Margin is asked to carry. No public price tier can define that work responsibly.</p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <Button type="button" onClick={() => handleCta('Request a Recovery Audit', true)} className="h-12 justify-between rounded-[7px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_28px_rgba(240,90,60,0.22)] hover:bg-[#D9472D] sm:min-w-[210px]">Request a Recovery Audit <ArrowRight className="h-4 w-4" /></Button>
+                  <Button type="button" onClick={() => handleCta('Start with a Position Check', true)} className="h-12 justify-between rounded-[7px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white shadow-[0_12px_28px_rgba(240,90,60,0.22)] hover:bg-[#D9472D] sm:min-w-[210px]">Start with a Position Check <ArrowRight className="h-4 w-4" /></Button>
                   <Button type="button" onClick={() => handleCta('Discuss an Engagement')} variant="outline" className="h-12 justify-between rounded-[7px] border-[#C7D5DC] bg-white px-5 text-[13px] font-semibold text-[#3F4A50] hover:bg-[#F4F5F4] sm:min-w-[190px]">Discuss an Engagement <ArrowRight className="h-4 w-4" /></Button>
                 </div>
               </motion.div>
@@ -193,17 +193,17 @@ export default function PricingAdjust() {
           <section className="relative border-y border-[#E1E5E5] bg-white px-5 py-16 sm:px-8 sm:py-24" aria-labelledby="audit-title">
             <div className={cn(containerClass, 'grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20')}>
               <motion.div {...reveal}>
-                <div className="text-[11px] font-semibold uppercase tracking-tight text-[#F05A3C]">Start with an examination</div>
-                <h2 id="audit-title" className="mt-5 font-lora text-3xl font-medium leading-tight tracking-tight text-[#30343B] sm:text-[40px]">Recovery Audit</h2>
-                <p className="mt-5 text-[15px] font-semibold leading-6 text-[#3F4A50] sm:text-[17px] sm:leading-7">Establish what the records support.</p>
-                <p className="mt-5 text-[13px] leading-[1.5] text-[#667177] sm:text-[16px] sm:leading-7">Before deciding what to recover, establish what has happened.</p>
-                <p className="mt-4 text-[13px] leading-[1.5] text-[#667177] sm:text-[16px] sm:leading-7">Margin examines the available Amazon financial and operational records to identify what is accounted for, what remains unresolved, what the evidence supports, and where further action may be warranted.</p>
-                <p className="mt-4 text-[13px] leading-[1.5] text-[#667177] sm:text-[16px] sm:leading-7">You&apos;ll receive a clearer financial position and a basis for deciding what needs attention next.</p>
-                <div className="mt-7 flex items-center gap-3 text-[14px] font-semibold text-[#3F4A50]"><span className="h-2 w-2 rounded-full bg-[#2E7D5B]" />Initial examination: complimentary.</div>
-                <Button type="button" onClick={() => handleCta('Request a Recovery Audit', true)} className="mt-7 h-11 rounded-[7px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white hover:bg-[#D9472D]">Request a Recovery Audit <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                <div className="text-[11px] font-semibold uppercase tracking-tight text-[#F05A3C]">Start with a position check</div>
+                <h2 id="audit-title" className="mt-5 font-lora text-3xl font-medium leading-tight tracking-tight text-[#30343B] sm:text-[40px]">Initial Financial Position Check</h2>
+                <p className="mt-5 text-[15px] font-semibold leading-6 text-[#3F4A50] sm:text-[17px] sm:leading-7">Establish whether further work is justified.</p>
+                <p className="mt-5 text-[13px] leading-[1.5] text-[#667177] sm:text-[16px] sm:leading-7">Before deciding what to pursue, establish what the available records support.</p>
+                <p className="mt-4 text-[13px] leading-[1.5] text-[#667177] sm:text-[16px] sm:leading-7">This limited, read-only examination defines the account, period, entity and financial question, separates supported findings from missing evidence, and identifies whether investigation, recovery, control work, no action or more evidence is justified.</p>
+                <p className="mt-4 text-[13px] leading-[1.5] text-[#667177] sm:text-[16px] sm:leading-7">A clean, unsupported or incomplete result is a valid result. Any paid work is separately scoped and approved before it begins.</p>
+                <div className="mt-7 flex items-center gap-3 text-[14px] font-semibold text-[#3F4A50]"><span className="h-2 w-2 rounded-full bg-[#2E7D5B]" />Complimentary position check. Read-only to begin.</div>
+                <Button type="button" onClick={() => handleCta('Start with a Position Check', true)} className="mt-7 h-11 rounded-[7px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white hover:bg-[#D9472D]">Start with a Position Check <ArrowRight className="ml-2 h-4 w-4" /></Button>
               </motion.div>
               <motion.div {...reveal} transition={{ ...reveal.transition, delay: 0.12 }} className="contact-route-panel border-y border-[#E1E5E5] bg-[#F7F8F7] p-6 sm:p-9">
-                <div className="flex items-center justify-between border-b border-[#D6E0E4] pb-5"><span className="text-[13px] font-semibold tracking-tight text-[#30343B]">What the examination establishes</span><span className="text-[12px] font-medium text-[#2E7D5B]">No payment required</span></div>
+                <div className="flex items-center justify-between border-b border-[#D6E0E4] pb-5"><span className="text-[13px] font-semibold tracking-tight text-[#30343B]">What the position check establishes</span><span className="text-[12px] font-medium text-[#2E7D5B]">No paid engagement required</span></div>
                 <div className="mt-6 space-y-4">
                   {auditSteps.map((step, index) => <div key={step} className="flex gap-4 border-b border-[#DDE2E1] pb-4 last:border-0"><span className="font-mono text-[12px] font-semibold text-[#F05A3C]">0{index + 1}</span><span className="text-[15px] leading-6 text-[#3F5661]">{step}</span></div>)}
                 </div>
@@ -214,9 +214,9 @@ export default function PricingAdjust() {
           <section className="relative px-5 py-16 sm:px-8 sm:py-24" aria-labelledby="action-title">
             <div className={containerClass}>
               <motion.div {...reveal} className="max-w-[740px]">
-                <div className="text-[11px] font-semibold uppercase tracking-tight text-[#F05A3C]">When the position requires action</div>
-                <h2 id="action-title" className="mt-5 font-lora text-3xl font-medium leading-tight tracking-tight text-[#30343B] sm:text-[40px]">Defined work, scoped to the position.</h2>
-                <p className="mt-5 text-[13px] leading-[1.5] text-[#667177] sm:text-[17px] sm:leading-8">Paid engagements begin after the financial examination establishes what the records support and what responsibility the work requires.</p>
+                <div className="text-[11px] font-semibold uppercase tracking-tight text-[#F05A3C]">Choose the work the position justifies</div>
+                <h2 id="action-title" className="mt-5 font-lora text-3xl font-medium leading-tight tracking-tight text-[#30343B] sm:text-[40px]">Commit only to the responsibility the position requires.</h2>
+                <p className="mt-5 text-[13px] leading-[1.5] text-[#667177] sm:text-[17px] sm:leading-8">Paid engagements begin only after the position establishes what can be examined and what responsibility the next step requires. Margin defines the evidence boundary, deliverable, ownership, approval requirements, dependencies, timeline and fee before paid work begins.</p>
               </motion.div>
               <div className="mt-10 grid gap-5 lg:grid-cols-3">{definedWork.map((item, index) => <EngagementCard key={item.title} {...item} index={index} onCta={handleCta} />)}</div>
             </div>
@@ -225,9 +225,9 @@ export default function PricingAdjust() {
           <section className="relative border-y border-[#E1E5E5] bg-[#F4F5F4] px-5 py-16 sm:px-8 sm:py-24" aria-labelledby="continue-title">
             <div className={containerClass}>
               <motion.div {...reveal} className="max-w-[740px]">
-                <div className="text-[11px] font-semibold uppercase tracking-tight text-[#F05A3C]">When financial control needs to continue</div>
-                <h2 id="continue-title" className="mt-5 font-lora text-3xl font-medium leading-tight tracking-tight text-[#30343B] sm:text-[40px]">Keep the financial position under examination.</h2>
-                <p className="mt-5 text-[13px] leading-[1.5] text-[#667177] sm:text-[17px] sm:leading-8">For businesses that need ongoing investigation, recovery follow-through, and a defined operating relationship with Margin.</p>
+                <div className="text-[11px] font-semibold uppercase tracking-tight text-[#F05A3C]">When the work becomes recurring</div>
+                <h2 id="continue-title" className="mt-5 font-lora text-3xl font-medium leading-tight tracking-tight text-[#30343B] sm:text-[40px]">Keep established financial context together over time.</h2>
+                <p className="mt-5 text-[13px] leading-[1.5] text-[#667177] sm:text-[17px] sm:leading-8">Where the responsibility repeats, Margin can establish an ongoing control relationship across evidence, actions, responses, payments, reversals, reconciliations and unresolved balances. Ongoing control is recommended only when the recurring need is demonstrated.</p>
               </motion.div>
               <div className="mt-10 grid gap-5 lg:grid-cols-2">{continuingWork.map((item, index) => <EngagementCard key={item.title} {...item} index={index} onCta={handleCta} />)}</div>
             </div>
@@ -239,8 +239,8 @@ export default function PricingAdjust() {
                 <div className="text-[11px] font-semibold uppercase tracking-tight text-[#F05A3C]">One principle across every engagement</div>
                 <h2 id="principle-title" className="mt-5 font-lora text-3xl font-medium leading-tight tracking-tight text-[#30343B] sm:text-[40px]">Establish the position. Prove what is justified. Reconcile the outcome.</h2>
                 <p className="mt-7 text-[13px] leading-[1.5] text-[#4D5B66] sm:text-[17px] sm:leading-8">Margin does not treat every discrepancy as a claim or every approval as recovered money.</p>
-                <p className="mt-4 text-[13px] leading-[1.5] text-[#4D5B66] sm:text-[17px] sm:leading-8">We examine the available evidence, distinguish what is known from what remains unresolved, and take action only within the agreed scope and authorization.</p>
-                <p className="mt-4 text-[13px] leading-[1.5] text-[#4D5B66] sm:text-[17px] sm:leading-8">Every engagement is scoped to the work required. Commercial terms are agreed before paid work begins.</p>
+                <p className="mt-4 text-[13px] leading-[1.5] text-[#4D5B66] sm:text-[17px] sm:leading-8">We examine the available evidence, distinguish what is known from what remains unresolved, and recommend only the responsibility the position justifies.</p>
+                <p className="mt-4 text-[13px] leading-[1.5] text-[#4D5B66] sm:text-[17px] sm:leading-8">No unsupported recovery promise. No undefined paid scope. No consequential action without customer approval.</p>
                 <Button type="button" onClick={() => handleCta('Discuss Your Financial Position')} className="mt-8 h-12 rounded-[7px] bg-[#F05A3C] px-5 text-[13px] font-semibold text-white hover:bg-[#D9472D]">Discuss Your Financial Position <ArrowRight className="ml-2 h-4 w-4" /></Button>
                 <p className="mt-4 text-[13px] leading-[1.5] text-[#66737F] sm:text-[14px] sm:leading-6">Tell us what you&apos;re trying to establish, what remains unresolved, and what your team needs help carrying through to resolution.</p>
               </div>
