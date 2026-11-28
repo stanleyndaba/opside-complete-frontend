@@ -22,6 +22,7 @@ import Index from "./pages/Index";
 import DuplicatePipelinePreviewPage from "./pages/DuplicatePipelinePreview";
 import Routine from "./pages/Routine";
 import SandboxDemo from "./pages/SandboxDemo";
+import DemoSceneOne from "./pages/DemoSceneOne";
 import DemoHero from "./pages/DemoHero";
 import TryDemo from "./pages/TryDemo";
 import TryDemoTwo from "./pages/TryDemoTwo";
@@ -322,7 +323,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 const RouteOverlays = () => {
   const location = useLocation();
   usePrivateRouteRobots(location.pathname);
-  const hidePublicChat = ['/review-consent', '/try-demo', '/try-demo-two', '/try-demo-three', '/try-demo-four', '/try-demo-five', '/try-demo-six', '/try-demo-seven', '/try-demo-eight', '/try-demo-nine', '/try-demo-ten', '/try-demo-eleven', '/try-demo-twelve', '/try-demo-thirteen', '/try-demo-fourteen', '/try-demo-fifteen', '/try-demo-sixteen', '/designsimulate', '/platformsimulate', '/documentsimulate', '/auditsimulate', '/platformfly', '/accuracy-graph', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/evidence-match', '/rejection-loop', '/report-generation', '/duplicate-pipeline-preview', '/routine', '/progress-review', '/evidence-required', '/issues-found', '/filing-pipeline-preview', '/progress-preview', '/amazon-thread-review', '/auto-submit-preview', '/appeals-review', '/financial-reconciliation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/openstatement', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate', '/timeline-simulation', '/readiness-simulate', '/readiness-simulate-two', '/memory-simulate', '/reconciliation-simulate', '/currency-margin', '/standalone', '/slack-interface'].includes(location.pathname);
+  const hidePublicChat = ['/review-consent', '/try-demo', '/try-demo-two', '/try-demo-three', '/try-demo-four', '/try-demo-five', '/try-demo-six', '/try-demo-seven', '/try-demo-eight', '/try-demo-nine', '/try-demo-ten', '/try-demo-eleven', '/try-demo-twelve', '/try-demo-thirteen', '/try-demo-fourteen', '/try-demo-fifteen', '/try-demo-sixteen', '/designsimulate', '/platformsimulate', '/documentsimulate', '/auditsimulate', '/platformfly', '/accuracy-graph', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/evidence-match', '/rejection-loop', '/report-generation', '/duplicate-pipeline-preview', '/routine', '/sandbox-demo', '/demo-scene-one', '/progress-review', '/evidence-required', '/issues-found', '/filing-pipeline-preview', '/progress-preview', '/amazon-thread-review', '/auto-submit-preview', '/appeals-review', '/financial-reconciliation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/openstatement', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate', '/timeline-simulation', '/readiness-simulate', '/readiness-simulate-two', '/memory-simulate', '/reconciliation-simulate', '/currency-margin', '/standalone', '/slack-interface'].includes(location.pathname);
 
   return (
     <>
@@ -370,6 +371,7 @@ const App = () => (
                         <Route path='/duplicate-pipeline-preview' element={<DuplicatePipelinePreviewPage />} />
                         <Route path='/routine' element={<Routine />} />
                         <Route path='/sandbox-demo' element={<SandboxDemo />} />
+                        <Route path='/demo-scene-one' element={<DemoSceneOne />} />
                         <Route path='/demo-hero' element={<DemoHero />} />
                         <Route path='/try-demo' element={<TryDemo />} />
                         <Route path='/try-demo-two' element={<TryDemoTwo />} />

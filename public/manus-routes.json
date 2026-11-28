@@ -77,6 +77,10 @@
       "title": "Sandbox Demo"
     },
     {
+      "path": "/demo-scene-one",
+      "title": "Demo Scene One"
+    },
+    {
       "path": "/demo-hero",
       "title": "Demo Hero"
     },
