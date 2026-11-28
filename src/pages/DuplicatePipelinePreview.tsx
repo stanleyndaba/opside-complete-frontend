@@ -894,35 +894,9 @@ const duplicateEventNumbers: Record<IntakeStage, number> = {
   learning: 19,
 };
 
-const duplicateGuidance: Record<IntakeStage, string> = {
-  query: "Margin starts with the financial question—not a feature tour.",
-  analysis: "First, Margin tests what the available records can actually establish.",
-  findings: "A reported signal is separated from what the evidence supports.",
-  'issues-found': "The question is broken into the specific exceptions that need explanation.",
-  'proof-required': "Missing proof stays visible instead of being replaced with certainty.",
-  'document-orbit': "Margin connects the records so the financial trail can be followed.",
-  'platform-simulation': "The evidence is tested against the source system before action is proposed.",
-  dropzone: "The investigation begins with the records already available to the business.",
-  documents: "Each source is brought into one examination boundary.",
-  register: "Every record receives a place in the evidence chain.",
-  'evidence-match': "The signal is matched to the evidence before it becomes a conclusion.",
-  'artifact-analysis': "Margin examines the underlying records, not just the provider's label.",
-  'case-build': "The position is written so Finance can inspect how it was reached.",
-  claims: "A possible action is separated from a verified financial outcome.",
-  handoff: "The next action is assigned instead of returned to the team by default.",
-  correspondence: "Responses stay connected to the financial question they are meant to resolve.",
-  'claim-summary': "Approved is distinguished from paid, and paid from reconciled.",
-  'recovery-position': "The final position shows what is supported, open, reversed, or unresolved.",
-  learning: "The record closes only when the financial state supports closure.",
-};
-
-function DuplicateGuidance({ event }: { event: IntakeStage }) {
-  return <motion.div key={event} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="mx-auto max-w-[1280px] border-b border-[#DDE7F0] bg-[#F4F8FF] px-5 py-3 font-google-sans text-[12px] font-semibold leading-5 tracking-tight text-[#245BFF] sm:px-6 sm:py-3.5 sm:text-[13px]">{duplicateGuidance[event]}</motion.div>;
-}
-
 function DuplicateEventFrame({ event, children }: { event: IntakeStage; children: React.ReactNode }) {
   const eventNumber = duplicateEventNumbers[event];
-  return <div className="relative"><DuplicateGuidance event={event} /><div className="pointer-events-none absolute left-4 top-[4.5rem] z-50 font-google-sans text-[9px] font-medium uppercase tracking-[0.12em] text-[#8A99A5] sm:left-8 sm:top-[5.25rem]">{String(eventNumber).padStart(2, "0")} / {duplicateEventNames.length} · {duplicateEventNames[eventNumber - 1]}</div>{children}</div>;
+  return <div className="relative"><div className="pointer-events-none absolute left-4 top-4 z-50 font-google-sans text-[9px] font-medium uppercase tracking-[0.12em] text-[#8A99A5] sm:left-8 sm:top-6">{String(eventNumber).padStart(2, "0")} / {duplicateEventNames.length} · {duplicateEventNames[eventNumber - 1]}</div>{children}</div>;
 }
 
 export function DuplicatePipelineVisual() {
