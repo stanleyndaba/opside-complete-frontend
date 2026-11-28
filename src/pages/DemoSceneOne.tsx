@@ -2,12 +2,12 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const sourceRecords = [
-  { label: "Provider recovery report", code: "SOURCE 01", note: "Reported amount" },
-  { label: "Amazon settlement records", code: "SOURCE 02", note: "Settlement period" },
-  { label: "Inventory movement records", code: "SOURCE 03", note: "Unit movement" },
-  { label: "Amazon case history", code: "SOURCE 04", note: "Case reference" },
-  { label: "Payout records", code: "SOURCE 05", note: "Payment trace" },
-  { label: "Accounting ledger", code: "SOURCE 06", note: "Ledger entry" },
+  { label: "Provider recovery report", code: "Source 01", note: "Reported amount" },
+  { label: "Amazon settlement records", code: "Source 02", note: "Settlement period" },
+  { label: "Inventory movement records", code: "Source 03", note: "Unit movement" },
+  { label: "Amazon case history", code: "Source 04", note: "Case reference" },
+  { label: "Payout records", code: "Source 05", note: "Payment trace" },
+  { label: "Accounting ledger", code: "Source 06", note: "Ledger entry" },
 ];
 
 const statusRows = [
@@ -42,15 +42,15 @@ function SourceRecord({
         <div className="min-w-0">
           <div className="mb-1 flex items-center gap-2">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#94A3B8]" />
-            <span className="truncate text-[12px] font-medium tracking-[-0.01em] text-[#26343D]">{source.label}</span>
+            <span className="truncate text-[12px] font-medium tracking-tight text-[#26343D]">{source.label}</span>
           </div>
-          <p className="pl-3.5 text-[10px] uppercase tracking-[0.14em] text-[#9AA7AF]">{source.note}</p>
+          <p className="pl-3.5 text-[10px] text-[#9AA7AF]">{source.note}</p>
         </div>
-        <span className="shrink-0 font-mono text-[9px] tracking-[0.1em] text-[#A5B0B7]">{source.code}</span>
+        <span className="shrink-0 font-mono text-[9px] text-[#A5B0B7]">{source.code}</span>
       </div>
       <div className="mt-3 flex items-center justify-between border-t border-dashed border-[#E4E9EC] pt-2.5">
         <span className="text-[10px] text-[#8A989F]">Record received</span>
-        <span className="rounded-full border border-[#E0E6E9] px-2 py-0.5 text-[9px] uppercase tracking-[0.1em] text-[#89969E]">Incomplete</span>
+        <span className="rounded-full border border-[#E0E6E9] px-2 py-0.5 text-[9px] text-[#89969E]">Incomplete</span>
       </div>
     </motion.div>
   );
@@ -84,7 +84,7 @@ export default function DemoSceneOne() {
             <div className="flex h-7 w-7 items-center justify-center rounded-[2px] bg-[#182026] text-[11px] font-semibold text-white">M</div>
             <span className="brand-wordmark text-[17px] text-[#182026]">Margin</span>
           </div>
-          <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.18em] text-[#8A989F]">
+          <div className="flex items-center gap-3 text-[10px] text-[#8A989F]">
             <span>Demo scene 01</span>
             <span className="h-1 w-1 rounded-full bg-[#B3BEC4]" />
             <span>Case opening</span>
@@ -93,8 +93,8 @@ export default function DemoSceneOne() {
 
         <section className="relative z-10 mx-auto flex w-full max-w-[1120px] flex-1 flex-col justify-center py-12 lg:py-16">
           <div className="mb-8 max-w-[720px]">
-            <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#0B74DE]">The unresolved financial question</p>
-            <h1 className="max-w-[760px] font-[Inter] text-[clamp(2rem,4.2vw,4.15rem)] font-medium leading-[1.03] tracking-[-0.055em] text-[#182026]">
+            <p className="mb-4 font-mono text-[10px] text-[#0B74DE]">The unresolved financial question</p>
+            <h1 className="max-w-[760px] font-[Inter] text-[clamp(2rem,4.2vw,4.15rem)] font-medium leading-[1.03] tracking-tight text-[#182026]">
               Financial question requiring an established position
             </h1>
             <p className="mt-5 max-w-[520px] text-[14px] leading-6 text-[#697780]">
@@ -112,16 +112,16 @@ export default function DemoSceneOne() {
               <div className="flex items-center justify-between border-b border-[#E2E8EC] px-5 py-4 sm:px-7">
                 <div className="flex items-center gap-2.5">
                   <span className="h-2 w-2 rounded-full bg-[#B8C2C8]" />
-                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#78868F]">Open financial question</span>
+                  <span className="font-mono text-[10px] text-[#78868F]">Open financial question</span>
                 </div>
-                <span className="font-mono text-[10px] text-[#A1ADB3]">CASE / Q1</span>
+                <span className="font-mono text-[10px] text-[#A1ADB3]">Case / Q1</span>
               </div>
               <div className="px-5 py-6 sm:px-7 sm:py-8">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-[#97A3A9]">Case card</p>
-                <h2 className="mt-2 text-[clamp(1.4rem,2.6vw,2.1rem)] font-medium leading-tight tracking-[-0.035em] text-[#182026]">FBA inventory reimbursement — Q1</h2>
+                <p className="text-[11px] text-[#97A3A9]">Case card</p>
+                <h2 className="mt-2 text-[clamp(1.4rem,2.6vw,2.1rem)] font-medium leading-tight tracking-tight text-[#182026]">FBA inventory reimbursement — Q1</h2>
                 <div className="mt-7 border-y border-[#E5EAED] py-5">
-                  <p className="text-[10px] uppercase tracking-[0.16em] text-[#98A5AC]">Provider reports</p>
-                  <p className="mt-1 text-[clamp(2rem,4vw,3.2rem)] font-medium tracking-[-0.06em] text-[#182026]">$42,800 <span className="text-[13px] font-normal tracking-normal text-[#7C8991]">recovered</span></p>
+                  <p className="text-[10px] text-[#98A5AC]">Provider reports</p>
+                  <p className="mt-1 text-[clamp(2rem,4vw,3.2rem)] font-medium tracking-tight text-[#182026]">$42,800 <span className="text-[13px] font-normal tracking-normal text-[#7C8991]">recovered</span></p>
                 </div>
                 <dl className="mt-5 space-y-3.5">
                   {statusRows.map(([label, value]) => (
@@ -133,14 +133,14 @@ export default function DemoSceneOne() {
                 </dl>
               </div>
               <div className="border-t border-[#E2E8EC] bg-[#F7F9FA] px-5 py-3.5 sm:px-7">
-                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.13em] text-[#8B989F]"><span className="h-1.5 w-1.5 rounded-full bg-[#C1CBD0]" />Position not yet established</div>
+                <div className="flex items-center gap-2 text-[10px] text-[#8B989F]"><span className="h-1.5 w-1.5 rounded-full bg-[#C1CBD0]" />Position not yet established</div>
               </div>
             </motion.article>
 
             <div className="relative pt-1 lg:pt-3">
               <div className="mb-4 flex items-end justify-between border-b border-[#DDE5E9] pb-3">
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#8B989F]">Evidence entering the case</p>
+                  <p className="font-mono text-[10px] text-[#8B989F]">Evidence entering the case</p>
                   <p className="mt-1 text-[12px] text-[#6F7D85]">Source records arrive, but none is a conclusion.</p>
                 </div>
                 <span className="font-mono text-[10px] text-[#A1ADB3]">{String(visibleSources).padStart(2, "0")} / 06</span>
@@ -160,11 +160,11 @@ export default function DemoSceneOne() {
             className="mt-12 flex items-center gap-4 border-t border-[#DDE5E9] pt-6 lg:mt-14"
           >
             <span className="h-px w-8 bg-[#0B74DE]" />
-            <p className="font-serif text-[clamp(1.1rem,2vw,1.5rem)] italic tracking-[-0.02em] text-[#33434D]">A reported number is not yet a financial position.</p>
+            <p className="font-serif text-[clamp(1.1rem,2vw,1.5rem)] italic tracking-tight text-[#33434D]">A reported number is not yet a financial position.</p>
           </motion.div>
         </section>
 
-        <footer className="relative z-10 flex items-center justify-between border-t border-[#DDE5E9] pt-4 text-[10px] uppercase tracking-[0.14em] text-[#A1ADB3]">
+        <footer className="relative z-10 flex items-center justify-between border-t border-[#DDE5E9] pt-4 text-[10px] text-[#A1ADB3]">
           <span>Recognition before resolution</span>
           <span>01 / 05</span>
         </footer>
